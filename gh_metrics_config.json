@@ -1,0 +1,27 @@
+{
+  "version": "2.0",
+  "projectName": "UPRM Hand_Me_Down_Clothing",
+  "managers": ["anthonyharrel, Alma-pineiro, jahsyelrojas"],
+  "milestones": {
+    "Milestone #1": {
+      "startDate": "2025-08-25",
+      "endDate": "2025-09-19",
+      "projectedGroupGrade": 100.0
+    },
+    "Milestone #2": {
+      "startDate": "2025-09-22",
+      "endDate": "2025-10-12",
+      "projectedGroupGrade": 100.0
+    },
+    "Milestone #3": {
+      "startDate": "2025-10-15",
+      "endDate": "2025-11-05",
+      "projectedGroupGrade": 100.0
+    }
+  },
+  "lectureTopicTaskQuota": 4,
+  "countOpenIssues": false,
+  "sprints": 2,
+  "minTasksPerSprint": 1,
+  "verbosity": 1
+}
