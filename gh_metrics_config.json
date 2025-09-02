@@ -23,4 +23,5 @@
   "countOpenIssues": false,
   "sprints": 2,
   "minTasksPerSprint": 1,
+  "verbosity": 1
 }
