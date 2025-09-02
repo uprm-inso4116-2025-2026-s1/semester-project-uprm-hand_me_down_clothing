@@ -1,11 +1,11 @@
 {
   "version": "2.0",
-  "projectName": "College Toolbox",
-  "managers": ["Poggecci", "Schutz"],
+  "projectName": "semester-project-uprm-hand_me_down_clothing",
+  "managers": ["anthonyharriel", "Alma-pineiro, jahsyelrojas"],
   "milestones": {
     "Milestone #1": {
-      "startDate": "2024-01-15",
-      "endDate": "2024-02-09",
+      "startDate": "2025-08-25",
+      "endDate": "2025-09-19",
       "projectedGroupGrade": 100.0
     },
     "Milestone #2": {
