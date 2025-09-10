@@ -1,0 +1,24 @@
+name: build adocs
+
+on:
+  push:
+    branches:
+    - main
+jobs:
+  adoc_build:
+    runs-on: ubuntu-latest
+    name: Asciidoctoring the docs to HTML
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+    - name: Get build container
+      id: adocbuild
+      uses: tonynv/asciidoctor-action@main
+      with:
+          program: "asciidoctor -D docs -a stylesheet=style.css --backend=html5 -o index.html README.adoc
+    - name: Deploy docs to ghpages
+      uses: peaceiris/actions-gh-pages@v3
+      with: 
+        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+        publish_branch: gh-pages
+        publish_dir: ./docs/
