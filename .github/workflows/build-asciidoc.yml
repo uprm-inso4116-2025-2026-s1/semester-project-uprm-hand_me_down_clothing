@@ -2,24 +2,38 @@ name: Build AsciiDoc to PDF
 
 on:
     push:
-        branches:
-            - Documentation
+        paths:
+            - "**.adoc"
     workflow_dispatch:
 
 jobs:
-    build_pdf:
+    build-pdf:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout repository
+            - name: Checkout repo
               uses: actions/checkout@v4
-
-            - name: Build AsciiDoc to PDF
-              uses: manoelcampos/asciidoctor-ghpages-action@v2.3.0
               with:
-                  # Specify the main AsciiDoc file to convert (e.g., README.adoc)
-                  # If not specified, it might convert all .adoc files recursively
-                  main_adoc_file: "README.adoc"
-                  pdf_build: true
-                  # pdf_theme: 'my-custom-theme.yml'
-                  output_dir: "."
+                  persist-credentials: false # we'll use a token instead
+
+            - name: Set up Ruby
+              uses: ruby/setup-ruby@v1
+              with:
+                  ruby-version: "3.1"
+
+            - name: Install Asciidoctor PDF
+              run: gem install asciidoctor-pdf
+
+            - name: Convert Asciidoc to PDF
+              run: |
+                  asciidoctor-pdf README.adoc -o ./README.pdf
+
+            - name: Commit and push PDF
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git add docs/your_file.pdf
+                  git commit -m "Auto-generate PDF from Asciidoc [skip ci]" || echo "No changes to commit"
+                  git push
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
