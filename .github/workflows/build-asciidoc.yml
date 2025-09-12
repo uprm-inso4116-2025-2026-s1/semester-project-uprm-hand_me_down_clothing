@@ -1,4 +1,4 @@
-name: Build AsciiDoc to PDF
+name: Build & Commit AsciiDoc PDF
 
 on:
     push:
