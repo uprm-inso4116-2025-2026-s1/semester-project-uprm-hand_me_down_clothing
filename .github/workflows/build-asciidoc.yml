@@ -2,13 +2,15 @@ name: Build & Commit AsciiDoc PDF
 
 on:
     push:
-        paths:
-            - "**.adoc"
+        branches:
+            - Documentation
     workflow_dispatch:
 
 jobs:
     build-pdf:
         runs-on: ubuntu-latest
+        permissions:
+            contents: write
 
         steps:
             - name: Checkout repo
@@ -26,13 +28,17 @@ jobs:
 
             - name: Convert Asciidoc to PDF
               run: |
-                  asciidoctor-pdf README.adoc -o ./README.pdf
+                  asciidoctor-pdf ./docs/README.adoc -o ./README.pdf
+
+            - name: Setup authenticated git
+              run: |
+                  git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
 
             - name: Commit and push PDF
               run: |
                   git config --global user.name "github-actions[bot]"
                   git config --global user.email "github-actions[bot]@users.noreply.github.com"
-                  git add docs/your_file.pdf
+                  git add ./README.pdf
                   git commit -m "Auto-generate PDF from Asciidoc [skip ci]" || echo "No changes to commit"
                   git push
               env:
