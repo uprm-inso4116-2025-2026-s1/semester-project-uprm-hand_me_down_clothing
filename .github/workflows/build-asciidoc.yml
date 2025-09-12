@@ -1,24 +1,25 @@
-name: build adocs
+name: Build AsciiDoc to PDF
 
 on:
-  push:
-    branches:
-    - main
+    push:
+        branches:
+            - Documentation
+    workflow_dispatch:
+
 jobs:
-  adoc_build:
-    runs-on: ubuntu-latest
-    name: Asciidoctoring the docs to HTML
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Get build container
-      id: adocbuild
-      uses: tonynv/asciidoctor-action@main
-      with:
-          program: "asciidoctor -D docs -a stylesheet=style.css --backend=html5 -o index.html README.adoc
-    - name: Deploy docs to ghpages
-      uses: peaceiris/actions-gh-pages@v3
-      with: 
-        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        publish_branch: gh-pages
-        publish_dir: ./docs/
+    build_pdf:
+        runs-on: ubuntu-latest
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+
+            - name: Build AsciiDoc to PDF
+              uses: manoelcampos/asciidoctor-ghpages-action@v2.3.0
+              with:
+                  # Specify the main AsciiDoc file to convert (e.g., README.adoc)
+                  # If not specified, it might convert all .adoc files recursively
+                  main_adoc_file: "README.adoc"
+                  pdf_build: true
+                  # pdf_theme: 'my-custom-theme.yml'
+                  output_dir: "."
