@@ -1,0 +1,182 @@
+// --
+// Author: Kevin Gomez
+// Institution: University of Puerto Rico at Mayagüez
+// Date Created: 2025-09-03
+// Last Updated: 2025-09-03
+// Version: 1.0
+// Project: Hand-me-down Clothing
+// GitHub Issue: #26
+// Purpose: Contribution to the Hand-me-down Clothing project documentation, focusing on database schema
+// --
+
+# Preliminary Database Schema for Donation Items
+
+## Existing Platforms
+
+### Amazon
+#### Key Features
+- Vast product catalog with strong categorization and filtering options (type, brand, size, condition, etc.)
+- Integrated payment and delivery system with buyer protection
+- Review system (buyers reviewing sellers and products)
+- Strong recommendation engine (suggested items based on browsing history)
+
+#### Areas for Improvement
+- Focuses mainly on new products, making it less intuitive for second-hand/donation-based items
+- High fees for sellers, which may not align with donation/low-cost goals
+- Sustainability/donation aspects are not emphasized
+
+### Etsy
+#### Key Features
+- Supports handmade, vintage, and unique items (closer to second-hand/donation model)
+- Seller profiles with reviews and ratings
+- Good categorization (tags, type, size, etc.)
+- Search filters allow for style- and preference-based discovery
+
+#### Areas for Improvement
+- Focuses more on selling rather than donation (everything has a price tag)
+- Discovery can still be cluttered if tags aren’t used well
+- No standardized way to indicate **condition** of items (important for second-hand clothes)
+
+### Shein
+#### Key Features
+- Very low-cost clothing options with easy browsing by category, size, and style
+- Strong focus on images to influence buyer decisions
+- Personalization/recommendations based on user preferences
+
+#### Areas for Improvement
+- Not a second-hand/donation platform at all—emphasizes fast fashion, which goes against sustainability
+- No system for user-to-user selling/donating, only brand-to-consumer
+- No transparency about condition or quality (everything is assumed "new")
+
+### Poshmark
+#### Key Features
+- Marketplace dedicated to second-hand clothes
+- Easy listing with pictures, condition, brand, and size
+- Reviews and ratings between buyers and sellers
+
+#### Areas for Improvement
+- Strong emphasis on social media–style interactions (not always aligned with donation-only goals)
+- Seller fees may discourage casual donators
+
+### ThredUp
+#### Key Features
+- Online thrift/donation model focused on second-hand clothing
+- Strong categorization by brand, size, style, and condition
+- Sustainability message aligned with reuse and recycling of clothing
+- Streamlined donation/selling process (clean-out kits for users)
+
+#### Areas for Improvement
+- Limited user-to-user interaction (platform acts as middleman)
+- Not always transparent about item rejection or pricing strategy
+- Focused more on resale than pure donation
+
+
+## Proposed Schemas
+
+### Clothing Pieces -> Piece
+[cols="1,1,2,1", options="header"]
+|===
+| Attribute | Type | Description | Example
+| ID | String | Unique identifier for each clothing piece | N/A
+| Type | String | Category of clothing | dress, pants, shirt
+| Color | String | Primary color of the item | red, blue, black
+| Brand | String | Manufacturer or label associated with the item | Macy`s, Louis Vuitton, custom, none
+| Gender | Enum | Intended gender fit of the clothing | male, female, non-binary, other
+| Size | Enum | Physical size of the item | small, medium, large, custom
+| Price | Number | Monetary value assigned to the item (in $) | 10, 2, 20
+| Current condition | Number | Overall state of wear or quality | 1/10, 7/10
+| Reason for selling | String | Explanation given by the donator/seller | old, broken, got tired
+| Images | List<Image> | Photos uploaded to represent the item | N/A
+|===
+
+### Donators/Sellers -> Seller
+[cols="1,1,2,1", options="header"]
+|===
+| Attribute | Type | Description | Example
+| ID | String | Unique identifier for each seller | N/A
+| Name | String | Full name of the seller |John Doe
+| Phone | String | Seller`s phone number | 555-123-4567
+| Email | String | Seller`s email address | seller@mail.com
+| Password | String | Authentication credential for login | password
+| Reviews | List<Review> | Collection of reviews received by this seller | [Review1]
+|===
+
+### Buyer
+[cols="1,1,2,1", options="header"]
+|===
+| Attribute | Type | Description | Example
+| ID | String | Unique identifier for each buyer | N/A
+| Name | String | Full name of the buyer | Jane Smith
+| Phone | String | Buyer`s phone number | 555-987-6543
+| Email | String | Buyer`s email address | buyer@mail.com
+| Password | String | Authentication credential for login | N/A
+| Reviews | List<Review> | Reviews written by this buyer | [Review2]
+|===
+
+### Review
+[cols="1,1,2,1", options="header"]
+|===
+| Attribute | Type | Description | Example
+| ID | String | Unique identifier for each review | N/A
+| BuyerID | String | Reference to the buyer who wrote the review | Buyer123
+| SellerID | String | Reference to the seller being reviewed | Seller456
+| Rating | Number | Numerical score given in the review | 2/5, 5/5, 0/5
+| Content | String | Textual explanation accompanying the rating | "Fast shipping, good condition"
+|===
+
+### Donation Locale -> Locale
+[cols="1,1,2,1", options="header"]
+|===
+| Attribute | Type | Description | Example
+| ID | String | Unique identifier for each locale | N/A
+| Address | String | Exact address for each locale | 259 Av. Alfonso Valdés Cobián, Mayagüez, 00680
+| Coordinates | String | Exact coordinates for each locale | 18.2097489° N 67.141826° W
+| Name | String | Name of the locale or company hosting the service | Donate Clothes Inc.
+| Description | String | Description of the locale and the service | Donation bin
+|===
+
+
+
+## Schemas` Justifications
+
+### Piece
+- ID -> for database categorization regardless of the technology used
+- Type of piece of clothing ->  to help the buyer filter when searching for clothing
+- Color -> so the buyer can take it into account for style-based decision making
+- Brand -> to help sellers/donators justify aspects such as price, and for buyers seeking specific branding
+- Gender -> to allow buyers to make style-and-size-based decisions
+- Size -> for optimal UX when buyers are looking for and purchasing clothing
+- Price -> stated in dollars so the buyer can make budget-friendly decisions and generally required inforation for optimal UX in e-commerce platforms
+- Current condition -> to enable buyers to correlate with price and evaluate the viability of obtaining that piece
+- Reason for selling -> to provide credibility for the seller/donator
+- Current images -> to decide whether the information given is truthfull, which helps to provide trust in the seller/donator and the platform as a proxy
+
+### Seller
+- ID -> for database categorization regardless of the technology used
+- Name -> to identify the user
+- Phone number -> to contact the user
+- Email -> for authentication
+- Password -> for authentication
+- Reviews received -> to enable buyers to do business with the seller based on past behavior 
+
+### Buyer
+- ID -> for database categorization regardless of the technology used
+- Name -> to identify the user
+- Phone number -> to contact the user
+- Email -> for authentication
+- Password -> for authentication
+- Reviews given -> to help other buyers decide on whether this buyer is trustworthy and/or reliable for reviewing
+
+### Review
+- ID -> for database categorization regardless of the technology used
+- BuyerID -> to identify the reviewer for future reference
+- SellerID -> to identify the reviewee for future reference
+- Rating -> to provide a numerical comparison system
+- Content -> to provide the context for the rating given
+
+### Locale
+- ID -> for database categorization regardless of the technology used
+- Address -> to help donators navigate to the locale traditionally
+- Coordinates -> to enable donators to use navigation software to the locale
+- Name -> to provide context as to what company hosts the service
+- Description -> to provide details about types of items received, destination, etc.
