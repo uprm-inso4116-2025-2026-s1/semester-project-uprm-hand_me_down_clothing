@@ -1,0 +1,135 @@
+// --
+// Author: Karina López Rodríguez
+// User: @Kaariinaa08
+// Project: Hand-me-down Clothing
+// GitHub Issue: #10
+// --
+
+= Verification Methods for Listings
+
+== Objective
+Identify and analyze existing verification methods used by online marketplaces to ensure item quality, seller authenticity, and platform trustworthiness. Use these findings to design verification workflows for both **Sell** and **Donate** listings.
+
+== Description
+This document investigates verification flows used by popular platforms and documents methods across three categories:
+
+* **Seller verification:** account checks, identity verification, ratings & reputation.
+* **Item verification:** photo authenticity, condition validation, AI-assisted checks.
+* **Fraud detection & reporting:** suspicious activity alerts, moderation processes, dispute resolution.
+
+It summarizes best practices, categorizes approaches by complexity, reliability, and user experience, and provides recommendations for Sell and Donate workflows.
+
+== Platforms Analyzed
+* **eBay**
+* **Facebook Marketplace (Meta)**
+* **OfferUp**
+* **Craigslist**
+* **Goodwill (Donation)**
+
+== Comparison Table
+The comparison table below summarizes commonly used verification methods across the platforms analyzed. 
+
+[cols="20,20,20,15,25", options="header"]
+|=== 
+| Verification Method | Platform(s) Using It | Applies To (Sell / Donate / Both) | Complexity | Notes
+
+| Account Email + Phone Verification | eBay, Facebook Marketplace, OfferUp, Goodwill | Both | Low | Confirm email and phone via OTP. Low friction, basic trust signal.
+
+| Identity Verification (Government ID / KYC) | eBay, OfferUp | Primarily Sell; optional for high-value Donations | High | Upload photo ID with liveness/selfie checks; higher reliability, higher friction.
+
+| Reputation & Ratings (Buyer/Seller feedback) | eBay, OfferUp, Facebook Marketplace | Sell; limited use for Donate | Medium | Post-transaction feedback, star ratings, verified seller badges.
+
+| Photo Authenticity & Metadata Checks | eBay, OfferUp, Facebook Marketplace | Both | Medium | Verify photo EXIF, upload history; flag stock/stock-photo matches. Helps detect misrepresented items.
+
+| Condition Validation (Inspection Workflows) | eBay | Sell; Donate (for accepted donations only) | High | Human or third-party grading often required for high-value goods.
+
+| AI-assisted Image & Description Analysis | eBay, Facebook Marketplace, OfferUp | Both | Medium | Automated detection of prohibited items, counterfeit logos, or obvious misrepresentations.
+
+| Payment Verification & Escrow | eBay, OfferUp | Sell | High | Holds funds in escrow until delivery/condition confirmed. Reduces fraud for buyers.
+
+| Verified Organization / Charity Badges | Goodwill, Facebook Marketplace | Donate | Medium | Accrediting charities with paperwork and tax ID verification; public badges.
+
+| Suspicious Activity Monitoring & Automated Alerts | All major platforms | Both | Medium | Rule-based or ML systems that detect anomalous posting patterns, repeat reports, or account clustering.
+
+| Moderation & Reporting Workflows | All major platforms | Both | Low | In-app reporting, manual moderation queues, escalation paths to remove listings/accounts.
+
+|===
+
+== Categorization of Approaches
+. *Low complexity / Low friction*: Email/phone verification, basic profile fields, community reporting.
+. *Medium complexity / Moderate friction*: Reputation systems, AI-assisted photo checks, conditional payment holds.
+. *High complexity / High friction*: KYC / government ID checks, third-party grading, physical inspection, escrow held by 3rd party.
+
+Each category trades off trust/reliability versus onboarding friction and operational cost.
+
+== Pros & Cons (by Verification Approach)
+
+[.description]
+
+* *Email / Phone OTP*:
+  ** _Pros:_ Low friction; easy to implement; immediate trust signal.
+  ** _Cons:_ Easy to spoof with disposable numbers/emails; limited against determined fraudsters.
+
+* *Ratings & Reputation*:
+  ** _Pros:_ Builds community trust over time; self-policing via feedback.
+  ** _Cons:_ New sellers/charities start with no reputation; ratings can be gamed or unfairly manipulated.
+
+* *ID / KYC Checks*:
+  ** _Pros:_ High reliability for identity; deters repeat offenders.
+  ** _Cons:_ Privacy concerns; legal/regulatory burden; onboarding friction; storage/security requirements.
+
+* *Photo EXIF / Authenticity Checks*:
+  ** _Pros:_ Detects reused or stock images; lightweight automated checks.
+  ** _Cons:_ EXIF can be stripped or spoofed; false positives for legitimate images processed on-device.
+
+* *AI-assisted content analysis*:
+  ** _Pros:_ Scalable; can flag prohibited/counterfeit items quickly.
+  ** _Cons:_ ML false positives; requires labeled data and ongoing tuning.
+
+* *Human moderation / Inspection*:
+  ** _Pros:_ Most accurate for nuanced cases; required for high-value items/donations.
+  ** _Cons:_ Costly and slow; scalability limits.
+
+* *Escrow & Payment Holds*:
+  ** _Pros:_ Strong buyer protection; reduces incentive to ship misrepresented goods.
+  ** _Cons:_ Adds complexity and costs; not applicable to cash-in-person or many donation workflows.
+
+* *Verified Charity Badges*:
+  ** _Pros:_ Increases donor confidence; supports tax and regulatory compliance.
+  ** _Cons:_ Requires paperwork and verification overhead; not relevant to casual donations.
+
+
+== Recommendations (for Sell & Donate Workflows)
+
+=== Core (Must-Have) — Low Friction:
+* Email + Phone Verification at signup.
+* Clear profile fields: real name, location, optional social proofs.
+* In-app reporting and fast removal for overt policy violations.
+* Automated rule-based filters for prohibited items.
+
+=== Strong (Recommended) — Medium Friction/Medium Cost:
+* Reputation & rating system for sellers; lightweight for donors.
+* AI-assisted image & text checks to flag likely counterfeit, prohibited items, or reused/stock photos.
+* Photo upload guidelines + photo metadata checks.
+* For sell transactions: optional escrow/managed payments for high-value items or for a platform fee tier.
+
+=== High-assurance (Optional / Use-Case Dependent):
+* ID verification (KYC) for sellers listing above a configurable value threshold or for recurring sellers.
+* Third-party grading or authenticated listing: consider partnerships with re-commerce graders.
+* Verified charity / nonprofit badges for organizations accepting donations.
+
+=== Mapping to Sell vs Donate:
+* *Sell:* Core + Strong; Escrow & KYC for high-value tiers; ratings are crucial.
+* *Donate:* Core + Verified charity badges for organizational donations; lightweight reputation/history for frequent donors; human-in-the-loop for intake inspection at physical donation centers.
+
+== Implementation Notes & UX Guidance
+* **Progressive verification:** start with low-friction checks and escalate only when risk signals appear.
+* **Clear communication:** explain why data is collected, and provide alternatives for donors who prefer anonymity.
+* **Trust signals:** use badges & micro-copy to communicate verification.
+* **Appeals path:** offer a fast review process for users flagged incorrectly.
+
+== References
+1. eBay Rules and  Policies: https://www.ebay.com/help/policies/selling-policies/selling-policies?id=4205
+2. Facebook Help: https://www.facebook.com/help/1713241952104830/?helpref=popular_topics
+3. OfferUp Privacy Policy: https://offerup.com/privacy
+4. Goodwill Legal: https://www.goodwill.org/legal/
