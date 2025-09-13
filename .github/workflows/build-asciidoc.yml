@@ -1,24 +1,45 @@
-name: build adocs
+name: Build & Commit AsciiDoc PDF
 
 on:
-  push:
-    branches:
-    - main
+    push:
+        branches:
+            - Documentation
+    workflow_dispatch:
+
 jobs:
-  adoc_build:
-    runs-on: ubuntu-latest
-    name: Asciidoctoring the docs to HTML
-    steps:
-    - name: Checkout code
-      uses: actions/checkout@v2
-    - name: Get build container
-      id: adocbuild
-      uses: tonynv/asciidoctor-action@main
-      with:
-          program: "asciidoctor -D docs -a stylesheet=style.css --backend=html5 -o index.html README.adoc
-    - name: Deploy docs to ghpages
-      uses: peaceiris/actions-gh-pages@v3
-      with: 
-        deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
-        publish_branch: gh-pages
-        publish_dir: ./docs/
+    build-pdf:
+        runs-on: ubuntu-latest
+        permissions:
+            contents: write
+
+        steps:
+            - name: Checkout repo
+              uses: actions/checkout@v4
+              with:
+                  persist-credentials: false # we'll use a token instead
+
+            - name: Set up Ruby
+              uses: ruby/setup-ruby@v1
+              with:
+                  ruby-version: "3.1"
+
+            - name: Install Asciidoctor PDF
+              run: gem install asciidoctor-pdf
+
+            - name: Convert Asciidoc to PDF
+              run: |
+                  asciidoctor-pdf ./docs/documentation.adoc -o ./DOCUMENTATION.pdf
+
+            - name: Setup authenticated git
+              run: |
+                  git remote set-url origin https://x-access-token:${{ secrets.GITHUB_TOKEN }}@github.com/${{ github.repository }}
+
+            - name: Commit and push PDF
+              run: |
+                  git config --global user.name "github-actions[bot]"
+                  git config --global user.email "github-actions[bot]@users.noreply.github.com"
+                  git add ./DOCUMENTATION.pdf
+                  git commit -m "Auto-generate PDF from Asciidoc [skip ci]" || echo "No changes to commit"
+                  git push
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
