@@ -1,0 +1,167 @@
+// --
+// Author: Karina López Rodríguez
+// User: @Kaariinaa08
+// Project: Hand-me-down Clothing
+// GitHub Issue: #22
+// --
+
+= Category Taxonomy & Standardization for Listings
+
+== Objective
+Define a clear, standardized category structure for **Sell** and **Donate** listings that improves discoverability, user experience, and future scalability of the platform.
+
+== Description
+* Research how established marketplaces structure their categories and subcategories.
+* Identify common category patterns across platforms.
+* Determine differences in category depth for selling vs. donating.
+* Recommend a taxonomy proposal that balances:
+  ** Ease of navigation for users
+  ** Flexibility for future growth
+  ** Compatibility with search/filter features
+* Document examples of potential categories and subcategories for our platform.
+
+== Platforms Analyzed
+* **eBay**
+* **Facebook Marketplace (Meta)**
+* **OfferUp**
+* **Craigslist**
+* **Goodwill (Donation)**
+
+== Reference Taxonomies
+=== eBay
+- Electronics
+  * Phones & Accessories
+  * Computers & Tablets
+  * Audio & Video
+- Fashion
+  * Men, Women, Kids
+- Home & Garden
+  * Furniture
+  * Kitchen
+  * Outdoor
+- Collectibles & Art
+- Sporting Goods
+- Health & Beauty
+
+=== Facebook Marketplace
+- Vehicles
+- Property Rentals & Sales
+- Household
+- Hobbies & Leisure
+- Clothing & Accessories
+- Electronics
+- Pet Supplies
+
+=== OfferUp
+- Electronics
+- Home & Garden
+- Vehicles
+- Clothing & Accessories
+- Toys & Games
+- Sports & Outdoors
+- Health & Beauty
+
+=== Craigslist
+- For Sale
+  * Appliances
+  * Furniture
+  * Electronics
+  * Sporting Goods
+  * Tools
+- Free
+  * Household Items
+  * Clothing
+  * Books & Media
+- Services
+- Community
+
+=== Goodwill (Donation)
+- Furniture
+- Clothing
+- Household Items
+- Electronics
+- Books & Media
+- Toys
+- Jewelry & Accessories
+
+== Common Patterns Observed
+* **Electronics, Home, Clothing, and Vehicles** appear across all major platforms.
+* **Sports/Outdoors, Health & Beauty, and Collectibles** are common secondary categories.
+* **Free/Donation** items are usually grouped more broadly (fewer levels).
+* **Local pickup categories** (Craigslist, OfferUp, FB Marketplace) emphasize simplicity.
+* **Attribute-driven filtering** (e.g., brand, size, condition) is critical for buyer listings.
+
+== Proposed Category Hierarchy
+
+=== Sell Listings
+* Electronics
+  ** Phones & Accessories
+  ** Computers & Tablets
+  ** Audio & Video
+* Fashion
+  ** Men
+  ** Women
+  ** Kids
+* Home & Garden
+  ** Furniture
+  ** Kitchen
+  ** Outdoor
+* Vehicles
+  ** Cars
+  ** Motorcycles
+  ** Bicycles
+* Hobbies & Collectibles
+  ** Books
+  ** Games & Toys
+  ** Sports Equipment
+  ** Art & Antiques
+* Health & Beauty
+  ** Personal Care
+  ** Fitness
+* Pet Supplies
+* Office & Business
+  ** Office Furniture
+  ** Equipment & Supplies
+
+=== Donate Listings
+* Household Items
+  ** Furniture
+  ** Kitchenware
+  ** Decor
+* Clothing & Accessories
+  ** Men
+  ** Women
+  ** Kids
+* Electronics
+  ** Phones & Accessories
+  ** Computers
+  ** Audio/Video
+* Toys & Hobbies
+  ** Games
+  ** Books
+  ** Art Supplies
+* Miscellaneous
+  ** Small Appliances
+  ** Linens
+  ** General Donations
+
+== Differences Between Sell and Donate Categories
+- Sell listings have more detailed subcategories to optimize discovery and filtering for buyers.
+- Donate listings prioritize simplicity to reduce friction for donors and focus on main item types.
+- Donate flow emphasizes condition, pickup/dropoff, and donation acceptance guidelines.
+- Naming conventions may differ slightly to align with user expectations (e.g., "Kitchenware" vs. "Kitchen").
+
+== Recommendations for Search & Filtering
+- Use main categories as primary filters.
+- Subcategories enable more precise filtering in advanced search.
+- Include category-specific attributes (brand, size, condition) to power faceted search.
+- Support synonyms and aliasing (e.g., "sofa" → "couch").
+- Maintain a flexible taxonomy to allow adding new categories without restructuring.
+- Provide category auto-suggestions during listing creation to reduce miscategorization.
+
+== References
+* **eBay**: https://www.ebay.com/n/all-categories
+* **Facebook Marketplace (Meta)**: https://www.facebook.com/marketplace/
+* **OfferUp**: https://offerup.com/
+* **Craigslist**: https://www.craigslist.org/about/sites
+* **Goodwill (Donation)**: https://shopgoodwill.com/all-categories
