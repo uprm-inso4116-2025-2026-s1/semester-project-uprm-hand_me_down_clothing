@@ -1,0 +1,37 @@
+// --
+// Author: Kevin Gómez
+// Institution: University of Puerto Rico at Mayagüez
+// Date Created: 2025-09-13
+// Last Updated: 2025-09-13
+// Version: 1.0
+// Project: Hand-me-down Clothing
+// GitHub Issue: #92
+// --
+
+==== *2.1.2 - Terminology*
+
+The following terminology consolidates entities, events, functions, and behaviors in the domain. Each entry specifies the type of concept it represents and the phase in which it is introduced 
+(domain, requirements, implementation). This approach avoids circular definitions and 
+ensures alignment with both domain knowledge and system concerns.
+
+[cols="^,^,3", options="header", align=center]
+|===
+| Term | Concept Type | Definition / Notes
+| Donator | Entity | A person providing clothing items.
+| Collector | Entity | A person who receives or is looking to receive (claimed or purchased) a clothing piece.
+| Piece | Entity | An individual clothing item. Defined independently of the system.
+| Listing | Representation | A published representation of a Piece in the platform.
+| Donation | Event | Instantaneous occurrence when a Donator has just made a clothing item available.
+| Collection | Event | Instantaneous occurrence when a Collector has just taken possession of a Piece.
+| Condition Rating | Attribute / Function | A measure (e.g., scale 1-10) of quality for a Piece.
+| Review | Behavior / Artifact | Annotation (usually written text) associated with a transaction that complements a rating.
+| Locale | Entity | Physical location or organization where donations are deposited or distributed.
+| Type | Attribute | Category of clothing (dress, pants, shirt, etc.).
+| rate(Piece, ConditionRating) -> ConditionRating | Function | Function that updates the condition rating of a Piece. Since the Rating is being created at this point, only the Piece is passed in, not a pre-existing Rating.
+| donate(Piece, Donator, Locale) -> Donation | Event Function | Function that triggers the event of donation: "A Piece has just been donated by a Donator at a Locale."
+| donate(Piece, Donator, Collector) -> Donation | Event Function | Function that triggers the event of donation: "A Piece has just been donated by a Donator to a Collector."
+| collect(Piece, Collector) -> Collection | Event Function | Function that triggers the event of collection: "A Piece has just been collected by a Collector."
+| review(Transaction, Text) -> Review | Function | Creates a Review for a completed transaction; depends on the Transaction having just occurred.
+|===
+
+
