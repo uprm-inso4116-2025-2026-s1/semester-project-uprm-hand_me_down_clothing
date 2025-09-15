@@ -1,0 +1,91 @@
+== Objective
+Ensure the project formally **captures, verifies, and applies relevant domain knowledge** before and during design so the Listing feature aligns with real-world needs, constraints, and user workflows.
+
+== Description
+This document defines the knowledge, assumptions, and decisions made when designing and implementing the Listing feature. It ensures the design reflects user workflows, respects constraints, and can be validated after launch.
+
+*Key principles*:
+
+- Engineers must acquire relevant domain knowledge.
+- Domain knowledge comes from **formal specifications** and **additional research** (SME interviews, standards, user studies, competitive analysis, etc.).
+- Knowledge must be **traceable** (linked sources), **living** (updated as we learn), and **actionable** (clearly influencing decisions).
+
+== Workflow
+. **Kickoff – Knowledge Brief**
+.. Summarize the problem, users, workflows, constraints, and known risks.
+.. Identify at least **two distinct sources** to consult (e.g., product spec + SME interview).
+. **Design Spec – Domain Knowledge Section**
+.. Capture context, sources, findings, assumptions, and open questions.
+.. Explicitly list **Decisions Influenced** by each finding.
+. **Review & PR Checklist**
+.. In code PRs, confirm the Domain Knowledge section is complete and linked.
+.. Block merge if high-risk assumptions or unanswered critical questions remain.
+. **Continuous Updates**
+.. As new info emerges, update the section and note the change in *Changelog*.
+.. Re-notify when decisions materially change.
+. **Post-Launch Validation**
+.. Capture real-world feedback, confirm assumptions, and feed learnings back into the knowledge base.
+
+== Domain Knowledge
+*Context overview*::
+- Problem statement: Users need a way to create, view, and manage listings for items they want to sell or donate. The process must be simple, trustworthy, and aligned with marketplace workflows.
+- Primary users & goals:
+  * Sellers: publish items quickly, reach buyers.
+  * Buyers: browse accurate, trustworthy listings.
+- Core workflows (current & target):
+  * Current: ad-hoc, manual sharing (social media, word of mouth).
+  * Target: structured listing form with photos, details, category, condition, price, delivery/pickup.
+- Constraints (technical, regulatory, operational):
+  * Must work smoothly on mobile (low bandwidth, varying devices).
+  * Listing data must comply with community guidelines and backend data schema.
+  * Images stored efficiently (cost and performance).
+
+*Sources*::
+- Product PRD draft v1 (link placeholder).
+- User research survey with 25 students (link placeholder).
+- SME interview: marketplace ops lead (notes placeholder).
+- Competitor analysis: FB Marketplace + Craigslist (links placeholder).
+
+*Findings (bullets)*::
+- F1 — Users abandon flows if forms are longer than 2–3 steps.
+- F2 — Trust hinges on clear photos + item condition transparency.
+- F3 — Sellers want both *Sell* and *Donate* listing types, with slightly different flows.
+- F4 — Metadata (category, tags) is critical for search/discovery.
+
+*Decisions Influenced*::
+- D1 (by F1): Use step-by-step flow instead of single long form.
+- D2 (by F2): Require at least one photo and an item condition field.
+- D3 (by F3): Support both “Sell” and “Donate” as listing types with branching logic.
+- D4 (by F4): Mandatory category selection + optional tags.
+
+*Assumptions*::
+- A1 — Most users will upload photos from mobile camera, not desktop.
+- A2 — Listings will not initially require admin pre-approval (trust handled via reporting).
+- A3 — Average listing creation time target < 2 minutes.
+
+*Open Questions*::
+- Q1 — Do we allow bulk upload (multiple items at once)?
+- Q2 — What’s the max file size/format for images?
+- Q3 — Should condition be standardized (dropdown) or free-text?
+
+*Risks & Mitigations*::
+- R1 — Risk: Spam or inappropriate listings.
+  * Mitigation: Add report button + lightweight moderation.
+  * Trigger: Spike in reported items (>5% of listings).
+- R2 — Risk: Poor photo quality hurts trust.
+  * Mitigation: Provide in-flow photo tips + enforce min resolution.
+  * Trigger: Buyer complaints about misleading images.
+- R3 — Risk: Abandonment due to friction in listing flow.
+  * Mitigation: Track funnel metrics; simplify if >30% drop-off in step 2.
+  * Trigger: Analytics flag drop-off.
+
+*Changelog*::
+- 2025-09-15 — Draft created for Listing feature — Owner: @nicolasrivera25
+
+== Knowledge Brief
+* Users: sellers creating listings, buyers browsing listings.
+* Tasks: sellers publish items quickly; buyers discover accurate, trustworthy options.
+* Constraints: must support mobile, low bandwidth, efficient image storage, and community compliance.
+* Existing workflows: manual sharing (social media, word of mouth).
+* Wrong outcomes: abandoned flows, spammy/inappropriate listings, poor photo quality eroding trust.
+* Success metrics: listing creation under 2 minutes, <30% drop-off, <5% spam reports, buyer satisfaction with listing clarity.
