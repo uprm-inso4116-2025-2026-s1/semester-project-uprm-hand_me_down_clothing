@@ -1,0 +1,35 @@
+==== *1.2.2 Need*
+The purpose of this section is to establish the fundamental needs that
+motivate the Hand Me Down project, expressed independently of any
+system-to-be. These needs are grounded in the resale domain and must
+reflect the concerns of students and families who participate in
+secondhand exchanges. The articulation of these needs will guide the
+subsequent development of domain descriptions, requirements, software
+architecture, and testing activities.
+
+Stakeholders in this domain shall be understood as students and families
+seeking opportunities for affordable, accessible, and trustworthy
+secondhand exchanges. Their needs are not for a platform itself, but for
+solutions to the problems they encounter when attempting to exchange
+goods in local communities.
+
+The following distinct needs are identified:
+
+* Students and families must have affordable access to secondhand goods
+  that support daily life, education, and well-being.
+* Stakeholders must be able to rely on transparent information about the
+  condition and history of pre-owned items.
+* Exchanges shall be conducted in a manner that establishes trust,
+  fairness, and safety between participants.
+* Opportunities for accessibility and inclusivity must be available so
+  that all families and students, regardless of economic background,
+  will participate in the resale domain without barriers.
+* Developers shall have clear requirements, descriptions, and
+  architecture to build upon, since no structured system currently
+  exists to organize this resale context.
+
+These needs form the foundation for further project work. They are
+deliberately expressed at the domain level, independently of any
+particular solution, to ensure that subsequent design and implementation
+activities will remain aligned with the stakeholders underlying
+motivations.
