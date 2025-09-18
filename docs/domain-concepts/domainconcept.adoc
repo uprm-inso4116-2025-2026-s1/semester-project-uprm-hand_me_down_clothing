@@ -35,6 +35,6 @@ The domain rough sketch was reviewed to identify recurring ideas and terminology
 
 === Conclusion
 The domain analysis produced a clear vocabulary:  
-- *`Clothing Item`* as the primary entity.  
-- *`Donation`* and *`Recycling`* as distinct actions.  
-- *`User`* and *`Service Provider`* as actors.
+- `Clothing Item` as the primary entity.  
+- `Donation` and `Recycling` as distinct actions.  
+- `User` and `Service Provider` as actors.
