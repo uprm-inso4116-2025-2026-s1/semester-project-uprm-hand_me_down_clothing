@@ -1,0 +1,40 @@
+=== 3.1 Domain Concepts
+
+=== Method
+The domain rough sketch was reviewed to identify recurring ideas and terminology. Ambiguities were noted, compared, and resolved by introducing consistent abstractions. This ensures traceability from observations to domain-level concepts while avoiding system-to-be details.
+
+=== Clothing Item
+- *Observation*: Notes reference “clothing,” “garments,” and “items” in different contexts.  
+- *Issue*: Terms overlap without clarity on whether they refer to a single piece or a category.  
+- *Resolution*: Standardized as **Clothing Item**, representing any individual piece of apparel.  
+- *Justification*: Provides a neutral, unambiguous unit of exchange within the domain.  
+- *Concept*: `Clothing Item` (entity).
+
+=== Donation vs. Recycling
+- *Observation*: Actions include “donating clothes,” “claiming items,” and “recycling textiles.”  
+- *Issue*: Donation and recycling are sometimes mentioned together, though they represent different flows.  
+- *Resolution*:  
+-- **Donation** = action of giving away clothing to others in the community.  
+-- **Recycling** = action of sending clothing to government/private services for textile reuse.  
+- *Justification*: Separation maintains clarity between peer-to-peer exchanges and organizational processes.  
+- *Concepts*: `Donation` (action), `Recycling` (action).
+
+=== Services and Community
+- *Observation*: Mentions of “government services,” “private services,” and “community sharing.”  
+- *Issue*: Ambiguity between individuals and organizations as actors.  
+- *Resolution*:  
+-- **User** = individual participant (donor or claimant).  
+-- **Service Provider** = organizational actor (government or private) that manages recycling/donation.  
+- *Justification*: Differentiation enables consistent treatment of human vs. institutional participation.  
+- *Concepts*: `User` (actor), `Service Provider` (actor).
+
+=== Terminology Resolution
+- *Clothes*, *garments*, *items*: standardized as **Clothing Item**.  
+- *Donation* vs. *Recycling*: separated to reflect community exchange vs. institutional process.  
+- *Users* vs. *Services*: clarified as **User** (individual) and **Service Provider** (organization).  
+
+=== Conclusion
+The domain analysis produced a clear vocabulary:  
+- *`Clothing Item`* as the primary entity.  
+- *`Donation`* and *`Recycling`* as distinct actions.  
+- *`User`* and *`Service Provider`* as actors.
