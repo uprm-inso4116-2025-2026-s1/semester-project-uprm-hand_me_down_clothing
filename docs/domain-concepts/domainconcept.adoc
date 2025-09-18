@@ -1,6 +1,6 @@
 === 3.1 Domain Concepts
 
-=== Method
+=== Description
 The domain rough sketch was reviewed to identify recurring ideas and terminology. Ambiguities were noted, compared, and resolved by introducing consistent abstractions. This ensures traceability from observations to domain-level concepts while avoiding system-to-be details.
 
 === Clothing Item
