@@ -1,0 +1,22 @@
+==== *1.3.1 Scope & Span*
+
+=== Scope
+The Hand Me Down project will operate in the broad domain of online resale marketplaces.
+It will address the general problem of enabling individuals and communities to exchange secondhand goods in a structured, reliable, and sustainable manner.
+The scope will cover activities in domain engineering, requirements engineering, and software architecture to ensure a well-founded solution.
+
+The project will emphasize the following areas:
+* Domain:: Resale of pre-owned items across categories such as clothing and accesories. 
+* Requirements:: Identifying user needs related to affordability, sustainability, accessibility, and usability.
+* Architecture:: Defining a framework that supports secure and scalable interactions between sellers and buyers.
+* Project Activities:: Documentation, validation, and design processes that must accompany implementation.
+
+=== Span
+The span narrows the focus of the Hand Me Down project to *specific concerns and audiences* within the general resale domain.
+The platform must primarily serve individuals and families who wish to exchange items affordably, students and young adults seeking budget-friendly goods, and community members interested in sustainable consumption.
+
+The span includes the following project-specific aspects:
+* User Interaction:: Individuals must be able to list, browse, and search for secondhand items.
+* Categorization:: Items will be organized into categories that facilitate discovery.
+* Transaction Support:: The system must provide structured means for negotiation, offers.
+* Trust and Transparency:: Item conditions and relevant metadata must be clearly described to support informed decisions.

@@ -1,0 +1,17 @@
+==== *1.5 Derived Goals*
+
+In addition to the primary goals (needs, scope, and core functionality), the project shall pursue secondary outcomes that respond to the realities of Mayagüez and the UPRM community. These outcomes are substantially different from core system behavior and emphasize long-term social, educational, and community benefits for students and families.
+
+* Promote sustainability literacy and circular practices in Mayagüez::
+The project shall normalize reuse, repair, and responsible disposal behaviors among students and families through donation and resale norms.
+*Broader impact:* item lifecycles will be extended and textile waste pressure will be reduced without prescribing any specific technical solution.
+
+* Strengthen community engagement and mutual aid through UPRM-led outreach::
+The project will cultivate equitable sharing practices (donation, fair resale) centered on UPRM as the primary touchpoint.
+*Broader impact:* social capital will increase and households will respond more effectively to clothing and accessory needs across semesters and seasons.
+
+* Raise awareness of affordability and access constraints faced by local households::
+The project shall make visible how structured sharing reduces acquisition cost and effort for students and families.
+*Broader impact:* schools and neighborhood groups will make more informed choices about drives, sizing priorities, and targeted outreach.
+
+These derived goals will guide outreach, education, and validation activities alongside the primary objectives, and shall not be construed as mandates for any specific platform or implementation approach.

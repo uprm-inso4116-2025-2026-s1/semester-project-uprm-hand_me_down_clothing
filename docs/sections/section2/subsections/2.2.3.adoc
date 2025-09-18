@@ -1,0 +1,25 @@
+=== 2.2.3 Domain Requirements
+
+The system shall manage listings according to the inherent properties of categories, items, and taxonomy structure in the domain of classified and donation listings.
+
+
+[requirements]
+* DR1: The system must classify every listing under exactly one primary category, ensuring consistent organization and discoverability across the taxonomy.
+* DR2: The system must allow categories to have hierarchical subcategories, reflecting the domain property of multi-level classification used in established marketplaces.
+* DR3: The system must distinguish between **Sell** and **Donate** listing taxonomies, preserving the domain difference in category depth and item grouping.
+* DR4: The system shall provide means to enforce item-to-category compatibility, ensuring that each listing aligns with an appropriate category (e.g., vehicles cannot be placed under clothing).
+* DR5: The system must support category evolution, allowing the taxonomy to incorporate new categories or subcategories without invalidating existing listings.
+
+Each of these requirements directly ties to observed domain properties:  
+- DR1 reflects the necessity of a single, authoritative classification per item.  
+- DR2 enforces hierarchical structures present in all reference taxonomies.  
+- DR3 respects the distinction between selling and donating, observed in multiple platforms.  
+- DR4 ensures semantic alignment between items and categories, preventing domain violations.  
+- DR5 supports the domain need for scalability and adaptability as marketplaces evolve.
+
+== References
+* **eBay**: https://www.ebay.com/n/all-categories
+* **Facebook Marketplace (Meta)**: https://www.facebook.com/marketplace/
+* **OfferUp**: https://offerup.com/
+* **Craigslist**: https://www.craigslist.org/about/sites
+* **Goodwill (Donation)**: https://shopgoodwill.com/all-categories

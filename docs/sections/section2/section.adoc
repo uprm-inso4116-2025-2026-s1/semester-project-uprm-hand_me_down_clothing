@@ -1,0 +1,5 @@
+=== *2 - Descriptive part*
+
+include::subsections/2.1.adoc[]
+include::subsections/2.1.2.adoc[]
+include::subsections/2.2.2.adoc[]
