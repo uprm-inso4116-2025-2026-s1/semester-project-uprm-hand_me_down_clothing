@@ -1,0 +1,44 @@
+==== *2.2.2 - Personas*
+
+A persona is a fictional yet plausible representation of a user for a platform. The following personas will help align development goals with user needs.
+
+*Adriana Gómez*
+
+- *Age*: 20 years old
+- *Occupation*: University student on financial aid working part-time on campus
+- *Build / Appearance*: Dark and straight hair, low to average height, dresses in vintage clothes and kitschy accessories
+- *Personality*: Creative, unique, community-driven
+
+Adriana loves expressing herself through her fashion, yet she struggles finding clothes that feel like her. She has an affinity for older clothing, so thrift stores are a common spot for her. However, she struggles finding thrift stores in her area given that most of them don’t have an online presence and, between her studies and her job, she doesn’t have a lot of time to go out and look for them.
+
+- *Pain Points*: Difficulty finding unique clothing items and accessories that don’t break the bank, difficulty finding local thrift stores
+- *Needs*: Access to trustworthy online listings, a way to find local thrift stores
+- *Platform Interaction*: Browses listings from her phone during her breaks between classes
+
+
+*Manuel Torres*
+
+- *Age*: 35 years old
+- *Occupation*: Middle school teacher
+- *Build / Appearance*: Brown and curly hair, average height, frequently seen in polo shirts or t-shirts with witty quotes on them.
+- *Personality*: Patient, funny, good with kids, adventurous
+
+Manuel is moving to a new location and wants a fresh start. Even if he doesn’t want a lot of his belongings anymore, he’d rather not throw them away. He wants to sell whatever he has that’s still in good condition to help out with the expenses involvd in the move but can’t find a way to do so.
+
+- *Pain Points*: No low-hassle way to sell his belongings
+- *Needs*: Access to a way to sell his belongings on his own terms
+- *Platform Interaction*: Creates listings from his work computer for his pre-loved clothes
+
+
+*Daniela López*
+
+- *Age*: 27 years old
+- *Occupation*: Nurse practitioner
+- *Build / Appearance*: Long and wavy brunette hair, tall, dresses in comfortable clothes like baggy jeans or athleisure
+- *Personality*: Outspoken, understanding, eco-conscious
+
+Daniela is the type of person to own something until it falls apart. She is vehemently against fast fashion and tries to not contribute to it to the best of her ability. She believes older clothing was made to last longer and buys second-hand whenever she can, but her favorite local thrift store has just closed down and the closest is now too far away for her to visit frequently.
+
+- *Pain Points*: Doesn’t want to contribute to fast fashion, tired of the low quality of modern clothing items
+- *Needs*: A way to purchase good quality vintage clothing items
+- *Platform Interaction*: Browses listings using search filters to narrow down her results to her needs
