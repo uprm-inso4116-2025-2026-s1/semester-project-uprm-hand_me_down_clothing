@@ -1,4 +1,4 @@
-=== 2.2.3 Domain Requirements
+==== *2.2.3 Domain Requirements*
 
 The system shall manage listings according to the inherent properties of categories, items, and taxonomy structure in the domain of classified and donation listings.
 
