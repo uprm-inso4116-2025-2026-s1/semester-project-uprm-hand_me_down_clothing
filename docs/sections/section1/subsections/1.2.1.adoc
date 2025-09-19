@@ -1,6 +1,6 @@
-==== *1.2.1 Current Situation*
+=== *1.2.1 Current Situation*
 
-===== Landfills and textile waste in Puerto Rico
+==== Landfills and textile waste in Puerto Rico
 
 * High waste volume: Approximately 250 million pounds of clothing and textiles are sent to Puerto Rico's landfills annually.
 
@@ -10,7 +10,7 @@
 
 * Overwhelmed landfills: Puerto Rico's landfills are facing a serious crisis, with many already at or over capacity. The high volume of textile waste contributes to this problem.
 
-sources: 
+Sources: 
 
 * https://www.investpr.org/pioneering-puerto-ricos-circular-economy-with-investpr-and-newlab/#:~:text=Puerto%20Rico%20is%20at%20a,urgent%20need%20for%20innovative%20solutions[investpr.org]
 
@@ -18,7 +18,7 @@ sources:
 
 
 
-===== Poverty
+==== Poverty
 
 * Overall Poverty: The poverty rate in Puerto Rico is alarmingly high, at around 41.7% as of 2022. This is over three times the U.S. national average.
 
@@ -26,7 +26,7 @@ sources:
 
 * Persistent Poverty: All 78 municipalities in Puerto Rico are classified as "persistent poverty counties," meaning they have maintained a poverty rate of 20% or more for at least 30 years.
 
-sources:
+Sources:
 
 * https://centropr.hunter.cuny.edu/reports/pervasive-poverty-in-puerto-rico/#:~:text=Puerto%20Rico's%20pervasive%20poverty%20is,but%20one%20other%20U.S.%20territory[centropr.hunter.cuny.edu]
 
@@ -34,7 +34,7 @@ sources:
 
 
 
-===== Homelessness:
+==== Homelessness:
 
 * Homeless Population: Recent counts show the homeless population in Puerto Rico to be around 2,096 individuals. For these individuals, clothing is a constant and critical need.
 

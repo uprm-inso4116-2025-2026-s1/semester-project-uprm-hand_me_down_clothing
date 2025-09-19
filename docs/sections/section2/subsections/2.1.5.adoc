@@ -1,4 +1,4 @@
-==== 2.1.5 Events, Actions, and Behaviors
+=== *2.1.5 Events, Actions, and Behaviors*
 :location: Mayagüez, Puerto Rico (UPRM touchpoint)
 :period: 2025
 
@@ -12,7 +12,7 @@ All descriptions are domain-oriented and independent of any future system.
 
 ===== Exchange of Clothing
 *Event*::  
-The instant a garment has just changed possession — for example, a student hands a jacket to another at a campus bench. This marks the conclusion of an informal transaction and the start of a new phase in the garment’s life.
+The instant a garment has just changed possession for example, a student hands a jacket to another at a campus bench. This marks the conclusion of an informal transaction and the start of a new phase in the garment’s life.
 
 *Action*::  
 Steps such as replying to an inquiry, confirming size or colour, agreeing on a price, and finally giving or receiving the garment. Each is purposeful and can succeed or fail (e.g., a missed appointment).
@@ -38,7 +38,7 @@ A price has just been named, accepted, or renegotiated for a garment.
 Comparing a proposed amount with informal references, adjusting for size or condition, or confirming that an item will be free rather than sold.
 
 *Behavior*::  
-A continuing process of social valuation. Participants rely on a tacit “student resale price band” — often eight to fifteen dollars — to anchor expectations while allowing room for negotiation or bundles.
+A continuing process of social valuation. Participants rely on a tacit “student resale price band” often eight to fifteen dollars to anchor expectations while allowing room for negotiation or bundles.
 
 ===== Management of Dormant Stock
 *Event*::  
@@ -58,7 +58,7 @@ An item has just been thrown into a rubbish container, left on a curb, or deposi
 Carrying worn garments to bins, abandoning them in vacant lots, or delivering unusable pieces to a charity or municipal collection point.
 
 *Behavior*::  
-All practices by which textiles exit the local circulation of reuse. Some are responsible — donation of damaged goods for recycling — while others are harmful, such as illegal dumping. Together they define the “textile waste stream” that runs parallel to reuse networks.
+All practices by which textiles exit the local circulation of reuse. Some are responsible donation of damaged goods for recycling while others are harmful, such as illegal dumping. Together they define the “textile waste stream” that runs parallel to reuse networks.
 
 ===== Arranging and Conducting Meetups
 *Event*::  
@@ -78,7 +78,7 @@ A new offer or request for clothing has just been posted or noticed in an online
 Opening a marketplace app, composing a caption, adding photos, scrolling through listings, or sending a direct message to express interest.
 
 *Behavior*::  
-The regular reliance on lightly moderated platforms — Facebook Marketplace, WhatsApp groups, Instagram stories — to discover, promote, and coordinate exchanges. This behaviour keeps circulation active and widens the reach beyond immediate acquaintances.
+The regular reliance on lightly moderated platforms Facebook Marketplace, WhatsApp groups, Instagram stories to discover, promote, and coordinate exchanges. This behaviour keeps circulation active and widens the reach beyond immediate acquaintances.
 
 ===== Building Trust
 *Event*::  

@@ -1,4 +1,4 @@
-==== *2.2.2 - Personas*
+=== *2.2.2 - Personas*
 
 A persona is a fictional yet plausible representation of a user for a platform. The following personas will help align development goals with user needs.
 

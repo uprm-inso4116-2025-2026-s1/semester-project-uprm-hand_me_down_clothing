@@ -1,65 +1,74 @@
-==== *1.4 Other Activities than Just Developing Source Code*
+=== *1.4 Other Activities than Just Developing Source Code*
 
 This project will not be limited to writing source code. To satisfy the needs identified for affordability, accessibility, trust/safety, and transparency in the Mayagüez/UPRM context, the team shall execute the following activities in addition to implementation. Each activity is mandatory, tied to a stakeholder need and justified by the current situation.
 
 Domain engineering::
 The team shall elicit and model the domain of donation and resale of clothing and accessories for students and families (actors, workflows, vocabulary, constraints).
-*Need satisfied:* developers must share a precise vocabulary and mental model to preserve accessibility, affordability, and transparency.  
-*Current situation:* rough sketches are based on team self-observation; no external interviews conducted yet; stakeholder roles are not enumerated; internal terminology seems consistent but remains unvalidated in the field.  
-*Contributions to date:* condition labels and verification practices were researched; the **Sell** vs **Donate** category structure was standardized; initial personas were drafted to ground concepts.  
-*Planned outcomes:* domain glossary, context diagram, concrete exchange workflows, and domain verification norms (tag photo, full-item photos, defect call-outs).
+
+* *Need satisfied:* developers must share a precise vocabulary and mental model to preserve accessibility, affordability, and transparency. 
+
+* *Current situation:* rough sketches are based on team self-observation; no external interviews conducted yet; stakeholder roles are not enumerated; internal terminology seems consistent but remains unvalidated in the field. 
+
+* *Contributions to date:* condition labels and verification practices were researched; the **Sell** vs **Donate** category structure was standardized; initial personas were drafted to ground concepts. 
+
+* *Planned outcomes:* domain glossary, context diagram, concrete exchange workflows, and domain verification norms (tag photo, full-item photos, defect call-outs).
 
 Requirements engineering::
 The team shall prescribe goals, user-level functional requirements (listing, browse/search, donation/resale flows, offer/negotiation) and quality attributes (trust/safety, transparency, usability, accessibility) with explicit traceability to needs and acceptance criteria.
-*Need satisfied:* developers must clearly understand system functionality and nonfunctional expectations that build trust and reduce effort.  
-*Current situation:* no consolidated requirements baseline or acceptance criteria exist.  
-*Contributions to date:* epics were linked to user stories (buyer/seller perspectives) against stakeholder needs; interface requirements at the system boundary were authored; measurable machine requirements (response time, uptime, user capacity) were drafted.  
-*Planned outcomes:* requirements set with SHALL statements and acceptance criteria; traceability matrix (Need → Requirement → Test); nonfunctional thresholds made testable.
+
+* *Need satisfied:* developers must clearly understand system functionality and nonfunctional expectations that build trust and reduce effort.
+
+* *Current situation:* no consolidated requirements baseline or acceptance criteria exist.  
+
+* *Contributions to date:* epics were linked to user stories (buyer/seller perspectives) against stakeholder needs; interface requirements at the system boundary were authored; measurable machine requirements (response time, uptime, user capacity) were drafted. 
+
+* *Planned outcomes:* requirements set with SHALL statements and acceptance criteria; traceability matrix (Need → Requirement → Test); nonfunctional thresholds made testable.
 
 Software architecture::
 The team shall select and justify an architecture addressing security, privacy, modifiability, and campus-scale usage; architectural views and decision records will be maintained.
-*Need satisfied:* stakeholders must receive a reliable, maintainable basis for transparent, safe exchanges.  
-*Current situation:* direction is leaning toward Supabase for authentication (Google sign-in compatibility) with a full custom backend; no UPRM hosting/privacy constraints identified; ADRs and C4 views are not yet written.  
-*Contributions to date:* search and map integration approaches were evaluated and geolocation/privacy considerations documented; authentication backends (Firebase vs. Supabase) and session-management implications were analyzed; page-level layouts were produced to inform view composition and navigation flows.  
-*Planned outcomes:* C4 views (context/container), Architectural Decision Records (auth, data, map/search), quality-attribute scenarios, and targeted risk spikes where uncertainty is high.
+
+* *Need satisfied:* stakeholders must receive a reliable, maintainable basis for transparent, safe exchanges.  
+* *Current situation:* direction is leaning toward Supabase for authentication (Google sign-in compatibility) with a full custom backend; no UPRM hosting/privacy constraints identified; ADRs and C4 views are not yet written.  
+* *Contributions to date:* search and map integration approaches were evaluated and geolocation/privacy considerations documented; authentication backends (Firebase vs. Supabase) and session-management implications were analyzed; page-level layouts were produced to inform view composition and navigation flows.  
+* *Planned outcomes:* C4 views (context/container), Architectural Decision Records (auth, data, map/search), quality-attribute scenarios, and targeted risk spikes where uncertainty is high.
 
 Component design::
 The team shall define modules, interfaces, and data contracts to preserve testability and changeability (catalog/search, profiles/auth, exchange/offer, reporting/moderation, “items circulated” metrics).
-*Need satisfied:* maintainable, verifiable components are required to deliver transparency (clear item/condition data) and accessibility (predictable flows).  
-*Current situation:* boundaries and interfaces are only partially documented.  
-*Contributions to date:* the user/auth schema (roles, profile fields, donation/sell history) was initiated and APIs for login/registration/logout were defined; search behavior and map-related data interactions were documented; wireframes and page designs (Homepage, About, Clothes Listing, Individual Item, Favorites, Checkout, Log In/Sign Up, Profile) clarify interface responsibilities and data needs.  
-*Planned outcomes:* module responsibilities, interface specs (inputs/outputs/preconditions/postconditions), initial schemas with migration notes, and example queries.
+* *Need satisfied:* maintainable, verifiable components are required to deliver transparency (clear item/condition data) and accessibility (predictable flows).  
+* *Current situation:* boundaries and interfaces are only partially documented.  
+* *Contributions to date:* the user/auth schema (roles, profile fields, donation/sell history) was initiated and APIs for login/registration/logout were defined; search behavior and map-related data interactions were documented; wireframes and page designs (Homepage, About, Clothes Listing, Individual Item, Favorites, Checkout, Log In/Sign Up, Profile) clarify interface responsibilities and data needs.  
+* *Planned outcomes:* module responsibilities, interface specs (inputs/outputs/preconditions/postconditions), initial schemas with migration notes, and example queries.
 
 Implementation planning::
 The team will establish a delivery roadmap, Definition of Done, contribution standards, and a branching/CI strategy suitable for a student-run service.
-*Need satisfied:* predictable, reviewable progress must be ensured to realize stakeholder value without regressions.  
-*Current situation:* a branch is created per team with controlled pull requests and merges to main when working; no CI pipeline is in place; review checklist/PR template usage is minimal.  
-*Contributions to date:* the AsciiDoc documentation structure and conventions were established; documentation issues with acceptance criteria were created; a step-by-step Node.js/npm installation and verification guide was produced to bootstrap the development environment.  
-*Planned outcomes:* roadmap with dates/owners, Definition of Done, CONTRIBUTING guidelines, PR template, and CI workflow for lint/tests on pull requests.
+* *Need satisfied:* predictable, reviewable progress must be ensured to realize stakeholder value without regressions.  
+* *Current situation:* a branch is created per team with controlled pull requests and merges to main when working; no CI pipeline is in place; review checklist/PR template usage is minimal.  
+* *Contributions to date:* the AsciiDoc documentation structure and conventions were established; documentation issues with acceptance criteria were created; a step-by-step Node.js/npm installation and verification guide was produced to bootstrap the development environment.  
+* *Planned outcomes:* roadmap with dates/owners, Definition of Done, CONTRIBUTING guidelines, PR template, and CI workflow for lint/tests on pull requests.
 
 Testing and validation::
 The team shall produce a test plan spanning unit, integration, end-to-end, and usability/acceptance with students and families; trust/safety validations shall be included (e.g., prohibited items policy, condition/fit etiquette).
-*Need satisfied:* stakeholders must have confidence that behavior and quality attributes match the prescription.  
-*Current situation:* no automated tests exist and the test plan is not started; usability/acceptance testing is deferred to later milestones; recruitment will be informal (“ask around UPRM”); top priority requirements for acceptance scenarios are not selected yet.  
-*Contributions to date:* machine requirements were expressed in measurable terms (e.g., support ~100 simultaneous users) to anchor performance testing; trust-building practices (verification methods, condition labels) were documented to translate into validation checks.  
-*Planned outcomes:* test plan, seeded test suites, acceptance scenarios (Given–When–Then) mapped to requirements, trust/safety validations, and a defect taxonomy with triage protocol.
+* *Need satisfied:* stakeholders must have confidence that behavior and quality attributes match the prescription.  
+* *Current situation:* no automated tests exist and the test plan is not started; usability/acceptance testing is deferred to later milestones; recruitment will be informal (“ask around UPRM”); top priority requirements for acceptance scenarios are not selected yet.  
+* *Contributions to date:* machine requirements were expressed in measurable terms (e.g., support ~100 simultaneous users) to anchor performance testing; trust-building practices (verification methods, condition labels) were documented to translate into validation checks.  
+* *Planned outcomes:* test plan, seeded test suites, acceptance scenarios (Given–When–Then) mapped to requirements, trust/safety validations, and a defect taxonomy with triage protocol.
 
 Deployment considerations::
 The team will define dev/staging environments, configuration, seed/reset data, rollback procedures, and a minimal operations runbook for a student-operated service.
-*Need satisfied:* availability and safe adoption are necessary for accessibility and affordability benefits to materialize.  
-*Current situation:* no documented path to deploy, recover, or roll back; backend selection work is informing environment and secrets management but is not yet consolidated in docs.  
-*Contributions to date:* Docker usage was explored to standardize developer environments and setup was documented; backend evaluations (Supabase/Firebase) inform environment and secret management decisions.  
-*Planned outcomes:* environment definitions, secrets/config guidance, release/rollback steps, seed scripts, and a basic ops runbook.
+* *Need satisfied:* availability and safe adoption are necessary for accessibility and affordability benefits to materialize.  
+* *Current situation:* no documented path to deploy, recover, or roll back; backend selection work is informing environment and secrets management but is not yet consolidated in docs.  
+* *Contributions to date:* Docker usage was explored to standardize developer environments and setup was documented; backend evaluations (Supabase/Firebase) inform environment and secret management decisions.  
+* *Planned outcomes:* environment definitions, secrets/config guidance, release/rollback steps, seed scripts, and a basic ops runbook.
 
 Stakeholder liaison and feedback (cross-cutting)::
 The team shall schedule and document periodic touchpoints with students and families in Mayagüez to validate assumptions early (quotes/anecdotes shall be recorded in §2.1.1).
-*Need satisfied:* continuous alignment is required to keep requirements correct and trust high.  
-*Current situation:* no formal liaison cadence is defined; external interviews are not planned at this time; consent/ethics approach is undefined.  
-*Planned outcomes:* contact cadence, feedback and decision logs, and lightweight consent notes for any future interactions.
+* *Need satisfied:* continuous alignment is required to keep requirements correct and trust high.  
+* *Current situation:* no formal liaison cadence is defined; external interviews are not planned at this time; consent/ethics approach is undefined.  
+* *Planned outcomes:* contact cadence, feedback and decision logs, and lightweight consent notes for any future interactions.
 
 Documentation & governance (cross-cutting)::
 The team shall maintain versioned documentation, change control, risk tracking, and metrics to ensure durable traceability across activities.
-*Need satisfied:* traceability is required to justify decisions and onboard contributors without rework.  
-*Current situation:* a docs index/navigation page is considered established (initial draft); changelog and risk register are not started; project metrics beyond “items circulated” are not yet defined.  
-*Contributions to date:* the docs/ layout and AsciiDoc style were standardized and most documentation issues were created; branding (logo, color palette, typography) was established to keep artifacts consistent and legible.  
-*Planned outcomes:* docs index and navigation (maintained), changelog, risk register (e.g., technology choice risk, schedule slip, data/privacy misconfiguration), and basic metrics (e.g., items circulated as a primary signal).
+* *Need satisfied:* traceability is required to justify decisions and onboard contributors without rework.  
+* *Current situation:* a docs index/navigation page is considered established (initial draft); changelog and risk register are not started; project metrics beyond “items circulated” are not yet defined.  
+* *Contributions to date:* the docs/ layout and AsciiDoc style were standardized and most documentation issues were created; branding (logo, color palette, typography) was established to keep artifacts consistent and legible.  
+* *Planned outcomes:* docs index and navigation (maintained), changelog, risk register (e.g., technology choice risk, schedule slip, data/privacy misconfiguration), and basic metrics (e.g., items circulated as a primary signal).
