@@ -2,72 +2,24 @@
 :location: Mayagüez, Puerto Rico (UPRM touchpoint)
 :period: 2025
 
-This section explains how several of the terms defined in *2.1.2 – Terminology* were derived
-through the analysis of the material captured in *2.1.1 – Domain Rough Sketch*.
-Its purpose is to make explicit the reasoning that transformed informal notes, phrases, and anecdotes
-into the concepts that organise our description of the hand-me-down clothing domain.
-It does not repeat the glossary presented in 2.1.2; instead, it narrates the steps that led from raw wording to stable vocabulary.
+This section explains how several of the terms defined in *2.1.2 – Terminology* were derived through the analysis of the material captured in *2.1.1 – Domain Rough Sketch*. Its purpose is to make explicit the reasoning that transformed informal notes, phrases, and anecdotes into the concepts that organise our description of the hand-me-down clothing domain. It does not repeat the glossary presented in 2.1.2; instead, it narrates the steps that led from raw wording to stable vocabulary.
 
-The rough sketch included an observation that students commonly *“look up an item, contact the seller, agree on price, size, and place, then pick up the item.”*
-This line was analysed as evidence of a recurring, recognisable structure in how people organise exchanges.
-Rather than a random set of moves, it revealed a social routine for transferring garments:
-identify an article, reach out to whoever offers it, negotiate its value, fit, and logistics,
-and complete the hand-off face-to-face.
-From this analysis emerged the term *Exchange Flow*, which designates the sequence of actions
-that gives shape to informal clothing transactions in the Mayagüez/UPRM setting.
+The rough sketch included an observation that students commonly *“look up an item, contact the seller, agree on price, size, and place, then pick up the item.”* This line was analysed as evidence of a recurring, recognisable structure in how people organise exchanges. Rather than a random set of moves, it revealed a social routine for transferring garments: identify an article, reach out to whoever offers it, negotiate its value, fit, and logistics, and complete the hand-off face-to-face. From this analysis emerged the term *Exchange Flow*, which designates the sequence of actions that gives shape to informal clothing transactions in the Mayagüez/UPRM setting.
 
-Several fragments in the sketch referred to sellers showing *a photograph of the size tag and full images of the garment, including any flaws*.
-These snippets suggested an implicit rule: before an exchange, the giver is expected to disclose enough detail
-to reassure the taker about size, hygiene, and hidden damage.
-By organising these remarks, we formulated the term *Condition Disclosure Norm*,
-a name for the informal convention that garments be represented honestly, with visual evidence, before a meeting occurs.
-This term encapsulates how participants try to manage uncertainty and build trust.
+Several fragments in the sketch referred to sellers showing *a photograph of the size tag and full images of the garment, including any flaws*. These snippets suggested an implicit rule: before an exchange, the giver is expected to disclose enough detail to reassure the taker about size, hygiene, and hidden damage. By organising these remarks, we formulated the term *Condition Disclosure Norm*, a name for the informal convention that garments be represented honestly, with visual evidence, before a meeting occurs. This term encapsulates how participants try to manage uncertainty and build trust.
 
-Price information appeared in multiple places.
-Notes such as *“symbolic prices between eight and fifteen dollars are common reference points”* hinted at an unwritten valuation practice.
-The figures were neither arbitrary nor fixed by any authority;
-they functioned as a social guideline for what counts as reasonable in low-cost exchanges among students.
-Processing this evidence produced *Student Resale Price Band*,
-a phrase describing the monetary interval that frames negotiations and distinguishes a resale from a donation or a commercial sale.
+Price information appeared in multiple places. Notes such as *“symbolic prices between eight and fifteen dollars are common reference points”* hinted at an unwritten valuation practice.The figures were neither arbitrary nor fixed by any authority; they functioned as a social guideline for what counts as reasonable in low-cost exchanges among students. Processing this evidence produced *Student Resale Price Band*, a phrase describing the monetary interval that frames negotiations and distinguishes a resale from a donation or a commercial sale.
 
-Other material dealt with what happens when garments do not re-enter circulation.
-Mentions of *discarded clothes left in open areas or delivered directly to landfill, with only rare opportunities for recycling*
-highlighted a backdrop of disposal routes.
-These lines were interpreted as documenting the “exit channels” of clothing once it ceases to be worn.
-We named this phenomenon *Textile Waste Stream*,
-referring to the set of pathways — municipal collection, careless dumping, or limited recycling — through which clothing leaves everyday use.
-This term anchors the environmental dimension of the domain.
+Other material dealt with what happens when garments do not re-enter circulation. Mentions of *discarded clothes left in open areas or delivered directly to landfill, with only rare opportunities for recycling* highlighted a backdrop of disposal routes. These lines were interpreted as documenting the “exit channels” of clothing once it ceases to be worn. We named this phenomenon *Textile Waste Stream*, referring to the set of pathways — municipal collection, careless dumping, or limited recycling — through which clothing leaves everyday use. This term anchors the environmental dimension of the domain.
 
-A different cluster of notes described *bags of outgrown clothing kept at home while owners decided whether to donate or sell them*.
-Here the sketch captured a liminal state: garments were no longer needed, yet had not been re-assigned.
-Analysing this condition produced *Dormant Stock*,
-a concept for clothing retained in domestic spaces after its initial life, awaiting a new role or final disposal.
+A different cluster of notes described *bags of outgrown clothing kept at home while owners decided whether to donate or sell them*. Here the sketch captured a liminal state: garments were no longer needed, yet had not been re-assigned. Analysing this condition produced *Dormant Stock*, a concept for clothing retained in domestic spaces after its initial life, awaiting a new role or final disposal.
 
-The sketch also documented preferred locations for handing over items:
-students mentioned *campus benches, apartment lobbies, and other familiar public corners*.
-Rather than isolated remarks, these examples pointed to a shared concern for safety and practicality.
-We consolidated them under the term *Meetup Spot*,
-which denotes semi-public environments chosen because they balance accessibility, visibility, and comfort during an exchange.
+The sketch also documented preferred locations for handing over items: students mentioned *campus benches, apartment lobbies, and other familiar public corners*. Rather than isolated remarks, these examples pointed to a shared concern for safety and practicality. We consolidated them under the term *Meetup Spot*, which denotes semi-public environments chosen because they balance accessibility, visibility, and comfort during an exchange.
 
-Another strand involved the digital places where clothing is discovered.
-Notes cited *Facebook Marketplace, WhatsApp groups, and Instagram stories* as typical sources.
-Instead of treating each separately, we recognised a broader category — lightly moderated online venues
-where offers, requests, and quick negotiations happen.
-From this reasoning came the expression *Ad-hoc Channel*,
-describing the informal communication spaces that enable the visibility of available garments.
+Another strand involved the digital places where clothing is discovered. Notes cited *Facebook Marketplace, WhatsApp groups, and Instagram stories* as typical sources. Instead of treating each separately, we recognised a broader category — lightly moderated online venues where offers, requests, and quick negotiations happen. From this reasoning came the expression *Ad-hoc Channel*, describing the informal communication spaces that enable the visibility of available garments.
 
-Scattered remarks highlighted how participants assess reliability.
-Seeing clear pictures, recognising a name, or receiving bilingual messages
-were all said to make people more comfortable proceeding with an exchange.
-Bringing these hints together led to the concept *Trust Cue*,
-a label for the small but influential signals that reduce perceived risk in peer-to-peer clothing transfers.
+Scattered remarks highlighted how participants assess reliability. Seeing clear pictures, recognising a name, or receiving bilingual messages were all said to make people more comfortable proceeding with an exchange. Bringing these hints together led to the concept *Trust Cue*, a label for the small but influential signals that reduce perceived risk in peer-to-peer clothing transfers.
 
-Finally, the rough sketch posed questions about changes in activity during *back-to-school periods, semester starts, or seasonal weather*.
-Even without full data, the presence of these queries suggested that demand for particular items is not constant.
-To represent this dynamic aspect we coined *Seasonal Demand Pulse*,
-a term for the predictable fluctuations in which garments are offered or sought as academic and climatic cycles progress.
+Finally, the rough sketch posed questions about changes in activity during *back-to-school periods, semester starts, or seasonal weather*. Even without full data, the presence of these queries suggested that demand for particular items is not constant. To represent this dynamic aspect we coined *Seasonal Demand Pulse*, a term for the predictable fluctuations in which garments are offered or sought as academic and climatic cycles progress.
 
-By articulating these derivations, this section clarifies the analytical bridge between the exploratory material of the rough sketch
-and the structured vocabulary presented in the Terminology section.
-Understanding this path is essential for tracing how domain knowledge was built
-and for ensuring that later requirements remain anchored in the observed environment.
+By articulating these derivations, this section clarifies the analytical bridge between the exploratory material of the rough sketch and the structured vocabulary presented in the Terminology section. Understanding this path is essential for tracing how domain knowledge was built and for ensuring that later requirements remain anchored in the observed environment.

@@ -2,9 +2,7 @@
 :location: Mayagüez, Puerto Rico (UPRM touchpoint)
 :period: 2025
 
-This section presents the main events, actions, and behaviors observed in the environment of informal hand-me-down exchanges
-around the University of Puerto Rico at Mayagüez.
-They were derived from the material collected in *2.1.1 – Domain Rough Sketch* and organised to separate:
+This section presents the main events, actions, and behaviors observed in the environment of informal hand-me-down exchanges around the University of Puerto Rico at Mayagüez. They were derived from the material collected in *2.1.1 – Domain Rough Sketch* and organised to separate:
 
 * **Events** – instantaneous occurrences (“has just …”),  
 * **Actions** – individual, intentional steps, and  
@@ -14,122 +12,90 @@ All descriptions are domain-oriented and independent of any future system.
 
 ===== Exchange of Clothing
 *Event*::  
-The instant a garment has just changed possession — for example, a student hands a jacket to another at a campus bench.
-This marks the conclusion of an informal transaction and the start of a new phase in the garment’s life.
+The instant a garment has just changed possession — for example, a student hands a jacket to another at a campus bench. This marks the conclusion of an informal transaction and the start of a new phase in the garment’s life.
 
 *Action*::  
-Steps such as replying to an inquiry, confirming size or colour, agreeing on a price,
-and finally giving or receiving the garment. Each is purposeful and can succeed or fail (e.g., a missed appointment).
+Steps such as replying to an inquiry, confirming size or colour, agreeing on a price, and finally giving or receiving the garment. Each is purposeful and can succeed or fail (e.g., a missed appointment).
 
 *Behavior*::  
-The broader social practice of recirculating clothing among students, families, and neighbours.
-It involves searching for items, advertising availability, negotiating conditions, arranging logistics,
-and physically meeting to complete the hand-off. This behaviour sustains a micro-economy of reuse
-and helps reduce the volume of textiles heading to landfill.
+The broader social practice of recirculating clothing among students, families, and neighbours. It involves searching for items, advertising availability, negotiating conditions, arranging logistics, and physically meeting to complete the hand-off. This behaviour sustains a micro-economy of reuse and helps reduce the volume of textiles heading to landfill.
 
 ===== Disclosure of Item Condition
 *Event*::  
-A seller has just provided evidence about a garment’s state — e.g., sending a tag photo or mentioning a stain.
-The recipient gains new knowledge that may influence their decision.
+A seller has just provided evidence about a garment’s state — e.g., sending a tag photo or mentioning a stain. The recipient gains new knowledge that may influence their decision.
 
 *Action*::  
-Taking photographs of the size tag or fabric, writing short notes about wear or washing,
-mentioning that an article is “lightly used” or “like new,” or warning of a missing button.
+Taking photographs of the size tag or fabric, writing short notes about wear or washing, mentioning that an article is “lightly used” or “like new,” or warning of a missing button.
 
 *Behavior*::  
-An established norm of transparency in which participants consistently present information about cleanliness, durability, or flaws.
-By embedding honesty into exchanges, this behaviour fosters trust and helps avoid disputes over quality.
+An established norm of transparency in which participants consistently present information about cleanliness, durability, or flaws. By embedding honesty into exchanges, this behaviour fosters trust and helps avoid disputes over quality.
 
 ===== Pricing and Valuation
 *Event*::  
 A price has just been named, accepted, or renegotiated for a garment.
 
 *Action*::  
-Comparing a proposed amount with informal references, adjusting for size or condition,
-or confirming that an item will be free rather than sold.
+Comparing a proposed amount with informal references, adjusting for size or condition, or confirming that an item will be free rather than sold.
 
 *Behavior*::  
-A continuing process of social valuation.
-Participants rely on a tacit “student resale price band” — often eight to fifteen dollars —
-to anchor expectations while allowing room for negotiation or bundles.
+A continuing process of social valuation. Participants rely on a tacit “student resale price band” — often eight to fifteen dollars — to anchor expectations while allowing room for negotiation or bundles.
 
 ===== Management of Dormant Stock
 *Event*::  
 A household member has just set aside garments that no longer fit or are not in active use.
 
 *Action*::  
-Reviewing wardrobes, classifying items as “keep,” “give away,” or “maybe later,”
-placing them in bags or boxes, and storing them out of daily reach.
+Reviewing wardrobes, classifying items as “keep,” “give away,” or “maybe later,” placing them in bags or boxes, and storing them out of daily reach.
 
 *Behavior*::  
-The tendency for unused clothing to accumulate in homes.
-Owners postpone decisions about destination, creating an intermediate state between active use and disposal.
-This behaviour feeds both donation opportunities and, if left too long, textile waste.
+The tendency for unused clothing to accumulate in homes. Owners postpone decisions about destination, creating an intermediate state between active use and disposal. This behaviour feeds both donation opportunities and, if left too long, textile waste.
 
 ===== Disposal and Environmental Impact
 *Event*::  
 An item has just been thrown into a rubbish container, left on a curb, or deposited in a landfill skip.
 
 *Action*::  
-Carrying worn garments to bins, abandoning them in vacant lots,
-or delivering unusable pieces to a charity or municipal collection point.
+Carrying worn garments to bins, abandoning them in vacant lots, or delivering unusable pieces to a charity or municipal collection point.
 
 *Behavior*::  
-All practices by which textiles exit the local circulation of reuse.
-Some are responsible — donation of damaged goods for recycling —
-while others are harmful, such as illegal dumping.
-Together they define the “textile waste stream” that runs parallel to reuse networks.
+All practices by which textiles exit the local circulation of reuse. Some are responsible — donation of damaged goods for recycling — while others are harmful, such as illegal dumping. Together they define the “textile waste stream” that runs parallel to reuse networks.
 
 ===== Arranging and Conducting Meetups
 *Event*::  
 Two participants have just arrived at a chosen place to finalise an exchange.
 
 *Action*::  
-Selecting a bench, lobby, or café corner as the site;
-confirming time via message; travelling to the location; greeting and checking the garment.
+Selecting a bench, lobby, or café corner as the site; confirming time via message; travelling to the location; greeting and checking the garment.
 
 *Behavior*::  
-A familiar choreography in which actors choose semi-public, convenient spots
-that reduce risks of theft or fraud while making hand-offs efficient.
-This behaviour reflects unwritten safety norms within the community.
+A familiar choreography in which actors choose semi-public, convenient spots that reduce risks of theft or fraud while making hand-offs efficient. This behaviour reflects unwritten safety norms within the community.
 
 ===== Use of Ad-hoc Channels
 *Event*::  
 A new offer or request for clothing has just been posted or noticed in an online group.
 
 *Action*::  
-Opening a marketplace app, composing a caption, adding photos, scrolling through listings,
-or sending a direct message to express interest.
+Opening a marketplace app, composing a caption, adding photos, scrolling through listings, or sending a direct message to express interest.
 
 *Behavior*::  
-The regular reliance on lightly moderated platforms — Facebook Marketplace, WhatsApp groups, Instagram stories —
-to discover, promote, and coordinate exchanges.
-This behaviour keeps circulation active and widens the reach beyond immediate acquaintances.
+The regular reliance on lightly moderated platforms — Facebook Marketplace, WhatsApp groups, Instagram stories — to discover, promote, and coordinate exchanges. This behaviour keeps circulation active and widens the reach beyond immediate acquaintances.
 
 ===== Building Trust
 *Event*::  
-A participant has just received a reassuring sign, such as recognising a familiar name,
-seeing unedited pictures, or receiving a message in their preferred language.
+A participant has just received a reassuring sign, such as recognising a familiar name, seeing unedited pictures, or receiving a message in their preferred language.
 
 *Action*::  
-Choosing clear, well-lit photos; greeting bilingually (Spanish/English);
-mentioning mutual contacts or personal references to confirm credibility.
+Choosing clear, well-lit photos; greeting bilingually (Spanish/English); mentioning mutual contacts or personal references to confirm credibility.
 
 *Behavior*::  
-The underlying social effort to manage uncertainty in face-to-face swaps.
-By scanning cues of reliability, people decide whether to meet and complete a transaction.
-Trust-building behaviours make the informal market viable despite the lack of formal guarantees.
+The underlying social effort to manage uncertainty in face-to-face swaps. By scanning cues of reliability, people decide whether to meet and complete a transaction. Trust-building behaviours make the informal market viable despite the lack of formal guarantees.
 
 ===== Responding to Seasonal Demand
 *Event*::  
 Interest in a category of garment (e.g., uniforms, sweaters, raincoats) has just increased due to academic or weather cycles.
 
 *Action*::  
-Sorting and preparing clothes needed for the coming semester, advertising jackets before the rainy season,
-or searching for graduation attire.
+Sorting and preparing clothes needed for the coming semester, advertising jackets before the rainy season, or searching for graduation attire.
 
 *Behavior*::  
-A cyclical pattern in which attention to certain garments rises and falls.
-Back-to-school weeks, semester openings, and cooler months create pulses of activity,
-stimulating donations, sales, and borrowing at predictable times.
-
+A cyclical pattern in which attention to certain garments rises and falls. Back-to-school weeks, semester openings, and cooler months create pulses of activity, stimulating donations, sales, and borrowing at predictable times.
