@@ -1,0 +1,89 @@
+=== *2.2.1 Epics, Features, and User Stories*
+
+=== *Epics*
+
+Epics are a higher level overview of goals that are large enough in scope that they can be broken down into multiple sprints. They provide direction and group related work together.
+
+*Buyer Epics*
+
+. Product Search
+.. As a buyer, I want to search for items by category, filters, and keywords, so that I can quickly find products that meet my needs.
+
+. Purchase Management
+.. As a buyer, I want to manage potential purchases by saving items in my cart, so that I can review and buy them later.
+
+. Trust and Transparency
+.. As a buyer, I want to access detailed seller information and provide feedback through reviews, so that I can make informed and confident purchasing decisions.
+
+*Seller Epics*
+
+. Listing Management
+.. As a seller, I want to create, edit, and delete listings with many details, so that I can effectively manage my items for sale.
+
+. Sales Notifications
+.. As a seller, I want to receive notifications when my items are sold, so that I can promptly respond and complete the transaction.
+
+. Seller Profile and Trust
+.. As a seller, I want to build a profile with personal and location details, so that I can establish trust with buyers and encourage sales.
+
+// =================================================================
+
+=== *Features*
+
+Features specify the functionality required to deliver the goals described in the epics to the user. They serve to provide more concrete goals related to development.
+
+*Buyer Features*
+
+. Product Search
+.. Filtering (clothing type, size, color, price, condition, brand, etc.).
+.. Keyword search.
+.. Sorting options (price low to high, new to old, etc.).
+
+. Purchase Management
+.. Shopping cart functionality (add and remove items).
+.. Cart persistence across sessions (items remain after logging out).
+
+. Trust and Transparency
+.. Seller profile page (location, account age, bio).
+.. Seller ratings & reviews system.
+.. Buyer-to-seller review submission flow.
+.. Reporting mechanism for problematic sellers.
+
+*Seller Features*
+
+. Listing Management
+.. Create listing form (title, description, tags, price, category).
+.. Image upload with multiple pictures per item.
+.. Edit listing functionality (update price, description, images).
+.. Delete or deactivate listing.
+
+. Sales Notifications
+.. Push/email/in-app notifications for new orders.
+.. Notification history center (list of past alerts).
+
+. Seller Profile and Trust
+.. Editable seller profile page (profile picture, name, location, bio).
+.. Seller dashboard with active listings and ratings overview.
+
+// =================================================================
+
+=== *User Stories*
+
+User stories are derived from Features, breaking them down into smaller, individual tasks to be added to the backlog. These stories focus on user needs and help make development more user-focused.
+
+*Buyer User Stories*
+
+. As a buyer, I want to browse items by category to find a specific type of item I want.
+. As a buyer, I want to filter my search by things like size and price to tailor my search to my needs.
+. As a buyer, I want to search for items using keywords to find specific items that can't be narrowed down by category or filters alone.
+. As a buyer, I want to add items to my cart to buy later.
+. As a buyer, I want to see a seller's information such as location, ratings, and account age to feel sure that my purchase will be successful.
+. As a buyer, I want to leave reviews for sellers so other buyers know what to expect.
+
+*Seller User Stories*
+
+. As a seller, I want to create listings for my items with options such as adding multiple pictures, a description and tags so interested buyers can find me.
+. As a seller, I want to edit listings so I can update details whenever necessary.
+. As a seller, I want to delete listings so I can stop selling an item.
+. As a seller, I want to receive notifications when one of my listings is sold so I can take action as fast as possible.
+. As a seller, I want to provide information on my profile such as my name and location to increase trust with buyers.
