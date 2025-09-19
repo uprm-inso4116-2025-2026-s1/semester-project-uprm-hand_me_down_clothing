@@ -3,20 +3,20 @@ This section provides selected fragments of the implementation that complement t
 
 === Home Page
 
-image::../../../../images/HomePage.png[Home Page, align=center, width=80%]
+image::../../../../images/HomePage.png[Home Page, align=center, pdfwidth=80%]
 
 
 The entry point of the application. Displays recent clothing items and quick navigation options for uploading, browsing items, liked clothing items, the user’s cart, and the map page for local centers.
 
 === Clothing Listing Page
 
-image::../../../../images/ListingsPage.png[Listings Page, align=center, width=80%]
+image::../../../../images/ListingsPage.png[Listings Page, align=center, pdfwidth=80%]
 
 Shows a landscape UI filled with different clothing items with their respective photo, price, size, condition, and category available for purchase. Each item links to a detail page. The page also includes search and filtering options by category, size, condition, and location. Users can also add items to a "liked list" to save for later viewing.
 
 === Item Detail Page
 
-image::../../../../images/IndividualListing.png[Individual Listing, align=center, width=80%]
+image::../../../../images/IndividualListing.png[Individual Listing, align=center, pdfwidth=80%]
 
 
 Provides detailed information about a specific clothing item selected from the listings page. Includes images, description, size, condition, and location. Users can like, share, or contact the seller. Related items are displayed at the bottom.
