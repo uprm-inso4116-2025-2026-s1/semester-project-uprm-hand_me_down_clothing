@@ -2,7 +2,7 @@
 
 include::subsections/1.1.adoc[]
 
-include::subsections/1.2.1.adoc[]
+include::subsections/1.2.1.adoc[leveloffset=+1]
 
 include::subsections/1.2.2.adoc[]
 
