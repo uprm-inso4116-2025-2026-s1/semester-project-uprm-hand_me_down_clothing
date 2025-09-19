@@ -1,0 +1,126 @@
+// --
+// Author: Karina López Rodríguez
+// User: @Kaariinaa08
+// Project: Hand-me-down Clothing
+// GitHub Issue: #69
+// --
+
+= Research Payment Integration Options for Selling Workflow
+
+== Objective:
+Identify and evaluate suitable payment integration solutions for the selling workflow to ensure secure, scalable, and user-friendly transactions.
+
+== Description:
+- This research evaluates popular payment providers (Stripe, PayPal, and ATH Móvil) across several dimensions:
+* Fees and transaction costs
+* Ease of integration and developer experience
+* Global availability and local coverage
+* Security measures
+* Documentation quality and SDK/API support
+* Potential constraints and risks
+- The outcome includes a comparison table, recommendations, setup steps, and limitations.
+
+== Comparison Matrix:
+[cols="2,2,2,2", options="header"]
+|===
+| Provider | Pros | Cons | Fees / Notes
+
+| Stripe
+| - Excellent developer tools, SDKs, and APIs
+  
+  - Wide global coverage
+  
+  - Supports subscriptions and advanced workflows
+  
+  - Strong fraud detection
+| - Slightly higher fees in some regions
+  
+  - Requires PCI compliance understanding
+| ~2.9% + $0.30 per transaction
+
+| PayPal
+| - Global recognition and trust
+  
+  - Easy setup and fast integration
+  
+  - Buyer protection features
+| - Higher dispute/chargeback rates
+  
+  - Integration less customizable
+| ~3.49% + fixed fee
+
+| ATH Móvil
+| - High adoption locally, familiar to users
+  
+  - Tailored for Puerto Rico banking system
+  
+  - Strong option for mobile/QR transactions
+  
+  - Lower fees for local transactions
+| - Limited to Puerto Rico market
+  
+  - API/SDK documentation less mature
+  
+  - Not suitable for international sales
+| Fees vary; typically competitive for local transactions
+|===
+
+== Visual Comparison Chart:
+[cols="1,1,1,1,1,1", options="header"]
+|===
+| Provider | Fees | Integration Ease | Global Reach | Security | Developer Tools
+
+| Stripe
+| ★★★☆ (2.9% + fee)
+| ★★★★
+| ★★★★
+| ★★★★
+| ★★★★
+
+| PayPal
+| ★★★ (3.49% + fee)
+| ★★★☆
+| ★★★★
+| ★★★☆
+| ★★★
+
+| ATH Móvil
+| ★★★★ (competitive locally)
+| ★★★
+| ★
+| ★★★
+| ★★☆
+|===
+
+_**Legend:**_ ★★★★ = Excellent, ★★★ = Good, ★★ = Fair, ★ = Poor
+
+== Security Evaluation:
+* **Stripe:** PCI DSS compliant, encryption at rest/in transit, Radar for fraud detection.
+* **PayPal:** PCI DSS compliant, dispute resolution and seller/buyer protections.
+* **ATH Móvil:** Secure and regulated locally, supports encrypted transactions; API-level fraud prevention tools less documented.  
+
+== Developer Experience:
+* **Stripe:** Comprehensive docs, test modes, excellent SDKs for multiple languages.
+* **PayPal:** Solid docs but APIs feel older; integration can be less flexible.
+* **ATH Móvil:** Business app provides dashboards; API/SDK support less mature and may require direct contact with Evertec for integration.
+
+== Constraints & Risks:
+* **Stripe/PayPal:** Higher fees but strong global coverage.
+* **ATH Móvil:** Market-limited, documentation gaps, potential reliance on QR/app workflows.
+
+== Recommendations:
+* **Primary Provider:** Stripe is the best global reach, features, and developer experience.
+* **Backup Provider:** PayPal is a widely trusted fallback option.
+* **Supplementary Local Provider:** ATH Móvil is strongly recommended for Puerto Rico-based customers to maximize adoption and reduce costs locally.
+
+== High-Level Setup Steps:
+. Create merchant accounts.
+. Enable sandbox/test environments.
+. Generate API keys and configure webhook endpoints.
+. Coordinate with Evertec for ATH Móvil integration details.
+. Implement transaction workflows: checkout, refunds, cancellations.
+. Test across currencies and payment methods.
+
+== Potential Risks & Limitations:
+* **Stripe/PayPal:** Higher costs, occasional regional restrictions.
+* **ATH Móvil:** Limited scope, unclear long-term API/SDK support, requires customer adoption of the ATH Móvil app.

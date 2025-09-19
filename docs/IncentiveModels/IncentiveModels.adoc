@@ -1,0 +1,101 @@
+// --
+// Author: Karina López Rodríguez
+// User: @Kaariinaa08
+// Project: Hand-me-down Clothing
+// GitHub Issue: #70
+// --
+
+= Explore Incentive Models for Donations
+
+== Objective:
+Identify strategies to encourage users to donate items by researching incentive models such as gamification, social recognition, and potential tax benefits. Produce recommendations and feasibility notes to help the team choose and implement one or more models.
+
+== Executive summary:
+This report evaluates five viable incentive models for encouraging donations: gamification, social recognition, tax-deduction receipts, impact metrics, and recurring / loyalty programs. Each model includes examples from existing platforms, pros/cons, and feasibility notes. The recommendation is to adopt a combined approach: prioritize automated tax receipts + social recognition + lightweight gamification, and add impact metrics as data and integration maturity allow.
+
+== A. Viable Donation Incentive Models:
+
+=== 1. Gamification:
+* *What it is:* Apply game design elements to make donating more engaging.  
+* *Examples:* Progress bars, streak badges, donor challenges.  
+* *Pros:* Boosts engagement, easy to test.  
+* *Cons:* May feel gimmicky, requires UX care.  
+* *Feasibility:* Low–medium engineering effort; achievement schema + counters.
+
+=== 2. Social Recognition & Community Features:
+* *What it is:* Public acknowledgement of donors.  
+* *Examples:* Donor spotlights, newsletters, thank-you messages.  
+* *Pros:* Strong emotional pull, low technical cost.  
+* *Cons:* Requires privacy controls and ongoing content.  
+* *Feasibility:* Simple donor opt-in + CMS integration.
+
+=== 3. Tax-Deduction Receipts:
+* *What it is:* Branded, compliant receipts for donors.  
+* *Examples:* Givebutter, Donorbox automated receipts.  
+* *Pros:* Builds trust, financial benefit to donors.  
+* *Cons:* Compliance/legal overhead.  
+* *Feasibility:* Templated PDF/HTML receipts; tax ID integration.
+
+=== 4. Social Impact Metrics & Dashboards:
+* *What it is:* Show donors their concrete impact (items, beneficiaries).  
+* *Examples:* Charity: water lifetime impact, GiveWell reports.  
+* *Pros:* Deepens long-term engagement.  
+* *Cons:* Requires reliable ops data.  
+* *Feasibility:* Start with coarse KPIs, expand to dashboards later.
+
+=== 5. Recurring and/or Loyalty Programs:
+* *What it is:* Rewards for recurring giving or lifetime milestones.  
+* *Examples:* Charity: water membership tiers.  
+* *Pros:* Stabilizes revenue, boosts retention.  
+* *Cons:* Must deliver meaningful perks.  
+* *Feasibility:* Recurring billing + tier tracking.
+
+== B. Comparison of Models:
+[cols="25,25,25,25",options="header"]
+|===
+| Model | Engagement Potential | Scalability & Ops | Programmatic Impact
+
+| Gamification
+| High for campaigns
+| Scales technically, some UX/content upkeep
+| Good for spikes/acquisition
+
+| Social Recognition
+| Medium–high, strong emotional pull
+| Low technical cost
+| Good for retention/community
+
+| Tax Receipts
+| Medium, more for larger donors
+| Requires compliance, scales with automation
+| Helps conversion of bigger gifts
+
+| Impact Metrics
+| High for long-term trust
+| High ops/engineering cost
+| Strong for retention and major gifts
+|===
+
+== C. Examples from Existing Platforms:
+* *Givebutter / Donorbox:* Automated, branded tax receipts.  
+* *Charity:* Lifetime impact metrics, recurring donor engagement.  
+* *GiveWell / GlobalGiving:* Public dashboards, reports.  
+* *Gamification & Recognition:* Progress bars, donor walls.
+
+== D. Recommendation:
+* *Phase 1:* Implement automated receipts + donor opt-in recognition.  
+* *Phase 2:* Add badges & progress bars, start simple impact reporting.  
+* *Phase 3:* Build full dashboards once data flows are reliable.  
+
+== E. Feasibility Notes:
+* *Automated receipts:* Transactional hooks, templated receipts, tax IDs.  
+* *Privacy:* Donor opt-in for recognition.  
+* *Gamification:* Achievement model, leaderboard caching.  
+* *Impact metrics:* Operational data pipelines.  
+* *Tax/legal:* Consult compliance for in-kind donation rules. 
+
+== F. Implementation Checklist:
+* *Backend:* Donor profile + receipts + achievements.  
+* *Frontend:* Donor opt-in UI, recognition wall, badges.  
+* *Ops:* Email templates, legal review, impact KPIs.  
+* *Analytics:* Event tracking, retention cohort analysis.
