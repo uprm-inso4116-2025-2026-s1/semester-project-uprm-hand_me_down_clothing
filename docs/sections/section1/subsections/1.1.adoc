@@ -44,4 +44,3 @@ The team is organized into key functional areas with dedicated leads overseeing 
 * Daniella Melero
 * Andrea Segarra
 * Kenneth Sepúlveda
--
