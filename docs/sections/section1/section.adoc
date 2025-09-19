@@ -1,7 +1,5 @@
 === *1 - Informative part*
 
-include::subsections/1.1.1dummy.adoc[]
-
 include::subsections/1.1.adoc[]
 
 include::subsections/1.2.1.adoc[leveloffset=+1]
