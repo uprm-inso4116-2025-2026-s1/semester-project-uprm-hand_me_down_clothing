@@ -1,1 +1,68 @@
-==== *2.1 - Domain description*
+== 2 Descriptive Part
+
+=== *2.1 Domain Description*
+
+The domain of *hand-me-down clothing exchange* in Puerto Rico is shaped by social, 
+environmental, and economic realities. It exists independently of any digital platform 
+or technical system and can be understood through the people, practices, artifacts, 
+and norms that sustain the circulation of clothing and accessories among students, 
+families, and local communities.
+
+At its core, the domain revolves around two primary actors:
+
+* *Donators*: Individuals or households who release garments they no longer need.
+* *Collectors*: Individuals who claim garments for reuse, whether through purchase or donation.
+
+The central entity in this domain is the *Piece*, any individual article of clothing or 
+accessory that circulates between actors. Each Piece carries attributes such as:
+
+* *Type*: The category of clothing.
+* *Condition Rating*: A measure of quality or usability.
+
+Pieces move between states through events:
+
+* *Donation Event*: Occurs when a Donator makes a garment available.
+* *Collection Event*: Occurs when a Collector takes possession of a garment.
+* *Discard Event*: Occurs when a Piece leaves circulation, feeding into the wider *Textile Waste Stream*.
+
+The domain is sustained by informal practices and behaviors:
+
+* *Exchange Flows*: The recurring sequence in which garments are identified, 
+  negotiated, and handed over in person.
+* *Condition Disclosure Norms*: The expectation that Donators will show tag photos, 
+  highlight defects, and represent garments honestly.
+* *Student Resale Price Bands*: Informal valuation brackets (typically USD $8–$15), 
+  distinguishing resale from donation or commercial sale.
+* *Dormant Stock*: Clothing stored in homes awaiting redistribution, donation, or disposal.
+* *Meetup Spots*: Semi-public locations (e.g., campus benches, apartment lobbies) 
+  chosen for exchanges.
+* *Ad-hoc Channels*: Informal digital venues (e.g., Facebook Marketplace, WhatsApp groups, Instagram stories).
+* *Trust Cues*: Bilingual communication, recognisable names, or clear photos that 
+  influence whether an exchange proceeds.
+* *Seasonal Demand Pulses*: Cyclical increases in demand, such as back-to-school 
+  or weather-driven surges for uniforms or outerwear.
+
+These elements form an interconnected web of events, actions, and behaviors. 
+Donators and Collectors rely on ad-hoc digital channels for discovery, agree on 
+terms through negotiation, and meet in semi-public spaces to transfer items. 
+Exchanges are underpinned by implicit rules of trust and fairness, while also 
+constrained by larger social and environmental forces such as poverty rates, 
+limited recycling infrastructure, and overflowing landfills.
+
+From a functional perspective, the domain can be represented through abstract operations:
+
+* `donate(Piece, Donator, Locale) → DonationEvent`
+* `collect(Piece, Collector) → CollectionEvent`
+* `rate(Piece, ConditionRating) → ConditionRating`
+* `review(Collection, Review) → Review`
+* `categorize(Piece, Type) → Piece`
+* `discard(Piece) → Void`
+
+Each function captures an action that transforms the state of a *Piece* within the domain, 
+producing observable changes such as entering circulation, changing ownership, or leaving circulation.
+
+In sum, the domain of secondhand clothing exchange in Puerto Rico is defined by the 
+*circulation of Pieces*, the *actors who exchange them*, the *events that mark transitions*, 
+and the *behaviors and norms* that make these exchanges trustworthy, affordable, 
+and sustainable. This description provides a foundation for later requirements 
+and design work, while remaining independent of any specific system or implementation.

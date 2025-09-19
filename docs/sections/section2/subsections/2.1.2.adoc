@@ -1,14 +1,4 @@
-// --
-// Author: Kevin Gómez
-// Institution: University of Puerto Rico at Mayagüez
-// Date Created: 2025-09-13
-// Last Updated: 2025-09-13
-// Version: 1.0
-// Project: Hand-me-down Clothing
-// GitHub Issue: #92
-// --
-
-==== *2.1.2 - Terminology*
+=== *2.1.2 - Terminology*
 
 The following terminology consolidates entities, events, functions, and behaviors in the domain. Each entry specifies the type of concept it represents and the phase in which it is introduced 
 (domain, requirements, design, implementation). This approach avoids circular definitions and 

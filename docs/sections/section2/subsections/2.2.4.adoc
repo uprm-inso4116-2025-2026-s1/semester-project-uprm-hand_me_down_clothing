@@ -1,4 +1,4 @@
-=== 2.2.4 Interface Requirements
+=== *2.2.4 Interface Requirements*
 
 ==== Objective
 The clothing marketplace must represent, initialize, and update domain concepts (e.g., clothing items, user accounts, transactions) in a consistent and testable manner. These requirements ensure that real-world phenomena (buying, selling, searching clothes) are accurately modeled inside the system.
