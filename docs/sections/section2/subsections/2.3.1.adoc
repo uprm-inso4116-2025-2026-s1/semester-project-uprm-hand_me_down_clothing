@@ -2,8 +2,8 @@
 This section provides selected fragments of the implementation that complement the architecture described in Section 2.3. Instead of full code listings (not yet implemented), this section includes visual representations of the application’s main pages.
 
 === Home Page
-
-image::../../../../images/HomePage.png[Home Page, align=center, pdfwidth=80%]
+image::HomePage.png[Home Page, align=center, pdfwidth=80%]
+//image::../../../../images/HomePage.png[Home Page, align=center, pdfwidth=80%]//
 
 
 The entry point of the application. Displays recent clothing items and quick navigation options for uploading, browsing items, liked clothing items, the user’s cart, and the map page for local centers.
