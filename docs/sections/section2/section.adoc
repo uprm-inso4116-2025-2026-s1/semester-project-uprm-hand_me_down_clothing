@@ -14,12 +14,6 @@ include::subsections/2.1.5.adoc[]
 
 include::subsections/2.1.6.adoc[]
 
-include::subsections/2.2.2.adoc[]
-
-include::subsections/2.3.adoc[]
-
-include::subsections/2.3.1.adoc[]
-
 include::subsections/2.2.1.adoc[]
 
 include::subsections/2.2.2.adoc[]
@@ -29,4 +23,8 @@ include::subsections/2.2.3.adoc[]
 include::subsections/2.2.4.adoc[]
 
 include::subsections/2.2.5.adoc[]
+
+include::subsections/2.3.adoc[]
+
+include::subsections/2.3.1.adoc[]
 
