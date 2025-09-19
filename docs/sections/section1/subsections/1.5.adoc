@@ -1,4 +1,4 @@
-==== *1.5 Derived Goals*
+=== *1.5 Derived Goals*
 
 In addition to the primary goals (needs, scope, and core functionality), the project shall pursue secondary outcomes that respond to the realities of Mayagüez and the UPRM community. These outcomes are substantially different from core system behavior and emphasize long-term social, educational, and community benefits for students and families.
 

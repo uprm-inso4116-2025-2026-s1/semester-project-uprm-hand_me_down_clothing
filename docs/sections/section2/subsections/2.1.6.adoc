@@ -1,10 +1,10 @@
-==== *2.1.6 - Function Signatures*
+=== *2.1.6 - Function Signatures*
 
-== Objective
+==== Objective
 Define domain-level function signatures that describe how actions are carried out, including inputs,
 outputs, and possible changes in the domain.
 
-== Description
+==== Description
 Function signatures are formal specifications of functions or actions that define:
 
 - *The name of the function*: The action being performed.
@@ -22,7 +22,7 @@ and any state changes in the domain.
 Function signatures do not describe how the function is implemented. Instead, they focus on the
 relationship between inputs, outputs, and possible state changes.
 
-== Examples
+==== Examples
 
 donate : Piece >< Donator >< Locale -> Donation,
 A Donator provides a Piece in a given Locale, producing a Donation event.

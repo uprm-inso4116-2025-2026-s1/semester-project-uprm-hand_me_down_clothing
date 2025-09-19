@@ -1,1 +1,3 @@
-==== *2.1 - Domain description*
+== 2 Descriptive Part
+
+=== *2.1 - Domain description*

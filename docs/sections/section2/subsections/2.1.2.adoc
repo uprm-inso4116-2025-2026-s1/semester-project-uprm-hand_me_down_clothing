@@ -1,4 +1,4 @@
-==== *2.1.2 - Terminology*
+=== *2.1.2 - Terminology*
 
 The following terminology consolidates entities, events, functions, and behaviors in the domain. Each entry specifies the type of concept it represents and the phase in which it is introduced 
 (domain, requirements, design, implementation). This approach avoids circular definitions and 

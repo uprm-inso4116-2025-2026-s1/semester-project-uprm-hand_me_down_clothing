@@ -1,6 +1,4 @@
-==== 2.1.3 Domain Terminology in Relation to Domain Rough Sketch
-:location: Mayagüez, Puerto Rico (UPRM touchpoint)
-:period: 2025
+=== *2.1.3 Domain Terminology in Relation to Domain Rough*
 
 This section explains how several of the terms defined in *2.1.2 – Terminology* were derived through the analysis of the material captured in *2.1.1 – Domain Rough Sketch*. Its purpose is to make explicit the reasoning that transformed informal notes, phrases, and anecdotes into the concepts that organise our description of the hand-me-down clothing domain. It does not repeat the glossary presented in 2.1.2; instead, it narrates the steps that led from raw wording to stable vocabulary.
 
