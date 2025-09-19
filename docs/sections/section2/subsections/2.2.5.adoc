@@ -1,0 +1,39 @@
+=== 2.2.5 Machine Requirements
+
+==== Objective
+The web server must support reliable and efficient operation of a React + JavaScript clothing marketplace, enabling users to buy, sell, and search for clothes. Requirements are defined in measurable, testable terms to ensure responsiveness, reliability, and scalability.
+
+==== Requirements
+
+*Performance*
+- The system shall return **search results within 2 seconds** on average, with a maximum of **4 seconds** under peak load (defined as 150 concurrent active users).
+- The system shall support **200 simultaneous browsing users** without response time exceeding 4 seconds, including actions such as searching, filtering, and viewing product details.
+- Checkout operations (add to cart, confirm purchase) shall complete within **3 seconds** on average.
+
+*Reliability*
+- The web server shall maintain an uptime of **99.7% per month**, allowing no more than **2.1 hours** of unscheduled downtime.
+- Transaction integrity must be preserved: no more than **0.1% of transactions** may fail due to server errors.
+- Scheduled maintenance shall be limited to **3 hours per month**, announced with at least **48 hours of notice**.
+
+*Scalability*
+- The system shall scale to support **500 concurrent users** performing mixed actions (browsing, searching, and checkout) while maintaining average response times ≤ 3.5 seconds.
+- The system shall handle a database of up to **50,000 clothing items** with no significant degradation (response time increase ≤ 20% compared to baseline).
+- The system shall allow vertical scaling (adding resources to a single server) and horizontal scaling (adding additional servers) without major architectural redesign.
+
+==== Clarifications
+- “Peak load” is defined as **≥ 150 concurrent active users** browsing/searching, with at least **10% engaged in checkout**.
+- “Minimal outages” is quantified as **≤ 2.1 hours per month** of unplanned downtime.
+- “Acceptable performance” is defined as **≤ 3.5 seconds response time** for 95% of requests.
+
+==== Areas for Refinement
+- Stress tolerance for **extreme traffic spikes** (≥ 1000 users during promotions or seasonal sales) remains under evaluation.
+- Requirements for **mobile vs. desktop optimization** need further benchmarking, especially under limited bandwidth conditions.
+
+==== Justification
+The clothing web marketplace requires fast, reliable interactions to maintain user trust and ensure successful transactions. Defined thresholds balance user expectations (quick searches, seamless checkout) with the limitations of typical hosting environments for web applications.
+
+==== Testing Plan
+- Conduct **load tests** at 150, 250, and 500 concurrent users simulating real-world actions (search, filter, checkout).
+- Perform **stress tests** with artificial traffic spikes to measure degradation patterns.
+- Monitor uptime and downtime logs to confirm 99.7% reliability.
+- Validate database query performance against a dataset of **50,000+ clothing items**.

@@ -1,0 +1,56 @@
+==== *2.1.1 Domain Rough Sketches*
+:location: Mayagüez, Puerto Rico (UPRM touchpoint)
+:period: 2025 
+
+====
+This section captures domain facts, phrases, anecdotes, and observations.
+It SHALL NOT mention features or designs of any future system.
+Interviews with external stakeholders are pending.
+====
+
+=== Stakeholder & Settings (roles only, no names yet)
+* Team self-observation (students), Mayagüez/UPRM: identified a recurring need for affordable access to clothing/accessories among students and families.
+* *No interviews conducted yet.* Contacts to schedule: students, families, school/university staff, local resale participants.
+
+=== Observed Practices (how exchanges currently happen)
+* Discovery: Facebook Marketplace; Facebook groups; WhatsApp groups; Instagram stories.
+* Handoff: in-person meetups at UPRM (on/near campus) or at apartment complexes.
+* Typical flow (as reported by students): look up item → contact seller → agree on specifics (price, size, time/place) → pick up item.
+
+=== Artifacts, Condition Language, and Pricing
+* Item types seen/expected: any clothing and accessories (no narrow category observed yet).
+* Condition/fit phrasing used: “lightly used,” “like new,” *specific sizes* (size called out explicitly).
+* Typical price bracket mentioned for clothing items: USD $8–$15 (symbolic/low-cost resale).
+
+=== Trust, Safety, and Informal Norms
+* Common concerns: item hygiene; no-shows; scams; unsafe meetups.
+* Informal norms reported: include a photo of the size **tag**; include full-item photos (front/back/defects).
+* Moderation: none observed in ad-hoc chats; Facebook groups *may* have basic moderation/house rules (unverified; needs follow-up).
+
+=== Language & Access
+* Languages used: Spanish + English (bilingual exchanges common).
+* Access barriers reported so far: none explicitly identified by team; requires external confirmation.
+
+=== Existing Channels (local)
+* Facebook Marketplace (general Mayagüez and student-adjacent listings).
+* Facebook groups (names to be captured during interviews).
+* WhatsApp groups/lists (parent/student circles).
+* Instagram stories (peer-to-peer sharing).
+* Moderation/ownership of channels: unknown (except Facebook-controlled groups); to verify.
+
+=== Micro-notes / Anecdotal Fragments (self-observations)
+* Price sensitivity appears high; low-cost clothing listings ($8–$15) are common reference points among students.
+* Meetups tend to prefer familiar, semi-public locations (campus spots, apartment lobbies).
+* Sellers are expected to show a **tag photo** and **full product photos**; size clarity is a frequent pain point.
+
+=== Small Data Points / Clippings (to attach later)
+* (None documented yet.) If a metric or screenshot is captured (e.g., number of listings/day in a specific group), record with date/source here.
+
+=== Open Questions (for later concept analysis)
+* Which specific groups/chats drive most exchanges in Mayagüez/UPRM? Who moderates them and what rules exist?
+* What concrete safety practices are considered “standard” locally (meetup spots, daylight hours, bringing a friend, ID at gates)?
+* How is *condition* defined locally beyond “lightly used/like new”? (e.g., semester-used uniforms, defect call-outs, hygiene steps)
+* Are there seasonal peaks (back-to-school, semester start, graduation, weather shifts)? What items spike, and when?
+* For pricing, when do buyers/sellers treat $8–$15 as “firm” vs. negotiable (OBO, bundles)?
+* Are there categories explicitly excluded by social norms (e.g., certain intimate apparel), and how is that communicated?
+* Which language (Spanish vs. English) dominates in each channel, and does that affect participation?
