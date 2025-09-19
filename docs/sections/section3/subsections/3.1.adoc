@@ -5,12 +5,12 @@
 ==== Description
 The domain rough sketch was reviewed to identify recurring ideas and terminology. Ambiguities were noted, compared, and resolved by introducing consistent abstractions. This ensures traceability from observations to domain-level concepts while avoiding system-to-be details.
 
-==== Clothing Item
+==== Piece
 - *Observation*: Notes reference “clothing,” “garments,” and “items” in different contexts.  
 - *Issue*: Terms overlap without clarity on whether they refer to a single piece or a category.  
-- *Resolution*: Standardized as **Clothing Item**, representing any individual piece of apparel.  
+- *Resolution*: Standardized as **Piece**, representing any individual piece of apparel.  
 - *Justification*: Provides a neutral, unambiguous unit of exchange within the domain.  
-- *Concept*: `Clothing Item` (entity).
+- *Concept*: `Piece` (entity).
 
 ==== Donation vs. Recycling
 - *Observation*: Actions include “donating clothes,” “claiming items,” and “recycling textiles.”  
@@ -31,12 +31,12 @@ The domain rough sketch was reviewed to identify recurring ideas and terminology
 - *Concepts*: `User` (actor), `Service Provider` (actor).
 
 ==== Terminology Resolution
-- *Clothes*, *garments*, *items*: standardized as **Clothing Item**.  
+- *Clothes*, *garments*, *items*: standardized as **Piece**.  
 - *Donation* vs. *Recycling*: separated to reflect community exchange vs. institutional process.  
 - *Users* vs. *Services*: clarified as **User** (individual) and **Service Provider** (organization).  
 
 ==== Conclusion
 The domain analysis produced a clear vocabulary:  
-- `Clothing Item` as the primary entity.  
+- `Piece` as the primary entity.  
 - `Donation` and `Recycling` as distinct actions.  
 - `User` and `Service Provider` as actors.
