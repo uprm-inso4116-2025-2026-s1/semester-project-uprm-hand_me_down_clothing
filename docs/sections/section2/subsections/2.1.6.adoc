@@ -1,0 +1,49 @@
+==== *2.1.6 - Function Signatures*
+
+== Objective
+Define domain-level function signatures that describe how actions are carried out, including inputs,
+outputs, and possible changes in the domain.
+
+== Description
+Function signatures are formal specifications of functions or actions that define:
+
+- *The name of the function*: The action being performed.
+- *The input parameters*: The information required by the action.
+- *Output*: Type of data the function produces.
+- *State changes*: How the action affects the domain.
+
+The general format of a function signature is:
+
+- FunctionName: Input1 >< Input2 >< ... -> OutputType
+
+This expresses the action's name, its input parameters with their types, the output type it produces
+and any state changes in the domain.
+
+Function signatures do not describe how the function is implemented. Instead, they focus on the
+relationship between inputs, outputs, and possible state changes.
+
+== Examples
+
+donate : Piece >< Donator >< Locale -> Donation,
+A Donator provides a Piece in a given Locale, producing a Donation event.
+
+collect : Piece >< Collector -> Collection +
+A Collector claims a Piece, producing a Collection event.
+
+rate : Piece >< ConditionRating -> ConditionRating +
+A Piece receives a ConditionRating, producing or updating the ConditionRating.
+
+review : Collection >< Review -> Review +
+A review is attached to a completed collection.
+
+transaction : Piece >< Collector >< Locale -> Review >< (Option Ignore) +
+A transaction requires a Piece (the item being transacted), Collector (the entity who initiates the
+transaction), and the locale (the locale in which the transaction is taking place) in order to
+produce a Review. If the transaction were to fail, produces no outcome (Ignore).
+
+categorize : Piece >< Type -> Piece +
+A piece is assigned a type, returning the updated piece.
+
+discard : Piece -> Void +
+Removes a piece from active circulation.
+
