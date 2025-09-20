@@ -2,9 +2,6 @@
 :doctype: book
 :imagesdir: .../images
 :toc:
-:toclevels: 3
-:sectnums:
-:revdate: {docdate}
 
 include::sections/section1/section.adoc[]
 
