@@ -1,6 +1,7 @@
 = Hand Me Down Clothing Documentation
 :doctype: book
 :imagesdir: .../images
+:toc:
 
 include::sections/section1/section.adoc[]
 
