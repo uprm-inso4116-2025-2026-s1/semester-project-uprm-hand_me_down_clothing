@@ -1,0 +1,77 @@
+= Communication Flows in the Listings Process
+
+== Objective:
+Apply the lecture concept of *communication as a core design activity* by mapping out how information flows between users, the system, and administrators during the Sell & Donate listing process. This task draws directly from *_The Nature of the Design Process_* lecture and adapts its principles to our project, emphasizing clarity, completeness, and usability in all communication points.
+
+== Description:
+Based on concepts from the lecture *_The Nature of the Design Process_* , this task explores how communication principles apply to the Listings workflow. The focus is on ensuring that both requirement sources (users) and implementers (developers/admins) have clear, structured communication points.
+
+== Communication Flow Diagram (Sell & Donate):
+   +--------+          +---------+          +-------+
+   |  User  | <------> | System  | <------> | Admin |
+   +--------+          +---------+          +-------+
+       |                   |                   |
+       | Submit Listing    |                   |
+       |------------------>|                   |
+       |                   | Review Request    |
+       |                   |------------------>|
+       |                   |                   |
+       |                   | Approval/Rejection|
+       |                   |<------------------|
+       | Send Status       |                   |
+       |<------------------|                   |
+       |                   |                   |
+       | User Inquiry/Msg  |                   |
+       |------------------>|                   |
+       | Send Response     |                   |
+       |<------------------|                   |
+
+        Legend:
+        User -> System: Listing creation, inquiries
+        System -> Admin: Moderation/flagging
+        Admin -> System: Approve/reject listings
+        System -> User: Notifications, status updates, errors
+        User <--> User (via System): Inquiries, responses
+
+=== Key Steps:
+1. *Communication points in the listing lifecycle:*
+* Listing creation (user -> system)
+* Listing validation or moderation (system -> admin)
+* Listing approval or rejection (admin -> system -> user)
+* Status updates, reminders, or errors (system -> user)
+* Inquiry or messaging between interested parties (user -> user/system)
+
+2. *Information exchanged at each point:*
+* _Listing creation:_ title, description, images, price/donation info, category
+* _Moderation request:_ listing ID, user info, flagged content indicators
+* _Approval/rejection:_ status, reason for rejection (if applicable), next steps
+* _Notifications:_ pending approval, successful posting, errors
+* _User inquiries:_ question content, sender ID, timestamp
+
+3. *Potential gaps or ambiguities:*
+* Users may not know why a listing is rejected.
+* Admins may lack context for flagged listings if user descriptions are unclear.
+* Users may miss notifications if messages are not centralized.
+
+4. *Relating findings to lecture principles:*
+* _Effective design_ requires structured communication between requirement sources and implementers.
+* _Ambiguities in information flow_ can lead to usability issues, errors, or mistrust.
+* _Clear, consistent, and timely communication_ reduces errors and improves user satisfaction.
+
+5. *Gaps and Recommendations:*
+[cols="1,2", options="header"]
+|===
+| *Communication Gap* | *Recommendation*
+
+| Users may not know why a listing is rejected. 
+| Provide clear rejection reasons with actionable resubmission tips.
+
+| Admins may lack context when reviewing flagged listings. 
+| Add admin notes and structured flag metadata to provide better context.
+
+| Users may miss system notifications if scattered across channels. 
+| Centralize all user-facing notifications in a single in-app notification center.
+
+| System-generated messages may feel inconsistent or unclear. 
+| Standardize templates for notifications, status updates, and error messages.
+|===
