@@ -73,11 +73,12 @@ export default function SellPiece() {
         <h2 className="text-2xl font-bold mb-4">Item Details</h2>
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-4">
-            <label htmlFor="title" className="block text-sm font-medium">Item Name * (e.g. Nike Hoodie - Lavender)</label>
+            <label htmlFor="title" className="block text-sm font-medium">Item Name *</label>
             <input
               id="title"
               name="title"
               type="text"
+              placeholder="e.g. Nike Hoodie - Lavender"
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
@@ -86,8 +87,10 @@ export default function SellPiece() {
             <select
               id="category"
               name="category"
+              defaultValue=""
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             >
+              <option value="" disabled>Select a category</option>
               <option>Shirt</option>
               <option>Dress</option>
               <option>Jacket</option>
@@ -104,8 +107,10 @@ export default function SellPiece() {
             <select
               id="condition"
               name="condition"
+              defaultValue=""
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             >
+              <option value="" disabled>Select condition</option>
               <option>New</option>
               <option>Like New</option>
               <option>Used</option>
@@ -120,6 +125,7 @@ export default function SellPiece() {
               name="quantity"
               type="number"
               min="1"
+              placeholder="e.g. 1"
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
@@ -130,6 +136,7 @@ export default function SellPiece() {
               name="price"
               type="number"
               min="0"
+              placeholder="e.g. 25"
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
@@ -140,6 +147,7 @@ export default function SellPiece() {
               name="deliveryFee"
               type="number"
               min="0"
+              placeholder="e.g. 5"
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
@@ -149,6 +157,7 @@ export default function SellPiece() {
               id="description"
               name="description"
               rows={4}
+              placeholder="Include material, style, and any flaws"
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
@@ -160,6 +169,7 @@ export default function SellPiece() {
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
               defaultValue="Large"
             >
+              <option value="" disabled>Select size</option>
               <option>2x-Small</option>
               <option>x-Small</option>
               <option>Small</option>
@@ -178,6 +188,7 @@ export default function SellPiece() {
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
               defaultValue="Unisex"
             >
+              <option value="" disabled>Select sex</option>
               <option>Male</option>
               <option>Female</option>
               <option>Unisex</option>
@@ -196,6 +207,7 @@ export default function SellPiece() {
               id="city"
               name="city"
               type="text"
+              placeholder="e.g. Mayagüez"
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
@@ -205,6 +217,7 @@ export default function SellPiece() {
               id="neighborhood"
               name="neighborhood"
               type="text"
+              placeholder="e.g. Terrace"
               className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
