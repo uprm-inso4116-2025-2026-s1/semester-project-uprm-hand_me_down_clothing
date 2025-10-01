@@ -5,10 +5,10 @@ import {
 
 export default function SellPiece() {
   return (
-    <main className="flex flex-col gap-20 p-8 sm:p-20 text-white">
+    <main className="flex flex-col gap-20 p-8 sm:p-20 text-black dark:text-white">
       <div className="lg:flex lg:items-center lg:justify-between">
       <div className="min-w-0 flex-1">
-        <h1 className="text-4xl font-bold text-white sm:truncate sm:text-3xl sm:tracking-tight">
+        <h1 className="text-4xl font-bold text-black dark:text-white sm:truncate sm:text-3xl sm:tracking-tight">
           Sell your Clothing!
         </h1>
       </div>
@@ -40,10 +40,10 @@ export default function SellPiece() {
     </div>
       {/* Step 1 – Photos */}
       <section id="photos" className="w-full">
-        <h2 className="text-2xl font-bold mb-4">Add Photos</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">Add Photos</h2>
         <div className="mt-2 flex justify-center rounded-lg border border-dashed border-gray-700 px-6 py-10">
           <div className="text-center">
-            <p className="mb-2 text-gray-300">Add Photos (min 1, max 8)</p>
+            <p className="mb-2 text-gray-700 dark:text-gray-300">Add Photos (min 1, max 8)</p>
             <label
               htmlFor="file-upload"
               className="relative cursor-pointer rounded-md bg-transparent font-semibold text-indigo-400 hover:text-indigo-300"
@@ -51,12 +51,12 @@ export default function SellPiece() {
               <span>Upload a file</span>
               <input id="file-upload" name="file-upload" type="file" className="sr-only" />
             </label>
-            <p className="pl-1 text-gray-400">or drag and drop</p>
-            <p className="text-xs text-gray-500 mt-2">PNG, JPG, GIF up to 10MB</p>
+            <p className="pl-1 text-gray-600 dark:text-gray-400">or drag and drop</p>
+            <p className="text-xs text-gray-700 dark:text-gray-500 mt-2">PNG, JPG, GIF up to 10MB</p>
           </div>
         </div>
-        <div className="ml-6 pt-3 text-gray-400 text-sm">
-          <h3>
+        <div className="ml-6 pt-3 text-gray-600 dark:text-gray-400 text-sm">
+          <h3 className="text-black dark:text-white">
             Tips:
           </h3>
           <ul className="ml-3 mt-1 list-disc list-inside">
@@ -70,25 +70,25 @@ export default function SellPiece() {
 
       {/* Step 2 – Item Details */}
       <section id="details" className="w-full">
-        <h2 className="text-2xl font-bold mb-4">Item Details</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">Item Details</h2>
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-4">
-            <label htmlFor="title" className="block text-sm font-medium">Item Name *</label>
+            <label htmlFor="title" className="block text-sm font-medium text-black dark:text-white">Item Name *</label>
             <input
               id="title"
               name="title"
               type="text"
               placeholder="e.g. Nike Hoodie - Lavender"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-base text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
           <div className="sm:col-span-3">
-            <label htmlFor="category" className="block text-sm font-medium">Category *</label>
+            <label htmlFor="category" className="block text-sm font-medium text-black dark:text-white">Category *</label>
             <select
               id="category"
               name="category"
               defaultValue=""
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             >
               <option value="" disabled>Select a category</option>
               <option>Shirt</option>
@@ -103,12 +103,12 @@ export default function SellPiece() {
             </select>
           </div>
           <div className="sm:col-span-3">
-            <label htmlFor="condition" className="block text-sm font-medium">Condition *</label>
+            <label htmlFor="condition" className="block text-sm font-medium text-black dark:text-white">Condition *</label>
             <select
               id="condition"
               name="condition"
               defaultValue=""
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             >
               <option value="" disabled>Select condition</option>
               <option>New</option>
@@ -119,54 +119,54 @@ export default function SellPiece() {
             </select>
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="quantity" className="block text-sm font-medium">Quantity *</label>
+            <label htmlFor="quantity" className="block text-sm font-medium text-black dark:text-white">Quantity *</label>
             <input
               id="quantity"
               name="quantity"
               type="number"
               min="1"
               placeholder="e.g. 1"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="price" className="block text-sm font-medium">Price ($) *</label>
+            <label htmlFor="price" className="block text-sm font-medium text-black dark:text-white">Price ($) *</label>
             <input
               id="price"
               name="price"
               type="number"
               min="0"
               placeholder="e.g. 25"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
           <div className="sm:col-span-2">
-            <label htmlFor="deliveryFee" className="block text-sm font-medium">Delivery Fee (optional)</label>
+            <label htmlFor="deliveryFee" className="block text-sm font-medium text-black dark:text-white">Delivery Fee (optional)</label>
             <input
               id="deliveryFee"
               name="deliveryFee"
               type="number"
               min="0"
               placeholder="e.g. 5"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
           <div className="col-span-full">
-            <label htmlFor="description" className="block text-sm font-medium">Description (optional)</label>
+            <label htmlFor="description" className="block text-sm font-medium text-black dark:text-white">Description (optional)</label>
             <textarea
               id="description"
               name="description"
               rows={4}
               placeholder="Include material, style, and any flaws"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
           <div className="sm:col-span-3">
-            <label htmlFor="size" className="block text-sm font-medium">Size *</label>
+            <label htmlFor="size" className="block text-sm font-medium text-black dark:text-white">Size *</label>
             <select
               id="size"
               name="size"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
               defaultValue="Large"
             >
               <option value="" disabled>Select size</option>
@@ -181,11 +181,11 @@ export default function SellPiece() {
             </select>
           </div>
           <div className="sm:col-span-3">
-            <label htmlFor="sex" className="block text-sm font-medium">Sex *</label>
+            <label htmlFor="sex" className="block text-sm font-medium text-black dark:text-white">Sex *</label>
             <select
               id="sex"
               name="sex"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
               defaultValue="Unisex"
             >
               <option value="" disabled>Select sex</option>
@@ -199,49 +199,49 @@ export default function SellPiece() {
 
       {/* Step 3 – Location & Delivery */}
       <section id="location" className="w-full">
-        <h2 className="text-2xl font-bold mb-4">Location & Delivery</h2>
+        <h2 className="text-2xl font-bold mb-4 text-black dark:text-white">Location & Delivery</h2>
         <div className="grid grid-cols-1 gap-x-6 gap-y-8 sm:grid-cols-6">
           <div className="sm:col-span-3">
-            <label htmlFor="city" className="block text-sm font-medium">City *</label>
+            <label htmlFor="city" className="block text-sm font-medium text-black dark:text-white">City *</label>
             <input
               id="city"
               name="city"
               type="text"
               placeholder="e.g. Mayagüez"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
           <div className="sm:col-span-3">
-            <label htmlFor="neighborhood" className="block text-sm font-medium">Neighborhood (optional)</label>
+            <label htmlFor="neighborhood" className="block text-sm font-medium text-black dark:text-white">Neighborhood (optional)</label>
             <input
               id="neighborhood"
               name="neighborhood"
               type="text"
               placeholder="e.g. Terrace"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             />
           </div>
           <div className="col-span-full">
             <fieldset className="mt-2">
-              <legend className="text-sm font-medium">Delivery Method *</legend>
+              <legend className="text-sm font-medium text-black dark:text-white">Delivery Method *</legend>
               <div className="mt-4 space-y-4">
                 <div>
                   <input id="pickup" name="delivery" type="radio" className="mr-2" />
-                  <label htmlFor="pickup">Local Pickup only</label>
+                  <label htmlFor="pickup" className="text-black dark:text-white">Local Pickup only</label>
                 </div>
                 <div>
                   <input id="delivery" name="delivery" type="radio" className="mr-2" />
-                  <label htmlFor="delivery">Delivery available</label>
+                  <label htmlFor="delivery" className="text-black dark:text-white">Delivery available</label>
                 </div>
               </div>
             </fieldset>
           </div>
           <div className="col-span-full">
-            <label htmlFor="contact" className="block text-sm font-medium">Contact Method *</label>
+            <label htmlFor="contact" className="block text-sm font-medium text-black dark:text-white">Contact Method *</label>
             <select
               id="contact"
               name="contact"
-              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
+              className="mt-2 block w-full rounded-md bg-white/5 px-3 py-1.5 text-black dark:text-white outline  outline-gray-500 focus:outline-2 focus:outline-indigo-500"
             >
               <option>In-app messages</option>
               <option>Phone</option>
