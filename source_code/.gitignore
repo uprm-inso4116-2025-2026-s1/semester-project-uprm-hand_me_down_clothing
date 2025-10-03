@@ -41,4 +41,6 @@ yarn-error.log*
 next-env.d.ts
 
 # local Docker Compose override
-docker-compose.override.yml
+docker-compose.override.yaml
+docker-compose.yml
+Dockerfile
