@@ -2,29 +2,30 @@
 
 === *Epics*
 
-Epics are a higher level overview of goals that are large enough in scope that they can be broken down into multiple sprints. They provide direction and group related work together.
+Epics are a higher-level overview of goals that are large enough in scope that they can be broken down into multiple sprints. They provide direction and group related work together.
 
 *Buyer Epics*
 
 . Product Search
 .. As a buyer, I want to search for items by category, filters, and keywords, so that I can quickly find products that meet my needs.
 
-. Purchase Management
-.. As a buyer, I want to manage potential purchases by saving items in my cart, so that I can review and buy them later.
+. Saved Listings
+.. As a buyer, I want to save or bookmark items I am interested in, so that I can revisit them later when deciding whether to contact the seller.
 
 . Trust and Transparency
-.. As a buyer, I want to access detailed seller information and provide feedback through reviews, so that I can make informed and confident purchasing decisions.
+.. As a buyer, I want to access detailed seller information and provide feedback through reviews, so that I can make informed and confident decisions.
 
 *Seller Epics*
 
 . Listing Management
-.. As a seller, I want to create, edit, and delete listings with many details, so that I can effectively manage my items for sale.
+.. As a seller, I want to create, edit, and delete listings with many details, so that I can effectively manage the items I am offering.
 
-. Sales Notifications
-.. As a seller, I want to receive notifications when my items are sold, so that I can promptly respond and complete the transaction.
+. Contact Notifications
+.. As a seller, I want to receive notifications when someone shows interest in my item, so that I can promptly respond and arrange the exchange offline.
 
 . Seller Profile and Trust
-.. As a seller, I want to build a profile with personal and location details, so that I can establish trust with buyers and encourage sales.
+.. As a seller, I want to build a profile with personal and location details, so that I can establish trust with buyers and encourage engagement with my listings.
+
 
 // =================================================================
 
@@ -39,31 +40,32 @@ Features specify the functionality required to deliver the goals described in th
 .. Keyword search.
 .. Sorting options (price low to high, new to old, etc.).
 
-. Purchase Management
-.. Shopping cart functionality (add and remove items).
-.. Cart persistence across sessions (items remain after logging out).
+. Saved Listings
+.. Ability to bookmark or save listings for later consideration.
+.. Saved listings remain accessible across sessions.
 
 . Trust and Transparency
 .. Seller profile page (location, account age, bio).
 .. Seller ratings & reviews system.
 .. Buyer-to-seller review submission flow.
-.. Reporting mechanism for problematic sellers.
+.. Reporting mechanism for problematic listings or sellers.
 
 *Seller Features*
 
 . Listing Management
-.. Create listing form (title, description, tags, price, category).
+.. Create listing form (title, description, tags, price/free marker, category).
 .. Image upload with multiple pictures per item.
-.. Edit listing functionality (update price, description, images).
+.. Edit listing functionality (update description, condition, images, price).
 .. Delete or deactivate listing.
 
-. Sales Notifications
-.. Push/email/in-app notifications for new orders.
-.. Notification history center (list of past alerts).
+. Contact Notifications
+.. Push/email/in-app notifications when someone contacts the seller about an item.
+.. Notification history center (list of past interest messages).
 
 . Seller Profile and Trust
 .. Editable seller profile page (profile picture, name, location, bio).
 .. Seller dashboard with active listings and ratings overview.
+
 
 // =================================================================
 
@@ -75,15 +77,15 @@ User stories are derived from Features, breaking them down into smaller, individ
 
 . As a buyer, I want to browse items by category to find a specific type of item I want.
 . As a buyer, I want to filter my search by things like size and price to tailor my search to my needs.
-. As a buyer, I want to search for items using keywords to find specific items that can't be narrowed down by category or filters alone.
-. As a buyer, I want to add items to my cart to buy later.
-. As a buyer, I want to see a seller's information such as location, ratings, and account age to feel sure that my purchase will be successful.
+. As a buyer, I want to search for items using keywords to find specific items that can’t be narrowed down by category or filters alone.
+. As a buyer, I want to save interesting listings so I can revisit them later.
+. As a buyer, I want to see a seller’s information such as location, ratings, and account age to feel sure that my interaction will be safe and worthwhile.
 . As a buyer, I want to leave reviews for sellers so other buyers know what to expect.
 
 *Seller User Stories*
 
 . As a seller, I want to create listings for my items with options such as adding multiple pictures, a description and tags so interested buyers can find me.
 . As a seller, I want to edit listings so I can update details whenever necessary.
-. As a seller, I want to delete listings so I can stop selling an item.
-. As a seller, I want to receive notifications when one of my listings is sold so I can take action as fast as possible.
+. As a seller, I want to delete listings so I can stop offering an item.
+. As a seller, I want to receive notifications when someone contacts me about a listing so I can respond quickly.
 . As a seller, I want to provide information on my profile such as my name and location to increase trust with buyers.

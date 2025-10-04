@@ -11,7 +11,7 @@ families, and local communities.
 At its core, the domain revolves around two primary actors:
 
 * *Donators*: Individuals or households who release garments they no longer need.
-* *Collectors*: Individuals who claim garments for reuse, whether through purchase or donation.
+* *Collectors*: Individuals who claim garments for reuse,whether as free donations or through sales arranged outside the system.
 
 The central entity in this domain is the *Piece*, any individual article of clothing or 
 accessory that circulates between actors. Each Piece carries attributes such as:

@@ -12,7 +12,7 @@ All descriptions are domain-oriented and independent of any future system.
 
 ===== Exchange of Clothing
 *Event*::  
-The instant a garment has just changed possession for example, a student hands a jacket to another at a campus bench. This marks the conclusion of an informal transaction and the start of a new phase in the garment’s life.
+The instant a garment has just changed possession for example, a student hands a jacket to another at a campus bench. This marks the conclusion of an informal exchange and the start of a new phase in the garment’s life.
 
 *Action*::  
 Steps such as replying to an inquiry, confirming size or colour, agreeing on a price, and finally giving or receiving the garment. Each is purposeful and can succeed or fail (e.g., a missed appointment).
@@ -35,7 +35,7 @@ An established norm of transparency in which participants consistently present i
 A price has just been named, accepted, or renegotiated for a garment.
 
 *Action*::  
-Comparing a proposed amount with informal references, adjusting for size or condition, or confirming that an item will be free rather than sold.
+Comparing a proposed amount with informal references, adjusting for size or condition, or confirming that an item will be free rather than sold. Price is communicated in the listing; payment (if any) is handled directly between the parties outside the platform.
 
 *Behavior*::  
 A continuing process of social valuation. Participants rely on a tacit “student resale price band” often eight to fifteen dollars to anchor expectations while allowing room for negotiation or bundles.

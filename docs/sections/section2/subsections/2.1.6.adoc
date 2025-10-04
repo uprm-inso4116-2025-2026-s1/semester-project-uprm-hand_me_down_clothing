@@ -39,7 +39,7 @@ A review is attached to a completed collection.
 transaction : Piece >< Collector >< Locale -> Review >< (Option Ignore) +
 A transaction requires a Piece (the item being transacted), Collector (the entity who initiates the
 transaction), and the locale (the locale in which the transaction is taking place) in order to
-produce a Review. If the transaction were to fail, produces no outcome (Ignore).
+produce a Review. If the transaction were to fail, produces no outcome (Ignore). A transfer or transaction describes the handoff process, not a platform transaction.
 
 categorize : Piece >< Type -> Piece +
 A piece is assigned a type, returning the updated piece.

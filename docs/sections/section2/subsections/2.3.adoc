@@ -9,56 +9,59 @@ work together. Include mockups and example code fragments to complement the expl
 The application is structured as follows:
 
 * Frontend (React)
-** Handles the user interface, including browsing items, uploading clothes, and viewing nearby donation centers.
+** Handles the user interface, including browsing clothing listings, saving favorites, uploading new listings, and viewing nearby donation centers.
 ** Planned pages/screens include:
-*** Home Page: shows recent listings and quick navigation to other pages
-*** Clothing Listing Page: displays a landscape list of available clothing items
-*** Upload Page: allows users to upload clothes for resale or donation
-*** Map Page: integrates with Leaflet to display donation centers
-** Styling is done with standard CSS (or CSS-in-JS).
+*** Home Page: shows recent listings and quick navigation to other pages.
+*** Clothing Listing Page: displays a scrollable list of available clothing items with filters and sorting options.
+*** Upload Page: allows sellers to upload clothes for resale or donation.
+*** Saved Listings Page: lets buyers review items they bookmarked.
+*** Map Page: integrates with Leaflet to display donation centers.
+** Styling is implemented with CSS modules or CSS-in-JS for maintainability.
 
 * Backend Logic (JavaScript functions)
-** Handles business logic directly in JavaScript functions.
+** Manages business logic through modular JavaScript functions that act as an interface between the frontend and Supabase.
 ** Responsibilities include:
-*** Validating form inputs.
-*** Managing image uploads to Supabase Storage.
+*** Validating form inputs for listing creation and user registration.
+*** Handling image uploads to Supabase Storage.
 *** Authenticating users via Supabase Auth.
-*** Querying data from Supabase Database.
+*** Querying and updating data in Supabase Database (listings, user profiles, reviews).
+*** Enforcing invariants such as mandatory seller ID and required listing fields.
 
 * Database & Storage (Supabase)
-** PostgreSQL database stores user profiles, clothing items, and donation center data.
-** Supabase Storage stores images.
-** Supabase Auth manages authentication and access control.
+** PostgreSQL database stores structured application data, including:
+*** User profiles (name, email, role, reputation score).
+*** Clothing listings (item ID, seller ID, title, description, category, size, condition, price/free marker, status).
+*** Reviews and ratings for trust-building.
+*** Donation center metadata.
+** Supabase Storage manages image uploads and retrieval.
+** Supabase Auth handles authentication, role assignment, and secure access.
 
 * External Services
-** Leaflet.js for map display.
-** Optional geocoding APIs for donation center coordinates.
+** Leaflet.js provides interactive map functionality for donation center locations.
+** Optional geocoding APIs convert addresses into map coordinates when new donation centers are added.
 
 ==== Architecture Diagram
-The architecture of the application is designed to clearly separate concerns between the frontend, backend logic, and database/storage/auth services. This structure ensures maintainability, scalability, and clarity for both developers and users.
+The architecture of the application is designed to separate concerns between the frontend, backend logic, and Supabase services. This structure ensures maintainability, scalability, and clarity for both developers and users.
 
 image::../../../../images/Architecture_Diagram.png[Architecture Diagram, align=center]
 
-
-
-
-
 . Architecture Overview
 .. React Frontend
-*** Provides the user interface where users can browse clothing items, upload new items and view nearby donation centers on a map powered by Leaflet.
-*** User actions such as submitting forms or navigating the map will trigger the API calls to the backend logic.
+*** Provides the user interface where users can browse, search, and filter clothing listings, upload new items, save favorites, and view donation centers on a map.
+*** User actions (e.g., creating a listing, saving an item, updating profile info) trigger requests to backend functions.
 
 .. JavaScript Logic (Backend Logic)
-*** Acts as the bridge between the frontend layer and Supabase.
-*** Responsible for validating inputs, formatting data, and sending queries to Supabase.
-*** Handles error responses and passes meaningful data back to the frontend.
+*** Bridges communication between the React frontend and Supabase services.
+*** Validates input (e.g., required fields for new listings).
+*** Formats data before insertion into the database.
+*** Handles error responses gracefully, ensuring the frontend receives useful feedback.
 
 .. Supabase Services
-*** Database (PostgreSQL) stores data like user profiles, clothing items, and donation center metadata in a structured manner.
-*** Cloud Storage manages image uploads securely and makes them easy to retrieve.
-*** Auth provides user authentication and access control, ensuring correct data privacy.
+*** Database (PostgreSQL) stores listings, user profiles, reviews, and donation center data.
+*** Cloud Storage securely manages clothing images, keeping them accessible for display in listings.
+*** Auth enforces authentication and authorization, ensuring data privacy and correct user roles.
 
 .. Data Flow
-*** Requests flow downward from the React frontend through the JavaScript backend layer into Supabase, while responses flow upward.
-*** Ensures clean separation between UI in React, business logic in JavaScript, and authentication in Supabase.
-*** Frontend updates with fresh data dynamically using React's state system.
+*** Requests flow downward from the React frontend through JavaScript logic into Supabase.
+*** Responses flow upward, updating React state dynamically so users see fresh listing data.
+*** This separation ensures that the UI, application logic, and data persistence remain decoupled and maintainable.

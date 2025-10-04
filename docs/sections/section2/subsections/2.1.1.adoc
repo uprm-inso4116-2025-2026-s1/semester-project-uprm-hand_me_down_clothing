@@ -13,7 +13,7 @@ Interviews with external stakeholders are pending.
 ==== Observed Practices 
 * Discovery: Facebook Marketplace; Facebook groups; WhatsApp groups; Instagram stories.
 * Handoff: in-person meetups at UPRM (on/near campus) or at apartment complexes.
-* Typical flow (as reported by students): look up item → contact seller → agree on specifics (price, size, time/place) → pick up item.
+* Typical flow (as reported by students): look up item → contact seller → agree on specifics (price, size, time/place) → pick up item. Price agreement is informational and not processed by the platform.
 
 ==== Artifacts, Condition Language, and Pricing
 * Item types seen/expected: any clothing and accessories (no narrow category observed yet).

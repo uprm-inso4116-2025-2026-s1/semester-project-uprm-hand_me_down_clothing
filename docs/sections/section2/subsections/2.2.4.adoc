@@ -1,50 +1,52 @@
 === *2.2.4 Interface Requirements*
 
 ==== Objective
-The clothing marketplace must represent, initialize, and update domain concepts (e.g., clothing items, user accounts, transactions) in a consistent and testable manner. These requirements ensure that real-world phenomena (buying, selling, searching clothes) are accurately modeled inside the system.
+The clothing marketplace must represent, initialize, and update domain concepts (e.g., clothing items, user accounts, and listings) in a consistent and testable manner. These requirements ensure that real-world phenomena (listing, browsing, contacting sellers) are accurately modeled inside the system. The platform does not process payments or host transactions; exchanges occur directly between buyers and sellers outside the system.
 
 ==== Requirements
 
 *Representation Rules*
 
-- **Clothing items** - represented as a unique system entity with attributes: item ID, seller ID, title, description, category, size, price, condition, and availability status.
+- **Clothing items (Listings)** – represented as a unique system entity with attributes: item ID, seller ID, title, description, category, size, price (or free marker), condition, location, images, and availability status (active, reserved, closed).
 
-- **User account** - represented as a unique system entity with attributes: user ID, username, email, role (buyer, seller, or both), and transaction history.
+- **User account** – represented as a unique system entity with attributes: user ID, username, email, role (buyer, seller, or both), profile information (bio, location, optional rating/review history).
 
-- **Transaction** - represented as a unique system entity with attributes: transaction ID, buyer ID, seller ID, item ID, status (pending, confirmed, completed), and timestamp.
+- **Saved listings** – represented as a link between a buyer and an item ID, enabling bookmarking or favorites functionality.
 
 *Initialization Rules*
 
-- **Listing a clothing item** - the system shall initialize the item entity with all required attributes. An item cannot exist in the system without a valid seller ID and price.
+- **Listing a clothing item** – the system shall initialize the item entity with all required attributes. A listing cannot exist without a valid seller ID, title, and at least one image. Price may be set or marked as “free.”
 
-- **User registration** - when a new user registers, the system shall initialize a user entity with a unique user ID and default role “buyer.” Role changes to “seller” require additional verification (e.g., valid payment info).
+- **User registration** – when a new user registers, the system shall initialize a user entity with a unique user ID and default role “buyer.” Role changes to “seller” require providing additional profile details (e.g., location, contact method).
 
-- **Purchase initiation** - when a buyer initiates a purchase, the system shall initialize a transaction entity with status = “pending” until confirmation.
+- **Saving a listing** – when a buyer saves/bookmarks an item, the system shall record the association between the buyer’s ID and the item ID.
 
 *Update Rules*
 
-- Item availability shall update automatically when a purchase is confirmed: availability status changes from “available” to “sold.”
+- Sellers may update listing attributes (title, description, price/free marker, condition, images, status). Updates to closed listings are restricted.
 
-- Sellers may update item attributes (title, description, price). Updates to sold items are restricted.
+- Item availability may be updated manually by the seller (active → reserved → closed). Reserved is used when the seller has agreed offline to hold the item for a buyer.
 
-- Transaction status shall update in predefined steps: “pending” → “confirmed” → “completed.” Skipping states is not permitted.
+- Buyers may update saved listings (add/remove from their saved list).
 
-- User accounts may update certain attributes (email, profile details) but transaction history shall be immutable once recorded.
+- User accounts may update certain attributes (email, profile details) but reviews/ratings history shall be immutable once recorded.
 
 ==== Examples
-1. **Initialization**: A seller lists a jacket. The system creates an item entity with attributes (ID=1001, seller=U123, category=outerwear, price=$50, status=available).
-2. **Update**: A buyer purchases the jacket. The system updates the transaction status (T555: pending → confirmed), and the item status (I1001: available → sold).
-3. **Restriction**: The seller attempts to change the price of the sold jacket. The system prevents this update because item availability = “sold.”
+
+1. **Initialization**: A seller lists a jacket. The system creates an item entity with attributes (ID=1001, seller=U123, category=outerwear, price=$50, condition=“like new”, status=active).  
+2. **Update**: A buyer shows interest offline. The seller updates the listing status to “reserved.”  
+3. **Restriction**: The seller attempts to change the description of a closed listing. The system prevents this update because item availability = “closed.”
 
 ==== Relation to Domain Requirements
-- If a clothing item exists in the domain (a seller lists it), it must exist as a system entity with required attributes.
-- If a buyer interacts with the system (e.g., initiates a purchase), a transaction entity must exist and follow state transitions.
-- If a user registers in the domain, their account must exist in the system with consistent properties.
+- If a clothing item exists in the domain (a seller lists it), it must exist as a system entity with required attributes.  
+- If a buyer interacts with the system (e.g., saves a listing), the system must record this association consistently.  
+- If a user registers in the domain, their account must exist in the system with consistent properties.  
 
 ==== Justification
-These interface requirements ensure that the system remains synchronized with real-world buying and selling activities. Initialization rules prevent incomplete or invalid entities. Update rules enforce consistency and protect critical data (e.g., preventing edits to sold items or completed transactions).
+These interface requirements ensure that the system remains synchronized with real-world listing and discovery activities. Initialization rules prevent incomplete or invalid listings. Update rules enforce consistency and protect critical data (e.g., preventing edits to closed items).
 
 ==== Testing Plan
-- Verify that all clothing items created by sellers initialize with complete required attributes.
-- Simulate purchase flows and confirm item and transaction entities update correctly (status changes).
-- Attempt restricted updates (e.g., editing sold items, altering completed transactions) and confirm the system rejects them.
+- Verify that all clothing items created by sellers initialize with complete required attributes.  
+- Simulate saving listings and confirm that they persist across sessions.  
+- Attempt restricted updates (e.g., editing closed listings) and confirm the system rejects them.  
+- Verify that user profile updates do not affect immutable history (reviews, past listings).  
