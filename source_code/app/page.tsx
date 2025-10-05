@@ -1,7 +1,12 @@
+import Link from 'next/link';
+
 export default function Home() {
   return (
-    <div>
-      Hello world!
-    </div>
+    <main className='p-6'>
+      <div>
+        Hello world!
+      </div>
+    
+    </main>
   );
 }
