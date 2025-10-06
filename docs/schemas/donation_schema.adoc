@@ -71,7 +71,7 @@
 - Focused more on resale than pure donation
 
 
-## Proposed Schemas
+## Schemas
 
 ### Clothing Pieces -> Piece
 [cols="1,1,2,1", options="header"]
@@ -140,7 +140,7 @@
 
 
 
-## Schemas` Justifications
+## Schemas' Justifications
 
 ### Piece
 - ID -> uniquely identifies each clothing piece in the database, regardless of backend technology
