@@ -1,10 +1,11 @@
 import Link from 'next/link';
+import Homepage from './homepage/page';
 
 export default function Home() {
   return (
     <main className='p-6'>
       <div>
-        Hello world!
+        <Homepage></Homepage>
       </div>
     
     </main>
