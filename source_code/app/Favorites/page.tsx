@@ -11,7 +11,7 @@ const Icon = {
   ),
   Filter: (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden focusable="false" {...props}>
-      <path d="M3 6h18M6 12h12M10 18h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
+      <path d="M3 6h18M6 12h312M10 18h4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" />
     </svg>
   ),
   Tag: (props: React.SVGProps<SVGSVGElement>) => (
@@ -75,26 +75,6 @@ export default function FavoritesLayout() {
         </div>
       </section>
 
-      {/* Browse by category cards (static) */}
-      <section className="mx-auto max-w-7xl px-6 pt-10">
-        <h2 className="font-bold text-3xl">Browse by category</h2>
-        <div className="mt-4 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4">
-          {["Streetwear", "Formal", "Athleisure", "Vintage", "Kids"].map((name) => (
-            <button
-              key={name}
-              className="w-full h-40 bg-[#F9F8F8] hover:bg-[#eceaea] border border-[#E5E7EF] rounded-xl px-4 text-left cursor-default"
-              type="button"
-              aria-disabled
-            >
-              <div className="flex items-center gap-2 py-3">
-                <div className="rounded-full w-7 h-7 bg-[#D6B1B1]" />
-                <h3 className="font-bold text-base">{name}</h3>
-              </div>
-              <p className="text-sm text-[#666666] pl-9">Explore •</p>
-            </button>
-          ))}
-        </div>
-      </section>
 
       {/* Controls row (static chips + select-look) */}
       <section className="mx-auto max-w-7xl px-6 pt-10">
