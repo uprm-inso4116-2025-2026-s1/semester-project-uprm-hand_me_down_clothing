@@ -31,3 +31,9 @@ image::../../../../images/Map3.png[Map 3, align=center]
 Displays nearby donation and repurposing centers using Leaflet. Locations (stored in Supabase) include name, address, hours, and type of service (donation only or donation-for-credit).
 
 These images complement the architecture by showing how the frontend components (React pages) map to backend logic (JavaScript functions) and data storage (Supabase).
+
+==== Item Upload Flowchart
+
+image::ItemUpload.png[Item Upload Flowchart, align=center]
+
+Shows the steps the user has to take to successfully upload an item. Includes the process of being logged in, creating the description of the item, uploading images and marking the item for sell or for a donation.
