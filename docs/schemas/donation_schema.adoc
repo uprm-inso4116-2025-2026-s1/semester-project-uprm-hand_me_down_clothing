@@ -2,14 +2,14 @@
 // Author: Kevin Gomez
 // Institution: University of Puerto Rico at Mayagüez
 // Date Created: 2025-09-03
-// Last Updated: 2025-09-03
-// Version: 1.0
+// Last Updated: 2025-10-06
+// Version: 2.0
 // Project: Hand-me-down Clothing
-// GitHub Issue: #26
+// GitHub Issue: #138
 // Purpose: Contribution to the Hand-me-down Clothing project documentation, focusing on database schema
 // --
 
-# Preliminary Database Schema for Donation Items
+#  Database Schema for Donation Items
 
 ## Existing Platforms
 
@@ -34,7 +34,7 @@
 
 #### Areas for Improvement
 - Focuses more on selling rather than donation (everything has a price tag)
-- Discovery can still be cluttered if tags aren’t used well
+- Discovery can still be cluttered if tags aren't used well
 - No standardized way to indicate **condition** of items (important for second-hand clothes)
 
 ### Shein
@@ -55,7 +55,7 @@
 - Reviews and ratings between buyers and sellers
 
 #### Areas for Improvement
-- Strong emphasis on social media–style interactions (not always aligned with donation-only goals)
+- Strong emphasis on social media-style interactions (not always aligned with donation-only goals)
 - Seller fees may discourage casual donators
 
 ### ThredUp
@@ -71,22 +71,24 @@
 - Focused more on resale than pure donation
 
 
-## Proposed Schemas
+## Schemas
 
 ### Clothing Pieces -> Piece
 [cols="1,1,2,1", options="header"]
 |===
 | Attribute | Type | Description | Example
-| ID | String | Unique identifier for each clothing piece | N/A
-| Type | String | Category of clothing | dress, pants, shirt
+| ID | String | Unique identifier for each clothing piece | 1, 93, 203, 47
+| Name | String | Descriptive name of the clothing item | Summer T-shirt
+| Category | Enum | Category of the clothing item | SHIRT, DRESS, JACKET
 | Color | String | Primary color of the item | red, blue, black
-| Brand | String | Manufacturer or label associated with the item | Macy`s, Louis Vuitton, custom, none
-| Gender | Enum | Intended gender fit of the clothing | male, female, non-binary, other
-| Size | Enum | Physical size of the item | small, medium, large, custom
+| Brand | String | Manufacturer or label associated with the item | Nike, Levi's, H&M
+| Gender | Enum | Intended gender fit of the clothing | FEMALE, MALE, UNISEX
+| Size | Enum | Physical size of the item | SMALL, MEDIUM, LARGE
 | Price | Number | Monetary value assigned to the item (in $) | 10, 2, 20
-| Current condition | Number | Overall state of wear or quality | 1/10, 7/10
-| Reason for selling | String | Explanation given by the donator/seller | old, broken, got tired
-| Images | List<Image> | Photos uploaded to represent the item | N/A
+| Condition | Enum | Overall state of wear or quality | NEW, LIKE_NEW, USED, WORN, OLD
+| Reason | String | Explanation given by the donator/seller | No longer fits, Style change
+| Images | List<String> | Photos uploaded to represent the item | ["img1.png", "img2.jpg"]
+| User ID | String | Reference to the seller/donator owning the piece | 847, 31, 9, 25
 |===
 
 ### Donators/Sellers -> Seller
@@ -98,6 +100,7 @@
 | Phone | String | Seller`s phone number | 555-123-4567
 | Email | String | Seller`s email address | seller@mail.com
 | Password | String | Authentication credential for login | password
+| Pieces | List<String> | Collection of pieces' ids owned by this seller | [139, 4, 97]
 | Reviews | List<Review> | Collection of reviews received by this seller | [Review1]
 |===
 
@@ -137,19 +140,21 @@
 
 
 
-## Schemas` Justifications
+## Schemas' Justifications
 
 ### Piece
-- ID -> for database categorization regardless of the technology used
-- Type of piece of clothing ->  to help the buyer filter when searching for clothing
-- Color -> so the buyer can take it into account for style-based decision making
-- Brand -> to help sellers/donators justify aspects such as price, and for buyers seeking specific branding
-- Gender -> to allow buyers to make style-and-size-based decisions
-- Size -> for optimal UX when buyers are looking for and purchasing clothing
-- Price -> stated in dollars so the buyer can make budget-friendly decisions and generally required inforation for optimal UX in e-commerce platforms
-- Current condition -> to enable buyers to correlate with price and evaluate the viability of obtaining that piece
-- Reason for selling -> to provide credibility for the seller/donator
-- Current images -> to decide whether the information given is truthfull, which helps to provide trust in the seller/donator and the platform as a proxy
+- ID -> uniquely identifies each clothing piece in the database, regardless of backend technology
+- Name -> provides a clear, human-readable description of the clothing item
+- Category -> classifies the item into a defined category (e.g., SHIRT, DRESS) for easier filtering and browsing
+- Color -> helps buyers make aesthetic or style-based decisions
+- Brand -> informs buyers about the manufacturer or label, which can influence quality perception and price
+- Gender -> specifies the intended gender fit (FEMALE, MALE, UNISEX) to improve search and personalization
+- Size -> allows buyers to find pieces that fit properly and avoid mismatches
+- Price -> indicates the monetary value in USD; important for decision-making even in low-cost donation contexts
+- Condition -> reflects the state of wear, helping buyers assess quality and trust the listing
+- Reason -> provides the donor's or seller's explanation, adding credibility and transparency
+- Images -> visually represent the item to ensure trust and attractiveness of listings
+- User ID -> links the clothing item to its respective seller or donor for ownership tracking
 
 ### Seller
 - ID -> for database categorization regardless of the technology used
@@ -157,7 +162,8 @@
 - Phone number -> to contact the user
 - Email -> for authentication
 - Password -> for authentication
-- Reviews received -> to enable buyers to do business with the seller based on past behavior 
+- Pieces Owned -> to enable buyers to do business with the same seller and allow for modification/deletion of listings
+- Reviews Received -> to enable buyers to do business with the seller based on past behavior 
 
 ### Buyer
 - ID -> for database categorization regardless of the technology used
