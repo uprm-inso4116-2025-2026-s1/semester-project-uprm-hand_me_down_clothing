@@ -1,198 +1,237 @@
-import React from "react";
+import { CheckIcon } from '@heroicons/react/20/solid'
+import Link from 'next/link'
 
-export default function DonateWireframe() {
+export default function DonatePiece() {
   return (
-    <div className="donate-page max-w-3xl mx-auto p-6">
-      {/* Header */}
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold mb-2">Donate Item</h1>
-        <p className="text-gray-600">
-          Please provide the details of the item you wish to donate. Fields
-          marked with <span className="text-lg font-semibold">*</span> are required.
-        </p>
-      </header>
+    <main className="p-3 text-[#2b2b2b] dark:text-[#f5f5dc]">
+      {/* Title */}
+      <h1 className="italic text-5xl sm:text-6xl font-bold mb-8">
+        Donate your clothing!
+      </h1>
 
-      {/* Donation Form */}
-      <form className="donate-form space-y-6">
-        {/* Item Title */}
-        <label className="block">
-          <span className="text-lg font-semibold">Item Title *</span>
-          <input
-            type="text"
-            placeholder="e.g., Yellow sundress"
-            className="mt-1 block w-full border rounded-lg p-2"
-            required
-          />
-        </label>
-
-        {/* Photos */}
-        <section>
-          <h2 className="text-lg font-semibold">Upload Photos *</h2>
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            className="block w-full text-gray-700 border rounded-lg p-2"
-            required
-          />
-          <p className="text-sm text-gray-500 mt-1">
-            You can upload one or more photos of your item.
-          </p>
-        </section>
-
-        {/* Category */}
-        {/* If we have an official list of categories, I can't seem to find it... 
-            This basic input field can be replaced with a different kind of menu like 
-            an autocomplete dropdown menu if we ever have a set list of categories. */}
-        <label className="block">
-          <span className="text-lg font-semibold">Category *</span>
-          <input
-            type="text"
-            placeholder="e.g., Outerwear, Formal, Winter"
-            className="mt-1 block w-full border rounded-lg p-2"
-            required
-          />
-        </label>
-
-        {/* Condition */}
-        <label className="block">
-          <span className="text-lg font-semibold">Condition *</span>
-          <select
-            className="mt-1 block w-full border rounded-lg p-2"
-            required
-          >
-            <option value="">Select condition</option>
-            <option value="new">New</option>
-            <option value="good">Good</option>
-            <option value="fair">Fair</option>
-          </select>
-        </label>
-
-        {/* Quantity */}
-        <label className="block">
-          <span className="text-lg font-semibold">Quantity *</span>
-          <input
-            type="number"
-            min="1"
-            defaultValue="1"
-            className="mt-1 block w-full border rounded-lg p-2"
-            required
-          />
-        </label>
-
-        {/* Description */}
-        <label className="block">
-          <span className="text-lg font-semibold">Description</span>
-          <textarea
-            placeholder="Add any details about your item."
-            className="mt-1 block w-full border rounded-lg p-2"
-          />
-        </label>
-
-        {/* Tags */}
-        {/* Same thing as the categories; this can be replaced if we ever get an official
-            list of tags by something like a dropdown. */}
-        <section>
-            <label className="block">
-            <span className="text-lg font-semibold">Tags</span>
-            <input
-                type="text"
-                placeholder="e.g., winter, casual, cotton"
-                className="mt-1 block w-full border rounded-lg p-2"
-            />
-            </label>
-            <p className="text-sm text-gray-500 mt-1">
-                Tags must be comma separated.
-            </p>
-        </section>
-
-        {/* Handoff Method */}
-        <section className="space-y-4">
-          <h2 className="text-lg font-semibold">Handoff Method *</h2>
-
-          {/* Pickup Option */}
-          <div className="border rounded-lg p-4 space-y-2">
-            <label className="flex items-center space-x-2">
-              <input type="radio" name="handoff" value="pickup" required />
-              <span className="font-medium">Pickup at my location</span>
-            </label>
-            <label className="block">
-              <span className="text-gray-700">Location *</span>
-              <input
-                type="text"
-                placeholder="Enter your address"
-                className="mt-1 block w-full border rounded-lg p-2"
-              />
-            </label>
-            <label className="block">
-              <span className="text-gray-700">Neighborhood</span>
-              <input
-                type="text"
-                placeholder="Enter your neighborhood"
-                className="mt-1 block w-full border rounded-lg p-2"
-              />
-            </label>
-            <label className="block">
-              <span className="text-gray-700">
-                Preferred Days/Times
-              </span>
-              <input
-                type="text"
-                placeholder="e.g., Weekdays after 6 PM"
-                className="mt-1 block w-full border rounded-lg p-2"
-              />
-            </label>
+      {/* Shared width wrapper */}
+      <div className="mx-auto w-340 space-y-12">
+        {/* Steps widget — pink (#d7b1b1) */}
+        <div className="rounded-3xl w-full bg-[#d7b1b1] p-6 text-center">
+          <div className="grid grid-cols-3 justify-items-center">
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold italic text-[#2b2b2b]">Step 1</h3>
+              <p className="text-sm text-white/85">Add photos</p>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold italic text-[#2b2b2b]">Step 2</h3>
+              <p className="text-sm text-white/85">Set location & handoff</p>
+            </div>
+            <div className="space-y-1">
+              <h3 className="text-2xl font-bold italic text-[#2b2b2b]">Step 3</h3>
+              <p className="text-sm text-white/85">Provide item details</p>
+            </div>
           </div>
+        </div>
 
-          {/* Drop-off Option */}
-          <div className="border rounded-lg p-4 space-y-2">
-            <label className="flex items-center space-x-2">
-              <input type="radio" name="handoff" value="dropoff" required />
-              <span className="font-medium">Drop-off at designated point</span>
-            </label>
-            <label className="block">
-              <span className="text-gray-700">Location *</span>
-              <input
-                type="text"
-                placeholder="Enter drop-off location"
-                className="mt-1 block w-full border rounded-lg p-2"
-              />
-            </label>
-            <label className="block">
-              <span className="text-gray-700">
-                Preferred Days/Times
-              </span>
-              <input
-                type="text"
-                placeholder="e.g., Saturday mornings"
-                className="mt-1 block w-full border rounded-lg p-2"
-              />
-            </label>
+        {/* Photos Section */}
+        <section id="photos" className="bg-white border-2 border-[#E5E7EF] rounded-3xl p-6 sm:p-8">
+          <h2 className="text-3xl font-bold italic mb-2">Add photos*</h2>
+          <p className="text-[#666666] mb-6">Show your item clearly so it finds a new home! [Min. 1, Max. 8]</p>
+          <div className="flex justify-center rounded-2xl border-2 border-dashed border-[#E5E7EF] bg-white/50 px-6 py-10">
+            <div className="text-center">
+              <p className="mb-2 text-[#666666]">Upload photos</p>
+              {/* Green upload button */}
+              <label
+                htmlFor="file-upload"
+                className="relative cursor-pointer rounded-full px-4 py-2 bg-[#abc8c1] hover:bg-[#8bb5aa] text-white inline-block transition-colors"
+              >
+                <span className="font-semibold italic">Upload a file</span>
+                <input id="file-upload" name="file-upload" type="file" className="sr-only" multiple />
+              </label>
+              <p className="pl-1 text-[#666666]">or drag and drop</p>
+              <p className="text-xs text-[#666666] mt-2">PNG, JPG, GIF up to 10MB</p>
+            </div>
           </div>
         </section>
 
-        {/* Contact Method */}
-        <section className="space-y-2">
-          <h2 className="text-lg font-semibold">Contact Method *</h2>
-          <select className="block w-full border rounded-lg p-2" required>
-            <option value="">Select contact method</option>
-            <option value="in-app">In-app messages</option>
-            <option value="phone">Phone</option>
-            <option value="email">Email</option>
-          </select>
+        {/* Location & Handoff */}
+        <section id="location" className="bg-white border-2 border-[#E5E7EF] rounded-3xl p-6 sm:p-8">
+          <h2 className="text-3xl font-bold italic mb-6">Location & handoff</h2>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+            <div className="sm:col-span-3">
+              <label htmlFor="city" className="block text-sm font-medium">City *</label>
+              <input
+                id="city"
+                name="city"
+                type="text"
+                placeholder="e.g., Mayagüez"
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              />
+            </div>
+            <div className="sm:col-span-3">
+              <label htmlFor="neighborhood" className="block text-sm font-medium">Neighborhood (optional)</label>
+              <input
+                id="neighborhood"
+                name="neighborhood"
+                type="text"
+                placeholder="e.g., Terrace"
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              />
+            </div>
+
+            <div className="col-span-full">
+              <fieldset className="mt-2">
+                <legend className="text-sm font-medium">Handoff method *</legend>
+                <div className="mt-4 space-y-3">
+                  <label htmlFor="pickup" className="flex items-center gap-2">
+                    <input id="pickup" name="handoff" type="radio" className="accent-[#abc8c1]" />
+                    <span>Pickup at my location</span>
+                  </label>
+                  <label htmlFor="dropoff" className="flex items-center gap-2">
+                    <input id="dropoff" name="handoff" type="radio" className="accent-[#abc8c1]" />
+                    <span>Drop-off at designated point</span>
+                  </label>
+                </div>
+              </fieldset>
+            </div>
+
+            <div className="col-span-full">
+              <label htmlFor="contact" className="block text-sm font-medium">How can we reach you for pickup? *</label>
+              <select
+                id="contact"
+                name="contact"
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                defaultValue="In-app messages"
+              >
+                <option>In-app messages</option>
+                <option>Phone</option>
+                <option>Email</option>
+              </select>
+            </div>
+          </div>
         </section>
 
-        {/* Submit */}
-        <section>
+        {/* Item Details */}
+        <section id="details" className="bg-white border-2 border-[#E5E7EF] rounded-3xl p-6 sm:p-8">
+          <h2 className="text-3xl font-bold italic mb-6">Item details</h2>
+          <div className="grid grid-cols-1 gap-x-6 gap-y-6 sm:grid-cols-6">
+            <div className="sm:col-span-4">
+              <label htmlFor="title" className="block text-sm font-medium">Item name *</label>
+              <input
+                id="title"
+                name="title"
+                type="text"
+                placeholder="e.g., Nike Hoodie — Lavender"
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              />
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="category" className="block text-sm font-medium">Category *</label>
+              <select
+                id="category"
+                name="category"
+                defaultValue=""
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              >
+                <option value="" disabled>Select a category</option>
+                <option>Shirt</option>
+                <option>Dress</option>
+                <option>Jacket</option>
+                <option>Pants</option>
+                <option>Underwear</option>
+                <option>Socks</option>
+                <option>Scarf</option>
+                <option>Hoodie</option>
+                <option>Coat</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="condition" className="block text-sm font-medium">Condition *</label>
+              <select
+                id="condition"
+                name="condition"
+                defaultValue=""
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              >
+                <option value="" disabled>Select condition</option>
+                <option>New</option>
+                <option>Like New</option>
+                <option>Used</option>
+                <option>Worn</option>
+                <option>Old</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-2">
+              <label htmlFor="quantity" className="block text-sm font-medium">Quantity *</label>
+              <input
+                id="quantity"
+                name="quantity"
+                type="number"
+                min={1}
+                placeholder="e.g., 1"
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              />
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="size" className="block text-sm font-medium">Size *</label>
+              <select
+                id="size"
+                name="size"
+                defaultValue=""
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              >
+                <option value="" disabled>Select size</option>
+                <option>2x-Small</option>
+                <option>x-Small</option>
+                <option>Small</option>
+                <option>Medium</option>
+                <option>Large</option>
+                <option>x-Large</option>
+                <option>2x-Large</option>
+                <option>Custom</option>
+              </select>
+            </div>
+
+            <div className="sm:col-span-3">
+              <label htmlFor="sex" className="block text-sm font-medium">Designed for *</label>
+              <select
+                id="sex"
+                name="sex"
+                defaultValue=""
+                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              >
+                <option value="" disabled>Select sex</option>
+                <option>Male</option>
+                <option>Female</option>
+                <option>Unisex</option>
+              </select>
+            </div>
+
+            <div className="col-span-full">
+              <label htmlFor="description" className="block text-sm font-medium">Description (optional)</label>
+              <textarea
+                id="description"
+                name="description"
+                rows={4}
+                placeholder="Highlight what makes this item special for someone else. Include material, style, and/or flaws."
+                className="mt-2 block w-full rounded-2xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+              />
+            </div>
+          </div>
+        </section>
+
+        {/* Footer action bar — green (#abc8c1) */}
+        <div className="flex flex-wrap gap-3 justify-end">
           <button
-            type="submit"
-            className="block w-full border rounded-lg p-2"
+            type="button"
+            className="px-5 py-2 h-13 bg-[#abc8c1] hover:bg-[#8bb5aa] rounded-full inline-flex items-center text-white transition-colors"
+            aria-label="Submit donation"
           >
-            Submit Donation
+            <CheckIcon className="mr-2 size-5" aria-hidden="true" />
+            Submit Donation!
           </button>
-        </section>
-      </form>
-
-    </div>
-  );
+        </div>
+      </div>
+    </main>
+  )
 }
