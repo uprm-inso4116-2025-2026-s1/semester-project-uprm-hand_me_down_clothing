@@ -39,3 +39,8 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# local Docker Compose override
+docker-compose.override.yaml
+docker-compose.yml
+Dockerfile
