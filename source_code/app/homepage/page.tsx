@@ -1,3 +1,6 @@
+import Link from 'next/link';
+import DonateWireframe from '../listings/donate_piece/page';
+
 // Categories for 'Browse by category' section
 const browse_categories = [
   { id: 1, name: "Streetwear", filter: "streetwear" },
@@ -61,9 +64,16 @@ export default function Homepage() {
               <button id="Start_Browsing_btn" className="px-4 py-2 w-55 h-13 bg-[#e6dac7] hover:bg-[#d8c8b4] rounded-full">
                 Start Browsing
               </button>
-              <button id="Donate_Item_btn" className="px-4 py-2 w-55 h-13 bg-[#f9f8f8] hover:bg-[#eceaea] border border-[#E5E7EF] border-2 rounded-full">
-                Donate Item
-              </button>
+              <Link href="../listings/donate_piece">
+                <button id="Donate_Item_btn" className="px-4 py-2 w-55 h-13 bg-[#f9f8f8] hover:bg-[#eceaea] border-[#E5E7EF] border-2 rounded-full">
+                  Donate Item
+                </button>
+              </Link>
+              <Link href="../listings/sell_piece">
+                <button id="Donate_Item_btn" className="px-4 py-2 w-55 h-13 bg-[#f9f8f8] hover:bg-[#eceaea] border-[#E5E7EF] border-2 rounded-full">
+                  Sell Item
+                </button>
+              </Link>
             </div>
             <input
               id="Search_Bar"
@@ -87,7 +97,7 @@ export default function Homepage() {
           <button 
             key={cat.id} 
             id="Browse_Category_btn" 
-            className="w-55 h-40 bg-[#F9F8F8] hover:bg-[#eceaea] border border-[#E5E7EF] border-2 px-4 m-auto rounded-xl">
+            className="w-55 h-40 bg-[#F9F8F8] hover:bg-[#eceaea] border-[#E5E7EF] border-2 px-4 m-auto rounded-xl">
             <div className="flex space-x-2 py-3">
               <div className="rounded-full w-7 h-7 bg-[#D6B1B1]"></div>
               <h3 className="text-lg font-bold italic">{cat.name}</h3>
@@ -114,11 +124,11 @@ export default function Homepage() {
           <button
             key={cat.id}
             id="Featured_Item_btn"
-            className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border border-2 border-[#E5E7EF] m-auto rounded-3xl">
+            className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
             <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
-              <div className="w-18 h-6 bg-[#f6e5e6] border border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{cat.condition}</div>
-              <div className="w-18 h-6 bg-[#F9F8F8] border border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{cat.price}</div>
-              <div className="w-8 h-8 bg-[#F9F8F8] border border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">♥</div>
+              <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{cat.condition}</div>
+              <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{cat.price}</div>
+              <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">♥</div>
             </div>
             <p className="text-lg font-bold italic pt-2">{cat.name}</p>
             <p className="text-md text-[#666666]">Size: {cat.size}</p>
@@ -134,7 +144,7 @@ export default function Homepage() {
         {steps.map((cat) => (
           <div
             key={cat.id}  
-            className="w-100 h-35 bg-[#F9F8F8] border border-[#E5E7EF] border-2 p-4 m-auto rounded-xl">
+            className="w-100 h-35 bg-[#F9F8F8] border-[#E5E7EF] border-2 p-4 m-auto rounded-xl">
             <div className="flex space-x-2 py-3">
               <div className="rounded-full py-2 mx-3 w-8 h-8 bg-[#D6B1B1] text-center text-sm font-bold italic text-[#ffffff]">{cat.id}</div>
               <h3 className="text-lg font-bold italic indent-2">{cat.step}</h3>
@@ -166,7 +176,7 @@ export default function Homepage() {
         {comments.map((comment) => (
           <div
             key={comment.id}  
-            className="w-110 h-35 bg-[#F9F8F8] border border-[#E5E7EF] border-2 p-4 m-auto rounded-xl">
+            className="w-110 h-35 bg-[#F9F8F8] border-[#E5E7EF] border-2 p-4 m-auto rounded-xl">
             <div className="flex space-x-2 py-3">
               <div className="rounded-full py-2 mx-3 w-8 h-8 bg-[#D6B1B1] text-center text-sm font-bold italic text-[#ffffff]"></div>
               <h3 className="text-lg font-bold italic indent-2">{comment.username}</h3>
