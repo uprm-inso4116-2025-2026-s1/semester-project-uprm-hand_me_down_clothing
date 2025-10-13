@@ -30,6 +30,7 @@ export default function SellPiece() {
   }
 
   async function handleSubmit(e: React.FormEvent) {
+    // TODO: refactor to use PieceRepository
     e.preventDefault()
     // Individual field validation
     if (!name.trim()) {
