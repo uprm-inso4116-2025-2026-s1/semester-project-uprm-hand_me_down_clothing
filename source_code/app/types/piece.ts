@@ -1,3 +1,5 @@
+// TODO: add subclasses for sold pieces and donated pieces
+
 export class Piece {
 
     constructor(
