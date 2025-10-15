@@ -12,6 +12,10 @@ const TileLayer = dynamic(
   () => import('react-leaflet').then((mod) => mod.TileLayer),
   { ssr: false }
 );
+const MapMarkerComponent = dynamic(
+  () => import('./marker').then((mod) => mod.default),
+  { ssr: false }
+);
 
 export default function Map() {
 
@@ -26,7 +30,10 @@ export default function Map() {
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and others'
         />
+        {/* Renders all markers on the map */}
+        <MapMarkerComponent />  
       </MapContainer>
+    
     </div>
   );
 }
