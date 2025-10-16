@@ -4,6 +4,7 @@ import React, { useEffect } from "react";
 import dynamic from "next/dynamic";
 import 'leaflet/dist/leaflet.css';
 import type { Map as LeafletMap } from "leaflet";
+import { LocationMarkers, DUMMY_LOCATION } from "./data-cards";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -172,6 +173,7 @@ export default function Map() {
           attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and others'
         />
         <CustomControl />
+        <LocationMarkers locations={DUMMY_LOCATION} />
         <MapMarkerComponent />
       </MapContainer>
     </div>
