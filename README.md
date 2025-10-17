@@ -23,6 +23,7 @@ Before you begin the installation process, make sure your system meets this requ
 
 - Windows, macOS, or Linux.
 
+
 Once you meet all the requirements you can run:
 
 ```bash
@@ -34,6 +35,8 @@ cd semester-project-uprm-hand_me_down_clothing/source_code
 
 # Install dependencies 
 npm install
+
+npm i lucide-react (for the icons react library)
 
 # Start development server
 npm run dev
