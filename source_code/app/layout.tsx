@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import { Lato } from "next/font/google";
 import "./globals.css";
+import AnnouncementBar from "@/src/components/announcementBar";
+import TopNav from "@/src/components/nav_bar";
 import Footer from "@/src/components/Footer";
 
 const lato = Lato({
@@ -19,8 +21,20 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <html lang="en">
-      <body className={`${lato.variable} antialiased`}>{}
-        <main className="min-h-screen flex flex-col">
+      <body className={`${lato.variable} antialiased`}>
+        {/* Skip link for accessibility */}
+        <a
+          href="#main"
+          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-50 rounded bg-white px-3 py-2 shadow"
+        >
+          Skip to content
+        </a>
+
+        <AnnouncementBar />
+        <TopNav />
+
+        {/* Page content + footer */}
+        <main id="main" className="min-h-screen flex flex-col">
           <div className="flex-grow">{children}</div>
           <Footer />
         </main>
@@ -28,3 +42,4 @@ export default function RootLayout({
     </html>
   );
 }
+
