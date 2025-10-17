@@ -1,24 +1,25 @@
 === *2.1.2 - Terminology*
 
-The following terminology consolidates entities, events, functions, and behaviors in the domain. Each entry specifies the type of concept it represents and the phase in which it is introduced 
-(domain, requirements, design, implementation). This approach avoids circular definitions and 
+The following terminology consolidates entities, events, functions, and behaviors in the domain. Each entry specifies the type of concept it represents and the phase in which it is introduced  
+(domain, requirements, design, implementation). This approach avoids circular definitions and  
 ensures alignment with both domain knowledge and system concerns.
 
 [cols="^,^,^,3", options="header", align=center]
 |===
 | Term | Concept Type | Phase Introduced | Definition / Notes
-| Donator | Entity | Domain | A person who provides clothing items for donation.
-| Collector | Entity | Domain | A person who purchases or claims a clothing piece. A person who will potentially purchase or claim a clothing piece.
+| Seller | Entity | Domain | A person who posts a clothing item on the platform to make it visible for reuse or resale.
+| Buyer | Entity | Domain | A person who browses listings and contacts sellers to express interest in an item.
 | Piece | Entity | Domain | An individual clothing item, defined independently of the system.
-| Listing | Representation | Design | A published representation of a Piece in the platform.
-| Donation | Event | Domain | Instantaneous occurrence when a Donator has just made a clothing item available.
-| Collection | Event | Domain | Instantaneous occurrence when a Collector has just taken possession of a Piece.
-| Condition Rating | Attribute / Function | Domain | A measure (e.g., scale 1-10) of quality for a Piece.
-| Review | Artifact | Domain | Annotation (usually written text) associated with a transaction that complements a rating.
-| Locale | Entity | Domain | Physical location or organization where donations are deposited or distributed.
+| Listing | Representation | Design | A published representation of a Piece in the platform, visible to potential buyers.
+| Listing Published | Event | Domain | Instantaneous occurrence when a Seller makes a clothing item publicly visible.
+| Interest Expressed | Event | Domain | Instantaneous occurrence when a Buyer contacts a Seller about a listed item.
+| Listing Closed | Event | Domain | Occurrence when a Listing is manually closed by the Seller after the exchange is completed offline or the item is withdrawn.
+| Condition Rating | Attribute / Function | Domain | A measure (e.g., scale 1–10) of quality for a Piece.
+| Review | Artifact | Domain | Feedback associated with a completed offline exchange between Buyer and Seller.
+| Locale | Entity | Domain | Physical location where exchanges typically occur (e.g., campus area, public spot).
 | Type | Attribute | Domain | Category of clothing (dress, pants, shirt, etc.).
 | rate(Piece, ConditionRating) -> ConditionRating | Function | Design | Updates the condition rating of a Piece using the new rating value; no pre-existing rating is required.
-| donate(Piece, Donator, Locale) -> Donation | Event Function | Design | Function that triggers the event of donation: "A Piece has just been donated by a Donator at a Locale."
-| donate(Piece, Donator, Collector) -> Donation | Event Function | Design | Function that triggers the event of donation: "A Piece has just been donated by a Donator to a Collector."
-| collect(Piece, Collector) -> Collection | Event Function | Design | Triggers the event: "A Piece has just been collected by a Collector."
+| publishListing(Piece, Seller, Locale) -> ListingPublished | Event Function | Design | Function that triggers the publication of a new Listing by a Seller at a given Locale.
+| expressInterest(Listing, Buyer) -> InterestExpressed | Event Function | Design | Function that triggers the event when a Buyer contacts a Seller about a Listing.
+| closeListing(Listing, Seller) -> ListingClosed | Event Function | Design | Function that closes a Listing, indicating that the exchange has been completed offline or the item is no longer available.
 |===

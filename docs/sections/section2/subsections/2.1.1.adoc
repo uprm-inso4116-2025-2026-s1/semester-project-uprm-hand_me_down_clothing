@@ -1,29 +1,30 @@
 === *2.1.1 Domain Rough Sketches*
 :location: Mayagüez, Puerto Rico (UPRM touchpoint)
-:period: 2025 
+:period: 2025
 
 This section captures domain facts, phrases, anecdotes, and observations.
 It SHALL NOT mention features or designs of any future system.
 Interviews with external stakeholders are pending.
 
 ==== Stakeholder & Settings
-* Team self-observation (students), Mayagüez/UPRM: identified a recurring need for affordable access to clothing/accessories among students and families.
+* Team self-observation (students), Mayagüez/UPRM: identified a recurring need for affordable access to clothing and accessories among students and families.
 * *No interviews conducted yet.* Contacts to schedule: students, families, school/university staff, local resale participants.
 
-==== Observed Practices 
-* Discovery: Facebook Marketplace; Facebook groups; WhatsApp groups; Instagram stories.
+==== Observed Practices
+* Discovery: Facebook Marketplace, Facebook groups, WhatsApp groups, Instagram stories.
 * Handoff: in-person meetups at UPRM (on/near campus) or at apartment complexes.
-* Typical flow (as reported by students): look up item → contact seller → agree on specifics (price, size, time/place) → pick up item. Price agreement is informational and not processed by the platform.
+* Typical flow (as reported by students): look up item → contact seller → agree on specifics (price, size, time/place) → meet in person to exchange the item.  
+  The agreement on price and pickup is handled entirely by the users outside any system.
 
 ==== Artifacts, Condition Language, and Pricing
-* Item types seen/expected: any clothing and accessories (no narrow category observed yet).
-* Condition/fit phrasing used: “lightly used,” “like new,” *specific sizes* (size called out explicitly).
-* Typical price bracket mentioned for clothing items: USD $8–$15 (symbolic/low-cost resale).
+* Item types seen/expected: all kinds of clothing and accessories (no restricted categories observed yet).
+* Condition/fit phrasing used: “lightly used,” “like new,” and explicit size labeling.
+* Typical price range mentioned for clothing items: USD $8–$15, treated as an informal or symbolic resale range for students.
 
 ==== Trust, Safety, and Informal Norms
-* Common concerns: item hygiene; no-shows; scams; unsafe meetups.
-* Informal norms reported: include a photo of the size **tag**; include full-item photos (front/back/defects).
-* Moderation: none observed in ad-hoc chats; Facebook groups *may* have basic moderation/house rules (unverified; needs follow-up).
+* Common concerns: item hygiene, no-shows, scams, and unsafe meetups.
+* Informal norms reported: include a **photo of the size tag**, full-item photos (front/back/defects), and respond promptly.
+* Moderation: minimal to none in ad-hoc chats; Facebook groups *may* apply basic moderation or post approval (to confirm).
 
 ==== Language & Access
 * Languages used: Spanish + English (bilingual exchanges common).
@@ -31,21 +32,22 @@ Interviews with external stakeholders are pending.
 
 ==== Existing Channels (local)
 * Facebook Marketplace (general Mayagüez and student-adjacent listings).
-* Facebook groups (names to be captured during interviews).
-* WhatsApp groups/lists (parent/student circles).
+* Facebook groups (specific group names to be gathered during interviews).
+* WhatsApp groups/lists (student and family circles).
 * Instagram stories (peer-to-peer sharing).
-* Moderation/ownership of channels: unknown (except Facebook-controlled groups); to verify.
+* Moderation/ownership of channels: typically user- or admin-managed groups; to verify.
 
-==== Micro-notes / Anecdotal Fragments 
-* Price sensitivity appears high; low-cost clothing listings ($8–$15) are common reference points among students.
-* Meetups tend to prefer familiar, semi-public locations (campus spots, apartment lobbies).
-* Sellers are expected to show a **tag photo** and **full product photos**; size clarity is a frequent pain point.
+==== Micro-notes / Anecdotal Fragments
+* Price sensitivity remains high; low-cost clothing listings ($8–$15) are the usual reference point for students.
+* Meetups generally occur in familiar, semi-public locations such as campus benches or apartment lobbies.
+* Sellers are expected to show **tag photos** and **clear images** of items; size miscommunication is a recurring issue.
+* Exchanges happen quickly once contact is established — often same-day or next-day pickup.
 
 ==== Open Questions (for later concept analysis)
-* Which specific groups/chats drive most exchanges in Mayagüez/UPRM? Who moderates them and what rules exist?
+* Which groups or chat channels are most active in Mayagüez/UPRM, and who moderates them?
 * What concrete safety practices are considered “standard” locally (meetup spots, daylight hours, bringing a friend, ID at gates)?
-* How is *condition* defined locally beyond “lightly used/like new”? (e.g., semester-used uniforms, defect call-outs, hygiene steps)
-* Are there seasonal peaks (back-to-school, semester start, graduation, weather shifts)? What items spike, and when?
-* For pricing, when do buyers/sellers treat $8–$15 as “firm” vs. negotiable (OBO, bundles)?
-* Are there categories explicitly excluded by social norms (e.g., certain intimate apparel), and how is that communicated?
-* Which language (Spanish vs. English) dominates in each channel, and does that affect participation?
+* How is *condition* described locally beyond “lightly used/like new”? (e.g., semester-used uniforms, visible defects, hygiene notes)
+* Are there predictable seasonal peaks (back-to-school, semester start, graduation, weather shifts)? Which items surge in demand?
+* For pricing, when do buyers and sellers treat $8–$15 as “firm” vs. negotiable (OBO, bundles)?
+* Are there categories socially excluded (e.g., certain intimate apparel), and how do participants communicate those boundaries?
+* Does the primary language (Spanish vs. English) of a listing or message affect engagement or trust among participants?

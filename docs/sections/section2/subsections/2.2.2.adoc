@@ -1,44 +1,45 @@
 === *2.2.2 - Personas*
 
-A persona is a fictional yet plausible representation of a user for a platform. The following personas will help align development goals with user needs.
+A persona is a fictional yet plausible representation of a user within the platform’s ecosystem. The following personas illustrate different motivations, behaviors, and constraints to help align development goals with user needs.  
+They represent typical users participating in the *listing and discovery* of secondhand clothing, where all exchanges and payments occur directly between parties, outside the system.
 
 *Adriana Gómez*
 
-- *Age*: 20 years old
-- *Occupation*: University student on financial aid working part-time on campus
-- *Build / Appearance*: Dark and straight hair, low to average height, dresses in vintage clothes and kitschy accessories
-- *Personality*: Creative, unique, community-driven
+- *Age*: 20 years old  
+- *Occupation*: University student on financial aid working part-time on campus  
+- *Build / Appearance*: Dark, straight hair; average height; dresses in vintage clothes and colorful accessories  
+- *Personality*: Creative, expressive, community-driven  
 
-Adriana loves expressing herself through her fashion, yet she struggles finding clothes that feel like her. She has an affinity for older clothing, so thrift stores are a common spot for her. However, she struggles finding thrift stores in her area given that most of them don’t have an online presence and, between her studies and her job, she doesn’t have a lot of time to go out and look for them.
+Adriana loves expressing herself through unique outfits. She often mixes styles and prefers pre-owned or vintage pieces that stand out from mainstream fashion. However, she finds it difficult to locate affordable, distinctive items near Mayagüez since many local thrift stores have little to no online presence. Between classes and her part-time job, she has limited time to explore in person.
 
-- *Pain Points*: Difficulty finding unique clothing items and accessories that don’t break the bank, difficulty finding local thrift stores
-- *Needs*: Access to trustworthy online listings, a way to find local thrift stores
-- *Platform Interaction*: Browses listings from her phone during her breaks between classes
+- *Pain Points*: Limited access to local secondhand clothing options; lack of time to search physically; difficulty finding one-of-a-kind pieces online.  
+- *Needs*: A trusted way to browse nearby listings from local sellers and individuals offering unique or free clothing.  
+- *Platform Interaction*: Scrolls listings during short study breaks, saves her favorite posts, and messages sellers when something catches her eye.  
 
 
 *Manuel Torres*
 
-- *Age*: 35 years old
-- *Occupation*: Middle school teacher
-- *Build / Appearance*: Brown and curly hair, average height, frequently seen in polo shirts or t-shirts with witty quotes on them.
-- *Personality*: Patient, funny, good with kids, adventurous
+- *Age*: 35 years old  
+- *Occupation*: Middle school teacher  
+- *Build / Appearance*: Brown, curly hair; average height; prefers casual, comfortable wear such as polos and witty t-shirts.  
+- *Personality*: Patient, organized, practical, approachable  
 
-Manuel is moving to a new location and wants a fresh start. Even if he doesn’t want a lot of his belongings anymore, he’d rather not throw them away. He wants to sell whatever he has that’s still in good condition to help out with the expenses involvd in the move but can’t find a way to do so.
+Manuel is preparing to move apartments and wants to downsize. He has a closet full of gently used clothing that could benefit others, but he doesn’t want to waste time organizing garage sales or posting on multiple apps. He wants an easy, local way to share listings that reach people nearby without having to handle payments through the platform.
 
-- *Pain Points*: No low-hassle way to sell his belongings
-- *Needs*: Access to a way to sell his belongings on his own terms
-- *Platform Interaction*: Creates listings from his work computer for his pre-loved clothes
+- *Pain Points*: No streamlined way to share or list his pre-owned items locally.  
+- *Needs*: A simple listing tool that allows him to post clothing quickly and connect with potential buyers or donors without complicated transactions.  
+- *Platform Interaction*: Creates listings from his work computer, uploads a few photos, sets prices or marks items as free, and arranges pickups directly through chat.  
 
 
 *Daniela López*
 
-- *Age*: 27 years old
-- *Occupation*: Nurse practitioner
-- *Build / Appearance*: Long and wavy brunette hair, tall, dresses in comfortable clothes like baggy jeans or athleisure
-- *Personality*: Outspoken, understanding, eco-conscious
+- *Age*: 27 years old  
+- *Occupation*: Nurse practitioner  
+- *Build / Appearance*: Tall, brunette with wavy hair; prefers relaxed styles such as denim, scrubs, and athleisure.  
+- *Personality*: Outspoken, empathetic, eco-conscious  
 
-Daniela is the type of person to own something until it falls apart. She is vehemently against fast fashion and tries to not contribute to it to the best of her ability. She believes older clothing was made to last longer and buys second-hand whenever she can, but her favorite local thrift store has just closed down and the closest is now too far away for her to visit frequently.
+Daniela believes in sustainability and fights against the culture of fast fashion. She values durability and ethics in clothing choices and enjoys supporting local reuse initiatives. When her favorite thrift store closed, she began looking for new ways to find secondhand clothes that align with her values, but she prefers interacting directly with other people instead of large e-commerce sites.
 
-- *Pain Points*: Doesn’t want to contribute to fast fashion, tired of the low quality of modern clothing items
-- *Needs*: A way to purchase good quality vintage clothing items
-- *Platform Interaction*: Browses listings using search filters to narrow down her results to her needs
+- *Pain Points*: Frustrated by the dominance of fast fashion and the scarcity of convenient local alternatives.  
+- *Needs*: A platform that connects her directly with local sellers offering high-quality secondhand clothing, helping her make eco-conscious choices.  
+- *Platform Interaction*: Uses search filters to narrow listings by condition and material, contacts sellers directly, and shares sustainable fashion tips in her messages.  
