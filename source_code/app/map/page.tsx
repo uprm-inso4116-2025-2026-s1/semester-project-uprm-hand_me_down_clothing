@@ -1,9 +1,9 @@
 'use client'
 
-import React, { use, useEffect } from "react";
+import React, { use, useEffect, useRef } from "react";
 import dynamic from "next/dynamic";
 import 'leaflet/dist/leaflet.css';
-import type { Map as LeafletMap } from "leaflet";
+import type { Map as LeafletMap, Marker as LeafletMarker } from "leaflet";
 import { LocationMarkers, LocationRecord } from "./data-cards";
 import {supabase} from '../auth/supabaseClient';
 
@@ -21,11 +21,22 @@ const MapMarkerComponent = dynamic(
 );
 import { useMap } from "react-leaflet";
 
-function CustomControl() {
+function CustomControl({ 
+  locations, 
+  markersRef 
+}: { 
+  locations: LocationRecord[];
+  markersRef: React.MutableRefObject<globalThis.Map<number, LeafletMarker>>;
+}) {
   const map: LeafletMap = useMap();
+  
   useEffect(() => {
     import("leaflet").then(L => {
-      if (document.querySelector(".custom-map-control")) return;
+      // Remove existing control if it exists
+      const existingControl = document.querySelector(".custom-map-control");
+      if (existingControl) {
+        existingControl.remove();
+      }
 
       const CustomControlClass = L.Control.extend({
         onAdd: function () {
@@ -33,14 +44,22 @@ function CustomControl() {
 
           const button = L.DomUtil.create("button", "custom-map-btn", container);
           button.innerHTML = "🗺️";
-          button.title = "Map Info";
+          button.title = "Locations";
 
           const menu = L.DomUtil.create("div", "custom-map-menu", container);
+          
+          // Build location list
+          const locationsList = locations.length > 0 
+            ? locations.map(loc => `
+                <li data-location-id="${loc.id}" style="padding: 8px; cursor: pointer; transition: background 0.2s, color 0.2s;">
+                  ${loc.name || 'Unnamed Location'}
+                </li>
+              `).join('')
+            : '<li style="padding: 8px; color: #666;">No locations available</li>';
+          
           menu.innerHTML = `
-            <ul style="list-style:none; padding:0; margin:0;">
-              <li>Option 1</li>
-              <li>Option 2</li>
-              <li>Option 3</li>
+            <ul style="list-style:none; padding:0; margin:0; max-height: 300px; overflow-y: auto;">
+              ${locationsList}
             </ul>
           `;
 
@@ -52,26 +71,50 @@ function CustomControl() {
           menu.style.background = "rgba(255, 182, 193, 0.9)";
           menu.style.border = "1px solid rgba(255, 182, 193, 0.7)";
           menu.style.borderRadius = "8px";
-          menu.style.minWidth = "140px";
+          menu.style.minWidth = "200px";
           menu.style.boxShadow = "0 4px 12px rgba(255, 182, 193, 0.4)";
           menu.style.padding = "0";
           menu.style.overflow = "hidden";
 
           // Style list items
-          const liElements = menu.querySelectorAll("li");
+          const liElements = menu.querySelectorAll("li[data-location-id]");
           liElements.forEach((li) => {
-            li.style.padding = "8px";
-            li.style.cursor = "pointer";
-            li.style.transition = "background 0.2s, color 0.2s";
-            li.onmouseenter = () => {
-              li.style.background = "rgba(255, 182, 193, 0.6)";
-              li.style.color = "#fff";
+            const htmlLi = li as HTMLElement;
+            htmlLi.onmouseenter = () => {
+              htmlLi.style.background = "rgba(255, 182, 193, 0.6)";
+              htmlLi.style.color = "#fff";
             };
-            li.onmouseleave = () => {
-              li.style.background = "transparent";
-              li.style.color = "#000";
+            htmlLi.onmouseleave = () => {
+              htmlLi.style.background = "transparent";
+              htmlLi.style.color = "#000";
             };
-            li.onclick = () => alert(`${li.textContent} clicked!`);
+            htmlLi.onclick = () => {
+              const locationId = parseInt(htmlLi.getAttribute('data-location-id') || '0');
+              const location = locations.find(loc => loc.id === locationId);
+              
+              if (location && location.latitude && location.longitude) {
+                // Pan to location
+                map.setView([location.latitude, location.longitude], 16, {
+                  animate: true,
+                  duration: 1
+                });
+                
+                // Open popup after a short delay to ensure pan completes
+                setTimeout(() => {
+                  const marker = markersRef.current.get(locationId);
+                  if (marker) {
+                    marker.openPopup();
+                  }
+                }, 500);
+                
+                // Close the dropdown
+                menu.style.transform = "scaleY(0)";
+                menu.style.opacity = "0";
+                setTimeout(() => {
+                  button.style.display = "block";
+                }, 300);
+              }
+            };
           });
 
           // Show dropdown
@@ -97,13 +140,14 @@ function CustomControl() {
 
       new CustomControlClass({ position: "topright" }).addTo(map);
     });
-  }, [map]);
+  }, [map, locations, markersRef]);
 
   return null;
 }
 
 export default function Map() {
   const [locations, setLocations] = React.useState<LocationRecord[]>([]);
+  const markersRef = useRef<globalThis.Map<number, LeafletMarker>>(new globalThis.Map());
   
   useEffect(() => {
     if (locations.length > 0) return; // Only run when locations is empty
@@ -198,8 +242,8 @@ export default function Map() {
           url="https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}"
           attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and others'
         />
-        <CustomControl />
-        <LocationMarkers locations={locations} />
+        <CustomControl locations={locations} markersRef={markersRef} />
+        <LocationMarkers locations={locations} markersRef={markersRef} />
         <MapMarkerComponent />
       </MapContainer>
     </div>
