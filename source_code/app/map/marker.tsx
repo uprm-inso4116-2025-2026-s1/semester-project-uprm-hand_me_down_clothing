@@ -31,8 +31,8 @@ export class Store{
 
 //Array of dummy data to populate the map with markers
 const storeArray: Store[]=[
-    new Store("Store 1", "Address 1", 18.2010, -67.1390),
-    new Store("Store 2", "Address 2", 18.2100, -67.1300),
+    new Store("Store 1", "Address 1", 18.2010, -67.1390), // JTorres: "These dummy pins can be removed. I will start implementing the responsive pins
+    new Store("Store 2", "Address 2", 18.2100, -67.1300), // with the data cards.""
 ]
 /////////////////////////////////////////////////////////////////////
 
