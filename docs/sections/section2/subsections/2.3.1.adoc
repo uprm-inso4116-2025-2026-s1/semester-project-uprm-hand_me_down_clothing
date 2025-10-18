@@ -1,25 +1,31 @@
 === 2.3.1 Selected Fragments of the Implementation
-This section provides selected fragments of the implementation that complement the architecture described in Section 2.3. Instead of full code listings (not yet implemented), this section includes visual representations of the application’s main pages.
+This section provides selected fragments of the implementation that complement the architecture described in Section 2.3.  
+Instead of full code listings (not yet implemented), this section includes visual representations of the application’s main pages and flows.
 
 ==== Home Page
 
 image::HomePage.png[Home Page, align=center, pdfwidth=80%]
 
-
-The entry point of the application. Displays recent clothing items and quick navigation options for uploading, browsing items, liked clothing items, the user’s cart, and the map page for local centers.
+The entry point of the application. Displays recent clothing listings and quick navigation options for uploading new listings, browsing available items, viewing saved (liked) items, and accessing the map page for local donation centers.  
+There is **no cart or checkout option**, since all exchanges occur directly between users outside the platform.
 
 ==== Clothing Listing Page
 
 image::ListingsPage.png[Listings Page, align=center, pdfwidth=80%]
 
-Shows a landscape UI filled with different clothing items with their respective photo, price, size, condition, and category available for purchase. Each item links to a detail page. The page also includes search and filtering options by category, size, condition, and location. Users can also add items to a "liked list" to save for later viewing.
+Shows a scrollable interface filled with clothing listings that include a photo, title, price (or “Free”), size, condition, and category.  
+Each listing links to a detailed view where users can see more information or contact the seller.  
+Search and filtering options are available by category, size, condition, location, and price/free marker.  
+Users can also add items to a “Saved Listings” list to revisit later.
 
 ==== Item Detail Page
 
 image::IndividualListing.png[Individual Listing, align=center, pdfwidth=80%]
 
-
-Provides detailed information about a specific clothing item selected from the listings page. Includes images, description, size, condition, and location. Users can like, share, or contact the seller. Related items are displayed at the bottom.
+Provides detailed information about a specific clothing listing selected from the Listings Page.  
+Displays images, descriptions, size, condition, price/free marker, and location.  
+Includes buttons to **Save**, **Share**, or **Contact Seller**, initiating an in-app message or redirection to the seller’s contact channel.  
+Related listings are displayed at the bottom to encourage continued browsing.
 
 ==== Map Page
 
@@ -27,13 +33,22 @@ image::Map1.png[Map 1, align=center]
 image::Map2.png[Map 2, align=center]
 image::Map3.png[Map 3, align=center]
 
+Displays nearby donation and repurposing centers using Leaflet.  
+Locations stored in Supabase include name, address, hours, and type of service (e.g., “Donation Only,” “Donation-for-Credit”).  
+The map helps users identify offline drop-off or pickup options near their area.
 
-Displays nearby donation and repurposing centers using Leaflet. Locations (stored in Supabase) include name, address, hours, and type of service (donation only or donation-for-credit).
-
-These images complement the architecture by showing how the frontend components (React pages) map to backend logic (JavaScript functions) and data storage (Supabase).
+These images complement the architecture by showing how the frontend components (React pages) map to backend logic (JavaScript functions) and Supabase services (Database, Storage, Auth).
 
 ==== Item Upload Flowchart
 
 image::HandMeDown_ItemUpload.png[Item Upload Flowchart, align=center]
 
-Shows the steps the user has to take to successfully upload an item. Includes the process of being logged in, creating the description of the item, uploading images and marking the item for sell or for a donation.
+Illustrates the process for creating a new listing:
+1. User logs in or registers.  
+2. Opens the *Create Listing* form.  
+3. Fills in title, category, description, condition, and optional price/free marker.  
+4. Uploads one or more images.  
+5. Submits the listing.  
+6. Listing is stored in Supabase with its associated seller ID and displayed publicly in the marketplace.  
+
+The upload process enforces required fields but **does not create or manage any transaction**; once published, all further exchanges between users occur externally.
