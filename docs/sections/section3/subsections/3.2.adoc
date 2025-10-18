@@ -18,10 +18,6 @@ requirements is accurate and complete, even before implementation:
   or families has been performed. Instead, internal reviews are used to identify 
   potential gaps, such as safety practices for meetups or the way condition 
   disclosure norms are represented.
-* *Planned A/B Testing*:: As the UI/UX evolves, A/B testing will be used to validate 
-  design hypotheses. Examples include testing filter placement in the item search 
-  page, or checkout button positioning. Metrics such as time-to-action and user 
-  satisfaction will guide design decisions.
 
 ==== Verification
 
@@ -41,6 +37,10 @@ deliverables can be tested against measurable criteria:
 * *Traceability Checks*:: Deliverables will be reviewed against the requirements 
   and terminology to ensure completeness and consistency. Each requirement will 
   be linked to validation and verification artifacts (test cases, scenarios).
+* *Planned A/B Testing*:: As the UI/UX evolves, A/B testing will be used to validate 
+  design hypotheses. Examples include testing filter placement in the item search 
+  page, or checkout button positioning. Metrics such as time-to-action and user 
+  satisfaction will guide design decisions.
 
 ==== Roles and Responsibilities
 
