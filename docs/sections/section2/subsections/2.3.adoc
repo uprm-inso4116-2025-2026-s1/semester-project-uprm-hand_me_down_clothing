@@ -43,7 +43,7 @@ The application is structured as follows:
 ==== Architecture Diagram
 The architecture of the application is designed to separate concerns between the frontend, backend logic, and Supabase services. This structure ensures maintainability, scalability, and clarity for both developers and users.
 
-image::../../../../images/Architecture_Diagram.png[Architecture Diagram, align=center]
+image::Architecture_Diagram.png[Architecture Diagram, align=center]
 
 . Architecture Overview
 .. React Frontend
