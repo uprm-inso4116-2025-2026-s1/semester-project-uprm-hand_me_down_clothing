@@ -1,10 +1,11 @@
 'use client'
 
-import React, { useEffect } from "react";
+import React, { use, useEffect } from "react";
 import dynamic from "next/dynamic";
 import 'leaflet/dist/leaflet.css';
 import type { Map as LeafletMap } from "leaflet";
-import { LocationMarkers, DUMMY_LOCATION } from "./data-cards";
+import { LocationMarkers, LocationRecord } from "./data-cards";
+import {supabase} from '../auth/supabaseClient';
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -22,7 +23,6 @@ import { useMap } from "react-leaflet";
 
 function CustomControl() {
   const map: LeafletMap = useMap();
-
   useEffect(() => {
     import("leaflet").then(L => {
       if (document.querySelector(".custom-map-control")) return;
@@ -103,6 +103,32 @@ function CustomControl() {
 }
 
 export default function Map() {
+  const [locations, setLocations] = React.useState<LocationRecord[]>([]);
+  
+  useEffect(() => {
+    if (locations.length > 0) return; // Only run when locations is empty
+    
+    (async () => {
+      const { data, error } = await supabase
+        .from('stores')
+        .select('id, name, latitude, longitude, address, contact_info, store_hours');
+      if (error) {
+        console.error("Error fetching locations:", error);
+      } else if (data) {
+        // Cast each item to LocationRecord
+        const castedLocations: LocationRecord[] = data.map(item => ({
+          id: item.id,
+          name: item.name,
+          latitude: item.latitude,
+          longitude: item.longitude,
+          address: item.address,
+          contact_info: item.contact_info,
+          store_hours: item.store_hours
+        }));
+        setLocations(castedLocations);
+      }
+    })();
+  }, [locations]);
   return (
     <div className="min-h-screen flex flex-col">
       {/* Header placeholder space */}
@@ -173,7 +199,7 @@ export default function Map() {
           attribution='Tiles &copy; Esri &mdash; Source: Esri, Maxar, Earthstar Geographics, and others'
         />
         <CustomControl />
-        <LocationMarkers locations={DUMMY_LOCATION} />
+        <LocationMarkers locations={locations} />
         <MapMarkerComponent />
       </MapContainer>
     </div>

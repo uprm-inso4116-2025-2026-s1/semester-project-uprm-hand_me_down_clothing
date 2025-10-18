@@ -13,32 +13,26 @@ const Popup = dynamic(async () => (await import("react-leaflet")).Popup, { ssr: 
 
 // Export the type definition for a location
 export type LocationRecord = {
-  id: string;
-  name: string;
+  id: number;
+  name?: string;
   description?: string;
-  coords: [number, number];
-  address?: string;
-  services?: string[];
-  hours?: string;
+  latitude?: number;
+  longitude?: number;
   thumbnailUrl?: string;
-  href?: string;
+  address?: string;
+  contact_info?: string;
+  store_hours?: store_hours;
 };
 
-// Export the dummy location data
-export const DUMMY_LOCATION: LocationRecord[] = [
-  {
-    id: "loc-1",
-    name: "Bazar del Carmen Thrift Shop",
-    description: "Your local favorite thrift shop.",
-    coords: [18.207087, -67.149468],
-    address: "246 C. Méndez Vigo, Mayagüez, 00682",
-    services: ["Clothes, Shoes, Hats"],
-    hours: "Mon-Fri 7am-11pm",
-    thumbnailUrl: "https://cdn.dribbble.com/userupload/2919739/file/original-f80d0820a6dc79dc861192da6e40b348.png?resize=1600x1200&vertical=center",
-    href: "#",
-  },
-  // You can add more locations here
-];
+export type store_hours = {
+  monday?: {open: string; close: string};
+  tuesday?: {open: string; close: string};
+  wednesday?: {open: string; close: string};
+  thursday?: {open: string; close: string};
+  friday?: {open: string; close: string};
+  saturday?: {open: string; close: string};
+  sunday?: {open: string; close: string};
+};
 
 // Custom hook to fix Leaflet's default marker icons in Next.js
 function useFixDefaultMarkerIcons() {
@@ -85,7 +79,7 @@ function useFixDefaultMarkerIcons() {
 }
 
 // Component to close popups when clicking on the map background
-function MapClickHandler({ markersRef }: { markersRef: React.MutableRefObject<Map<string, LeafletMarker>> }) {
+function MapClickHandler({ markersRef }: { markersRef: React.MutableRefObject<Map<number, LeafletMarker>> }) {
   const map = useMapEvents({
     popupopen: () => {
       // When a popup opens, we don't need to do anything special
@@ -122,7 +116,7 @@ function MapClickHandler({ markersRef }: { markersRef: React.MutableRefObject<Ma
 // This is the main component you will import into page.tsx
 export function LocationMarkers({ locations }: { locations: LocationRecord[] }) {
   useFixDefaultMarkerIcons();
-  const markersRef = useRef<Map<string, LeafletMarker>>(new Map());
+  const markersRef = useRef<Map<number, LeafletMarker>>(new Map());
 
   // Effect to close popup on 'Escape' key press
   useEffect(() => {
@@ -141,21 +135,25 @@ export function LocationMarkers({ locations }: { locations: LocationRecord[] }) 
     <>
       <MapClickHandler markersRef={markersRef} />
       {locations.map((loc) => {
-        const [lat, lng] = loc.coords || [];
-        const valid = Number.isFinite(lat) && Number.isFinite(lng);
-        if (!valid) return null;
+        // Create marker position from latitude/longitude
+        const position: [number, number] | null =
+          (Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude))
+            ? [loc.latitude as number, loc.longitude as number]
+            : null;
+
+        if (!position) return null;
 
         return (
           <Marker
             key={loc.id}
-            position={loc.coords}
+            position={position}
             ref={(ref) => {
               if (ref) {
                 // @ts-ignore - ref is a React-Leaflet wrapper, need to access the Leaflet marker
                 markersRef.current.set(loc.id, ref);
               }
             }}
-            eventHandlers={{ 
+            eventHandlers={{
               click: (e) => {
                 // @ts-ignore - Leaflet event has originalEvent
                 e.originalEvent?.stopPropagation();
@@ -193,16 +191,23 @@ export function LocationMarkers({ locations }: { locations: LocationRecord[] }) 
                   <p className="text-sm mb-1">{loc.description || "No description provided."}</p>
 
                   <div className="text-xs leading-snug mb-2">
-                    {loc.address && <div><strong>Address:</strong> {loc.address}</div>}
-                    {loc.services?.length && <div><strong>Services:</strong> {loc.services.join(", ")}</div>}
-                    {loc.hours && <div><strong>Hours:</strong> {loc.hours}</div>}
+                    {loc.address && <div className="mb-2"><strong>Address:</strong> {loc.address}</div>}
+                    {loc.contact_info && <div className="mb-2"><strong>Contact:</strong> {loc.contact_info}</div>}
+                    {loc.store_hours && (
+                      <div><strong>Hours:</strong>
+                        <div className="ml-2 mt-1 space-y-0.5">
+                          {Object.entries(loc.store_hours).map(([day, hours]) => 
+                            hours && typeof hours === 'object' && 'open' in hours && 'close' in hours && (
+                              <div key={day} className="text-xs flex justify-between">
+                                <span className="capitalize font-medium">{day}:</span>
+                                <span>{hours.open} - {hours.close}</span>
+                              </div>
+                            )
+                          )}
+                        </div>
+                      </div>
+                    )}
                   </div>
-
-                  {loc.href && (
-                    <a href={loc.href} className="inline-block text-xs underline">
-                      View more
-                    </a>
-                  )}
                 </div>
               </Popup>
           </Marker>
