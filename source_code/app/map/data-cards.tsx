@@ -114,15 +114,22 @@ function MapClickHandler({ markersRef }: { markersRef: React.MutableRefObject<Ma
 }
 
 // This is the main component you will import into page.tsx
-export function LocationMarkers({ locations }: { locations: LocationRecord[] }) {
+export function LocationMarkers({ 
+  locations, 
+  markersRef 
+}: { 
+  locations: LocationRecord[];
+  markersRef?: React.MutableRefObject<Map<number, LeafletMarker>>;
+}) {
   useFixDefaultMarkerIcons();
-  const markersRef = useRef<Map<number, LeafletMarker>>(new Map());
+  const internalMarkersRef = useRef<Map<number, LeafletMarker>>(new Map());
+  const activeMarkersRef = markersRef || internalMarkersRef;
 
   // Effect to close popup on 'Escape' key press
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
-        markersRef.current.forEach((marker) => {
+        activeMarkersRef.current.forEach((marker) => {
           marker.closePopup();
         });
       }
@@ -133,7 +140,7 @@ export function LocationMarkers({ locations }: { locations: LocationRecord[] }) 
 
   return (
     <>
-      <MapClickHandler markersRef={markersRef} />
+      <MapClickHandler markersRef={activeMarkersRef} />
       {locations.map((loc) => {
         // Create marker position from latitude/longitude
         const position: [number, number] | null =
@@ -150,7 +157,7 @@ export function LocationMarkers({ locations }: { locations: LocationRecord[] }) 
             ref={(ref) => {
               if (ref) {
                 // @ts-ignore - ref is a React-Leaflet wrapper, need to access the Leaflet marker
-                markersRef.current.set(loc.id, ref);
+                activeMarkersRef.current.set(loc.id, ref);
               }
             }}
             eventHandlers={{
@@ -158,7 +165,7 @@ export function LocationMarkers({ locations }: { locations: LocationRecord[] }) 
                 // @ts-ignore - Leaflet event has originalEvent
                 e.originalEvent?.stopPropagation();
                 // Close other popups first
-                markersRef.current.forEach((marker, id) => {
+                activeMarkersRef.current.forEach((marker, id) => {
                   if (id !== loc.id) {
                     marker.closePopup();
                   }
