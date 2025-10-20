@@ -1,9 +1,10 @@
 "use client"
 
 import { CheckIcon } from '@heroicons/react/20/solid'
-import { createClient } from '@/app/utils/supabase/client'
 import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
+import { PieceRepository } from '@/src/repositories/pieceRepository';
+import { PieceFactory } from '@/src/factories/pieceFactory';
 
 const dummyUserId = "00000000-0000-0000-0000-000000000000"; // placeholder UUID
 
@@ -30,8 +31,16 @@ export default function SellPiece() {
   }
 
   async function handleSubmit(e: React.FormEvent) {
-    // TODO: refactor to use PieceRepository
     e.preventDefault()
+    
+    // TODO: add this once Auth is set up (meaning signup and login screens with a logout button somewhere )
+    // Get the current user
+    // const { data: { user } } = await supabase.auth.getUser();
+    // if (!user) {
+    //   alert("You must be logged in to publish a piece.");
+    //   return;
+    // }
+
     // Individual field validation
     if (!name.trim()) {
       alert("Please enter a name for your piece.");
@@ -71,32 +80,29 @@ export default function SellPiece() {
       return;
     }
 
-    const supabase = createClient();
+    const factory = new PieceFactory();
+    const repository = new PieceRepository();
 
-    // TODO: add this once Auth is set up (meaning signup and login screens with a logout button somewhere )
-    // Get the current user
-    // const { data: { user } } = await supabase.auth.getUser();
-    // if (!user) {
-    //   alert("You must be logged in to publish a piece.");
-    //   return;
-    // }
-
-    const { error } = await supabase.from('pieces').insert([{
-      name,
-      category,
-      color,
-      brand,
-      gender,
-      size,
+    const piece = factory.makePiece({
+      id: "0",
+      name: name,
+      category: category,
+      color: color,
+      brand: brand,
+      gender: gender,
+      size: size,
       price: parsedPrice.toFixed(2),
-      condition,
-      reason,
-      images,
-      user_id : dummyUserId,
-      // user_id : user.id,
-    }])
+      condition: condition,
+      reason: reason,
+      images: images,
+      user_id: dummyUserId,
+      // user_id: user.id, 
+    });
+
+    const error = await repository.createPiece(piece);
+
     if (error) {
-      alert("Failed to publish: " + error.message)
+      alert("Failed to publish: " + error.message);
     } else {
       alert("Piece published successfully!");
       router.push("/");
@@ -362,13 +368,11 @@ function step(index: number, s: string){
 // and uncomment everything beneath this line. Reverse that action when finished.
 
 // import { ReactElement } from "react";
-// import { createClient } from '@/app/utils/supabase/client'
 // import { Piece } from "@/app/types/piece";
+// import { PieceRepository } from "@/src/repositories/pieceRepository";
 
 // export default async function Home() {
-//   const supabase = createClient();
-//   const pieces_data = (await supabase.from('pieces').select("*")).data;
-//   const pieces = pieces_data!.map((item) => new Piece(item['id'], item['name'], item['category'], item['color'], item['brand'], item['gender'], item['size'], item['price'], item['condition'], item['reason'], item['images'], item['user_id']));
+//   const pieces = await (new PieceRepository().getPieces());
 
 //   return (
 //     <main className="px-10 py-6 flex flex-col items-center">
@@ -433,11 +437,5 @@ function step(index: number, s: string){
 //         </div>
 //       </div>
 //     </div>
-//   );
-// }
-
-// function button(contents: ReactElement): ReactElement {
-//   return (
-//     <div className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">{contents}</div>
 //   );
 // }

@@ -1,6 +1,6 @@
-// TODO: add subclasses for sold pieces and donated pieces
+import { Category, Gender, Size, Condition } from "./classifications";
 
-export class Piece {
+export abstract class Piece {
 
     constructor(
         public id: string,
@@ -17,46 +17,30 @@ export class Piece {
         public user_id: string,
     ) { }
 
-    getFormattedPrice() {
+    public getFormattedPrice(): string {
         if (this.price == null) { return `$0.00`; }
         return `$${this.price!.toFixed(2)}`;
     }
 
-}
+    // TODO: properly implement the following methods to aid UI team
+    public getFormattedCategory(): string {
+        return this.category.toString();
+    }
 
-enum Condition {
-    NEW,
-    LIKE_NEW,
-    USED,
-    WORN,
-    OLD,
-}
+    public getFormattedGender(): string {
+        return this.gender.toString();
+    }
 
-enum Category {
-    SHIRT,
-    DRESS,
-    JACKET,
-    PANTS,
-    UNDERWEAR,
-    SOCKS,
-    SCARF,
-    HOODIE,
-    COAT,
-}
+    public getFormattedSize(): string {
+        return this.size.toString();
+    }
 
-enum Gender {
-    FEMALE,
-    MALE,
-    UNISEX
-}
+    public getFormattedCondition(): string {
+        return this.condition.toString();
+    }
 
-enum Size {
-    SMALL_X2,
-    SMALL_X,
-    SMALL,
-    MEDIUM,
-    LARGE,
-    LARGE_X,
-    LARGE_X2,
-    CUSTOM
+    public toString(): string {
+        return `Piece(id: ${this.id}, name: ${this.name}, category: ${this.category}, color: ${this.color}, brand: ${this.brand}, gender: ${this.gender}, size: ${this.size}, price: ${this.price}, condition: ${this.condition}, reason: ${this.reason}, images: ${this.images.toString()}, user_id: ${this.user_id})`;
+    }
+
 }

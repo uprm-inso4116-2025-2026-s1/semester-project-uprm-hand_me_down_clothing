@@ -30,10 +30,10 @@ export class Store{
 }
 
 //Array of dummy data to populate the map with markers
-const storeArray: Store[]=[
-    new Store("Store 1", "Address 1", 18.2010, -67.1390),
-    new Store("Store 2", "Address 2", 18.2100, -67.1300),
-]
+// const storeArray: Store[]=[
+//     new Store("Store 1", "Address 1", 18.2010, -67.1390), // JTorres: "These dummy pins can be removed. I will start implementing the responsive pins
+//     new Store("Store 2", "Address 2", 18.2100, -67.1300), // with the data cards.""
+// ]
 /////////////////////////////////////////////////////////////////////
 
 //Class to represent each marker on the map
@@ -77,9 +77,9 @@ export const markersCollection= new MapMarkers();
 //Dummy Data Used for testing in this section.
 
 //Populate the singleton with the dummy data
-storeArray.forEach((store) => {
-    markersCollection.addMarker(new MapMarker(store));
-});
+// storeArray.forEach((store) => {
+//     markersCollection.addMarker(new MapMarker(store));
+// });
 /////////////////////////////////////////////////////////////////////////
 
 //Creates each marker component to be used in the map, returns each component. 
