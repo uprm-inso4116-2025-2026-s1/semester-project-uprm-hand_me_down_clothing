@@ -1,0 +1,118 @@
+= Deep Model Discovery: Refining Core Domain Concepts
+// --
+// Author: Fabiola Z. Torres Maldonado
+// User: @FabiolaZTorres
+// Revdate: 2025-10-18
+// Ver: 1.0
+// Issue: #194
+// --
+
+== Objective
+Show how refining our project's domain reveals deeper abstractions and relationships between core concepts.
+
+== Overview
+This document examines the main domain concepts in the *Hand Me Down Clothing* project and refines them to uncover the deeper models they represent.  
+By exploring *why* and *how* each concept exists, we reveal the hidden structures that guide the system’s logic and business rules.
+
+== Concept 1: Listing
+
+*Before:*  
+A *Listing* is a post where a user describes an item they want to sell or donate.
+
+*After:*  
+A *Listing* represents an **Ownership & Trust Transfer Offer**, a structured proposal to transfer possession of an item under defined conditions (sale or donation).
+
+*Implications:*  
+
+- Listings expire because offers are temporary.  
+- Verification and reporting exist to manage trust in ownership transfers.  
+- Donations and sales share the same transfer abstraction with different transaction rules.
+
+== Concept 2: Seller
+
+*Before:*  
+A *Seller* is a user who creates listings to sell or donate items.
+
+*After:*  
+A *Seller* is an **Ownership Initiator**, an actor responsible for initiating a transfer of ownership and providing trustworthy information about the item.
+
+*Implications:*  
+
+- Sellers must be identifiable and credible to preserve marketplace trust.  
+- Reputation, history, and verification systems stem from this responsibility model.  
+- System permissions (e.g., who can post or edit listings) align with ownership control.
+
+== Concept 3: Buyer
+
+*Before:*  
+A *Buyer* is a user browsing or purchasing items through listings.
+
+*After:*  
+A *Buyer* is an **Ownership Receiver**, an actor who accepts the transfer of ownership and verifies item authenticity through the listing data.
+
+*Implications:*  
+
+- Buyers rely on listing transparency (photos, condition) for trust validation.  
+- Review and feedback systems emerge from this verification role.  
+- Buyer experience flows center on evaluating and confirming ownership transfers.
+
+== Concept 4: Item
+
+*Before:*  
+An *Item* is a piece of clothing being sold or donated.
+
+*After:*  
+An *Item* is a **Transferable Asset**, an entity with a defined state (available, pending, transferred) that moves through ownership cycles in the system.
+
+*Implications:*  
+
+- Database models should track ownership state transitions.  
+- Items may be reused in multiple listings if relisted.  
+- The system must preserve item history to maintain trust and traceability.
+
+== Concept 5: Listing Type (Sell vs Donate)
+
+*Before:*  
+Listings can be one of two types: *Sell* or *Donate*.
+
+*After:*  
+Listing types represent **Transaction Modes**, alternative paths for executing ownership transfers, differing in exchange value rather than structure.
+
+*Implications:*  
+
+- Core logic remains the same (transfer of ownership), but business rules differ (payment required vs. free).  
+- Both flows can share a unified API with mode-specific conditions.  
+- Analytics can compare engagement across transaction modes.
+
+== Concept 6: Category and Tags (Metadata)
+
+*Before:*  
+Categories and tags help users filter and discover listings.
+
+*After:*  
+They represent a **Semantic Discovery Layer**, a structured vocabulary that links user intent (search) to inventory data.
+
+*Implications:*  
+
+- Improves search relevance and personalization.  
+- Metadata supports domain-level reasoning (e.g., seasonal clothing trends, sustainability tracking).  
+- Validation rules ensure consistent data input.
+
+== Concept 7: Photo and Condition
+
+*Before:*  
+Photos and condition fields provide visual and descriptive details about an item.
+
+*After:*  
+They function as **Trust Signals**, domain mechanisms that communicate authenticity, quality, and reliability between users.
+
+*Implications:*  
+
+- System enforces minimum photo quality and required condition fields.  
+- Machine learning or moderation tools can later evaluate trust signals automatically.  
+- Buyer satisfaction metrics correlate with trust signal quality.
+
+== Key Insight
+Across all concepts, the deeper domain model reveals that *Hand Me Down Clothing* is not merely a platform for posting clothing items, it is a **trust-based ownership transfer system**.  
+Every feature, from listings to photos, contributes to maintaining fairness, reliability, and traceability in these transfers.
+
