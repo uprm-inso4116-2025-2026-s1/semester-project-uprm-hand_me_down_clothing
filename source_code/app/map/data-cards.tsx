@@ -1,10 +1,11 @@
 'use client'
 
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import dynamic from "next/dynamic";
 import { useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Marker as LeafletMarker } from "leaflet";
+import SuperclusterLayer, { ClusterPoint } from "./cluster-layer";
 
 
 // Dynamically import React-Leaflet components
@@ -138,22 +139,34 @@ export function LocationMarkers({
     return () => window.removeEventListener("keydown", onKey);
   }, []);
 
+  // Convert to ClusterPoint[]
+  const points: ClusterPoint<LocationRecord>[] = useMemo(
+    () =>
+      locations
+        .filter((loc) => Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude))
+        .map((loc) => ({
+          id: loc.id,
+          lat: loc.latitude as number,
+          lng: loc.longitude as number,
+          data: loc,
+        })),
+    [locations]
+  );
+
   return (
     <>
       <MapClickHandler markersRef={activeMarkersRef} />
-      {locations.map((loc) => {
-        // Create marker position from latitude/longitude
-        const position: [number, number] | null =
-          (Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude))
-            ? [loc.latitude as number, loc.longitude as number]
-            : null;
-
-        if (!position) return null;
+      <SuperclusterLayer<LocationRecord>
+        points={points}
+        radius={60}
+        maxZoom={18}
+        renderPoint={(p) => {
+          const loc = p.data!;
 
         return (
           <Marker
             key={loc.id}
-            position={position}
+            position={[p.lat, p.lng]}
             ref={(ref) => {
               if (ref) {
                 // @ts-ignore - ref is a React-Leaflet wrapper, need to access the Leaflet marker
@@ -219,7 +232,8 @@ export function LocationMarkers({
               </Popup>
           </Marker>
         );
-      })}
-    </>
+      }}
+     />
+   </>
   );
 }
