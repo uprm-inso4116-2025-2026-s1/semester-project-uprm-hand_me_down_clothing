@@ -47,7 +47,7 @@ export default function TopNav() {
     { href: "/map", label: "Map" },
     { href: "/listings/donate_piece", label: "Donate" },
     { href: "/about", label: "About" },
-    { href: "/auth", label: "Sign in/Sign Up" },
+    { href: "/Login", label: "Sign in/Sign Up" },
   ];
 
   
