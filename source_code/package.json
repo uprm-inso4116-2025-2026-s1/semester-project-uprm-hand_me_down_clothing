@@ -20,7 +20,9 @@
     "react": "19.1.0",
     "react-dom": "19.1.0",
     "react-leaflet": "^5.0.0",
-    "supabase": "^2.48.3"
+    "supabase": "^2.48.3",
+    "supercluster": "^8.0.1",
+    "use-supercluster": "^1.2.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3",
