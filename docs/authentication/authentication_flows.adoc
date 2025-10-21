@@ -1,0 +1,22 @@
+// --
+// Authentication Flows
+// --
+
+= Authentication Flows (Supabase)
+
+== Overview
+This document describes how password reset and email verification are implemented in the Hand-Me-Down Clothing platform using Supabase Auth.
+
+== Password Reset Workflow
+* Users request a password reset from the login page.
+* Supabase sends a password reset email with a magic link.
+* After clicking the link, users are directed to a form to set a new password.
+* Backend logic: see `source_code/app/auth/auth.ts` (`requestPasswordReset`, `updatePassword`).
+
+== Email Verification Workflow
+* New users receive a verification email after sign-up.
+* Email verification is automatic via Supabase magic links.
+* Verification status can be checked with `getUser()` and inspecting `user.email_confirmed_at`.
+
+== Implementation Reference
+* See `source_code/app/auth/` for backend functions and UI forms.

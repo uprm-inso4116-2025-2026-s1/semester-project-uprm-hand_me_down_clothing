@@ -23,7 +23,16 @@ export async function signUp (
 }
 
 // Log in (sign in) an existing user
-export async function signIn (email: string, password: string) {
+import { setAuthPersistence } from './storage'
+
+export async function signIn (email: string, password: string, remember = false) {
+  // store persistence preference so the storage adapter picks it up
+  try {
+    setAuthPersistence(remember)
+  } catch (e) {
+    // non-fatal
+  }
+
   const { data, error } = await supabase.auth.signInWithPassword({
     email,
     password
