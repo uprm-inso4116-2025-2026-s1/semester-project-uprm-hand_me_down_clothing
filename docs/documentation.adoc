@@ -2,6 +2,10 @@
 :doctype: book
 :imagesdir: ./images
 :toc:
+:pdf-themesdir: {docdir}/themes
+:pdf-theme: change_highlight
+:stylesdir: themes
+:stylesheet: highlights.css
 
 include::sections/section1/section.adoc[]
 
