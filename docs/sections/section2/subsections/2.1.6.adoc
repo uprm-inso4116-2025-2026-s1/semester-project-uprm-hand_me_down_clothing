@@ -5,9 +5,8 @@ Define domain-level function signatures that describe how actions are carried ou
 outputs, and possible changes in the domain.
 
 ==== Description
-[removed]#Function signatures are formal specifications of functions or actions that define:#
 
-[.added]#Function signatures specify how actors in the system interact through domain actions. They define the logical relationships between inputs, outputs, and resulting state changes:# 
+Function signatures specify how actors in the system interact through domain actions. They define the logical relationships between inputs, outputs, and resulting state changes: 
 
 - *The name of the function*: The action being performed.  
 - *The input parameters*: The information required by the action.  
@@ -16,110 +15,89 @@ outputs, and possible changes in the domain.
 
 The general format of a function signature is:
 
-- FunctionName: Input1 >< Input2 >< ... -> OutputType#
-- [.added]#**Description** – what the function does.#
-- [.added]#**Preconditions** – what must be true or available for the function to execute.#
-- [.added]#**Postconditions** - what becomes true afterwards.#
-- [.added]#**Notes** - clarifications about scope, limits, or non-covered cases.#
-
-
-
-[.removed]#This expresses the action's name, its input parameters with their types, the output type it produces,
-and any state changes in the domain.#
-
-[.removed]#Function signatures do not describe how the function is implemented. Instead, they focus on the
-relationship between inputs, outputs, and possible state changes.#
+- FunctionName: Input1 >< Input2 >< ... -> OutputType
+- **Description** – what the function does.
+- **Preconditions** – what must be true or available for the function to execute.
+- **Postconditions** - what becomes true afterwards.
+- **Notes** - clarifications about scope, limits, or non-covered cases.
 
 ==== Examples
 
-publishListing : Piece >< Seller >< Locale -> [.changed]#Either[ValidationError,ListingPublished]#
+publishListing : Piece >< Seller >< Locale -> Either[ValidationError,ListingPublished]
 
-[.added]#Description::# [.added]#A Seller publishes a Piece in a given Locale, producing a ListingPublished event.#
+Description:: A Seller publishes a Piece in a given Locale, producing a ListingPublished event.
 
-[.added]#Preconditions::# [.added]#Seller and Piece exist and are active; Piece has required metadata (title, condition, images).#
+Preconditions:: Seller and Piece exist and are active; Piece has required metadata (title, condition, images).
 
-[.added]#Postconditions::# [.added]#Listing becomes visible; `ListingPublished` recorded.#
+Postconditions:: Listing becomes visible; `ListingPublished` recorded.
 
-[.added]#Notes::# [.added]#Discovery-only; no in-platform payments.#
-
-
-expressInterest : Listing >< Buyer -> [.changed]#Either[ContactError, InterestExpressed]#
-
-[.added]#Description::# [.added]#A Buyer signals interest in a Listing to start contact with the Seller.#
-
-[.added]#Preconditions::# [.added]#Listing is open; Buyer is authenticated.#
-
-[.added]#Postconditions::# [.added]#`InterestExpressed` links Buyer and Seller.#
-
-[.added]#Notes::# [.added]#Returns `ContactError` if listing is closed/unavailable.#
-
-[.removed]#A Buyer expresses interest in a specific Listing, producing an InterestExpressed event that signals contact between Buyer and Seller.#
-
-rate : Piece >< ConditionRating -> [.changed]#Option[ConditionRating]#
-
-[.added]#Description::# [.added]#Assigns or updates a Piece’s condition rating.#
-
-[.added]#Preconditions::# [.added]#Piece exists; rating within 1–5.#
-
-[.added]#Postconditions::# [.added]#Piece’s stored rating updated.#
-
-[.added]#Notes::# [.added]#Returns `None` if Piece missing/inactive.#
-
-[.removed]#A Piece receives a ConditionRating, producing or updating the ConditionRating attribute.#
-
-review : Seller >< Buyer >< Review -> [.changed]#Either[ReviewError, ReviewSubmitted]#  
-
-[.added]#Description::# [.added]#Records a review after an offline exchange.#
-
-[.added]#Preconditions::# [.added]#A prior interaction/closed listing exists between the parties.#
+Notes:: Discovery-only; no in-platform payments.
 
 
-[.added]#Postconditions::# [.added]#`ReviewSubmitted` attached to reviewer/reviewee.#
-[.added]#Notes::# [.added]#Returns `ReviewError` if no eligible exchange is found.#
+expressInterest : Listing >< Buyer -> Either[ContactError, InterestExpressed]
+
+Description:: A Buyer signals interest in a Listing to start contact with the Seller.
+
+Preconditions:: Listing is open; Buyer is authenticated.
+
+Postconditions:: `InterestExpressed` links Buyer and Seller.
+
+Notes:: Returns `ContactError` if listing is closed/unavailable.
+
+rate : Piece >< ConditionRating -> Option[ConditionRating]
+
+Description:: Assigns or updates a Piece’s condition rating.
+
+Preconditions:: Piece exists; rating within 1–5.
+
+Postconditions:: Piece’s stored rating updated.
+
+Notes:: Returns `None` if Piece missing/inactive.
+
+review : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]  
+
+Description:: Records a review after an offline exchange.
+
+Preconditions:: A prior interaction/closed listing exists between the parties.
 
 
-[.removed]#A review is submitted by a Buyer or Seller after an offline exchange, creating a ReviewSubmitted event associated with the interaction.#
+Postconditions:: `ReviewSubmitted` attached to reviewer/reviewee.
+Notes:: Returns `ReviewError` if no eligible exchange is found.
 
-closeListing : Listing >< Seller -> [.changed]#Either[ClosedError, ListingClosed]#  
+closeListing : Listing >< Seller -> Either[ClosedError, ListingClosed]  
 
-[.added]#Description::# [.added]#Seller closes an active Listing after exchange or withdrawal.#
+Description:: Seller closes an active Listing after exchange or withdrawal.
 
-[.added]#Preconditions::# [.added]#Seller owns the Listing; Listing is active.#
+Preconditions:: Seller owns the Listing; Listing is active.
 
-[.added]#Postconditions::# [.added]#Listing state becomes "closed"; 'ListingClosed' recorded.#
+Postconditions:: Listing state becomes "closed"; 'ListingClosed' recorded.
 
-[.added]#Notes::# [.added]#Not callable by Buyers.#
+Notes:: Not callable by Buyers.
 
-[.removed]#A Seller closes a Listing after the offline exchange or withdrawal, producing a ListingClosed event and removing the item from visibility.#
+categorize : Piece >< Type -> Option[Piece]
 
-categorize : Piece >< Type -> [.changed]#Option[Piece]#
+Description:: Assigns a category type to a Piece.
 
-[.added]#Description::# [.added]#Assigns a category type to a Piece.#
+Preconditions:: Piece exists; Type is valid.
 
-[.added]#Preconditions::# [.added]#Piece exists; Type is valid.#
+Postconditions:: Piece’s Type attribute updated.
 
-[.added]#Postconditions::# [.added]#Piece’s Type attribute updated.#
+Notes:: Returns `None` if Piece missing/inactive. Does not change visibility.
 
-[.added]#Notes::# [.added]#Returns `None` if Piece missing/inactive. Does not change visibility.#
+discard : Piece -> Option[Void]
 
-[.removed]#A Piece is assigned a Type, returning the updated Piece.#
+Description:: Removes a Piece from active circulation.
 
-discard : Piece -> [.changed]#Option[Void]#
+Preconditions:: Piece exists and is active.
 
-[.added]#Description::# [.added]#Removes a Piece from active circulation.#
+Postconditions:: Piece marked as discarded/inactive.
 
-[.added]#Preconditions::# [.added]#Piece exists and is active.#
-
-[.added]#Postconditions::# [.added]#Piece marked as discarded/inactive.#
-
-[.added]#Notes::# [.added]#Returns `None` if Piece missing/inactive.#
-
-[.removed]#Removes a Piece from active circulation, marking it as no longer available.#
+Notes:: Returns `None` if Piece missing/inactive.
 
 ==== Example Scenario: From Listing to Offline Exchange
 1. Seller publishes a listing using `publishListing(Piece, Seller, Locale)` → produces `ListingPublished`.  
 2. Buyer browses available items and finds one of interest.  
-3. Buyer [.changed]#triggers `expressInterest(Listing, Buyer)` → produces `InterestExpressed`.#  
+3. Buyer triggers `expressInterest(Listing, Buyer)` → produces `InterestExpressed`.  
 4. Both users coordinate offline to exchange the item.  
 5. Seller closes the listing via `closeListing(Listing, Seller)` → produces `ListingClosed`.  
 6. Buyer leaves a review using `review(Seller, Buyer, Review)` → produces `ReviewSubmitted`.
