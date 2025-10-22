@@ -1,0 +1,12 @@
+extends: default
+role:
+  added:
+    font_color: #008000  # Green
+    background_color: #e6ffe6  # Light green background
+  changed:
+    font_color: #b58900  # Yellow
+    background_color: #fff8dc  # Light yellow background
+  removed:
+    font_color: #d93025  # Red
+    background_color: #ffe6e6  # Light red background
+    text_decoration: line-through

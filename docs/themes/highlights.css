@@ -1,0 +1,14 @@
+.added {
+  color: green;
+  background-color: #e6ffe6;
+}
+
+.changed {
+  color: #b58900;
+  background-color: #fff8dc;
+}
+
+.removed {
+  color: #d93025;
+  text-decoration: line-through;
+}
