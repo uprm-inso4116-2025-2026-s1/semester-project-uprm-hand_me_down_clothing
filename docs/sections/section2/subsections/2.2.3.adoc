@@ -1,14 +1,14 @@
 === *2.2.3 Domain Requirements*
 
-The system shall manage clothing listings according to the inherent properties of categories, items, and taxonomy structures observed in local resale and donation discovery platforms.  
-It must allow users to browse, publish, and filter listings efficiently without facilitating in-platform payments or transactions.
+The system shall manage clothing listings according to the inherent properties of categories, items, and taxonomy structures observed in [.changed]#local resale and donation discovery platforms.#  
+[.added]#It must allow users to browse, publish, and filter listings efficiently without facilitating in-platform payments or transactions.#
 
 [requirements]
-* DR1: The system must classify every listing under exactly one primary category (e.g., tops, bottoms, shoes, accessories) to ensure consistent organization and discoverability across the taxonomy.
-* DR2: The system must allow categories to have hierarchical subcategories, reflecting how real-world resale and reuse spaces organize clothing by type, gender, or size.
-* DR3: The system must distinguish between **Resale** and **Free/Donation** listings, preserving the domain difference in motivation and visibility while keeping both accessible through a unified discovery interface.
-* DR4: The system shall provide means to enforce item-to-category compatibility, ensuring that each listing aligns with an appropriate clothing category (e.g., shirts cannot be placed under footwear).
-* DR5: The system must support category evolution, allowing the taxonomy to incorporate new categories or subcategories (e.g., uniforms, vintage) without invalidating existing listings.
+* DR1: The system must classify every listing under exactly one primary category [.changed]#(e.g., tops, bottoms, shoes, accessories) to ensure consistent organization and discoverability across the taxonomy.#
+* DR2: The system must allow categories to have hierarchical subcategories, reflecting [.changed]#how real-world resale and reuse spaces organize clothing by type, gender, or size.#
+* DR3: The system must distinguish between [.changed]#**Resale** and **Free/Donation** listings, preserving the domain difference in motivation and visibility while keeping both accessible through a unified discovery interface.#
+* DR4: The system shall provide means to enforce item-to-category compatibility, ensuring that each listing aligns with an appropriate [.added]#clothing# category [.changed]#(e.g., shirts cannot be placed under footwear).#
+* DR5: The system must support category evolution, allowing the taxonomy to incorporate new categories or subcategories [.added]#(e.g., uniforms, vintage)# without invalidating existing listings.
 
 Each of these requirements directly ties to observed domain properties:  
 - **DR1** reflects the necessity of a single, authoritative classification per item for consistent search results.  

@@ -1,22 +1,69 @@
 === *2.1.1 Domain Rough Sketches*
 
-This section documents raw, observable examples of clothing exchange and discovery as they occur in daily life. These anecdotes are early insights and do not interpret or generalize; they simply record what was seen or described.
+[.changed]#This section documents raw, observable examples of clothing exchange and discovery as they occur in daily life. These anecdotes are early insights and do not interpret or generalize; they simply record what was seen or described.#
 
-==== Example 1: Adriana’s Search for Affordable Outfits
-Adriana, a 20-year-old UPRM student, needs new outfits for an upcoming presentation but cannot afford retail prices. She opens a local Facebook group called “UPRM Ropa y Accesorios” and scrolls through the feed.  
-She spots a post titled *“Blazer, lightly used, $10”* with photos showing the tag and sleeves. Adriana messages the seller in Spanish: *“¿Todavía lo tienes disponible?”* The seller responds quickly and confirms that the blazer is still available. They agree to meet at the main campus entrance the next afternoon. Adriana checks the garment in person, pays in cash, and the seller later marks the post as “Sold.”  
-The entire flow—scrolling, messaging, coordinating, and closing—happened outside any dedicated app, relying solely on informal trust and visible cues like clear photos and quick replies.
+==== [.removed]#Stakeholder & Settings#
+* [.removed]#Team self-observation (students), Mayagüez/UPRM: identified a recurring need for affordable access to clothing and accessories among students and families.#
+* [.removed]#*No interviews conducted yet.* Contacts to schedule: students, families, school/university staff, local resale participants.#
 
-==== Example 2: Manuel’s Donation After Semester End
-Manuel, a middle school teacher and UPRM alumnus, sorts his closet at the end of the semester. He finds several shirts in good condition but no longer wears them. He takes photos, labels them *“Free for pickup near UPRM apartments”*, and posts them in a WhatsApp group where local students trade items.  
-Within hours, a student replies: *“Can I pick up tomorrow morning?”* Manuel agrees, places the items in a bag labeled “Free clothes,” and leaves them at his apartment lobby. By afternoon, the bag is gone. No money exchanged hands, and no platform intervention was needed — only quick, direct communication and mutual trust.  
+==== [.added]#Example 1: Adriana’s Search for Affordable Outfits#
+[.added]#Adriana, a 20-year-old UPRM student, needs new outfits for an upcoming presentation but cannot afford retail prices. She opens a local Facebook group called “UPRM Ropa y Accesorios” and scrolls through the feed.#  
+[.added]#She spots a post titled *“Blazer, lightly used, $10”* with photos showing the tag and sleeves. Adriana messages the seller in Spanish: *“¿Todavía lo tienes disponible?”* The seller responds quickly and confirms that the blazer is still available. They agree to meet at the main campus entrance the next afternoon. Adriana checks the garment in person, pays in cash, and the seller later marks the post as “Sold.”#  
+[.added]#The entire flow—scrolling, messaging, coordinating, and closing—happened outside any dedicated app, relying solely on informal trust and visible cues like clear photos and quick replies.#
 
-==== Observed Raw Facts
-- Listings often use informal phrases like “lightly used,” “like new,” and “free.”  
-- Meetups happen in semi-public, familiar places.  
-- Sellers use photos as proof of honesty (tags, condition, size).  
-- Prices are symbolic and flexible ($8–$15 typical range).  
-- Listings and messages are bilingual; Spanish often dominates the first contact.  
-- Exchanges rely on visibility and responsiveness rather than any formal guarantee.  
+==== [.removed]#Observed Practices#
+* [.removed]#Discovery: Facebook Marketplace, Facebook groups, WhatsApp groups, Instagram stories.#
+* [.removed]#Handoff: in-person meetups at UPRM (on/near campus) or at apartment complexes.#
+* [.removed]#Typical flow (as reported by students): look up item → contact seller → agree on specifics (price, size, time/place) → meet in person to exchange the item.#  
+[.removed]#The agreement on price and pickup is handled entirely by the users outside any system.#
 
-These examples illustrate the recurring pattern of discovery → contact → agreement → exchange that underlies the entire secondhand clothing domain.
+==== [.added]#Example 2: Manuel’s Donation After Semester End#
+[.added]#Manuel, a middle school teacher and UPRM alumnus, sorts his closet at the end of the semester. He finds several shirts in good condition but no longer wears them. He takes photos, labels them *“Free for pickup near UPRM apartments”*, and posts them in a WhatsApp group where local students trade items.#  
+[.added]#Within hours, a student replies: *“Can I pick up tomorrow morning?”* Manuel agrees, places the items in a bag labeled “Free clothes,” and leaves them at his apartment lobby. By afternoon, the bag is gone. No money exchanged hands, and no platform intervention was needed — only quick, direct communication and mutual trust.#  
+
+==== [.removed]#Artifacts, Condition Language, and Pricing#
+* [.removed]#Item types seen/expected: all kinds of clothing and accessories (no restricted categories observed yet).#
+* [.removed]#Condition/fit phrasing used: “lightly used,” “like new,” and explicit size labeling.#
+* [.removed]#Typical price range mentioned for clothing items: USD $8–$15, treated as an informal or symbolic resale range for students.#
+
+==== [.added]#Observed Raw Facts#
+- [.added]#Listings often use informal phrases like “lightly used,” “like new,” and “free.”#  
+- [.added]#Meetups happen in semi-public, familiar places.#  
+- [.added]#Sellers use photos as proof of honesty (tags, condition, size).#  
+- [.added]#Prices are symbolic and flexible ($8–$15 typical range).#  
+- [.added]#Listings and messages are bilingual; Spanish often dominates the first contact.#  
+- [.added]#Exchanges rely on visibility and responsiveness rather than any formal guarantee.#  
+
+==== [.removed]#Trust, Safety, and Informal Norms#
+* [.removed]#Common concerns: item hygiene, no-shows, scams, and unsafe meetups.#
+* [.removed]#Informal norms reported: include a **photo of the size tag**, full-item photos (front/back/defects), and respond promptly.#
+
+* [.removed]#Moderation: minimal to none in ad-hoc chats; Facebook groups *may* apply basic moderation or post approval (to confirm).#
+
+==== [.removed]#Language & Access#
+* [.removed]#Languages used: Spanish + English (bilingual exchanges common).#
+* [.removed]#Access barriers reported so far: none explicitly identified by team; requires external confirmation.#
+
+==== [.removed]#Existing Channels (local)#
+* [.removed]#Facebook Marketplace (general Mayagüez and student-adjacent listings).#
+* [.removed]#Facebook groups (specific group names to be gathered during interviews).#
+* [.removed]#WhatsApp groups/lists (student and family circles).#
+* [.removed]#Instagram stories (peer-to-peer sharing).#
+* [.removed]#Moderation/ownership of channels: typically user- or admin-managed groups; to verify.#
+
+==== [.removed]#Micro-notes / Anecdotal Fragments#
+* [.removed]#Price sensitivity remains high; low-cost clothing listings ($8–$15) are the usual reference point for students.#
+* [.removed]#Meetups generally occur in familiar, semi-public locations such as campus benches or apartment lobbies.#
+* [.removed]#Sellers are expected to show **tag photos** and **clear images** of items; size miscommunication is a recurring issue.#
+* [.removed]#Exchanges happen quickly once contact is established — often same-day or next-day pickup.#
+
+==== [.removed]#Open Questions (for later concept analysis)#
+* [.removed]#Which groups or chat channels are most active in Mayagüez/UPRM, and who moderates them?#
+* [.removed]#What concrete safety practices are considered “standard” locally (meetup spots, daylight hours, bringing a friend, ID at gates)?#
+* [.removed]#How is *condition* described locally beyond “lightly used/like new”? (e.g., semester-used uniforms, visible defects, hygiene notes)#
+* [.removed]#Are there predictable seasonal peaks (back-to-school, semester start, graduation, weather shifts)? Which items surge in demand?#
+* [.removed]#For pricing, when do buyers and sellers treat $8–$15 as “firm” vs. negotiable (OBO, bundles)?#
+* [.removed]#Are there categories socially excluded (e.g., certain intimate apparel), and how do participants communicate those boundaries?#
+* [.removed]#Does the primary language (Spanish vs. English) of a listing or message affect engagement or trust among participants?#
+
+[.added]#These examples illustrate the recurring pattern of discovery → contact → agreement → exchange that underlies the entire secondhand clothing domain.#

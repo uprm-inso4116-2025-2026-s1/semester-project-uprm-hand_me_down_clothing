@@ -9,68 +9,68 @@ work together. Include mockups and example code fragments to complement the expl
 The application is structured as follows:
 
 * Frontend (React)
-** Handles the user interface, including browsing clothing listings, saving favorites, uploading new listings, basic messaging/contact, and viewing nearby donation centers.
-** Planned pages/screens include:
-*** Home Page: shows recent listings and quick navigation to other pages.
-*** Clothing Listing Page: displays a scrollable list of available clothing items with filters and sorting options.
-*** Upload Page: allows sellers to publish clothes as **listings** (with price or **free** marker); no checkout or payment is provided.
-*** Saved Listings Page: lets buyers review items they bookmarked.
-*** Map Page: integrates with Leaflet to display donation centers.
-** Styling is implemented with CSS modules or CSS-in-JS for maintainability.
+** [.added]#Handles the user interface, including browsing clothing listings, saving favorites, uploading new listings, basic messaging/contact, and viewing nearby donation centers.#
+** [.added]#Planned pages/screens include:#
+*** [.added]#Home Page: shows recent listings and quick navigation to other pages.#
+*** [.added]#Clothing Listing Page: displays a scrollable list of available clothing items with filters and sorting options.#
+*** [.added]#Upload Page: allows sellers to publish clothes as **listings** (with price or **free** marker); no checkout or payment is provided.#
+*** [.added]#Saved Listings Page: lets buyers review items they bookmarked.#
+*** [.added]#Map Page: integrates with Leaflet to display donation centers.#
+** [.added]#Styling is implemented with CSS modules or CSS-in-JS for maintainability.#
 
-* Backend Logic (JavaScript functions)
-** Manages business logic through modular JavaScript functions that act as an interface between the frontend and Supabase.
-** Responsibilities include:
-*** Validating form inputs for listing creation and user registration.
-*** Handling image uploads to Supabase Storage.
-*** Authenticating users via Supabase Auth.
-*** Querying and updating data in Supabase Database (listings, user profiles, reviews, saved listings).
-*** Enforcing invariants such as mandatory seller ID and required listing fields.
-*** Managing contact flows (e.g., expressing interest, message thread creation) without processing payments.
+* [.added]#Backend Logic (JavaScript functions)#
+** [.added]#Manages business logic through modular JavaScript functions that act as an interface between the frontend and Supabase.#
+** [.added]#Responsibilities include:#
+*** [.added]#Validating form inputs for listing creation and user registration.#
+*** [.added]#Handling image uploads to Supabase Storage.#
+*** [.added]#Authenticating users via Supabase Auth.#
+*** [.added]#Querying and updating data in Supabase Database (listings, user profiles, reviews, saved listings).#
+*** [.added]#Enforcing invariants such as mandatory seller ID and required listing fields.#
+*** [.added]#Managing contact flows (e.g., expressing interest, message thread creation) without processing payments.#
 
-* Database & Storage (Supabase)
-** PostgreSQL database stores structured application data, including:
-*** User profiles (name, email, role, reputation score).
-*** Clothing listings (item ID, seller ID, title, description, category, size, condition, price/free marker, status).
-*** Reviews and ratings for trust-building.
-*** Saved listings (buyer ↔ listing associations).
-*** Donation center metadata.
-** Supabase Storage manages image uploads and retrieval.
-** Supabase Auth handles authentication, role assignment, and secure access.
+* [.added]#Database & Storage (Supabase)#
+** [.added]#PostgreSQL database stores structured application data, including:#
+*** [.added]#User profiles (name, email, role, reputation score).#
+*** [.added]#Clothing listings (item ID, seller ID, title, description, category, size, condition, price/free marker, status).#
+*** [.added]#Reviews and ratings for trust-building.#
+*** [.added]#Saved listings (buyer ↔ listing associations).#
+*** [.added]#Donation center metadata.#
+** [.added]#Supabase Storage manages image uploads and retrieval.#
+** [.added]#Supabase Auth handles authentication, role assignment, and secure access.#
 
-* External Services
-** Leaflet.js provides interactive map functionality for donation center locations.
-** Optional geocoding APIs convert addresses into map coordinates when new donation centers are added.
+* [.added]#External Services#
+** Leaflet.js [.changed]#provides interactive map functionality for donation center locations.#
+** Optional geocoding APIs [.changed]#convert addresses into map coordinates when new donation centers are added.#
 
 ==== Architecture Diagram
-The architecture of the application is designed to separate concerns between the frontend, backend logic, and Supabase services. This structure ensures maintainability, scalability, and clarity for both developers and users.
+The architecture of the application is designed to [.changed]#separate concerns between the frontend, backend logic, and Supabase services.# This structure ensures maintainability, scalability, and clarity for both developers and users.
 
 image::Architecture_Diagram.png[Architecture Diagram, align=center]
 
 . Architecture Overview
 .. React Frontend
-*** Provides the user interface where users can browse, search, and filter clothing listings, upload new items, save favorites, contact sellers, and view donation centers on a map.
-*** User actions (e.g., creating a listing, saving an item, updating profile info, sending a message) trigger requests to backend functions.
+*** Provides the user interface where users can [.changed]#browse, search, and filter clothing listings, upload new items, save favorites, contact sellers, and view donation centers on a map.#
+*** User actions [.changed]#(e.g., creating a listing, saving an item, updating profile info, sending a message) trigger requests to backend functions.#
 
 .. JavaScript Logic (Backend Logic)
-*** Bridges communication between the React frontend and Supabase services.
-*** Validates input (e.g., required fields for new listings).
-*** Formats data before insertion into the database.
-*** Handles error responses gracefully, ensuring the frontend receives useful feedback.
+*** [.added]#Bridges communication between the React frontend and Supabase services.#
+*** [.changed]#Validates input (e.g., required fields for new listings).#
+*** [.added]#Formats data before insertion into the database.#
+*** Handles error responses [.changed]#gracefully, ensuring the frontend receives useful feedback.#
 
 .. Supabase Services
-*** Database (PostgreSQL) stores listings, user profiles, reviews, saved associations, and donation center data.
-*** Cloud Storage securely manages clothing images, keeping them accessible for display in listings.
-*** Auth enforces authentication and authorization, ensuring data privacy and correct user roles.
+*** Database (PostgreSQL) stores [.changed]#listings, user profiles, reviews, saved associations, and donation center data.#
+*** Cloud Storage [.changed]#securely manages clothing images, keeping them accessible for display in listings.#
+*** [.changed]#Auth enforces authentication and authorization, ensuring data privacy and correct user roles.#
 
 .. Data Flow
-*** Requests flow downward from the React frontend through JavaScript logic into Supabase.
-*** Responses flow upward, updating React state dynamically so users see fresh listing data.
-*** The platform **does not** perform or mediate payments; messaging/contact supports offline coordination only.
-*** This separation ensures that the UI, application logic, and data persistence remain decoupled and maintainable.
+*** Requests flow downward from the React frontend through [.changed]#JavaScript logic into Supabase.#
+*** [.added]#Responses flow upward, updating React state dynamically so users see fresh listing data.#
+*** [.added]#The platform **does not** perform or mediate payments; messaging/contact supports offline coordination only.#
+*** [.changed]#This separation ensures that the UI, application logic, and data persistence remain decoupled and maintainable.#
 
-==== Layer Mapping (Clean Architecture / DDD Alignment)
-* **Domain Layer**: Core concepts and rules (Listing, Piece, User, Review; invariants like required fields; aggregate boundaries).  
-* **Application Layer**: Use-case functions (publishListing, expressInterest, closeListing, saveListing), validation, orchestration of repository calls.  
-* **Interface/Adapters Layer**: React components/pages (forms, lists, profile, messaging UI), adapters to call application services, view models.  
-* **Frameworks/Drivers Layer**: Supabase (PostgreSQL, Storage, Auth), Leaflet, geocoding APIs, HTTP client libraries.
+==== [.added]#Layer Mapping (Clean Architecture / DDD Alignment)#
+* [.added]#**Domain Layer**: Core concepts and rules (Listing, Piece, User, Review; invariants like required fields; aggregate boundaries).#  
+* [.added]#**Application Layer**: Use-case functions (publishListing, expressInterest, closeListing, saveListing), validation, orchestration of repository calls.#  
+* [.added]#**Interface/Adapters Layer**: React components/pages (forms, lists, profile, messaging UI), adapters to call application services, view models.#  
+* [.added]#**Frameworks/Drivers Layer**: Supabase (PostgreSQL, Storage, Auth), Leaflet, geocoding APIs, HTTP client libraries.#

@@ -1,23 +1,31 @@
 === *2.1.4 Domain Narrative*
 
-In Puerto Rico, informal clothing exchanges are a normal part of student and family life.  
-Individuals frequently use social media to find or offer clothing items and arrange in-person meetups.  
-The domain captured by this project represents those existing behaviors, listing, discovery, communication, and offline exchange rather than creating new ones.
+[.changed]#In Puerto Rico, informal clothing exchanges are a normal part of student and family life.#  
+[.changed]#Individuals frequently use social media to find or offer clothing items and arrange in-person meetups.#  
+[.changed]#The domain captured by this project represents those existing behaviors, listing, discovery, communication, and offline exchange rather than creating new ones.#
 
-Sellers create posts or listings to share available garments, often including details such as size, condition, and photos.  
-Buyers search or browse listings, then contact sellers through direct messages to express interest.  
-Once both parties agree, they meet in person to complete the exchange.  
-Afterward, sellers may close their listings, and buyers may leave a review describing their experience.
+[.removed]#The domain of secondhand clothing exchange involves a variety of actors and informal practices. Sellers — individuals or families with surplus or outgrown clothing — choose to make these items available for others, motivated by a mix of practicality, sustainability, and community-mindedness. Before posting, a seller may inspect each garment for cleanliness and condition, annotating the listing with information about size, wear, or visible defects. The act of publishing a listing marks the point at which the garment enters public visibility within the discovery space, allowing others to view and express interest.#
 
-All exchanges happen directly between users, outside the platform.  
-The platform’s role is limited to:
+[.added]#Sellers create posts or listings to share available garments, often including details such as size, condition, and photos.#  
+[.added]#Buyers search or browse listings, then contact sellers through direct messages to express interest.# 
+[.added]#Once both parties agree, they meet in person to complete the exchange.#  
+[.added]#Afterward, sellers may close their listings, and buyers may leave a review describing their experience.#
 
-* making listings visible
 
-* enabling efficient search and filtering  
+[.removed]#These exchanges are embedded in a broader cycle of reuse and redistribution. Garments often pass through multiple owners, with each transition adding to the item’s social history. Some pieces re-enter circulation when outgrown, while others are repaired or repurposed to extend their lifespan. The community sustains informal norms of honesty and trust: sellers are expected to represent item condition accurately, while buyers are encouraged to respect agreed meeting times and terms. Occasional misunderstandings — such as no-shows or misrepresented condition — are resolved through communication or social feedback, reinforcing a shared ethic of fairness.#
 
-* supporting communication through messaging.
+[.removed]#Through these ongoing practices, the domain fosters sustainability, mutual aid, and local connection. The circulation of clothing and accessories in Puerto Rico is thus a living narrative — one shaped by economic hardship, environmental necessity, and the collective will of its people to reduce waste and support one another. This narrative frames the motivation for structured, transparent, and community-driven listing systems, enabling participants to access what they need with dignity and trust while maintaining the informal, person-to-person character that defines this exchange culture.#
 
-The domain also includes secondary practices such as saving listings for later, checking reviews for trust, and adjusting a listing’s visibility (active, reserved, closed).  
-Together, these elements describe a clear, observable cycle of activity: *publish → discover → contact → exchange offline → close*.  
-The system reflects this real-world rhythm without modeling payment, ownership, or physical handoffs.
+[.added]#All exchanges happen directly between users, outside the platform.#  
+[.added]#The platform’s role is limited to:#
+
+* [.added]#making listings visible#
+
+* [.added]#enabling efficient search and filtering#  
+
+* [.added]#supporting communication through messaging.#
+
+[.added]#The domain also includes secondary practices such as saving listings for later, checking reviews for trust, and adjusting a listing’s visibility (active, reserved, closed).#  
+[.added]#Together, these elements describe a clear, observable cycle of activity: *publish → discover → contact → exchange offline → close*.#  
+[.added]#The system reflects this real-world rhythm without modeling payment, ownership, or physical handoffs.#
+

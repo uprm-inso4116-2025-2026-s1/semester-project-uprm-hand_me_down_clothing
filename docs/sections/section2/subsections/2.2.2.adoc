@@ -1,45 +1,45 @@
 === *2.2.2 - Personas*
 
-A persona is a fictional yet plausible representation of a user within the platform’s ecosystem. The following personas illustrate different motivations, behaviors, and constraints to help align development goals with user needs.  
-They represent typical users participating in the *listing and discovery* of secondhand clothing, where all exchanges and payments occur directly between parties, outside the system.
+A persona is a fictional yet plausible representation of a user [.changed]#within the platform’s ecosystem. The following personas illustrate different motivations, behaviors, and constraints to help align development goals with user needs.#
+[.added]#They represent typical users participating in the *listing and discovery* of secondhand clothing, where all exchanges and payments occur directly between parties, outside the system.#
 
 *Adriana Gómez*
 
 - *Age*: 20 years old  
 - *Occupation*: University student on financial aid working part-time on campus  
-- *Build / Appearance*: Dark, straight hair; average height; dresses in vintage clothes and colorful accessories  
-- *Personality*: Creative, expressive, community-driven  
+- *Build / Appearance*: [.changed]#Dark, straight hair; average height; dresses in vintage clothes and colorful accessories.#  
+- *Personality*: Creative, [.changed]#expressive, community-driven.#  
 
-Adriana loves expressing herself through unique outfits. She often mixes styles and prefers pre-owned or vintage pieces that stand out from mainstream fashion. However, she finds it difficult to locate affordable, distinctive items near Mayagüez since many local thrift stores have little to no online presence. Between classes and her part-time job, she has limited time to explore in person.
+Adriana loves expressing herself through [.changed]#unique outfits. She often mixes styles and prefers pre-owned or vintage pieces that stand out from mainstream fashion. However, she finds it difficult to locate affordable, distinctive items near Mayagüez since many local thrift stores have little to no online presence. Between classes and her part-time job, she has limited time to explore in person.#
 
-- *Pain Points*: Limited access to local secondhand clothing options; lack of time to search physically; difficulty finding one-of-a-kind pieces online.  
-- *Needs*: A trusted way to browse nearby listings from local sellers and individuals offering unique or free clothing.  
-- *Platform Interaction*: Scrolls listings during short study breaks, saves her favorite posts, and messages sellers when something catches her eye.  
+- *Pain Points*: [.changed]#Limited access to local secondhand clothing options; lack of time to search physically; difficulty finding one-of-a-kind pieces online.#  
+- *Needs*: [.changed]#A trusted way to browse nearby listings from local sellers and individuals offering unique or free clothing.#  
+- *Platform Interaction*: [.changed]#Scrolls listings during short study breaks, saves her favorite posts, and messages sellers when something catches her eye.#  
 
 
 *Manuel Torres*
 
 - *Age*: 35 years old  
 - *Occupation*: Middle school teacher  
-- *Build / Appearance*: Brown, curly hair; average height; prefers casual, comfortable wear such as polos and witty t-shirts.  
-- *Personality*: Patient, organized, practical, approachable  
+- *Build / Appearance*: Brown, curly hair; average height; [.changed]#prefers casual, comfortable wear such as polos and witty t-shirts.#  
+- *Personality*: Patient, [.changed]#organized, practical, approachable#  
 
-Manuel is preparing to move apartments and wants to downsize. He has a closet full of gently used clothing that could benefit others, but he doesn’t want to waste time organizing garage sales or posting on multiple apps. He wants an easy, local way to share listings that reach people nearby without having to handle payments through the platform.
+Manuel is [.changed]#preparing to move apartments and wants to downsize. He has a closet full of gently used clothing that could benefit others, but he doesn’t want to waste time organizing garage sales or posting on multiple apps. He wants an easy, local way to share listings that reach people nearby without having to handle payments through the platform.#
 
-- *Pain Points*: No streamlined way to share or list his pre-owned items locally.  
-- *Needs*: A simple listing tool that allows him to post clothing quickly and connect with potential buyers or donors without complicated transactions.  
-- *Platform Interaction*: Creates listings from his work computer, uploads a few photos, sets prices or marks items as free, and arranges pickups directly through chat.  
+- *Pain Points*: [.changed]#No streamlined way to share or list his pre-owned items locally.#  
+- *Needs*: [.changed]#A simple listing tool that allows him to post clothing quickly and connect with potential buyers or donors without complicated transactions.#  
+- *Platform Interaction*: Creates listings from his work computer, [.changed]#uploads a few photos, sets prices or marks items as free, and arranges pickups directly through chat.#  
 
 
 *Daniela López*
 
 - *Age*: 27 years old  
 - *Occupation*: Nurse practitioner  
-- *Build / Appearance*: Tall, brunette with wavy hair; prefers relaxed styles such as denim, scrubs, and athleisure.  
-- *Personality*: Outspoken, empathetic, eco-conscious  
+- *Build / Appearance*: [.changed]#Tall, brunette with wavy hair; prefers relaxed styles such as denim, scrubs, and athleisure.#  
+- *Personality*: Outspoken, [.changed]#empathetic, eco-conscious#  
 
-Daniela believes in sustainability and fights against the culture of fast fashion. She values durability and ethics in clothing choices and enjoys supporting local reuse initiatives. When her favorite thrift store closed, she began looking for new ways to find secondhand clothes that align with her values, but she prefers interacting directly with other people instead of large e-commerce sites.
+[.changed]#Daniela believes in sustainability and fights against the culture of fast fashion. She values durability and ethics in clothing choices and enjoys supporting local reuse initiatives. When her favorite thrift store closed, she began looking for new ways to find secondhand clothes that align with her values, but she prefers interacting directly with other people instead of large e-commerce sites.#
 
-- *Pain Points*: Frustrated by the dominance of fast fashion and the scarcity of convenient local alternatives.  
-- *Needs*: A platform that connects her directly with local sellers offering high-quality secondhand clothing, helping her make eco-conscious choices.  
-- *Platform Interaction*: Uses search filters to narrow listings by condition and material, contacts sellers directly, and shares sustainable fashion tips in her messages.  
+- *Pain Points*: [.changed]#Frustrated by the dominance of fast fashion and the scarcity of convenient local alternatives.#  
+- *Needs*: [.changed]#A platform that connects her directly with local sellers offering high-quality secondhand clothing, helping her make eco-conscious choices.#  
+- *Platform Interaction*: [.changed]#Uses search filters to narrow listings by condition and material, contacts sellers directly, and shares sustainable fashion tips in her messages.#  

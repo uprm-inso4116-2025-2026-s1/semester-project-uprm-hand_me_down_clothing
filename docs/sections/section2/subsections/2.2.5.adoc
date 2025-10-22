@@ -1,42 +1,44 @@
 === *2.2.5 Machine Requirements*
 
 ==== Objective
-The web server must support reliable and efficient operation of a React + JavaScript clothing discovery platform, enabling users to create, browse, filter, and save listings. Requirements are defined in measurable, testable terms to ensure responsiveness, reliability, and scalability. The platform does not handle payments, carts, or checkout operations; all exchanges between buyers and sellers occur offline after contact through the system.
+The web server must support reliable and efficient operation of a React + JavaScript clothing [.changed]#discovery platform, enabling users to create, browse, filter, and save listings.# Requirements are defined in measurable, testable terms to ensure responsiveness, reliability, and scalability. [.added]#The platform does not handle payments, carts, or checkout operations; all exchanges between buyers and sellers occur offline after contact through the system.#
 
 ==== Requirements
 
 *Performance*
 - The system shall return **search results within 2 seconds** on average, with a maximum of **4 seconds** under peak load (defined as 150 concurrent active users).
-- The system shall support **200 simultaneous browsing users** without response time exceeding 4 seconds, including actions such as searching, filtering, saving listings, and viewing listing details.
-- Listing creation and updates (e.g., uploading images, editing descriptions, updating status) shall complete within **3 seconds** on average.
+- The system shall support **200 simultaneous browsing users** without response time exceeding 4 seconds, including actions such as searching, filtering, [.changed]#saving listings, and viewing listing details.#
+- [.added]#Listing creation and updates (e.g., uploading images, editing descriptions, updating status) shall complete within **3 seconds** on average.#
 
 *Reliability*
 - The web server shall maintain an uptime of **99.7% per month**, allowing no more than **2.1 hours** of unscheduled downtime.
-- Core operations — creating, editing, saving, and closing listings — must be processed reliably, with **no more than 0.1% of requests** failing due to server errors.
+- [.changed]#Core operations — creating, editing, saving, and closing listings — must be processed reliably, with **no more than 0.1% of requests** failing due to server errors.#
 - Scheduled maintenance shall be limited to **3 hours per month**, announced with at least **48 hours of notice**.
 
 *Scalability*
-- The system shall scale to support **500 concurrent users** performing mixed actions (browsing, searching, creating listings, saving favorites, sending messages) while maintaining average response times ≤ 3.5 seconds.
+- The system shall scale to support **500 concurrent users** performing mixed actions [.changed]#(browsing, searching, creating listings, saving favorites, sending messages)# while maintaining average response times ≤ 3.5 seconds.
 - The system shall handle a database of up to **50,000 active listings** without significant degradation (response time increase ≤ 20% compared to baseline).
-- The system shall support both **vertical scaling** (increasing server resources) and **horizontal scaling** (adding more servers or instances) without major architectural changes.
+- The system shall support both **vertical scaling** [.changed]#(increasing server resources) and **horizontal scaling** (adding more servers or instances) without major architectural changes.#
 
 ==== Clarifications
-- “Peak load” is defined as **≥ 150 concurrent active users** browsing or searching, with at least **10% performing listing creation or updates**.
-- “Minimal outages” means **≤ 2.1 hours per month** of unplanned downtime.
-- “Acceptable performance” means **≤ 3.5 seconds response time** for 95% of requests.
-- No transaction throughput metrics are required, as **the system does not process financial operations**.
+- “Peak load” is defined as **≥ 150 concurrent active users** [.changed]#browsing or searching, with at least **10% performing listing creation or updates**.#
+- “Minimal outages” [.changed]#means# **≤ 2.1 hours per month** of unplanned downtime.
+- “Acceptable performance” [.changed]#means# **≤ 3.5 seconds response time** for 95% of requests.
+- [.added]#No transaction throughput metrics are required, as **the system does not process financial operations**.#
 
 ==== Areas for Refinement
-- Stress tolerance for **extreme traffic spikes** (≥ 1000 users during semester openings or local donation drives) remains under evaluation.
-- Optimization for **mobile devices under slow network conditions** needs further benchmarking.
-- Additional testing required for concurrent **image upload** operations and cache efficiency under high demand.
+- Stress tolerance for **extreme traffic spikes** [.changed]#(≥ 1000 users during semester openings or local donation drives)# remains under evaluation.
+- [.added]#Optimization for **mobile devices under slow network conditions** needs further benchmarking.#
+- [.added]#Additional testing required for concurrent **image upload** operations and cache efficiency under high demand.#
+- [.removed]#Requirements for **mobile vs. desktop optimization** need further benchmarking, especially under limited bandwidth conditions.#
+
 
 ==== Justification
-The clothing discovery platform requires fast, consistent responses to maintain usability and trust. Defined thresholds ensure users can browse and post listings smoothly, even during busy periods such as the start of a semester or community events. These benchmarks align with standard web performance expectations for lightweight, image-based listing platforms similar to Facebook Marketplace or OfferUp.
+[.changed]#The clothing discovery platform requires fast, consistent responses to maintain usability and trust. Defined thresholds ensure users can browse and post listings smoothly, even during busy periods such as the start of a semester or community events. These benchmarks align with standard web performance expectations for lightweight, image-based listing platforms similar to Facebook Marketplace or OfferUp.#
 
 ==== Testing Plan
-- Conduct **load tests** at 150, 250, and 500 concurrent users simulating real-world actions (searching, filtering, creating, editing, and saving listings).  
-- Perform **stress tests** with simulated traffic spikes to evaluate degradation and recovery patterns.  
-- Monitor uptime logs to confirm 99.7% reliability.  
-- Benchmark database performance against a dataset of **50,000+ listings** with image attachments.  
-- Measure latency on both desktop and mobile clients to validate acceptable response times across devices.  
+- Conduct **load tests** at 150, 250, and 500 concurrent users simulating real-world actions [.changed]#(searching, filtering, creating, editing, and saving listings).#  
+- Perform **stress tests** with [.changed]#simulated traffic spikes to evaluate degradation and recovery patterns.#  
+- [.changed]#Monitor uptime logs to confirm 99.7% reliability.#  
+- [.added]#Benchmark database performance against a dataset of **50,000+ listings** with image attachments.#  
+- [.added]#Measure latency on both desktop and mobile clients to validate acceptable response times across devices.#  

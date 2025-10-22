@@ -144,17 +144,10 @@
 [.added]#*Entity*::#  
 [.added]#A **Meeting** represents an offline handoff between buyer and seller that concludes the exchange cycle.#
 
-===== [.removed]#Closing a Listing#
-[.removed]#*Event*::#  
-[.removed]#A listing has just been marked as closed, either because the exchange occurred offline or the item is no longer available.#
-
 [.added]#*Associated Actions*::#  
 - [.added]#Agreeing on a time and location (often a campus bench or public space).#  
 - [.added]#Inspecting the garment and finalizing the exchange offline.#  
 - [.added]#Marking the listing as closed afterward.#
-
-[.removed]#*Action*::#  
-[.removed]#Seller toggles the status to “Closed,” adds an optional note (“Given away,” “Sold,” “No longer available”), or removes the post from visibility.#
 
 [.added]#*Events*::#  
 - [.added]#**Meetup Conducted** — occurs when both parties arrive and inspect the item.#  

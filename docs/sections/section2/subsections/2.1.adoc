@@ -8,19 +8,19 @@ families, and local communities.
 
 At its core, the domain revolves around two primary actors:
 
-* *Sellers*: Individuals or households who post garments they no longer need, offering them for reuse or resale.  
-* *Buyers*: Individuals who discover these garments through listings and arrange exchanges directly with the seller, outside the system.
+* [.changed]#*Sellers*: Individuals or households who post garments they no longer need, offering them for reuse or resale.#  
+* [.changed]#*Buyers*: Individuals who discover these garments through listings and arrange exchanges directly with the seller, outside the system.#
 
-[.changed]#The central entity in this domain is the *Piece*, any individual article of clothing or   accessory that circulates between actors. Each Piece carries attributes such as:#
+The central entity in this domain is the *Piece*, any individual article of clothing or   accessory that circulates between actors. Each Piece carries attributes such as:
 
 * *Type*: The category of clothing.  
 * *Condition Rating*: A measure of quality or usability.
 
 Pieces move between states through events:
 
-* *Listing Published*: Occurs when a Seller makes a garment visible to potential Buyers.  
-* *Interest Expressed*: Occurs when a Buyer contacts a Seller regarding a listed garment.  
-* *Listing Closed*: Occurs when a garment has been exchanged offline or removed from visibility.  
+* [.added]#*Listing Published*: Occurs when a Seller makes a garment visible to potential Buyers.#  
+* [.added]#*Interest Expressed*: Occurs when a Buyer contacts a Seller regarding a listed garment.#  
+* [.added]#*Listing Closed*: Occurs when a garment has been exchanged offline or removed from visibility.#  
 * *Discard Event*: Occurs when a Piece leaves circulation, feeding into the wider *Textile Waste Stream*.
 
 The domain is sustained by informal practices and behaviors:
@@ -28,7 +28,7 @@ The domain is sustained by informal practices and behaviors:
 
 * [changed]#*Discovery Flows*: The recurring sequence in which garments are listed, browsed, and handed over in person.#  
 * [changed]#*Condition Disclosure Norms*: The expectation that Sellers will show tag photos, highlight defects, and represent garments honestly.#  
-* *Informal Price Bands*: Symbolic or suggested valuations (typically USD $8–$15), distinguishing resale from donation or commercial sale.  
+* [.changed]#*Informal Price Bands*: Symbolic or suggested valuations (typically USD $8–$15), distinguishing resale from donation or commercial sale.#  
 * *Dormant Stock*: Clothing stored in homes awaiting redistribution, resale, or disposal.  
 * *Meetup Spots*: Semi-public locations (e.g., campus benches, apartment lobbies) chosen for exchanges.  
 * *Ad-hoc Channels*: Informal digital venues (e.g., Facebook Marketplace, WhatsApp groups, Instagram stories).  
@@ -43,15 +43,21 @@ limited recycling infrastructure, and overflowing landfills.
 
 From a functional perspective, the domain can be represented through abstract operations:
 
-* `publishListing(Piece, Seller, Locale) → ListingPublished`  
-* `expressInterest(Listing, Buyer) → InterestExpressed`  
-* `rate(Piece, ConditionRating) → ConditionRating`  
-* `review(Seller, Buyer, Review) → ReviewSubmitted`  
-* `categorize(Piece, Type) → Piece`  
-* `closeListing(Listing) → ListingClosed`
+* [.removed]#`donate(Piece, Donator, Locale) → DonationEvent`#
+* [.removed]#`collect(Piece, Collector) → CollectionEvent`#
+* `review(Collection, Review) → Review`#
+* [.removed]#`categorize(Piece, Type) → Piece`#
+* [.removed]#`discard(Piece) → Void`#
 
-Each function captures an action that transforms the state of a *Listing* or *Piece* within the domain,  
-producing observable changes such as entering circulation, connecting interested parties, or leaving visibility once the exchange occurs offline.
+* [.added]#`publishListing(Piece, Seller, Locale) → ListingPublished`#  
+* [.added]#`expressInterest(Listing, Buyer) → InterestExpressed`#  
+* `rate(Piece, ConditionRating) → ConditionRating`#  
+* [.changed]#`review(Seller, Buyer, Review) → ReviewSubmitted`#  
+* `categorize(Piece, Type) → Piece`  
+* [.added]#`closeListing(Listing) → ListingClosed`#
+
+Each function captures an action that transforms the state of [.changed]#a *Listing* or *Piece* within the domain,  
+producing observable changes such as entering circulation, connecting interested parties, or leaving visibility once the exchange occurs offline.#
 
 In sum, the domain of secondhand clothing discovery in Puerto Rico is defined by the  
 *visibility of Pieces*, the *actors who list and find them*, the *events that mark transitions*,  

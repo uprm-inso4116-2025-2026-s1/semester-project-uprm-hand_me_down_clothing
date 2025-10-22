@@ -1,12 +1,12 @@
 === *2.2.1 Epics, Features, and User Stories*
 
 === *Epics*
-[.changed]#Epics are a higher-level overview of goals that are large enough in scope that they can be broken down into multiple sprints. They provide direction and group related work together.#
+Epics are a [.changed]#higher-level# overview of goals that are large enough in scope that they can be broken down into multiple sprints. They provide direction and group related work together.
 
 *Buyer Epics*
 
-. Listing Discovery  
-.. As a buyer, I want to search for listings by category, filters, and keywords, so that I can quickly find clothing items that meet my needs.  
+. [.changed]#Listing Discovery#  
+.. [.changed]#As a buyer, I want to search for listings by category, filters, and keywords, so that I can quickly find clothing items that meet my needs.#  
 . [removed]#Purchase Management#
 .. [removed]#As a buyer, I want to manage potential purchases by saving items in my cart, so that I can review and buy them later.#
 . [.added]#Saved Listings#  
@@ -66,7 +66,7 @@ Features specify the functionality required to deliver the goals described in th
 . [.changed]#Interest Notifications# 
 .. [.changed]#Push/email/in-app notifications when a buyer expresses interest in a listing.#  
 .. [.changed]#Notification center showing recent messages or contact attempts.#  
-. [.changed]#Seller Profile and Trust#  
+. Seller Profile and Trust  
 .. [.changed]#Editable seller profile (profile picture, name, location, short bio).#  
 .. [.change]#Seller dashboard displaying active and closed listings, as well as reviews and ratings.# 
 
@@ -79,7 +79,7 @@ User stories are derived from Features, breaking them down into smaller, individ
 *Buyer User Stories*
 
 . As a buyer, I want to browse listings by category to find a specific type of item I want.  
-. As a buyer, I want to filter my search by size, condition, and category to tailor my search to my preferences.  
+. As a buyer, I want to filter my search by [.changed]#size, condition, and category to tailor my search to my preferences.#  
 . [.changed]#As a buyer, I want to search for listings using keywords to find specific items that may not fit predefined categories.#  
 . [.changed]#As a buyer, I want to save interesting listings so I can revisit them later.# 
 . [.changed]#As a buyer, I want to view a seller’s information such as location, reviews, and account details to feel confident before contacting them.#  
@@ -87,7 +87,7 @@ User stories are derived from Features, breaking them down into smaller, individ
 
 *Seller User Stories*
 
-. As a seller, I want to create listings for my items with options such as adding multiple pictures, a description, and a condition rating so interested buyers can find me easily.  
+. As a seller, I want to create listings for my items with options such as adding multiple pictures, a description, [.changed]#and a condition rating so interested buyers can find me easily.#  
 . As a seller, I want to edit my listings so I can update details whenever necessary. 
 . [.changed]# As a seller, I want to close listings once the item is exchanged offline so the system stays accurate.#  
 . [.changed]#As a seller, I want to receive notifications when someone contacts me about a listing so I can respond quickly.#  

@@ -1,47 +1,86 @@
-=== *3.1 Concept Formation and Analysis*
+=== [.changed]#*3.1 Concept Formation and Analysis*#
 
-This section documents how the concepts identified in *2.1.2 – Terminology* emerged from the raw observations and examples in *2.1.1 – Domain Rough Sketch*.  
-It clarifies how individual, context-specific details were abstracted into general domain entities, events, functions, and behaviors.  
-The goal is to make the reasoning behind each abstraction traceable and verifiable.
+==== [.removed]#Description#
+[.removed]#The domain rough sketch was reviewed to identify recurring ideas and terminology. Ambiguities were noted, compared, and resolved by introducing consistent abstractions. This ensures traceability from observations to domain-level concepts while avoiding system-to-be details.#
 
-==== From Observation to Abstraction
+==== [.removed]#Piece#
+- [.removed]#*Observation*: Notes reference “clothing,” “garments,” and “items” in different contexts.#  
+- [.removed]#*Issue*: Terms overlap without clarity on whether they refer to a single piece or a category.#  
+- [.removed]#*Resolution*: Standardized as **Piece**, representing any individual piece of apparel.#  
+- [.removed]#*Justification*: Provides a neutral, unambiguous unit of exchange within the domain.#  
+- [.removed]#*Concept*: `Piece` (entity).#
 
-The first stories in the rough sketch (Adriana’s search and Manuel’s donation) revealed a repeating structure of discovery, communication, and exchange.  
-By comparing these scenarios side-by-side, the team recognized several recurring phenomena:
+==== [.removed]#Donation vs. Recycling#
+- [.removed]#*Observation*: Actions include “donating clothes,” “claiming items,” and “recycling textiles.”#  
+- [.removed]#*Issue*: Donation and recycling are sometimes mentioned together, though they represent different flows.#  
+- [.removed]#*Resolution*:#  
+-- [.removed]#**Donation** = action of giving away clothing to others in the community.#  
+-- [.removed]#**Recycling** = action of sending clothing to government/private services for textile reuse.#  
+- [.removed]#*Justification*: Separation maintains clarity between peer-to-peer exchanges and organizational processes.#  
+- [.removed]#*Concepts*: `Donation` (action), `Recycling` (action).#
 
-* Listings (Facebook posts, WhatsApp messages) act as public representations of clothing items.  
-* Buyers and sellers interact through short, informal text exchanges that express *interest* and confirm details.  
-* The actual hand-off happens offline, after mutual agreement.  
-* Trust is maintained through norms such as showing garment tags, using bilingual communication, and meeting in visible places.
+==== [.removed]#Services and Community#
+- [.removed]#*Observation*: Mentions of “government services,” “private services,” and “community sharing.”#  
+- [.removed]#*Issue*: Ambiguity between individuals and organizations as actors.#  
+- [.removed]#*Resolution*:#  
+-- [.removed]#**User** = individual participant (donor or claimant).#  
+-- [.removed]#**Service Provider** = organizational actor (government or private) that manages recycling/donation.#  
+- [.removed]#*Justification*: Differentiation enables consistent treatment of human vs. institutional participation.#  
+- [.removed]#*Concepts*: `User` (actor), `Service Provider` (actor).#
 
-These repeated elements were abstracted into domain concepts — *Listing*, *Buyer*, *Seller*, *Interest Expressed*, *Condition Disclosure Norm*, and *Meetup Practice*.  
-Each concept reflects a consistent pattern observed in multiple exchanges, rather than a one-off anecdote.
+==== [.removed]#Terminology Resolution#
+- [.removed]#*Clothes*, *garments*, *items*: standardized as **Piece**.#  
+- [.removed]#*Donation* vs. *Recycling*: separated to reflect community exchange vs. institutional process.#  
+- [.removed]#*Users* vs. *Services*: clarified as **User** (individual) and **Service Provider** (organization).#  
 
-==== Entity Consolidation
+==== [.removed]#Conclusion#
+[.removed]#The domain analysis produced a clear vocabulary:#  
+- [.removed]#`Piece` as the primary entity.#  
+- [.removed]#`Donation` and `Recycling` as distinct actions.#  
+- [.removed]#`User` and `Service Provider` as actors.#
 
-Multiple items described in the examples (e.g., “blazer,” “shirts”) suggested a single core entity: **Piece**, representing any individual clothing item in circulation.  
-The posts and messages that made those items visible became the entity **Listing**, distinct from the physical item itself.  
-This separation mirrors how the domain actually functions: a Listing can exist, be updated, or be removed independently of the Piece it describes.
+[.added]#This section documents how the concepts identified in *2.1.2 – Terminology* emerged from the raw observations and examples in *2.1.1 – Domain Rough Sketch*.#  
+[.added]#It clarifies how individual, context-specific details were abstracted into general domain entities, events, functions, and behaviors.#  
+[.added]#The goal is to make the reasoning behind each abstraction traceable and verifiable.#
 
-==== Event and Function Identification
+==== [.added]#From Observation to Abstraction#
 
-Actions observed in the examples were distilled into domain functions:
+[.added]#The first stories in the rough sketch (Adriana’s search and Manuel’s donation) revealed a repeating structure of discovery, communication, and exchange.  
+By comparing these scenarios side-by-side, the team recognized several recurring phenomena:#
 
-* `publishListing(Piece, Seller, Locale)` — a seller’s act of making an item visible.  
-* `closeListing(Listing, Seller)` — a seller’s act of marking a listing inactive after the offline exchange.
+* [.added]#Listings (Facebook posts, WhatsApp messages) act as public representations of clothing items.#  
+* [.added]#Buyers and sellers interact through short, informal text exchanges that express *interest* and confirm details.#  
+* [.added]#The actual hand-off happens offline, after mutual agreement.#  
+* [.added]#Trust is maintained through norms such as showing garment tags, using bilingual communication, and meeting in visible places.#
 
-Each function captures a discrete transition in the domain, corresponding to what participants *do* rather than what the platform might later automate.
+[.added]#These repeated elements were abstracted into domain concepts — *Listing*, *Buyer*, *Seller*, *Interest Expressed*, *Condition Disclosure Norm*, and *Meetup Practice*.#  
+[.added]#Each concept reflects a consistent pattern observed in multiple exchanges, rather than a one-off anecdote.#
 
-==== Behavioral Norms and Implicit Concepts
+==== [.added]#Entity Consolidation#
 
-Trust-related practices emerged as implicit but crucial aspects of the domain.  
-For instance, showing tags or defects evolved into the **Condition Disclosure Norm**, while bilingual messaging and recognizable names became **Trust Cues**.  
-By identifying these implicit elements explicitly, the terminology provides a shared vocabulary that aligns both domain understanding and future requirements.
+[.added]#Multiple items described in the examples (e.g., “blazer,” “shirts”) suggested a single core entity: **Piece**, representing any individual clothing item in circulation.#  
+[.added]#The posts and messages that made those items visible became the entity **Listing**, distinct from the physical item itself.#  
+[.added]#This separation mirrors how the domain actually functions: a Listing can exist, be updated, or be removed independently of the Piece it describes.#
 
-==== Iterative Refinement
+==== [.added]#Event and Function Identification#
 
-During group analysis sessions, terms were revisited to ensure they described phenomena observable without assuming the existence of a system.  
-This distinction kept the domain pure — describing only what happens in the world — while preparing a foundation for requirements in Section 2.2.
+[.added]#Actions observed in the examples were distilled into domain functions:#
 
-In conclusion, the concept analysis bridges the gap between individual real-world stories and the structured domain model.  
-It traces how recurring actions, roles, and norms were abstracted into formal concepts that will guide subsequent design and implementation work.
+* [.added]#`publishListing(Piece, Seller, Locale)` — a seller’s act of making an item visible.#  
+* [.added]#`closeListing(Listing, Seller)` — a seller’s act of marking a listing inactive after the offline exchange.#
+
+[.added]#Each function captures a discrete transition in the domain, corresponding to what participants *do* rather than what the platform might later automate.#
+
+==== [.added]#Behavioral Norms and Implicit Concepts#
+
+[.added]#Trust-related practices emerged as implicit but crucial aspects of the domain.#  
+[.added]#For instance, showing tags or defects evolved into the **Condition Disclosure Norm**, while bilingual messaging and recognizable names became **Trust Cues**.# 
+[.added]#By identifying these implicit elements explicitly, the terminology provides a shared vocabulary that aligns both domain understanding and future requirements.#
+
+==== [.added]#Iterative Refinement#
+
+[.added]#During group analysis sessions, terms were revisited to ensure they described phenomena observable without assuming the existence of a system.#  
+[.added]#This distinction kept the domain pure — describing only what happens in the world — while preparing a foundation for requirements in Section 2.2.#
+
+[.added]#In conclusion, the concept analysis bridges the gap between individual real-world stories and the structured domain model.#  
+[.added]#It traces how recurring actions, roles, and norms were abstracted into formal concepts that will guide subsequent design and implementation work.#
