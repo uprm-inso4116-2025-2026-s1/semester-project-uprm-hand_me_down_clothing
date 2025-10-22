@@ -134,9 +134,10 @@ def updateadoc():
 
 
 def start():
-  addOrDel = input("Add or delete entry ('a' for add, 'd' for delete)? ").lower()
+  addOrDel = input("Add or delete entry? ('a' for add, 'd' for delete, 'q to quit): ").lower()
   if addOrDel == 'a': add()
   elif addOrDel == 'd': delete()
+  elif addOrDel == 'q': return
   elif addOrDel == 'updateadoc': updateadoc()
   else: start()
 
