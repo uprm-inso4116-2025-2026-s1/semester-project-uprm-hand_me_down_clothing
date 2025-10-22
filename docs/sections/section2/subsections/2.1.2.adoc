@@ -3,7 +3,6 @@
 The following terminology consolidates entities, events, functions, and behaviors in the domain. Each entry specifies the type of concept it represents and the phase in which it is introduced  
 (domain, requirements, design, implementation). This approach avoids circular definitions and  
 ensures alignment with both domain knowledge and system concerns.
-
 [cols="^,^,^,3", options="header", align=center]
 |===
 | Term | Concept Type | Phase Introduced | Definition / Notes

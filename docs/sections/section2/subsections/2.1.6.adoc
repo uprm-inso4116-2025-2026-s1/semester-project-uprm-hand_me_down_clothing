@@ -116,10 +116,14 @@ discard : Piece -> [.changed]#Option[Void]#
 
 [.removed]#Removes a Piece from active circulation, marking it as no longer available.#
 
+[.added]
 ==== Example Scenario: From Listing to Offline Exchange
+[.added]
+--
 1. Seller publishes a listing using `publishListing(Piece, Seller, Locale)` → produces `ListingPublished`.  
 2. Buyer browses available items and finds one of interest.  
 3. Buyer [.changed]#triggers `expressInterest(Listing, Buyer)` → produces `InterestExpressed`.#  
 4. Both users coordinate offline to exchange the item.  
 5. Seller closes the listing via `closeListing(Listing, Seller)` → produces `ListingClosed`.  
 6. Buyer leaves a review using `review(Seller, Buyer, Review)` → produces `ReviewSubmitted`.
+--

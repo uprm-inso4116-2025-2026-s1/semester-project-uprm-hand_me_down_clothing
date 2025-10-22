@@ -11,8 +11,7 @@ At its core, the domain revolves around two primary actors:
 * *Sellers*: Individuals or households who post garments they no longer need, offering them for reuse or resale.  
 * *Buyers*: Individuals who discover these garments through listings and arrange exchanges directly with the seller, outside the system.
 
-The central entity in this domain is the *Piece*, any individual article of clothing or  
-accessory that circulates between actors. Each Piece carries attributes such as:
+[.changed]#The central entity in this domain is the *Piece*, any individual article of clothing or   accessory that circulates between actors. Each Piece carries attributes such as:#
 
 * *Type*: The category of clothing.  
 * *Condition Rating*: A measure of quality or usability.
@@ -26,14 +25,15 @@ Pieces move between states through events:
 
 The domain is sustained by informal practices and behaviors:
 
-* *Discovery Flows*: The recurring sequence in which garments are listed, browsed, and handed over in person.  
-* *Condition Disclosure Norms*: The expectation that Sellers will show tag photos, highlight defects, and represent garments honestly.  
+
+* [changed]#*Discovery Flows*: The recurring sequence in which garments are listed, browsed, and handed over in person.#  
+* [changed]#*Condition Disclosure Norms*: The expectation that Sellers will show tag photos, highlight defects, and represent garments honestly.#  
 * *Informal Price Bands*: Symbolic or suggested valuations (typically USD $8–$15), distinguishing resale from donation or commercial sale.  
 * *Dormant Stock*: Clothing stored in homes awaiting redistribution, resale, or disposal.  
 * *Meetup Spots*: Semi-public locations (e.g., campus benches, apartment lobbies) chosen for exchanges.  
 * *Ad-hoc Channels*: Informal digital venues (e.g., Facebook Marketplace, WhatsApp groups, Instagram stories).  
 * *Trust Cues*: Bilingual communication, recognizable names, or clear photos that influence whether an exchange proceeds.  
-* *Seasonal Demand Pulses*: Cyclical increases in demand, such as back-to-school or weather-driven surges for uniforms or outerwear.
+* *Seasonal Demand Pulses*: Cyclical increases in demand, such as back-to-school or weather-driven surges for uniforms or outerwear.#
 
 These elements form an interconnected web of events, actions, and behaviors.  
 Sellers and Buyers rely on ad-hoc digital channels for discovery, agree on terms through direct contact, and meet in semi-public spaces to exchange items offline.  

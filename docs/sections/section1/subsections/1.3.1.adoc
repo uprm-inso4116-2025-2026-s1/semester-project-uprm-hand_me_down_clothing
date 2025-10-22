@@ -20,5 +20,5 @@ The span includes the following project-specific aspects:
 
 * User Interaction:: Individuals must be able to list, browse, and search for secondhand items.
 * Categorization:: Items will be organized into categories that facilitate discovery.
-* Transaction Support:: The system must provide structured means for creating and viewing listings, including optional prices or donation markers. Negotiation and exchange are arranged outside the platform.
+* [.changed]#Transaction Support:: The system must provide structured means for creating and viewing listings, including optional prices or donation markers. Negotiation and exchange are arranged outside the platform.#
 * Trust and Transparency:: Item conditions and relevant metadata must be clearly described to support informed decisions.
