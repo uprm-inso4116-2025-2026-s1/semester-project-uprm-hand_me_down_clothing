@@ -1,0 +1,20 @@
+// --
+// Remember Me (Session Persistence)
+// --
+
+= Remember Me (Session Persistence)
+
+The application supports a "Remember me" option at sign-in that controls whether the authentication session is persisted across browser restarts.
+
+Implementation details:
+
+* A small storage adapter (`app/auth/storage.ts`) chooses between `localStorage` (persistent) and `sessionStorage` (non-persistent) based on a user preference flag.
+* The flag is set when the user checks "Remember me" on sign-in (`setAuthPersistence(true)`), and cleared otherwise.
+* Supabase client is configured to use the custom storage adapter (`app/auth/supabaseClient.ts`).
+* This approach avoids server-side state changes while providing an explicit UX control for persistence.
+
+Security considerations:
+
+* Persistent sessions increase the risk if a device is shared; clearly label the option and recommend using it only on personal devices.
+* The storage flag is stored in `localStorage`; the adapter will store session tokens in `sessionStorage` when "Remember me" is disabled.
+* Optionally pair with device recognition or allow users to view and revoke active sessions from their account settings.
