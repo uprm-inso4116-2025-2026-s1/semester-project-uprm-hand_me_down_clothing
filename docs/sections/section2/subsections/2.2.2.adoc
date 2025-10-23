@@ -1,6 +1,8 @@
 === *2.2.2 - Personas*
 
-A persona is a fictional yet plausible representation of a user for a platform. The following personas will help align development goals with user needs.
+A persona is a fictional yet plausible representation of the goals, needs, and expectations of any person within the project's domain. These don't have to just be direct users of the platform; anyone who benefits from the project's goals in one way or another can be a good persona. These personas serve to guide development in such a way where users are kept in mind when creating, developing, and refining features.
+
+The following personas represent direct users of the platform:
 
 *Adriana Gómez*
 
@@ -11,10 +13,11 @@ A persona is a fictional yet plausible representation of a user for a platform. 
 
 Adriana loves expressing herself through her fashion, yet she struggles finding clothes that feel like her. She has an affinity for older clothing, so thrift stores are a common spot for her. However, she struggles finding thrift stores in her area given that most of them don’t have an online presence and, between her studies and her job, she doesn’t have a lot of time to go out and look for them.
 
-
+- *Goals:* Build a wardrobe that reflects her individuality without overspending
 - *Pain Points*: Difficulty finding unique clothing items and accessories that don’t break the bank, difficulty finding local thrift stores
 - *Needs*: Access to trustworthy online listings, a way to find local thrift stores
 - *Platform Interaction*: Browses listings from her phone during her breaks between classes
+- *Keep Adriana in mind when:* Developing the general listings layout
 
 
 *Manuel Torres*
@@ -24,12 +27,13 @@ Adriana loves expressing herself through her fashion, yet she struggles finding 
 - *Build / Appearance*: Brown and curly hair, average height, frequently seen in polo shirts or t-shirts with witty quotes on them.
 - *Personality*: Patient, funny, good with kids, adventurous 
 
-Manuel is moving to a new location and wants a fresh start. Even if he doesn’t want a lot of his belongings anymore, he’d rather not throw them away. He wants to sell whatever he has that’s still in good condition to help out with the expenses involvd in the move but can’t find a way to do so.
+Manuel is moving to a new location and wants a fresh start. Even if he doesn’t want a lot of his belongings anymore, he’d rather not throw them away. He wants to sell whatever he has that’s still in good condition to help out with the expenses involved in the move but can’t find a way to do so.
 
-
+- *Goals:* Simplify his moving process while giving his clothes a second life
 - *Pain Points*: No low-hassle way to sell his belongings
 - *Needs*: Access to a way to sell his belongings on his own terms
 - *Platform Interaction*: Creates listings from his work computer for his pre-loved clothes
+- *Keep Manuel in mind when:* Developing the listing creation interface and functionality
 
 
 *Daniela López*
@@ -41,6 +45,40 @@ Manuel is moving to a new location and wants a fresh start. Even if he doesn’t
 
 Daniela is the type of person to own something until it falls apart. She is vehemently against fast fashion and tries to not contribute to it to the best of her ability. She believes older clothing was made to last longer and buys second-hand whenever she can, but her favorite local thrift store has just closed down and the closest is now too far away for her to visit frequently.
 
+- *Goals:* Achieve convenient access to good-quality clothing
 - *Pain Points*: Doesn’t want to contribute to fast fashion, tired of the low quality of modern clothing items
 - *Needs*: A way to purchase good quality vintage clothing items
 - *Platform Interaction*: Browses listings using search filters to narrow down her results to her needs
+- *Keep Daniela in mind when:* Developing the search filters
+
+
+As mentioned, it's not just direct users of the platform that benefit from it; other people within the domain can also benefit from the platform's goals. The following personas pertain to the project's domain:
+
+*Isidra Montoya*
+
+- *Age*: 61 years old  
+- *Occupation*: Thrift store owner
+- *Build / Appearance*: White and straight hair in a pixie cut, short in stature, wears comfortable outfits like jeans and a t-shirt
+- *Personality*: Friendly, welcoming, hard-working
+
+Isidra runs a small thrift store that has been struggling to pull in customers as of late. Her store isn't located very close to the main highway and lacks an online presence due to Isidra's limited technical knowledge and reluctance to learn, making her rely mainly on word of mouth and the occasional curious passerby.
+
+- *Pain Points*: Limited digital presence, lack of technical skills, poor reach
+- *Needs*: An alternate way to expand her shop's reach to attract more customers
+- *Platform Interaction*: Despite not interacting directly with the platform, a user uploaded her store's location to the thrift store map, expanding her store's reach and allowing her to gain the additional customers she needed.
+- *Keep Isidra in mind when:* Developing the map feature and designing user friendly interfaces so intuitive that even those with poor technical knowledge can use them
+
+
+*Fernando Ruiz*
+
+- *Age*: 29 years old  
+- *Occupation*: Event organizer and nonprofit volunteer
+- *Build / Appearance*: Short hair that has been dyed blue at the tips, medium build, tall, usually seen wearing light colors like whites and pastels
+- *Personality*: Proactive, charismatic, enthusiastic
+
+Fernando is very involved in volunteer work and helps host monthly clothing drives in his community to help those in need. However, getting sufficient clothes for the drives has been a recurring issue, as they don't receive enough donations to help as many people as they'd like.
+
+- *Pain Points*: Lack of clothing donations due to a lack of visibility
+- *Needs*: More contributors/donors
+- *Platform Interaction*: Despite not interacting directly with the platform, a user of the platform added the recurring clothing drive event to the map, increasing its visibility and contributing to getting more clothing donations for the drive.
+- *Keep Fernando in mind when:* Developing the map feature
