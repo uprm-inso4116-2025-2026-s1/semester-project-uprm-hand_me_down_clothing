@@ -8,7 +8,7 @@ import type { Map as LeafletMap, Marker as LeafletMarker } from "leaflet";
 import { LocationMarkers, LocationRecord } from "./data-cards";
 import type { FilterRecord } from '../utils/filters/mapFilter';
 import {supabase} from '../auth/supabaseClient';
-import openNow  from '../utils/filters/mapFilter';
+import {openNow, nearMe}  from '../utils/filters/mapFilter';
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -61,8 +61,7 @@ function LocateControlSimple() {
   }, [map]);
 
   return null;
-}
-const filters: FilterRecord[] = [{"name": "Open Now"}, {'name': 'Clear Filters'}]; 
+} 
 
 function CustomControl({ 
   locations, 
@@ -71,7 +70,7 @@ function CustomControl({
 }: { 
   locations: LocationRecord[];
   markersRef: React.MutableRefObject<Map<number, LeafletMarker>>;
-  filterFunction: (filterName: string) => void;
+  filterFunction: (filterName: string, map: LeafletMap) => void;
 }) {
   const map: LeafletMap = useMap();
   
@@ -102,7 +101,9 @@ function CustomControl({
           mapButton.innerHTML = "🗺️";
           mapButton.title = "Locations";
 
-          /** ILTERS BUTTON **/
+          /** FILTERS BUTTON **/
+          const filters: FilterRecord[] = [{'name': 'Open Now'}, {'name': 'Near Me'}, {'name': 'Clear Filters'}];
+
           const filterButton = L.DomUtil.create("button", "custom-map-btn", container);
           filterButton.innerHTML = "🧩";
           filterButton.title = "Filters";
@@ -208,8 +209,8 @@ function CustomControl({
             const htmlLi = li as HTMLElement;
             htmlLi.onclick = () => {
               const filterName = htmlLi.getAttribute("data-filter-name") || "";
-              filterFunction(filterName);
-              console.log("Applying filter:", filterName);
+              filterFunction(filterName, map);
+              // console.log("Applying filter:", filterName);
               hideMenus();
             };
           });
@@ -231,7 +232,7 @@ function CustomControl({
             });
           };
 
-          /** 🔘 Button actions **/
+          /** Button actions **/
           mapButton.onclick = (e) => {
             e.stopPropagation();
             toggleMenu(mapMenu);
@@ -251,7 +252,7 @@ function CustomControl({
       new CustomControlClass({ position: "topright" }).addTo(map);
       });
     });
-  }, [map, locations, markersRef, filters]);
+  }, [map, locations, markersRef]);
 
   return null;
 }
@@ -262,12 +263,24 @@ export default function Map() {
   const markersRef = useRef<globalThis.Map<number, LeafletMarker>>(new globalThis.Map());
   const [openNowFilter, setOpenNowFilter] = useState(false);
 
-  const handleFilter = (filterName: string) => {
+  const handleFilter = (filterName: string, map: LeafletMap) => {
     switch (filterName) {
       case "Open Now":
-        const filteredLocations = openNow(locations);
+        let filteredLocations = openNow(locations);
         setLocations(filteredLocations);
         setOpenNowFilter(true);
+        break;
+      case "Near Me":
+        map.locate({setView: true, maxZoom: 13});
+
+        map.on('locationfound', (e) => {
+          const userCoords = e.latlng;
+
+          const filteredLocations = nearMe(locations, [userCoords.lat, userCoords.lng]);
+
+          setLocations(filteredLocations);
+          return;
+        });
         break;
       case 'Clear Filters':
         setLocations([]);

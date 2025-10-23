@@ -43,6 +43,7 @@ export async function getFeaturedItems() {
   const {data: items, error } = await supabase
     .from('pieces')
     .select('*')
+    .limit(7);
 
   if (error) {
     console.log("Error fetching featured items: ", error);
@@ -55,7 +56,6 @@ export async function getFeaturedItems() {
 export default async function Homepage() {
 
   const featuredItems: Item[] = await getFeaturedItems();
-  console.log(featuredItems);
 
   return (
     <div className="p-3">

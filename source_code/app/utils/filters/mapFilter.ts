@@ -1,78 +1,92 @@
 'use client';
+import { Store } from '@/app/map/marker';
 import type { LocationRecord } from '../../map/data-cards';
 
 export type FilterRecord = {
     name: string;
 }
 
-export default function openNow(locations: LocationRecord[]) {
+type Day =
+  | "monday"
+  | "tuesday"
+  | "wednesday"
+  | "thursday"
+  | "friday"
+  | "saturday"
+  | "sunday";
+
+function getCurrentTime() {
     const now = new Date();
 
-    // current local day as a string (e.g. "Monday")
-    let curDay = 'monday' // now.toLocaleDateString(undefined, { weekday: "long" });
+    const hour = now.getHours();
+    const minutes = now.getMinutes();
 
-    // current local time in 24h format (e.g. "14:35")
-    const curTime = 12 // now.toLocaleTimeString(undefined, { hour12: false }).split(":").map(val => Number(val)).at(0) || 0;
+    const result = hour + (minutes / 100);
 
-    let filteredLocations: LocationRecord[] = [];
-    locations.forEach( (location) => {
+    return result;
+}
 
-        switch (curDay) {
-            case 'monday':
-                let openTime = location.store_hours?.monday?.open.split(":").map(val => Number(val)).at(0) || 0;
-                let closeTime = location.store_hours?.monday?.close.split(":").map(val => Number(val)).at(0) || 0;
-                if (openTime < curTime && closeTime > curTime) {
-                    filteredLocations.push(location);
-                } 
-                break;
-            case 'tuesday':
-                openTime = location.store_hours?.tuesday?.open.split(":").map(val => Number(val)).at(0) || 0;
-                closeTime = location.store_hours?.tuesday?.close.split(":").map(val => Number(val)).at(0) || 0;
-                if (openTime < curTime && closeTime > curTime) {
-                    filteredLocations.push(location);
-                } 
-                break;
-            case 'wednesday':
-                 openTime = location.store_hours?.wednesday?.open.split(":").map(val => Number(val)).at(0) || 0;
-                 closeTime = location.store_hours?.wednesday?.close.split(":").map(val => Number(val)).at(0) || 0;
-                if (openTime < curTime && closeTime > curTime) {
-                    filteredLocations.push(location);
-                } 
-                break;
-            case 'thursday':
-                 openTime = location.store_hours?.thursday?.open.split(":").map(val => Number(val)).at(0) || 0;
-                 closeTime = location.store_hours?.thursday?.close.split(":").map(val => Number(val)).at(0) || 0;
-                if (openTime < curTime && closeTime > curTime) {
-                    filteredLocations.push(location);
-                } 
-                break;
-            case 'friday':
-                 openTime = location.store_hours?.friday?.open.split(":").map(val => Number(val)).at(0) || 0;
-                 closeTime = location.store_hours?.friday?.close.split(":").map(val => Number(val)).at(0) || 0;
-                if (openTime < curTime && closeTime > curTime) {
-                    filteredLocations.push(location);
-                } 
-                break;
-            case 'saturday':
-                 openTime = location.store_hours?.saturday?.open.split(":").map(val => Number(val)).at(0) || 0;
-                 closeTime = location.store_hours?.saturday?.close.split(":").map(val => Number(val)).at(0) || 0;
-                if (openTime < curTime && closeTime > curTime) {
-                    filteredLocations.push(location);
-                } 
-                break;
-            case 'sunday':
-                 openTime = location.store_hours?.sunday?.open.split(":").map(val => Number(val)).at(0) || 0;
-                 closeTime = location.store_hours?.sunday?.close.split(":").map(val => Number(val)).at(0) || 0;
-                if (openTime < curTime && closeTime > curTime) {
-                    filteredLocations.push(location);
-                } 
-                break;
-            default:
-                break;
+function toDecimalTime(time: string) {
+    // time in form of HH:MM
 
-        }
+    if (time.at(0) === '0') {
+        time = time.substring(1);
+    }
+
+    const hour_minutes: number[] = time.split(':').map((s) => Number(s));
+    const hour = hour_minutes[0];
+    const minutes = hour_minutes[1];
+
+    const result = hour + (minutes / 100);
+
+    return result;
+}
+
+export function openNow(locations: LocationRecord[]) {
+    const now = new Date();
+
+    // current local day as a string 
+    let curDay = now.toLocaleDateString(undefined, { weekday: "long" }).toLowerCase();
+
+    // current local time in 24h format 
+    const curTime = getCurrentTime();
+
+    // console.log(curDay + ' -- ' + curTime);
+
+    let filteredLocations: LocationRecord[] = locations.filter( (location) => {
+
+        const openTime = toDecimalTime(location.store_hours?.[curDay as Day]?.open || "");
+        const closeTime = toDecimalTime(location.store_hours?.[curDay as Day]?.close || "");
+
+        // console.log(openTime + ' -- ' + closeTime);
+
+        return (openTime < curTime && closeTime > curTime);
+
     });
 
-    console.log(filteredLocations);
+    return filteredLocations;
+}
+
+// haversine formula to get the distance between two points on a sphere
+// result will be in km
+function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // radius to the sphere of interest (Earth)
+  const dLat = (lat2 - lat1) * (Math.PI / 180);
+  const dLon = (lon2 - lon1) * (Math.PI / 180);
+  const a =
+    Math.sin(dLat / 2) ** 2 +
+    Math.cos(lat1 * Math.PI / 180) *
+      Math.cos(lat2 * Math.PI / 180) *
+      Math.sin(dLon / 2) ** 2;
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  return R * c;
+}
+
+export function nearMe(locations: LocationRecord[], userLocation: [number, number]) {
+    const filteredLocations: LocationRecord[] = locations.filter((location) => {
+        const distance = getDistance(userLocation[0], userLocation[1], location.latitude || 0, location.longitude || 0);
+        return distance <= 8;
+    });
+
     return filteredLocations;
 }
