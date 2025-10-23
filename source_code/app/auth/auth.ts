@@ -74,3 +74,26 @@ export async function getUser() {
   const { data, error } = await supabase.auth.getUser()
   return { data, error }
 }
+
+// --- Phone-based 2FA helpers ---
+// Send OTP to phone for sign-in or verification
+export async function signInWithPhone(phone: string) {
+  const { data, error } = await supabase.auth.signInWithOtp({ phone })
+  return { data, error }
+}
+
+// Verify phone OTP (type 'sms') and, on success, mark phone as verified in user metadata
+export async function verifyPhoneOtp(phone: string, token: string) {
+  const { data, error } = await supabase.auth.verifyOtp({ phone, token, type: 'sms' })
+  if (error) return { data, error }
+
+  // On successful verification, update user's metadata to mark phone verification and enable 2FA
+  try {
+    // store phone and 2fa flag in user metadata
+    await supabase.auth.updateUser({ data: { phone, phone_2fa: 'enabled' } })
+  } catch (e) {
+    // ignore metadata update failure but return success for verification
+  }
+
+  return { data, error }
+}
