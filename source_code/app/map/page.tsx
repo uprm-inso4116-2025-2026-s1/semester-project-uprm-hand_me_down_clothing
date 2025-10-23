@@ -267,33 +267,32 @@ export default function Map() {
   const markersRef = useRef<globalThis.Map<number, LeafletMarker>>(new globalThis.Map());
   const [openNowFilter, setOpenNowFilter] = useState(false);
 
+  const [userLocation, setUserLocation] = useState<[number, number] | null>(null);
+
   const handleFilter = (filterName: string, map: LeafletMap) => {
     switch (filterName) {
       case "Open Now":
-        let filteredLocations = openNow(locations);
-        setLocations(filteredLocations);
+        setLocations(openNow(locations));
         setOpenNowFilter(true);
         break;
       case "Near Me":
-        map.locate({setView: true, maxZoom: 13});
-
-        map.on('locationfound', (e) => {
-          const userCoords = e.latlng;
-
-          const filteredLocations = nearMe(locations, [userCoords.lat, userCoords.lng]);
-
-          setLocations(filteredLocations);
-          return;
-        });
+        if (userLocation) {
+          setLocations(nearMe(locations, userLocation));
+        } else {
+          map.once('locationfound', (e: any) => {
+            const coords: [number, number] = [e.latlng.lat, e.latlng.lng];
+            setUserLocation(coords);
+            setLocations(nearMe(locations, coords));
+          });
+          map.locate({ setView: true, maxZoom: 13 });
+        }
         break;
-      case 'Clear Filters':
+      case "Clear Filters":
         setLocations([]);
         setOpenNowFilter(false);
         break;
-      default:
-        break;
     }
-  }
+  };
   
   useEffect(() => {
     if (locations.length > 0 || openNowFilter) return; // Only run when locations is empty or open now filter was ran and no locations were open
