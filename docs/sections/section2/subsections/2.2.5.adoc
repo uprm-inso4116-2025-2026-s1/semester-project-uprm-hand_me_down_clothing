@@ -40,3 +40,25 @@ The clothing discovery platform requires fast, consistent responses to maintain 
 - Monitor uptime logs to confirm 99.7% reliability.  
 - Benchmark database performance against a dataset of **50,000+ listings** with image attachments.  
 - Measure latency on both desktop and mobile clients to validate acceptable response times across devices.  
+
+==== Load Definitions
+Refined load definitions include:
+- *Peak Concurrent Users*: 500 users performing actions simultaneously.
+- *Average Concurrent Users*: 200 users during regular hours.
+
+==== User Mix Scenarios
+1. *Scenario 1: Browsing Listings*
+   - 60% of users are browsing listings.
+   - Actions: Filtering, searching, and viewing item details.
+
+2. *Scenario 2: Creating Listings*
+   - 20% of users are creating new listings.
+   - Actions: Uploading photos, entering item details, and submitting listings.
+
+3. *Scenario 3: Messaging*
+   - 15% of users are messaging sellers or buyers.
+   - Actions: Sending and receiving messages.
+
+4. *Scenario 4: Administrative Actions*
+   - 5% of users are performing administrative tasks.
+   - Actions: Moderating listings, resolving disputes.
