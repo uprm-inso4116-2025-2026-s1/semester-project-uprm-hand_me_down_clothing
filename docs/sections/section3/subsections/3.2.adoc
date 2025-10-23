@@ -1,0 +1,59 @@
+== 3.2 Validation and Verification
+
+=== Validation
+Validation ensures that our understanding of the domain and requirements is accurate and complete. It focuses on confirming that our interpretation aligns with the expectations of domain experts, stakeholders, and prospective users. Validation activities are designed to uncover gaps or misunderstandings in the requirements and refine them based on feedback.
+
+==== Why Validation is Needed
+- To ensure that the system meets the needs of stakeholders and users.
+- To confirm that the requirements accurately reflect the domain and its workflows.
+- To identify gaps or ambiguities in the requirements early in the development process.
+
+==== How Validation is Performed
+1. **Scenario Walkthroughs**:
+   - Scenarios can be created to represent real-world use cases (e.g., listing an item, purchasing an item, donating an item).
+   - These scenarios could be presented to domain experts and stakeholders to gather feedback.
+   - Example Scenario: "A seller decides to list a clothing item. They upload photos, provide a description, and set a price. A buyer views the listing, adds the item to their cart, and completes the purchase. The seller is notified of the sale and arranges delivery."
+   - Feedback Example: Stakeholders might suggest adding a feature to allow sellers to specify donation-only listings.
+
+2. **Stakeholder Interviews**:
+   - Interviews could be conducted with domain experts and prospective users to validate assumptions about workflows and requirements.
+   - Example: Discussing the lifecycle of a clothing item with stakeholders to confirm the transition points between real-world entities and system entities.
+
+3. **Terminology Validation**:
+   - Scenarios and requirements can be reviewed to ensure that all terms are clearly defined and understood by stakeholders.
+   - Example: Validating the term "clothing item" to ensure it encompasses all relevant attributes (e.g., size, condition, price).
+
+=== Verification
+Verification ensures that the requirements are consistent, complete, and correctly implemented. It focuses on checking that the system meets the specified requirements and that the requirements themselves are refinements of more general goals.
+
+==== Why Verification is Needed
+- To ensure that the system behaves as expected under defined conditions.
+- To confirm that the requirements are internally consistent and traceable to higher-level goals.
+- To identify and address implementation issues before deployment.
+
+==== How Verification is Performed
+1. **Unit Testing**:
+   - Tests are written to verify the behavior of individual components (e.g., `ClothingItem`, `Transaction`).
+   - Example: Testing the `validate()` method of the `ClothingItem` class to ensure it throws an error for invalid attributes.
+
+2. **Integration Testing**:
+   - Verifies that different components of the system work together as expected.
+   - Example: Testing the interaction between the `CreateListing` use case and the database adapter to ensure listings are saved correctly.
+
+3. **A/B Testing**:
+   - Used to compare different versions of a feature to determine which performs better.
+   - Example: Testing two versions of the checkout page to measure the time it takes for users to complete a purchase.
+
+4. **Requirements Traceability**:
+   - Ensures that all requirements are refinements of higher-level goals and are implemented in the system.
+   - Example: Tracing the requirement "A user can list an item for sale" to its implementation in the `CreateListing` use case.
+
+5. **Scenario-Based Testing**:
+   - Scenarios used during validation are revisited to verify that the implemented system supports them.
+   - Example: Testing the scenario where a seller lists an item and a buyer completes the purchase to ensure all steps work as expected.
+
+=== Summary
+- **Validation** focuses on confirming that the requirements align with the domain and stakeholder expectations. Techniques include scenario walkthroughs, stakeholder interviews, and terminology validation.
+- **Verification** ensures that the requirements are correctly implemented and consistent. Techniques include unit testing, integration testing, A/B testing, and requirements traceability.
+
+Both validation and verification are critical to ensuring the success of the project, as they address different aspects of requirement accuracy and implementation correctness.

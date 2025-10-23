@@ -1,0 +1,106 @@
+== 2.3 Implementation Section
+
+=== Architecture Layers
+
+==== Domain Layer
+- **Purpose**: Encapsulates the core business logic and rules.
+- **Implemented Entities**:
+  - `ClothingItem`: Represents a clothing item with attributes like `name`, `size`, `condition`, and `price`.
+  - `User`: Represents a user with attributes like `name`, `email`, and `role` (buyer/seller).
+  - `Transaction`: Represents a transaction with attributes like `buyer`, `seller`, `item`, and `status`.
+- **Interaction**: The domain layer is independent of external systems and interacts with the application layer to enforce business rules.
+
+[source, javascript]
+----
+class ClothingItem {
+  constructor(name, size, condition, price) {
+    this.name = name;
+    this.size = size;
+    this.condition = condition;
+    this.price = price;
+  }
+
+  validate() {
+    if (!this.name || !this.size || !this.condition || !this.price) {
+      throw new Error("Invalid clothing item attributes");
+    }
+  }
+}
+----
+
+==== Application Layer
+- **Purpose**: Coordinates workflows and use cases.
+- **Implemented Use Cases**:
+  - `CreateListing`: Handles the creation of a new listing by validating the item and saving it to the database.
+  - `ProcessTransaction`: Manages the purchase of an item, including payment processing and status updates.
+- **Interaction**: The application layer uses the domain layer to execute workflows and interacts with the interfaces/adapters layer to communicate with external systems.
+
+[source, javascript]
+----
+function createListing(item) {
+  item.validate();
+  // Save the item to the database
+  console.log("Listing created:", item);
+}
+
+function processTransaction(transaction) {
+  if (transaction.status !== "pending") {
+    throw new Error("Invalid transaction status");
+  }
+  // Process payment and update transaction status
+  transaction.status = "completed";
+  console.log("Transaction processed:", transaction);
+}
+----
+
+==== Interfaces/Adapters Layer
+- **Purpose**: Connects the system to external interfaces.
+- **Implemented Components**:
+  - REST APIs: Endpoints for user actions (e.g., `POST /listings`, `GET /items`).
+  - Database Adapters: Logic for interacting with the database (e.g., CRUD operations for listings).
+  - Third-party Integrations: Services like Supabase for authentication or Stripe for payments.
+- **Interaction**: This layer adapts workflows from the application layer to external systems.
+
+[source, javascript]
+----
+const express = require("express");
+const app = express();
+
+app.post("/listings", (req, res) => {
+  const item = new ClothingItem(req.body.name, req.body.size, req.body.condition, req.body.price);
+  try {
+    item.validate();
+    // Save to database (mocked)
+    res.status(201).send({ message: "Listing created", item });
+  } catch (error) {
+    res.status(400).send({ error: error.message });
+  }
+});
+----
+
+==== Frameworks/Drivers Layer
+- **Purpose**: Provides the technical infrastructure for the app.
+- **Implemented Components**:
+  - Frameworks: Tools like Next.js for the frontend and Supabase for the backend.
+  - Drivers: Libraries or SDKs for interacting with external services (e.g., Stripe SDK for payments).
+- **Interaction**: This layer supports the interfaces/adapters layer and provides the tools needed for implementation.
+
+[source, javascript]
+----
+const stripe = require("stripe")("your-stripe-secret-key");
+
+async function processPayment(amount, currency, source) {
+  try {
+    const payment = await stripe.charges.create({
+      amount,
+      currency,
+      source,
+    });
+    console.log("Payment processed:", payment);
+    return payment;
+  } catch (error) {
+    console.error("Payment failed:", error);
+    throw error;
+  }
+}
+----
