@@ -103,8 +103,71 @@ A **Piece** of clothing progresses through various life stages: active use, dorm
 *Behavior*::  
 A long-term lifecycle pattern connecting reuse and sustainability efforts within the community.
 
----
-
 In this integrated view, entities, actions, and events are presented as parts of a continuous system of behavior.  
 Each action triggers one or more observable events, and each entity serves as the anchor for those actions.  
 This unified structure better reflects the natural interdependence of domain phenomena without artificial separation.
+
+==== Domain Aggregate Definition 
+
+The unified model of entities, actions, and events described above naturally forms bounded clusters of related concepts. 
+In the context of the clothing exchange domain, the **Piece** (representing a listing) acts as the **aggregate root**, 
+governing all changes to its internal state and related sub-entities such as condition ratings, reviews, and reservations.
+
+===== Objective
+Document the domain aggregate aligned with a discovery-only platform. For this milestone, **Piece** is treated as the **aggregate root** that also fulfills the “listing” role. 
+All mutations to elements inside the boundary occur **only** through the root.
+
+===== Aggregate Definition
+[cols="^,^,3", options="header"]
+|===
+| Role | Kind | Notes
+| Piece | Aggregate Root | Discoverable item (listing) and single entry point for changes.
+| ConditionRating | Value Object | Integer in `[1..10]`; updated via root method only.
+| Review | Child Entity | `{id, reviewerId, rating (1–5), comment, createdAt}`; belongs to exactly one Piece.
+| Reservation | Value Object | `{buyerId, reservedAt}`; optional hold while parties coordinate offline.
+| Images | Collection of Value Objects | ≥ 1 image required when publishing (URI + metadata).
+| Status | Value Object | One of: `Active | Reserved | Closed`.
+| SellerId | Reference (Primitive/VO) | Owner identity outside the aggregate boundary.
+| Locale | Reference (Primitive/VO) | Optional area label to aid discovery (e.g., campus/borough).
+|===
+
+[NOTE]
+====
+**Boundary Rule:** Client code obtains a **Piece** (aggregate root), invokes root-level operations (e.g., `reserveFor`, `close`, `addReview`), and persists the **Piece** via a repository that works at the **aggregate** level. No direct writes to inner members.
+====
+
+===== Invariants
+[cols="2,1,1,3", options="header"]
+|===
+| Invariant | Enforced In | Temp. Violation? | Rationale
+| A Piece requires ≥ 1 image at publish time. | Factory / publish step | No | Visual trust for discovery.
+| `ConditionRating` ∈ `[1..10]`. | `rateCondition()` | No | Consistent quality scale.
+| A `Review` belongs to exactly one Piece. | `addReview()` | No | Prevents cross-linking reviews.
+| Status transitions follow `Active ↔ Reserved → Closed` (no reopen). | Root methods | Yes (within method only) | Coherent lifecycle; history integrity.
+| `reserveFor(buyerId)` allowed only when status = `Active`. | `reserveFor()` | No | Avoid double holds.
+| `close(reason)` allowed only when status ∈ {`Active`,`Reserved`}. | `close()` | No | Forbids illegal re-closing.
+| Editing details is blocked when status = `Closed`. | Root guards | No | Preserve record of completed exchanges.
+|===
+
+===== Root Operations (Conceptual Surface)
+- `publish()` — (if drafts are modeled) make the Piece publicly visible.
+- `editDetails(updates)` — update title/description/attributes (forbidden when `Closed`).
+- `rateCondition(newRating)` — set/adjust condition in `[1..10]`.
+- `reserveFor(buyerId)` — `Active → Reserved` (hold while parties coordinate offline).
+- `releaseReservation()` — `Reserved → Active`.
+- `close(reason)` — `Active/Reserved → Closed` after offline handoff or withdrawal.
+- `addReview(reviewerId, rating, comment)` — attach feedback post-close.
+
+===== Factory (Conceptual)
+The **Piece Factory** constructs valid roots and applies initial invariants:
+- Ensures **≥ 1 image**.
+- Ensures **condition in `[1..10]`**.
+- Initializes **status = `Active`**, empty reviews, and no reservation.
+
+===== Repository (Conceptual)
+A repository that operates at the **aggregate level** (reads may provide projections for lists):
+- `findById(pieceId) → Piece?`
+- `save(piece) → void` (persists the whole aggregate and its members)
+- Read-model queries (projections for UI lists), e.g.:
+  - `findActiveByFilters(filters) → Page<PieceSummary>`
+  - `findBySeller(sellerId) → Page<PieceSummary>`
