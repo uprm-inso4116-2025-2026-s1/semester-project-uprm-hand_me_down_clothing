@@ -1,18 +1,12 @@
-// --
-// Author: Ojani Figueroa
-// Institution: University of Puerto Rico at Mayagüez
-// Date Created: 2025-09-12
-// Last Updated: 2025-09-12
-// Version: 1.0
-// Project: Hand-me-down Clothing
-// GitHub Issue: #68
-// Writing documentation quick-start guide: https://docs.google.com/document/d/1E-ucYkThHK95Vt4D-Fmy9WoJILxDQp55LSxtIwK31Xs/edit?usp=sharing
-// --
-
 = Hand Me Down Clothing Documentation
+:doctype: book
+:imagesdir: ./images
+:toc:
 
 include::sections/section1/section.adoc[]
 
 include::sections/section2/section.adoc[]
 
 include::sections/section3/section.adoc[]
+
+include::sections/logbook.adoc[]

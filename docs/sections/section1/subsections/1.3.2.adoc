@@ -1,4 +1,4 @@
-==== *1.3.2 Synopsis*
+=== *1.3.2 Synopsis*
 
 This Synopsis provides overview of the Hand Me Down project from the perspective of students and families engaged in secondhand exchanges.
 It articulates the domain, affordability, accessibility, trust, safety and states that stakeholders must be able to discover, evaluate, and exchange pre-owned goods with transparent information about item condition and history.

@@ -1,0 +1,64 @@
+=== *3.2 Validation and Verification*
+
+Validation and verification activities ensure that the Hand Me Down project’s 
+deliverables meet the intended quality standards, align with stakeholder needs, 
+and remain consistent with the domain description, requirements, and architecture. 
+These activities are conducted as an ongoing, shared responsibility across all teams.
+
+==== Validation
+
+Validation activities focus on confirming that our understanding of the domain and 
+requirements is accurate and complete, even before implementation:
+
+* *Scenario Walkthroughs*:: Draft scenarios were created and reviewed internally 
+  within the team to test whether our domain terminology, requirements, and workflows 
+  are coherent. For example, walkthroughs of donation and resale flows helped 
+  highlight whether our categorization and pricing assumptions were consistent.  
+* *Requirement Exploration*:: At this stage, no external validation with students 
+  or families has been performed. Instead, internal reviews are used to identify 
+  potential gaps, such as safety practices for meetups or the way condition 
+  disclosure norms are represented.
+
+==== Verification
+
+Verification ensures that system components behave as prescribed and that 
+deliverables can be tested against measurable criteria:
+
+* *Unit Testing*:: Individual components of the system will be tested using unit 
+  tests to verify correctness in isolation. This includes authentication functions, 
+  item listing logic, and condition rating updates.
+* *Integration Testing*:: Selected flows (e.g., creating a listing, completing a 
+  transaction) will be tested across multiple modules to ensure interactions 
+  remain consistent.
+* *Load Testing with k6*:: Performance and scalability will be evaluated using the 
+  k6 framework. Initial load tests will target ~150 concurrent users, scaling up 
+  to 500, to verify that response times remain within the defined machine 
+  requirements.
+* *Traceability Checks*:: Deliverables will be reviewed against the requirements 
+  and terminology to ensure completeness and consistency. Each requirement will 
+  be linked to validation and verification artifacts (test cases, scenarios).
+* *Planned A/B Testing*:: As the UI/UX evolves, A/B testing will be used to validate 
+  design hypotheses. Examples include testing filter placement in the item search 
+  page, or checkout button positioning. Metrics such as time-to-action and user 
+  satisfaction will guide design decisions.
+
+==== Roles and Responsibilities
+
+Validation and verification are a *shared responsibility* across the team.  
+While individual sub-teams focus on different aspects (e.g., listings, 
+authentication, documentation), every member contributes to writing, reviewing, 
+and executing tests and walkthroughs. This ensures that quality is embedded 
+throughout the project rather than isolated in a single role.
+
+==== Outcomes
+
+The combination of walkthroughs, scenario-based validation, unit and integration 
+testing, load testing, and A/B experimentation provides a balanced approach:  
+
+* *Validation* ensures that the concepts and requirements are correctly understood 
+  and aligned with the domain.  
+* *Verification* ensures that implementation artifacts conform to measurable 
+  standards and deliver the expected performance.  
+
+Together, these practices guarantee that the Hand Me Down project remains 
+trustworthy, usable, and scalable in the context of secondhand exchanges.

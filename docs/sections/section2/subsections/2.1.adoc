@@ -1,1 +1,60 @@
-==== *2.1 - Domain description*
+=== *2.1 Domain Description*
+
+The domain of *hand-me-down clothing exchange* in Puerto Rico is shaped by social,  
+environmental, and economic realities. It exists independently of any digital platform  
+or technical system and can be understood through the people, practices, artifacts,  
+and norms that sustain the circulation of clothing and accessories among students,  
+families, and local communities.
+
+At its core, the domain revolves around two primary actors:
+
+* *Sellers*: Individuals or households who post garments they no longer need, offering them for reuse or resale.  
+* *Buyers*: Individuals who discover these garments through listings and arrange exchanges directly with the seller, outside the system.
+
+The central entity in this domain is the *Piece*, any individual article of clothing or  
+accessory that circulates between actors. Each Piece carries attributes such as:
+
+* *Type*: The category of clothing.  
+* *Condition Rating*: A measure of quality or usability.
+
+Pieces move between states through events:
+
+* *Listing Published*: Occurs when a Seller makes a garment visible to potential Buyers.  
+* *Interest Expressed*: Occurs when a Buyer contacts a Seller regarding a listed garment.  
+* *Listing Closed*: Occurs when a garment has been exchanged offline or removed from visibility.  
+* *Discard Event*: Occurs when a Piece leaves circulation, feeding into the wider *Textile Waste Stream*.
+
+The domain is sustained by informal practices and behaviors:
+
+* *Discovery Flows*: The recurring sequence in which garments are listed, browsed, and handed over in person.  
+* *Condition Disclosure Norms*: The expectation that Sellers will show tag photos, highlight defects, and represent garments honestly.  
+* *Informal Price Bands*: Symbolic or suggested valuations (typically USD $8–$15), distinguishing resale from donation or commercial sale.  
+* *Dormant Stock*: Clothing stored in homes awaiting redistribution, resale, or disposal.  
+* *Meetup Spots*: Semi-public locations (e.g., campus benches, apartment lobbies) chosen for exchanges.  
+* *Ad-hoc Channels*: Informal digital venues (e.g., Facebook Marketplace, WhatsApp groups, Instagram stories).  
+* *Trust Cues*: Bilingual communication, recognizable names, or clear photos that influence whether an exchange proceeds.  
+* *Seasonal Demand Pulses*: Cyclical increases in demand, such as back-to-school or weather-driven surges for uniforms or outerwear.
+
+These elements form an interconnected web of events, actions, and behaviors.  
+Sellers and Buyers rely on ad-hoc digital channels for discovery, agree on terms through direct contact, and meet in semi-public spaces to exchange items offline.  
+Exchanges are underpinned by implicit rules of trust and fairness, while also  
+constrained by larger social and environmental forces such as poverty rates,  
+limited recycling infrastructure, and overflowing landfills.
+
+From a functional perspective, the domain can be represented through abstract operations:
+
+* `publishListing(Piece, Seller, Locale) → ListingPublished`  
+* `expressInterest(Listing, Buyer) → InterestExpressed`  
+* `rate(Piece, ConditionRating) → ConditionRating`  
+* `review(Seller, Buyer, Review) → ReviewSubmitted`  
+* `categorize(Piece, Type) → Piece`  
+* `closeListing(Listing) → ListingClosed`
+
+Each function captures an action that transforms the state of a *Listing* or *Piece* within the domain,  
+producing observable changes such as entering circulation, connecting interested parties, or leaving visibility once the exchange occurs offline.
+
+In sum, the domain of secondhand clothing discovery in Puerto Rico is defined by the  
+*visibility of Pieces*, the *actors who list and find them*, the *events that mark transitions*,  
+and the *behaviors and norms* that make these exchanges trustworthy, affordable,  
+and sustainable. This description provides a foundation for later requirements  
+and design work, while remaining independent of any specific system or implementation.

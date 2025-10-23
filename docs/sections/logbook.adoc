@@ -1,0 +1,8 @@
+
+=== Logbook 
+
+[%header]
+|===
+| Person |  Sections worked on
+| link:github.com/Alma-pineiro[Alma-pineiro] | 2.3.1 (link:https://github.com/uprm-inso4116-2025-2026-s1/semester-project-uprm-hand_me_down_clothing/issues/148\[#148])
+|===

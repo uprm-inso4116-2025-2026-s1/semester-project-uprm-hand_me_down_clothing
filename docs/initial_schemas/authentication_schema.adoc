@@ -1,0 +1,70 @@
+= Authentication Schema Design for Web App Using Supabase
+
+== 1. Supabase Auth Default Tables
+
+Supabase manages the following core tables for authentication:
+
+=== 1.1 auth.users
+
+[cols="1,1,2", options="header"]
+|===
+| Field                | Type        | Constraints/Notes
+| id                   | UUID        | PK, unique, not null
+| aud                  | Text        | Audience, default: authenticated
+| role                 | Text        | Default: authenticated
+| email                | Text        | Unique, nullable if using phone
+| encrypted_password   | Text        | Supabase-managed (secure hash)
+| email_confirmed_at   | Timestamp   | 
+| invited_at           | Timestamp   | 
+| confirmation_token   | Text        | Token for email confirmation
+| phone                | Text        | Unique, optional
+| confirmation_sent_at | Timestamp   | 
+| last_sign_in_at      | Timestamp   | 
+| app_metadata         | JSONB       | Providers, etc.
+| user_metadata        | JSONB       | Custom user fields
+| created_at           | Timestamp   | 
+| updated_at           | Timestamp   | 
+|===
+
+=== 1.2 auth.identities (for social logins)
+
+[cols="1,1,2", options="header"]
+|===
+| Field           | Type      | Constraints/Notes
+| id              | UUID      | PK
+| user_id         | UUID      | FK to users.id
+| provider        | Text      | e.g., google, facebook
+| provider_id     | Text      | Provider’s unique ID
+| identity_data   | JSONB     | 
+| created_at      | Timestamp | 
+| last_sign_in_at | Timestamp | 
+|===
+
+=== 1.3 auth.sessions (JWT-based sessions)
+
+[cols="1,1,2", options="header"]
+|===
+| Field     | Type      | Notes (managed by Supabase)
+| ...       | ...       | Access/refresh tokens, expiry, etc
+|===
+
+=== 1.4 auth.mfa_factors (if using MFA)
+
+[cols="1,1,2", options="header"]
+|===
+| Field        | Type      | Notes
+| id           | UUID      | PK
+| user_id      | UUID      | FK to users
+| factor_type  | Text      | e.g., totp
+| status       | Text      | unverified/verified
+| created_at   | Timestamp | 
+|===
+
+---
+
+== 2. Security & Best Practices
+
+* Supabase handles password hashing, session security, and social login integrations.
+* Enable Row Level Security (RLS) on `profiles` to restrict access to each user’s data.
+* App-specific fields (e.g., campus, preferences, etc.) go in `profiles`, not `auth.users`.
+* Use Supabase’s built-in password reset, email confirmation, and MFA features as needed.
