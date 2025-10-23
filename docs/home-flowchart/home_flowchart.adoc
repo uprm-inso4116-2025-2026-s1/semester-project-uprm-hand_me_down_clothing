@@ -23,4 +23,3 @@ image::home_flowchart.png[Homepage Flowchart, width=100%, align=center, link=hom
 
 == Notes
 * Exported from Microsoft Visio Web as a 300 PPI PNG for higher clarity.
-* The diagram is zoomable — click to open it in a new tab.
