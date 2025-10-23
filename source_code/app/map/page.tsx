@@ -20,6 +20,10 @@ const MapMarkerComponent = dynamic(
   () => import("./marker").then((mod) => mod.default),
   { ssr: false }
 );
+const Routing = dynamic(
+  () => import('./routing'), 
+  { ssr: false }
+);
 import { useMap } from "react-leaflet";
 
 function LocateControlSimple() {
@@ -270,6 +274,11 @@ export default function Map() {
           color: #ff87a2;
           background: rgba(255, 255, 255, 0.25);
         }
+
+        .leaflet-control-locate {
+          margin-top: +120px !important;
+          margin-left: +20px !important;
+        }
       `}</style>
 
       {/* Map container */}
@@ -286,6 +295,7 @@ export default function Map() {
         <CustomControl locations={locations} markersRef={markersRef} />
         <LocationMarkers locations={locations} markersRef={markersRef} />
         <MapMarkerComponent />
+        <Routing />
       </MapContainer>
     </div>
   );
