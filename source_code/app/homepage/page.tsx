@@ -1,5 +1,8 @@
 import Link from 'next/link';
 import DonateWireframe from '../listings/donate_piece/page';
+import { supabase } from '../auth/supabaseClient';
+import FilterableFeaturedItems from './filterableListing';
+import { Item } from '../utils/filters/listingsFilter';
 
 // Categories for 'Browse by category' section
 const browse_categories = [
@@ -10,29 +13,17 @@ const browse_categories = [
   { id: 5, name: "Kids", filter: "kids" },
 ];
 
-// Categories for 'Featured items' section
-const featured_categories = [
-  { id: 1, name: "Tops", filter: "tops" },
-  { id: 2, name: "Bottoms", filter: "bottoms" },
-  { id: 3, name: "Dresses", filter: "dresses" },
-  { id: 4, name: "Shoes", filter: "shoes" },
-  { id: 5, name: "Outerwear", filter: "outerwear" },
-  { id: 6, name: "Accessories", filter: "accessories" },
-  { id: 7, name: "Kids", filter: "kids" },
-  { id: 8, name: "Unisex", filter: "unisex" },
-];
-
 // Items for 'Featured items' section
-const featured_items = [
-  {id: 1, name: "Nike Hoodie", size: "M", condition: "Used", category: "Hoodie", price: "Free"},
-  {id: 2, name: "Adidas Sneakers", size: "9", condition: "New", category: "Shoes", price: "$10"},
-  {id: 3, name: "Zara Dress", size: "S", condition: "New", category: "Dress", price: "Free"},
-  {id: 4, name: "Uniqlo", size: "L", condition: "Used", category: "Sweater", price: "$5"},
-  {id: 5, name: "Levi's Jeans", size: "32", condition: "Used", category: "Jeans", price: "Free"},
-  {id: 6, name: "Puma Jacket", size: "L", condition: "New", category: "Jacket", price: "$12"},
-  {id: 7, name: "H&M Top", size: "M", condition: "New", category: "Top", price: "Free"},
-  {id: 8, name: "Converse Shoes", size: "8", condition: "Used", category: "Shoes", price: "$8"},
-];
+// const featured_items = [
+//   {id: 1, name: "Nike Hoodie", size: "M", condition: "Used", category: "Hoodie", price: "Free"},
+//   {id: 2, name: "Adidas Sneakers", size: "9", condition: "New", category: "Shoes", price: "$10"},
+//   {id: 3, name: "Zara Dress", size: "S", condition: "New", category: "Dress", price: "Free"},
+//   {id: 4, name: "Uniqlo", size: "L", condition: "Used", category: "Sweater", price: "$5"},
+//   {id: 5, name: "Levi's Jeans", size: "32", condition: "Used", category: "Jeans", price: "Free"},
+//   {id: 6, name: "Puma Jacket", size: "L", condition: "New", category: "Jacket", price: "$12"},
+//   {id: 7, name: "H&M Top", size: "M", condition: "New", category: "Top", price: "Free"},
+//   {id: 8, name: "Converse Shoes", size: "8", condition: "Used", category: "Shoes", price: "$8"},
+// ];
 
 // Comments for 'Community' section
 const comments = [
@@ -48,7 +39,24 @@ const steps = [
   { id: 3, step: "Meet up or ship sustainably", description: "Pick the eco-friendly option" },
 ];
 
-export default function Homepage() {
+export async function getFeaturedItems() {
+  const {data: items, error } = await supabase
+    .from('pieces')
+    .select('*')
+    .limit(7);
+
+  if (error) {
+    console.log("Error fetching featured items: ", error);
+    return []
+  } else {
+    return items;
+  }
+}
+
+export default async function Homepage() {
+
+  const featuredItems: Item[] = await getFeaturedItems();
+
   return (
     <div className="p-3">
 
@@ -107,36 +115,9 @@ export default function Homepage() {
         ))}
       </div>
 
-      {/* Featured items: displays highlighted clothing listings */}
-      <h2 className="text-3xl font-bold italic pl-15 pt-13">Featured items</h2>
-      <div className="flex space-x-auto px-13 pt-4 pl-18 pr-18">
-        {featured_categories.map((cat) => (
-          <button
-            key={cat.id}
-            id="Featured_Category_btn"
-            className="w-39 h-11 bg-[#e6dac7] hover:bg-[#d8c8b4] focus:bg-[#c9b8a2] px-4 m-auto rounded-full">
-            <div className="text-md text-[#666666]">{cat.name}</div>
-          </button>
-        ))}
-      </div>
-      <div className="grid grid-cols-4 gap-1 px-15 py-4">
-        {featured_items.map((cat) => (
-          <button
-            key={cat.id}
-            id="Featured_Item_btn"
-            className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
-            <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
-              <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{cat.condition}</div>
-              <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{cat.price}</div>
-              <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">♥</div>
-            </div>
-            <p className="text-lg font-bold italic pt-2">{cat.name}</p>
-            <p className="text-md text-[#666666]">Size: {cat.size}</p>
-            <p className="text-md text-[#666666]">Condition: {cat.condition}</p>
-            <p className="text-md text-[#666666]">Category: {cat.category}</p>
-          </button>
-        ))}
-      </div>
+      {/* This a client component which enables us to filter data as a response to the user clicking a button. We need a client component because 
+      server components cannot 'listen' to events happening on the client side. */}
+      <FilterableFeaturedItems initialItems={featuredItems}/>
 
       {/* How it works: explanation of the platform process */}
       <h2 className="text-3xl font-bold italic pl-15 pt-10">How it works</h2>
