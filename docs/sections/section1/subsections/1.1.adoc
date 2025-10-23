@@ -1,1 +1,44 @@
-==== *1.1 - Team*
+== 1 Informative Part
+
+=== 1.1 Team
+
+The team is organized into key functional areas with dedicated leads overseeing documentation and requirement completion, authentication, listings, and search and map integration, under the guidance of three project managers.
+
+==== Managers
+* Anthony Martinez
+* Alma Piñeiro
+* Jahsyel Rojas
+
+==== Team 1 - Documentation & Requirements
+* Joshua Dávila (Lead)
+* Ojani Figueroa
+* Giovanny García
+* Juan Iranzo
+
+==== Team 2 - Authentication & User Accounts
+* Lorenzo Pérez (Lead)
+* Jessy Andújar
+* Gabriel Marrero
+* Luis Marrero
+* Ángel Villegas
+
+==== Team 3 - Listings
+* Kevin Gómez (Lead)
+* Leanelys González
+* Karina López
+* Nicolás Rivera
+* Jachikasielu Uwakweh
+
+==== Team 4 - Search & Map Integration
+* Jorge De León (Lead)
+* Devlin Hahn
+* Alejandro Marrero
+* Kian Ramos
+* Januel Torres
+
+==== Team 5 - UI/UX & Branding
+* Fabiola Torres (Lead)
+* Yamilette Alemañy
+* Daniella Melero
+* Andrea Segarra
+* Kenneth Sepúlveda

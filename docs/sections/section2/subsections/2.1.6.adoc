@@ -1,0 +1,54 @@
+=== *2.1.6 - Function Signatures*
+
+==== Objective
+Define domain-level function signatures that describe how actions are carried out, including inputs,
+outputs, and possible changes in the domain.
+
+==== Description
+Function signatures are formal specifications of functions or actions that define:
+
+- *The name of the function*: The action being performed.  
+- *The input parameters*: The information required by the action.  
+- *Output*: Type of data the function produces.  
+- *State changes*: How the action affects the domain.
+
+The general format of a function signature is:
+
+- FunctionName: Input1 >< Input2 >< ... -> OutputType
+
+This expresses the action's name, its input parameters with their types, the output type it produces,
+and any state changes in the domain.
+
+Function signatures do not describe how the function is implemented. Instead, they focus on the
+relationship between inputs, outputs, and possible state changes.
+
+==== Examples
+
+publishListing : Piece >< Seller >< Locale -> ListingPublished +  
+A Seller publishes a Piece in a given Locale, producing a ListingPublished event.
+
+expressInterest : Listing >< Buyer -> InterestExpressed +  
+A Buyer expresses interest in a specific Listing, producing an InterestExpressed event that signals contact between Buyer and Seller.
+
+rate : Piece >< ConditionRating -> ConditionRating +  
+A Piece receives a ConditionRating, producing or updating the ConditionRating attribute.
+
+review : Seller >< Buyer >< Review -> ReviewSubmitted +  
+A review is submitted by a Buyer or Seller after an offline exchange, creating a ReviewSubmitted event associated with the interaction.
+
+closeListing : Listing >< Seller -> ListingClosed +  
+A Seller closes a Listing after the offline exchange or withdrawal, producing a ListingClosed event and removing the item from visibility.
+
+categorize : Piece >< Type -> Piece +  
+A Piece is assigned a Type, returning the updated Piece.
+
+discard : Piece -> Void +  
+Removes a Piece from active circulation, marking it as no longer available.
+
+==== Example Scenario: From Listing to Offline Exchange
+1. Seller publishes a listing using `publishListing(Piece, Seller, Locale)` → produces `ListingPublished`.  
+2. Buyer browses available items and finds one of interest.  
+3. Buyer clicks “Contact Seller,” triggering `expressInterest(Listing, Buyer)` → produces `InterestExpressed`.  
+4. Both users coordinate offline to exchange the item.  
+5. Seller closes the listing via `closeListing(Listing, Seller)` → produces `ListingClosed`.  
+6. Buyer leaves a review using `review(Seller, Buyer, Review)` → produces `ReviewSubmitted`.

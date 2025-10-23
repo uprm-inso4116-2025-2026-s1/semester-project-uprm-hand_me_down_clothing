@@ -16,6 +16,7 @@ jobs:
             - name: Checkout repo
               uses: actions/checkout@v4
               with:
+                  lfs: true
                   persist-credentials: false # we'll use a token instead
 
             - name: Set up Ruby

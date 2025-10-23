@@ -1,50 +1,69 @@
-=== 2.2.4 Interface Requirements
+=== *2.2.4 Interface Requirements*
 
 ==== Objective
-The clothing marketplace must represent, initialize, and update domain concepts (e.g., clothing items, user accounts, transactions) in a consistent and testable manner. These requirements ensure that real-world phenomena (buying, selling, searching clothes) are accurately modeled inside the system.
+Define how users interact with the system through visible UI elements, controls, states, and feedback. These *Interface Requirements* specify the behavior of forms, buttons, validation, navigation, and visibility rules. The platform facilitates listing and discovery but does not process payments or host transactions; all exchanges occur directly between buyers and sellers outside the system.
 
-==== Requirements
+==== Interface Requirements
 
-*Representation Rules*
+*Create Listing Form*
+- The authenticated user is implicitly the seller; **no seller field is displayed**.  
+- Required fields: **Title**, **at least one Image**, and **Category**. Optional fields: **Price** (if absent, listing is marked **Free**), **Description**, **Condition**, and **Size**.  
+- The **Publish** button is **disabled** until all required fields are valid.  
+- On submit with missing or invalid fields, show **inline errors**; **focus moves** to the first invalid field.  
+- On success, navigate to the **Listing Details** page and show a **toast**: “Listing published.”
 
-- **Clothing items** - represented as a unique system entity with attributes: item ID, seller ID, title, description, category, size, price, condition, and availability status.
+*Listing Details (Seller View)*
+- Shows editable fields (Title, Description, Images, Price, Condition) while **Status = Active**.  
+- Includes a **Status** dropdown with transitions: **Active → Reserved → Closed** (no skipping).  
+- When **Status = Closed**, all edit controls are **disabled**, and a **‘Closed’ badge** is displayed.  
+- Displays **Contact Requests** received for that listing, sorted by most recent.  
 
-- **User account** - represented as a unique system entity with attributes: user ID, username, email, role (buyer, seller, or both), and transaction history.
+*Browse & Search (Buyer View)*
+- Buyers can **search by keyword** and **filter by Category, Condition, Size, and Price/Free marker**.  
+- Sorting options include **Newest first**, **Lowest price**, and **Condition rating**.  
+- Each listing card shows **Title, Thumbnail, Price/Free marker, Condition, and Seller rating (if available)**.  
+- Clicking a card opens **Listing Details**, where the **Contact Seller** button is visible if the viewer is not the owner.
 
-- **Transaction** - represented as a unique system entity with attributes: transaction ID, buyer ID, seller ID, item ID, status (pending, confirmed, completed), and timestamp.
+*Saved Listings (Buyer View)*
+- Buyers can **Save/Unsave** a listing from both the card and details views.  
+- Saved items persist across sessions and appear in the **Saved Listings** section under the user menu.  
+- Saved icons visually change state (e.g., outlined vs. filled heart).  
 
-*Initialization Rules*
+*Contact Seller / Messaging*
+- **Contact Seller** opens a message composer prefilled with the listing title.  
+- On send, show confirmation (“Message sent”) and add it to **Message Threads**.  
+- Seller receives a **notification badge** in the header or inbox.  
+- Messages are displayed chronologically, grouped by listing.  
 
-- **Listing a clothing item** - the system shall initialize the item entity with all required attributes. An item cannot exist in the system without a valid seller ID and price.
+*Profile & Reviews*
+- Sellers and buyers each have a **profile page** displaying their listings, ratings, and reviews.  
+- Users can **edit their own profile** (profile picture, bio, location).  
+- Reviews are **read-only** for the profile owner but can be submitted by others after an offline exchange.  
+- The **average rating** and total reviews are displayed prominently at the top of the profile.
 
-- **User registration** - when a new user registers, the system shall initialize a user entity with a unique user ID and default role “buyer.” Role changes to “seller” require additional verification (e.g., valid payment info).
-
-- **Purchase initiation** - when a buyer initiates a purchase, the system shall initialize a transaction entity with status = “pending” until confirmation.
-
-*Update Rules*
-
-- Item availability shall update automatically when a purchase is confirmed: availability status changes from “available” to “sold.”
-
-- Sellers may update item attributes (title, description, price). Updates to sold items are restricted.
-
-- Transaction status shall update in predefined steps: “pending” → “confirmed” → “completed.” Skipping states is not permitted.
-
-- User accounts may update certain attributes (email, profile details) but transaction history shall be immutable once recorded.
+*Accessibility & Feedback*
+- All interactive elements are **keyboard-accessible** (Tab/Shift+Tab) with visible **focus outlines**.  
+- Inline validation messages are **ARIA-live announced** to screen readers.  
+- Toasts and banners are **non-blocking** and dismissible via keyboard.  
+- Forms include descriptive labels and placeholder text for clarity.
 
 ==== Examples
-1. **Initialization**: A seller lists a jacket. The system creates an item entity with attributes (ID=1001, seller=U123, category=outerwear, price=$50, status=available).
-2. **Update**: A buyer purchases the jacket. The system updates the transaction status (T555: pending → confirmed), and the item status (I1001: available → sold).
-3. **Restriction**: The seller attempts to change the price of the sold jacket. The system prevents this update because item availability = “sold.”
+1. **Create Listing**: A seller opens the *Create Listing* form. Title is empty and there are no images, so **Publish** is disabled. The user enters a title, selects a category, and uploads a photo. **Publish** becomes active. On submit, a success toast appears and the app redirects to the Listing Details page.  
+2. **Reserve Then Close**: A seller opens their Listing (Status = Active), selects **Reserved** from the dropdown. After completing the exchange offline, they select **Closed**, disabling all edit controls.  
+3. **Contact Seller**: A buyer opens a listing and clicks **Contact Seller**, writes a message, and sends it. A confirmation appears, and the seller’s header shows a **1** notification badge.
 
 ==== Relation to Domain Requirements
-- If a clothing item exists in the domain (a seller lists it), it must exist as a system entity with required attributes.
-- If a buyer interacts with the system (e.g., initiates a purchase), a transaction entity must exist and follow state transitions.
-- If a user registers in the domain, their account must exist in the system with consistent properties.
+- Domain Requirements define what must exist (e.g., Listing entity, User, Saved association).  
+- Interface Requirements define how users **create, view, modify, and interact** with those entities through UI components.  
+- Each interface rule directly supports a domain rule by providing a visible, testable interaction.  
 
 ==== Justification
-These interface requirements ensure that the system remains synchronized with real-world buying and selling activities. Initialization rules prevent incomplete or invalid entities. Update rules enforce consistency and protect critical data (e.g., preventing edits to sold items or completed transactions).
+This section ensures that UI behaviors are intuitive, consistent, and verifiable. It separates internal representation (domain) from what users experience, providing a clear mapping between actions and visible states. These behaviors reinforce trust and usability while aligning with accessibility and real-world discovery practices.
 
 ==== Testing Plan
-- Verify that all clothing items created by sellers initialize with complete required attributes.
-- Simulate purchase flows and confirm item and transaction entities update correctly (status changes).
-- Attempt restricted updates (e.g., editing sold items, altering completed transactions) and confirm the system rejects them.
+- Test each form and button for proper enable/disable states and validation.  
+- Confirm that “Publish” and “Close” actions trigger correct navigation and feedback messages.  
+- Verify that saved listings persist across sessions.  
+- Ensure that editing is disabled once a listing is closed.  
+- Check accessibility by tab-navigating forms and validating screen reader output.  
+- Confirm that notifications appear when a buyer sends a contact message.

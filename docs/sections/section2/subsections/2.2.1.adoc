@@ -1,0 +1,91 @@
+=== *2.2.1 Epics, Features, and User Stories*
+
+=== *Epics*
+
+Epics are a higher-level overview of goals that are large enough in scope that they can be broken down into multiple sprints. They provide direction and group related work together.
+
+*Buyer Epics*
+
+. Listing Discovery  
+.. As a buyer, I want to search for listings by category, filters, and keywords, so that I can quickly find clothing items that meet my needs.  
+
+. Saved Listings  
+.. As a buyer, I want to save or bookmark listings I am interested in, so that I can revisit them later when deciding whether to contact the seller.  
+
+. Trust and Transparency  
+.. As a buyer, I want to view detailed seller profiles and leave reviews after exchanges, so that I can make informed and confident decisions about future interactions.  
+
+*Seller Epics*
+
+. Listing Management  
+.. As a seller, I want to create, edit, and close listings with detailed information, so that I can effectively manage the items I am offering for reuse or resale.  
+
+. Interest Notifications  
+.. As a seller, I want to receive notifications when someone shows interest in my item, so that I can promptly respond and arrange the exchange offline.  
+
+. Seller Profile and Trust  
+.. As a seller, I want to maintain a profile with personal and location details, so that I can establish credibility and attract buyers interested in my listings.  
+
+
+// =================================================================
+
+=== *Features*
+
+Features specify the functionality required to deliver the goals described in the epics to the user. They serve to provide more concrete goals related to development.
+
+*Buyer Features*
+
+. Listing Discovery  
+.. Filtering (clothing type, size, color, condition, category, price/free marker, etc.).  
+.. Keyword search.  
+.. Sorting options (newest first, alphabetical, etc.).  
+
+. Saved Listings  
+.. Ability to bookmark or save listings for later consideration.  
+.. Saved listings persist across sessions and devices.  
+
+. Trust and Transparency  
+.. Seller profile page (location, account age, bio).  
+.. Seller ratings & reviews system.  
+.. Buyer-to-seller review submission flow.  
+.. Reporting mechanism for problematic listings or suspicious behavior.  
+
+*Seller Features*
+
+. Listing Management  
+.. Create listing form (title, description, tags, price/free marker, category).  
+.. Upload multiple images per listing.  
+.. Edit listing details (update description, condition, images, price).  
+.. Close or deactivate a listing once the exchange is complete offline.  
+
+. Interest Notifications  
+.. Push/email/in-app notifications when a buyer expresses interest in a listing.  
+.. Notification center showing recent messages or contact attempts.  
+
+. Seller Profile and Trust  
+.. Editable seller profile (profile picture, name, location, short bio).  
+.. Seller dashboard displaying active and closed listings, as well as reviews and ratings.  
+
+
+// =================================================================
+
+=== *User Stories*
+
+User stories are derived from Features, breaking them down into smaller, individual tasks to be added to the backlog. These stories focus on user needs and help make development more user-focused.
+
+*Buyer User Stories*
+
+. As a buyer, I want to browse listings by category to find a specific type of item I want.  
+. As a buyer, I want to filter my search by size, condition, and category to tailor my search to my preferences.  
+. As a buyer, I want to search for listings using keywords to find specific items that may not fit predefined categories.  
+. As a buyer, I want to save interesting listings so I can revisit them later.  
+. As a buyer, I want to view a seller’s information such as location, reviews, and account details to feel confident before contacting them.  
+. As a buyer, I want to leave reviews for sellers after an offline exchange so others can trust the process.  
+
+*Seller User Stories*
+
+. As a seller, I want to create listings for my items with options such as adding multiple pictures, a description, and a condition rating so interested buyers can find me easily.  
+. As a seller, I want to edit my listings so I can update details whenever necessary.  
+. As a seller, I want to close listings once the item is exchanged offline so the system stays accurate.  
+. As a seller, I want to receive notifications when someone contacts me about a listing so I can respond quickly.  
+. As a seller, I want to provide information on my profile such as my name and location to increase trust with buyers.  

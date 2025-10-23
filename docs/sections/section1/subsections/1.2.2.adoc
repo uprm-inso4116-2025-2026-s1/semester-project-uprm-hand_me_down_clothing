@@ -1,4 +1,4 @@
-==== *1.2.2 Need*
+=== *1.2.2 Need*
 The purpose of this section is to establish the fundamental needs that
 motivate the Hand Me Down project, expressed independently of any
 system-to-be. These needs are grounded in the resale domain and must
