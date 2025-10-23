@@ -4,6 +4,7 @@ import * as filterListings from '../utils/filters/listingsFilter'
 import { Item } from '../utils/filters/listingsFilter'
 
 const featured_categories = [
+  {id: 0, name: "All", filter: "all"},
   { id: 1, name: "Tops", filter: "tops" },
   { id: 2, name: "Bottoms", filter: "bottoms" },
   { id: 3, name: "Dresses", filter: "dresses" },
@@ -24,7 +25,7 @@ export default function FilterableFeaturedItems({initialItems}: any) {
         switch (filter) {
             case 'all':
                 result = initialItems;
-                break
+                break;
             case 'tops':
             case 'bottoms':
             case 'dresses':
@@ -44,43 +45,73 @@ export default function FilterableFeaturedItems({initialItems}: any) {
         }
 
         setFilter(result);
+    }
 
+    let content;
+    if (filtered.length > 0) {
+      content = (
+        <div className="grid grid-cols-4 gap-1 px-15 py-4">
+          {filtered.map((item: Item) => (
+            <button
+              key={item.id}
+              id="Featured_Item_btn"
+              className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl"
+            >
+              <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
+                <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
+                  {item.condition}
+                </div>
+                <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
+                  {item.price}$
+                </div>
+                <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">
+                  ♥
+                </div>
+              </div>
+              <p className="text-lg font-bold italic pt-2">{item.name}</p>
+              <p className="text-md text-[#666666]">Size: {item.size}</p>
+              <p className="text-md text-[#666666]">Condition: {item.condition}</p>
+              <p className="text-md text-[#666666]">Category: {item.category}</p>
+            </button>
+          ))}
+        </div>
+      );
+    } else {
+      content = (
+        <div className="flex items-center justify-center w-full h-64">
+          <div className="flex flex-col items-center justify-center bg-[#F9F8F8] rounded-3xl border-2 border-[#E5E7EF] shadow-sm px-10 py-12">
+            <p className="text-2xl font-semibold italic text-[#666666]">
+              No items found 😔
+            </p>
+            <p className="text-md text-[#9A9A9A] mt-2">
+              Try adjusting your filters or check back later.
+            </p>
+          </div>
+        </div>
+      );
     }
 
     return (
     <>
       {/* Featured items: displays highlighted clothing listings */}
       <h2 className="text-3xl font-bold italic pl-15 pt-13">Featured items</h2>
+
       <div className="flex space-x-auto px-13 pt-4 pl-18 pr-18">
         {featured_categories.map((cat) => (
           <button
             onClick={() => handleFilter(cat.filter)}
             key={cat.id}
             id="Featured_Category_btn"
-            className="w-39 h-11 bg-[#e6dac7] hover:bg-[#d8c8b4] focus:bg-[#c9b8a2] px-4 m-auto rounded-full">
+            className="w-39 h-11 bg-[#e6dac7] hover:bg-[#d8c8b4] focus:bg-[#c9b8a2] px-4 m-auto rounded-full"
+          >
             <div className="text-md text-[#666666]">{cat.name}</div>
           </button>
         ))}
       </div>
-      <div className="grid grid-cols-4 gap-1 px-15 py-4">
-        {filtered.map((item: Item) => (
-          <button
-            key={item.id}
-            id="Featured_Item_btn"
-            className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
-            <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
-              <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{item.condition}</div>
-              <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{item.price}$</div>
-              <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">♥</div>
-            </div>
-            <p className="text-lg font-bold italic pt-2">{item.name}</p>
-            <p className="text-md text-[#666666]">Size: {item.size}</p>
-            <p className="text-md text-[#666666]">Condition: {item.condition}</p>
-            <p className="text-md text-[#666666]">Category: {item.category}</p>
-          </button>
-        ))}
-      </div>
+      
+      <div>{content}</div>
+        
     </>
-    );
+  );
 }
 
