@@ -45,7 +45,7 @@ export default function TopNav() {
   const links = [
     { href: "/listings/sell_piece", label: "Browse" },
     { href: "/map", label: "Map" },
-    { href: "/listings/donate", label: "Donate" }, // "/listings/donate_piece"
+    { href: "/listings/donate", label: "Donate" }, 
     { href: "/about", label: "About" },
     { href: "/Login", label: "Sign in/Sign Up" },
   ];

@@ -65,7 +65,8 @@ export default function Donate() {
           </Link>
         </div>
 
-        
+         
+         
         <img
           src="/images/vintage-shop.jpeg" 
           alt="Donate illustration"
