@@ -137,7 +137,7 @@ export async function mountPieceElements(e : React.FormEvent<HTMLFormElement>,qu
 }
 
 //main function
-export async function Search(e : React.FormEvent<HTMLFormElement>, query :string | null){
+export async function SearchPieces(e : React.FormEvent<HTMLFormElement>, query :string | null){
     e.preventDefault();
     mountPieceElements(e, query);
     

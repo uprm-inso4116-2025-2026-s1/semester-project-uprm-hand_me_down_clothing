@@ -66,7 +66,7 @@ export default function Homepage() {
     return ()=> {alive=false};
   }, []);
 
-  function open_browsing(e: ReactReact.FormEvent<HTMLFormElement>) {
+  function open_browsing(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     const form= e.target as HTMLFormElement;
     const input= form.elements.namedItem("Search_Bar") as HTMLInputElement;

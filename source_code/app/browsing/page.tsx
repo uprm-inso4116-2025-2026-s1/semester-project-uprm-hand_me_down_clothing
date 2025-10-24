@@ -1,7 +1,7 @@
 'use client'
 
 import React from "react";
-import {Search as handleSearch, mountPieceElements} from "./search";
+import {SearchPieces as handleSearch, mountPieceElements} from "./search";
 import ResultsPanel from "./search";
 import { useSearchParams } from "next/navigation";
 
