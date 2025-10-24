@@ -142,6 +142,18 @@ export class PieceRepository {
                 if (value == null || value === '') return;
                 if (key === 'name') {
                     query = query.ilike('name', `%${value}%`);
+                }else if (key === 'category') {
+                    query = query.ilike('category', `%${value}%`);
+                }else if (key === 'color') {
+                    query = query.ilike('color', `%${value}%`);
+                }else if (key === 'brand') {
+                    query = query.ilike('brand', `%${value}%`);
+                }else if (key === 'gender') {
+                    query = query.ilike('gender', `%${value}%`);
+                }else if (key === 'size') {
+                    query = query.ilike('size', `%${value}%`);
+                }else if (key === 'condition') {
+                    query = query.ilike('condition', `%${value}%`);
                 } else {
                     query = query.eq(key, value);
                 }
