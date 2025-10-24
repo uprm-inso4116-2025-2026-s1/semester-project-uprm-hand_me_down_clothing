@@ -20,3 +20,24 @@ This document describes how password reset and email verification are implemente
 
 == Implementation Reference
 * See `source_code/app/auth/` for backend functions and UI forms.
+
+== Phone-based 2FA (SMS OTP)
+
+This project supports optional phone-based two-step verification (2FA) using Supabase's SMS OTP flow.
+
+Flows implemented:
+
+* `signInWithPhone(phone)` — sends an OTP to the user's phone (see `source_code/app/auth/auth.ts`).
+* `verifyPhoneOtp(phone, token)` — verifies the OTP and marks the phone as verified in user metadata.
+
+UI pages:
+
+* `/auth/phone-signin` — collect phone number and send OTP.
+* `/auth/phone-verify` — enter OTP and verify.
+* `/auth/phone-2fa-settings` — add phone, send verification, enable/disable 2FA.
+
+Security notes:
+
+* OTPs are short-lived and verified by Supabase; treat verification errors generically to avoid enumeration.
+* When phone is verified, the system sets `phone_2fa: 'enabled'` in user metadata.
+
