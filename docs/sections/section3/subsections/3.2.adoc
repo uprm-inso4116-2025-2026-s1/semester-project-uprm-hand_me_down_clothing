@@ -64,11 +64,11 @@ Together, these practices guarantee that the Hand Me Down project remains
 trustworthy, usable, and scalable in the context of secondhand exchanges.
 
 
-=== 3.2 Validation and Verification
+=== *3.2 Validation and Verification*
 
 Validation and verification ensure that the Hand Me Down platform meets stakeholder needs,
 maintains internal consistency across modules, and satisfies measurable quality standards
-defined in the requirements.  These activities are carried out continuously and collaboratively
+defined in the requirements. These activities are carried out continuously and collaboratively
 across all sub-teams—Documentation & Requirements, Authentication, Listings, Map/Search, and UI/UX—
 to preserve traceability from stakeholder needs through implementation and testing.
 
@@ -76,7 +76,7 @@ to preserve traceability from stakeholder needs through implementation and testi
 
 *Domain and Requirements Validation*::  
 Validation of terminology and requirements was performed iteratively through internal
-documentation reviews.  Each update to §§ 2.1 – 2.3 was examined to confirm that
+documentation reviews. Each update to §§ 2.1 – 2.3 was examined to confirm that
 domain concepts such as *Piece*, *Listing*, *Condition Disclosure Norm*, and *Listing Closed*
 remained coherent and aligned with stakeholder needs (§ 1.2.2).  
 All requirements now employ definitive “shall/must” statements instead of uncertain
@@ -86,33 +86,40 @@ milestones to confirm usability and trust cues with students and families.
 
 *Scenario Walkthroughs*::  
 Walkthroughs were conducted for the **publishing** process, tracing data flow from
-form submission to Supabase storage.  No inconsistencies were found.
+form submission to Supabase storage. No inconsistencies were found.
 Editing, closing, and saving workflows are planned for final-phase validation once their
 implementations are complete.
 
 *Category and Condition Refinement*::  
 Internal validation led to refinement of the category taxonomy and condition-rating scales,
-resolving ambiguities from the initial model.  Terminology was standardized to
+resolving ambiguities from the initial model. Terminology was standardized to
 **Donated Piece** and **Sold Piece** to ensure semantic consistency across documentation and database layers.
 
 *Search and Map Validation*::  
 The Map & Search module was validated by cross-checking UI results against the actual
-data stored in Supabase.  
-Each search query correctly displayed only listings matching its attributes, and filter
-walkthroughs confirmed accurate behavior for “Tops,” “Bottoms,” and “All.”  
+data stored in Supabase. Each search query correctly displayed only listings matching its
+attributes, and filter walkthroughs confirmed accurate behavior for “Tops,” “Bottoms,” and “All.”  
 Usability was validated through manual inspection: map markers are accurately pinned,
 display complete popup information (name, address, hours), and maintain expected
-cluster and static behaviors.  
-Search relevance and marker accuracy jointly confirm correct data binding between UI
-and repository functions.
+cluster and static behaviors. Search relevance and marker accuracy confirm correct data
+binding between UI and repository functions.
 
 *Authentication Validation*::  
 Supabase Auth integration was validated by confirming that users can **sign up, log in, and log out**
-successfully without confusion.  The authentication flow follows Supabase and OWASP
-recommendations for secure web login.  
-Manual tests were executed in Google Chrome, Firefox, and Brave on desktop devices.
-Error messages were displayed properly when login, signup, or logout failed.
-Mobile testing is scheduled for the next milestone.
+successfully without confusion. The authentication flow follows Supabase and OWASP
+recommendations for secure web login. Manual tests were executed in Google Chrome,
+Firefox, and Brave on desktop devices. Error messages were displayed properly when
+login, signup, or logout failed. Mobile testing is scheduled for the next milestone.
+
+*UI/UX Validation*::  
+Informal validation was performed through manual walkthroughs and internal demos.
+Team members and classmates interacted with the interface to identify confusing or redundant
+elements and provided feedback on button labeling and visibility of listing-creation steps.
+Adjustments were applied iteratively, improving label clarity and layout alignment.  
+Accessibility was validated manually through color-contrast and tab-navigation checks.
+Primary text and buttons met readability standards, and form elements followed a logical tab order.
+Semantic HTML was verified for buttons and labels, while full ARIA labeling and automated
+accessibility audits are planned for the next milestone.
 
 *Planned Stakeholder Validation*::  
 A short validation session with student volunteers will be scheduled before the final milestone
@@ -123,17 +130,17 @@ condition labels and safety guidance.
 
 *Traceability and Acceptance Criteria*::  
 A preliminary *Need → Requirement → Test* mapping exists conceptually and will be formalized
-in `/docs/tests/traceability.adoc` for milestone 3.  Each requirement includes measurable
-acceptance conditions:
+in `/docs/tests/traceability.adoc` for milestone 3. Each requirement includes measurable
+acceptance conditions:  
 – Interface Requirements define button-state validation, inline error messaging, and toast feedback.  
 – Machine Requirements specify response-time thresholds (≤ 2 s average; ≤ 4 s peak) and uptime ≥ 99.7 %.  
 – Domain Requirements link directly to test cases verifying classification and visibility logic.
 
 *Unit Testing*::  
 Manual unit tests were completed for **publishListing()**, validating data verification,
-database insertion, and frontend feedback.  All manual tests passed successfully.
+database insertion, and frontend feedback. All manual tests passed successfully.
 Additional automated unit tests for **closeListing()** and **editListing()** are scheduled for
-the next milestone.  Authentication unit tests validated correct sign-up, login, and logout
+the next milestone. Authentication unit tests validated correct sign-up, login, and logout
 behavior, while error handling displayed expected feedback messages when failures occurred.
 
 *Integration Testing*::  
@@ -145,7 +152,10 @@ The Search module’s repository functions
 were validated indirectly through accurate data synchronization between Supabase
 queries and the rendered results.  
 Authentication privacy constraints were verified through **role-based access control**
-using Supabase **Row Level Security (RLS) Policies** implemented in issue #301.
+using Supabase **Row Level Security (RLS)** policies implemented in issue #301.  
+Interface behaviors—such as disabled Publish buttons until form validation passes,
+visible toast messages, and navigation flow correctness—were manually verified against
+the Interface Requirements. Visual consistency was confirmed across browsers.
 
 *Load and Performance Testing*::  
 Preliminary manual observations show average search responses in **≈ 1 second**
@@ -156,10 +166,12 @@ Authentication latency and API response times will also be measured in the next 
 
 *Data Validation and Security Checks*::  
 Map-coordinate rendering logic filters out invalid or non-finite latitude/longitude
-values, preventing off-map markers.  
-All markers are non-draggable, ensuring that location data remains immutable in the UI.  
+values, preventing off-map markers. All markers are non-draggable, ensuring location data
+remains immutable in the UI.  
 RLS policies in Supabase protect user records by restricting read/write access
-based on authentication state and role.
+based on authentication state and role.  
+UI components were visually validated across major browsers (Chrome, Edge) to ensure
+consistent layout, iconography, and branding defined in the global style guide.
 
 *Continuous Verification*::  
 A GitHub Actions workflow will execute linting and unit-test jobs on pull requests to
@@ -172,6 +184,7 @@ maintain consistent quality and prevent regressions once automated tests are in 
 – Search and map functionalities were validated against Supabase data, loading results in ≈ 1 s on average.  
 – Map markers were verified for nine sample donation centers.  
 – Authentication features (sign up, login, logout) were validated across major desktop browsers with secure RLS policies.  
+– UI elements and flows passed internal usability and accessibility checks; no critical issues were reported.  
 – Category and condition-rating systems were refined for accuracy and uniformity.  
 – Traceability structure and automated CI testing are established for completion in the final milestone.
 
