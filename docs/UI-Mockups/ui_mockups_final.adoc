@@ -1,0 +1,145 @@
+Author: Andrea P. Segarra
+User: andreasegarra
+Project: Hand-Me-Down Clothing
+:toc:
+:toclevels: 2
+
+= Objective
+Produce a clean, formal document showcasing all finalized UI mockups for milestone submission, consolidating existing designs into a single format.
+
+= Description
+This document compiles all finalized UI mockups for the **Hand Me Down** application.  
+Each screen section includes:
+- A labeled screenshot or embedded image of the final mockup.
+- A short description of key components and design choices.
+- Notes on how the mockup evolved from earlier iterations (if applicable).
+
+= Included Screens
+* Homepage
+* Browse
+* Donate
+* Favorites
+* Footer
+* Sign Up
+
+= Homepage
+image::/images/ui/home.png[Homepage Mockup, width=80%]
+
+=== Description
+The homepage provides a clean and welcoming layout that introduces users to the purpose of the platform — giving clothes a second life.  
+It features:
+- A **top announcement bar** with community and pickup information.
+- A centered **navigation bar** including the logo, main links (Browse, Map, Donate, About), and user icons for favorites and the shopping bag.
+- A **hero section** with a large headline ("Give clothes a second life"), descriptive subtext, and three main call-to-action buttons: *Start Browsing*, *Donate Item*, and *Sell Item*.
+- A **search bar** positioned below the hero to help users quickly look for clothing items.
+- A section titled **“Browse by category”** with rounded cards for various categories.
+
+=== Changes
+- Introduced pastel beige and soft pink palette for a warm, sustainable aesthetic.
+- Refined hero text alignment and spacing for better readability.
+
+= Browse
+image::/images/ui/browse.png[Browse Mockup, width=80%]
+
+=== Description
+The Browse page displays available items with category filters and sorting options.  
+It highlights:
+- Category filters (Tops, Dresses, Shoes, etc.).
+- Search bar for easy access to specific items.
+- Item cards with essential info like condition, price, and brand.
+
+=== Changes
+- Refined card spacing and improved filter chip design.
+- Introduced consistent rounded card corners across listings.
+
+= Donate
+image::/images/ui/donate.png[Donate Mockup, width=80%]
+
+=== Description
+The Donate page provides users with a clear layout to submit items for donation.  
+Key features include:
+- Step-by-step donation form.
+- Image upload field for clothing previews.
+- Submit and cancel buttons for user control.
+
+=== Changes
+- Simplified donation input flow.
+- Added visual indicators for progress and confirmation.
+
+= Favorites
+image::/images/ui/favorites.png[Favorites Screen Mockup, width=80%]
+
+= Description
+The Favorites page allows users to view and manage saved items in a clean, filterable grid layout.  
+It features:
+- A large **“Favorites”** heading.
+- Filter chips by **Category**, **Size**, and **Brand**, plus a sort dropdown (e.g., “Most Recent”).
+- Each product card shows placeholders for **Condition**, **Price**, and includes a **heart icon** to indicate the item is saved.
+
+The design maintains consistency with the homepage — light backgrounds, soft pastel tags, and rounded card edges.
+
+= Changes
+- Added filters for category, size, and brand.
+- Increased card spacing for visual clarity.
+- Unified component color scheme to match the rest of the UI.
+
+= Footer
+image::/images/ui/footer.png[Footer Mockup, width=80%]
+
+=== Description
+The footer provides essential links and contact information with a balanced, minimal design.  
+It includes three sections:
+- **Contact Us:** Email, phone, and location (Mayagüez, PR).
+- **Site Information:** Links to Privacy Policy, Terms of Service, and Cookies.
+- **Social Media:** Icons for Discord, Instagram, LinkedIn, and Facebook.
+
+The **Hand Me Down logo** is positioned on the left, creating brand recognition across all pages.
+
+=== Changes
+- Updated icon colors to match the site’s soft pink theme.
+- Reorganized layout for equal spacing between sections.
+- Added © 2025 copyright notice for completeness.
+
+== Sign-Up
+image::images/ui/sign-up.png[Sign-Up Mockup, width=80%]
+
+=== Description
+The Sign-Up page allows new users to create a personal account quickly and securely.  
+It includes:
+- Two input fields for **First name** and **Last name**.  
+- Fields for **Email** and **Password** with a visibility toggle icon.  
+- A disabled **Create personal account** button that activates when all fields are valid.  
+- Social login options via **Google**, **Facebook**, and **Apple**, displayed as branded buttons.  
+- A top-right link for users who are *already registered* to easily sign in.
+
+=== Design Choices
+- Minimal white background to keep focus on the form.  
+- Rounded, soft-grey input fields matching the site’s calm aesthetic.  
+- Consistent typography and spacing aligned with the rest of the Hand-Me-Down brand.
+
+=== Changes
+- Added password visibility toggle icon for usability.  
+- Adjusted button contrast and spacing for accessibility.  
+- Refined alignment for a clean, centered composition.
+
+= Checkout
+image::images/ui/checkout.png[Checkout Mockup, width=80%]
+
+=== Description
+The Checkout page provides a simple and clean interface for users to complete their purchase.  
+It includes:
+- A labeled **Payment method** dropdown for users to select their preferred payment option (e.g., Credit Card, PayPal, etc.).
+- A prominent **Pay $25.99** button that finalizes the transaction once the payment method is selected.
+
+The minimalist design ensures focus on the payment action, reducing friction and distractions during checkout.
+
+=== Design Choices
+- Center-aligned layout with clear typography for readability.
+- High-contrast button to emphasize the primary action.
+- Rounded edges consistent with the Hand-Me-Down UI theme.
+
+=== Changes
+- Simplified previous multi-step layout to a single confirmation step.
+- Increased button size for accessibility and ease of interaction.
+- Adjusted spacing for a balanced visual composition.
+
