@@ -1,8 +1,11 @@
+'use client'
 import Link from 'next/link';
 import DonateWireframe from '../listings/donate_piece/page';
 import { supabase } from '../auth/supabaseClient';
 import FilterableFeaturedItems from './filterableListing';
 import { Item } from '../utils/filters/listingsFilter';
+import {useRouter} from "next/navigation";
+import {useEffect, useState} from 'react';
 
 // Categories for 'Browse by category' section
 const browse_categories = [
@@ -49,13 +52,27 @@ export async function getFeaturedItems() {
     console.log("Error fetching featured items: ", error);
     return []
   } else {
-    return items;
+    return items ?? [];
   }
 }
 
-export default async function Homepage() {
+export default function Homepage() {
+  const router= useRouter();
+  const [featuredItems, setFeaturedItems]= useState<Item[]>([]);
 
-  const featuredItems: Item[] = await getFeaturedItems();
+  useEffect(()=>{
+    let alive= true;
+    getFeaturedItems().then(items=>{if (alive) setFeaturedItems(items)});
+    return ()=> {alive=false};
+  }, []);
+
+  function open_browsing(e: ReactReact.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const form= e.target as HTMLFormElement;
+    const input= form.elements.namedItem("Search_Bar") as HTMLInputElement;
+    const query= input.value.trim();
+    router.push(`../browsing?query=${encodeURIComponent(query)}`);
+  }
 
   return (
     <div className="p-3">
@@ -69,9 +86,11 @@ export default async function Homepage() {
               Discover, donate, and share styles with your community — sustainably and affordably.
             </p>
             <div className="flex space-x-4 pt-5 text-[#666666] font-bold italic">
-              <button id="Start_Browsing_btn" className="px-4 py-2 w-55 h-13 bg-[#e6dac7] hover:bg-[#d8c8b4] rounded-full">
-                Start Browsing
-              </button>
+              <Link href="../browsing">
+                <button id="Start_Browsing_btn" className="px-4 py-2 w-55 h-13 bg-[#e6dac7] hover:bg-[#d8c8b4] rounded-full">
+                  Start Browsing
+                </button>
+              </Link>
               <Link href="../listings/donate_piece">
                 <button id="Donate_Item_btn" className="px-4 py-2 w-55 h-13 bg-[#f9f8f8] hover:bg-[#eceaea] border-[#E5E7EF] border-2 rounded-full">
                   Donate Item
@@ -83,12 +102,15 @@ export default async function Homepage() {
                 </button>
               </Link>
             </div>
-            <input
-              id="Search_Bar"
-              type="text"
-              placeholder="Search for clothing..."
-              className="w-150 h-13 px-4 py-2 mt-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
-            </input>
+              <form onSubmit={open_browsing}>
+                <input
+                    //onChange={(e)=> } use for Search Suggestions
+                    name="Search_Bar"
+                    type="text"
+                    placeholder="Search for clothing..."
+                    className="w-150 h-13 px-4 py-2 mt-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
+                </input>
+            </form>
           </div>
           <img 
             src={"https://packstar.mx/wp-content/uploads/2024/04/como-el-empaque-afecta-la-imagen-de-tu-marca-3.jpg"}
