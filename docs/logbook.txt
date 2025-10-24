@@ -1,3 +1,5 @@
+entry #32: Ojani modified section 2.3 on issue #247
+entry #31: Ojani modified section 2.3.1 on issue #247
 entry #30: JuanIranzo modified section 2.1.6 on issue #218
 entry #29: JoshDG03 modified section 2.2.5 on issue #242
 entry #28: JoshDG03 modified section 2.1.5 on issue #182
