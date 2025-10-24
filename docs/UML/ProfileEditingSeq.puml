@@ -1,0 +1,56 @@
+@startuml ProfileEditSequence
+actor User
+participant "ProfileEditPage (UI)" as UI
+participant "APIClient" as Client
+participant "ProfileController" as Controller
+participant "AuthService" as Auth
+participant "UserService" as Service
+participant "AvatarStorage" as Storage
+participant "ProfileRepository" as Repo
+participant "AuditService" as Audit
+
+User -> UI: open profile page
+UI -> Client: GET /profile/:userId
+Client -> Controller: GET /profile/:userId
+Controller -> Auth: currentUser(token)
+Auth --> Controller: user validated
+Controller -> Service: getProfile(userId)
+Service -> Repo: findByUserId(userId)
+Repo --> Service: UserProfile
+Service --> Controller: UserProfile
+Controller --> Client: 200 + profile
+Client --> UI: profile data
+
+User -> UI: change fields & select avatar
+UI -> AvatarUploader: selectFile(file)
+AvatarUploader -> Client: POST /profile/:userId/avatar (optional)
+Client -> Controller: POST /profile/:userId/avatar
+Controller -> Auth: authorize
+Auth --> Controller: ok
+Controller -> Storage: store(file)
+Storage --> Controller: avatarUrl
+Controller --> Client: 201 + avatarUrl
+Client --> AvatarUploader: avatarUrl
+
+User -> UI: click Save
+UI -> ProfileForm: validate()
+ProfileForm --> UI: validation OK
+UI -> Client: PUT /profile/:userId (payload incl avatarUrl)
+Client -> Controller: PUT /profile/:userId
+Controller -> Auth: authorize
+Auth --> Controller: ok
+Controller -> Service: updateProfile(userId, payload)
+Service -> Service: validatePayload(payload)
+alt validation fails
+  Service --> Controller: 400 validation errors
+  Controller --> Client: 400
+  Client --> UI: show errors
+else validation ok
+  Service -> Repo: save(updatedProfile)
+  Repo --> Service: savedProfile
+  Service -> Audit: recordChange(userId, diff)
+  Service --> Controller: success
+  Controller --> Client: 200 success
+  Client --> UI: show success & update view
+end
+@enduml

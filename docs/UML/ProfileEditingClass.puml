@@ -1,0 +1,96 @@
+@startuml ProfileEditClassDiagram
+' Frontend
+package "Frontend" {
+  class ProfileEditPage {
+    +render(): void
+    +onSubmit(): Promise
+  }
+  class ProfileForm {
+    +validate(): ValidationResult
+    +getPayload(): ProfilePayload
+  }
+  class AvatarUploader {
+    +selectFile(file): void
+    +uploadTemp(file): Promise<UploadResult>
+  }
+  class APIClient {
+    +get(path, params): Promise
+    +post(path, body): Promise
+    +put(path, body): Promise
+  }
+}
+
+' Backend API / Controller
+package "Backend (API)" {
+  class ProfileController {
+    +GET /profile/:userId -> getProfile(userId): UserProfile
+    +PUT /profile/:userId -> updateProfile(userId, payload): Result
+    +POST /profile/:userId/avatar -> uploadAvatar(userId, file): UploadResult
+  }
+}
+
+' Backend Services & Persistence
+package "Backend (Services)" {
+  class UserService {
+    +getProfile(userId): UserProfile
+    +updateProfile(userId, payload): Result
+    +validatePayload(payload): ValidationResult
+  }
+  class AuthService {
+    +authorize(userId, token): boolean
+    +currentUser(token): User
+  }
+  class ProfileRepository {
+    +findByUserId(userId): UserProfile
+    +save(profile): UserProfile
+  }
+  class AvatarStorage {
+    +store(file, path): StorageResult
+    +delete(path): boolean
+    +generateSignedUrl(path): URL
+  }
+  class AuditService {
+    +recordChange(userId, change): void
+  }
+}
+
+' Domain entities
+class User {
+  +id: UUID
+  +email: String
+  +createdAt: Date
+}
+class UserProfile {
+  +userId: UUID
+  +displayName: String
+  +bio: String
+  +phone: String
+  +avatarUrl: URL
+  +preferences: Map<String,String>
+  +version: Int  ' optimistic lock
+}
+
+' Associations (arrows)
+ProfileEditPage --> ProfileForm : uses
+ProfileEditPage --> AvatarUploader : uses
+ProfileForm --> APIClient : submits to
+AvatarUploader --> APIClient : uploads to
+APIClient --> ProfileController : HTTP
+
+ProfileController --> AuthService : authorize
+ProfileController --> UserService : delegates
+UserService --> ProfileRepository : reads/writes
+UserService --> AvatarStorage : stores avatar
+UserService --> AuditService : records
+ProfileRepository --> UserProfile : persists
+
+' Notes
+note right of ProfileController
+  Controller is thin - delegate to services.
+end note
+
+note left of AvatarStorage
+  AvatarStorage can be S3, GCS, or local.
+  Implement atomic/transactional behavior policy.
+end note
+@enduml

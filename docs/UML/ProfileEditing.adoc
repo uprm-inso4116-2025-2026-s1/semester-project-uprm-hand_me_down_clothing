@@ -1,0 +1,247 @@
+// --
+// Author: Jessy Andújar Cruz
+// User: @J3SSY-ANDU
+// Project: Hand-me-down Clothing
+// GitHub Issue: #176
+// --
+
+= UML Diagrams for Profile Editing Page
+
+== Overview
+
+Goal::
+Allow an authenticated user to edit their profile (display name, contact, bio, preferences, and avatar). The design separates frontend UI components from backend API/controller, uses service/repository patterns, and handles avatar storage.
+
+Key goals captured::
+- Clear separation of concerns (UI ↔ API ↔ Service ↔ Repository ↔ Storage).
+- Server-side validation and authorization.
+- Support for segmented operations (avatar upload + profile update) with consideration for transactional behavior.
+- Distributed validation (client-side UX validation + authoritative server validation).
+
+== PlantUML: Class Diagram
+
+[plantuml, ProfileEditClassDiagram, svg]
+----
+@startuml ProfileEditClassDiagram
+' Frontend
+package "Frontend" {
+  class ProfileEditPage {
+    +render(): void
+    +onSubmit(): Promise
+  }
+  class ProfileForm {
+    +validate(): ValidationResult
+    +getPayload(): ProfilePayload
+  }
+  class AvatarUploader {
+    +selectFile(file): void
+    +uploadTemp(file): Promise<UploadResult>
+  }
+  class APIClient {
+    +get(path, params): Promise
+    +post(path, body): Promise
+    +put(path, body): Promise
+  }
+}
+
+' Backend API / Controller
+package "Backend (API)" {
+  class ProfileController {
+    +GET /profile/:userId -> getProfile(userId): UserProfile
+    +PUT /profile/:userId -> updateProfile(userId, payload): Result
+    +POST /profile/:userId/avatar -> uploadAvatar(userId, file): UploadResult
+  }
+}
+
+' Backend Services & Persistence
+package "Backend (Services)" {
+  class UserService {
+    +getProfile(userId): UserProfile
+    +updateProfile(userId, payload): Result
+    +validatePayload(payload): ValidationResult
+  }
+  class AuthService {
+    +authorize(userId, token): boolean
+    +currentUser(token): User
+  }
+  class ProfileRepository {
+    +findByUserId(userId): UserProfile
+    +save(profile): UserProfile
+  }
+  class AvatarStorage {
+    +store(file, path): StorageResult
+    +delete(path): boolean
+    +generateSignedUrl(path): URL
+  }
+  class AuditService {
+    +recordChange(userId, change): void
+  }
+}
+
+' Domain entities
+class User {
+  +id: UUID
+  +email: String
+  +createdAt: Date
+}
+class UserProfile {
+  +userId: UUID
+  +displayName: String
+  +bio: String
+  +phone: String
+  +avatarUrl: URL
+  +preferences: Map<String,String>
+  +version: Int  ' optimistic lock
+}
+
+' Associations (arrows)
+ProfileEditPage --> ProfileForm : uses
+ProfileEditPage --> AvatarUploader : uses
+ProfileForm --> APIClient : submits to
+AvatarUploader --> APIClient : uploads to
+APIClient --> ProfileController : HTTP
+
+ProfileController --> AuthService : authorize
+ProfileController --> UserService : delegates
+UserService --> ProfileRepository : reads/writes
+UserService --> AvatarStorage : stores avatar
+UserService --> AuditService : records
+ProfileRepository --> UserProfile : persists
+
+' Notes
+note right of ProfileController
+  Controller is thin - delegate to services.
+end note
+
+note left of AvatarStorage
+  AvatarStorage can be S3, GCS, or local.
+  Implement atomic/transactional behavior policy.
+end note
+@enduml
+----
+
+== PlantUML: Sequence Diagram (Edit & Save flow)
+
+[plantuml, ProfileEditSequence, svg]
+----
+@startuml ProfileEditSequence
+actor User
+participant "ProfileEditPage (UI)" as UI
+participant "APIClient" as Client
+participant "ProfileController" as Controller
+participant "AuthService" as Auth
+participant "UserService" as Service
+participant "AvatarStorage" as Storage
+participant "ProfileRepository" as Repo
+participant "AuditService" as Audit
+
+User -> UI: open profile page
+UI -> Client: GET /profile/:userId
+Client -> Controller: GET /profile/:userId
+Controller -> Auth: currentUser(token)
+Auth --> Controller: user validated
+Controller -> Service: getProfile(userId)
+Service -> Repo: findByUserId(userId)
+Repo --> Service: UserProfile
+Service --> Controller: UserProfile
+Controller --> Client: 200 + profile
+Client --> UI: profile data
+
+User -> UI: change fields & select avatar
+UI -> AvatarUploader: selectFile(file)
+AvatarUploader -> Client: POST /profile/:userId/avatar (optional)
+Client -> Controller: POST /profile/:userId/avatar
+Controller -> Auth: authorize
+Auth --> Controller: ok
+Controller -> Storage: store(file)
+Storage --> Controller: avatarUrl
+Controller --> Client: 201 + avatarUrl
+Client --> AvatarUploader: avatarUrl
+
+User -> UI: click Save
+UI -> ProfileForm: validate()
+ProfileForm --> UI: validation OK
+UI -> Client: PUT /profile/:userId (payload incl avatarUrl)
+Client -> Controller: PUT /profile/:userId
+Controller -> Auth: authorize
+Auth --> Controller: ok
+Controller -> Service: updateProfile(userId, payload)
+Service -> Service: validatePayload(payload)
+alt validation fails
+  Service --> Controller: 400 validation errors
+  Controller --> Client: 400
+  Client --> UI: show errors
+else validation ok
+  Service -> Repo: save(updatedProfile)
+  Repo --> Service: savedProfile
+  Service -> Audit: recordChange(userId, diff)
+  Service --> Controller: success
+  Controller --> Client: 200 success
+  Client --> UI: show success & update view
+end
+@enduml
+----
+
+== Classes & Methods (detailed)
+
+- ProfileEditPage (Frontend)
+  * render()
+  * onSubmit()
+  * onAvatarSelected()
+
+- ProfileForm (Frontend)
+  * validate(): ValidationResult
+  * getPayload(): ProfilePayload
+
+- AvatarUploader (Frontend)
+  * selectFile(file)
+  * uploadTemp(file) -> returns temp upload URL or avatarUrl
+
+- APIClient (Frontend)
+  * get/post/put (standard REST wrapper with auth token)
+
+- ProfileController (Backend)
+  * getProfile(userId)
+  * updateProfile(userId, payload)
+  * uploadAvatar(userId, file)
+
+- AuthService (Backend)
+  * currentUser(token)
+  * authorize(userId, token)
+
+- UserService (Backend)
+  * validatePayload(payload)
+  * updateProfile(userId, payload) — orchestrates avatar storage & repo
+  * getProfile(userId)
+
+- ProfileRepository (Backend)
+  * findByUserId(userId)
+  * save(profile)
+
+- AvatarStorage (Backend)
+  * store(file, path)
+  * delete(path)
+  * generateSignedUrl(path)
+
+- AuditService (Backend)
+  * recordChange(userId, changeSummary)
+
+.Non-functional considerations
+* Optimistic locking: include a `version` or `updatedAt` on UserProfile to detect concurrent edits.
+* Validation: server authoritative; client helpful validation.
+* Transactions: avatar upload and profile save may not be atomic across storage & DB—define rollback/compensation strategy (see ambiguities).
+
+== Associations & multiplicities (summary)
+
+* 1 User -> 1 UserProfile
+* 1 ProfileController -> 1 UserService (uses)
+* 1 UserService -> 1..* ProfileRepository (reads/writes)
+* 1 UserService -> 0..1 AvatarStorage (for avatars)
+* Frontend ProfileEditPage -> ProfileForm, AvatarUploader (composition)
+
+== Notes on implementation decisions
+
+* Thin controller / fat service pattern to keep controllers testable and simple.
+* Use repository pattern so persistence can be swapped (SQL, NoSQL).
+* Avatar storage is abstracted to enable S3-compatible or local file storage.
+* Include `version` in UserProfile for optimistic concurrency control.
