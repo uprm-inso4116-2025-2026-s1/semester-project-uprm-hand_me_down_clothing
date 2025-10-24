@@ -1,148 +1,167 @@
-== Concept Refactoring: Multi-Entity Evolution 
+== Concept Refactoring Analysis
 
-=== Context
-Our domain is *discovery-only*—the app makes items visible and helps people contact each other; all exchanges happen offline. Modeling choices below tighten boundaries, add invariants, and reduce ambiguity. 
+=== 1. Purpose
+This document analyzes how the conceptual model of the Hand Me Down domain evolved from Milestone 1 to Milestone 2. It identifies the main refactorings applied to entities, events, and terminology to make the model more aligned with observed behavior in the resale environment near UPRM. Each change is described with its rationale and impact on future requirements, architecture, and testing.
 
----
+=== 2. Major Conceptual Refactorings
 
-=== R1) Listing → Piece (Aggregate Root)
+==== 2.1 Actor Entities — From Donator/Collector → Seller/Buyer
+*Change Summary:*  
+Milestone 1 used *Donator* and *Collector* to describe the two primary roles in exchanges. Milestone 2 replaces them with *Seller* and *Buyer* to reflect the behavior of users engaging in low-cost resale rather than donation.
 
-*Original (M1)*::
-`Listing` mixed the physical garment and its on-platform post.
+*Rationale:*  
+Field observations and stakeholder notes revealed that most exchanges among students involved symbolic resale prices (USD $8–$15), negotiation, and mutual benefit rather than one-way giving. Aligning terminology with *Seller* and *Buyer* clarifies responsibilities and supports trust-based features such as ratings and reviews.
 
-*Refactored (M2)*::
-`Piece` becomes the **aggregate root** that governs lifecycle (`Active ↔ Reserved → Closed`), reviews, condition rating, images, and reservation. A “listing” is just the visibility event/view (e.g., `ListingPublished`). All mutations go through the root. 
+*Impact:*  
+- Removes ambiguity between donation and resale flows.  
+- Establishes clearer mappings for requirements and user stories involving offers, reviews, and messaging.  
+- Simplifies transitions into the listing-based lifecycle introduced in Milestone 2.
 
-*Motivation (insight)*::
-Observed events are about a *garment entering/leaving visibility* and the exchange concluding offline—so the stable identity is the garment, not the post. 
+==== 2.2 Core Entity — Piece (Retained, Context Expanded)
+*Change Summary:*  
+The *Piece* remains the core domain entity but gains new context in Milestone 2 as the anchor for listings, ratings, and reviews.
 
-*Key invariants*::
-≥1 image at publish; reviews belong to exactly one Piece; legal transitions only; edits blocked when Closed. 
+*Rationale:*  
+Milestone 1 defined Piece as a physical garment. Milestone 2 keeps this but attaches new representations: Listings, ConditionRating, Review, and Reservation. The Piece becomes the aggregate root that all these elements relate to.
 
-*Impact*::
-Clearer lifecycle, stronger consistency, future-proofing for re-posting/history.
+*Impact:*  
+- Provides stable identity for condition updates, reviews, and status changes.  
+- Enables reuse of the same garment across multiple listings.  
+- Connects physical reality (garment) to digital representation (listing).
 
----
+==== 2.3 Event Refactoring — From Donation/Collection → Listing Lifecycle
+*Change Summary:*  
+Milestone 1’s actions (`donate`, `collect`, `discard`) are replaced in Milestone 2 with Listing lifecycle events (`publishListing`, `expressInterest`, `closeListing`, `discard`).
 
-=== R2) Reviews Ownership: Profile view ← Piece source
+*Rationale:*  
+The change shifts focus from physical handoff to digital visibility and user intent. Listings describe when a Piece becomes discoverable and when it exits visibility, regardless of where the real exchange happens.
 
-*Original (M1)*::
-Reviews were conceptually tied to profiles/listings interchangeably.
+*Impact:*  
+- Makes visibility a measurable state change.  
+- Allows analysis of listing durations and user interactions.  
+- Better represents actual marketplace behaviors observed in WhatsApp and Facebook groups.
 
-*Refactored (M2)*::
-`Review` is a **child of Piece**; profiles show *read-only projections* (avg + count). Profile owners cannot mutate reviews. 
+==== 2.4 Introduction of Listing as a System Representation
+*Change Summary:*  
+The *Listing* did not exist in Milestone 1. It is introduced in Milestone 2 as the published representation of a Piece.
 
-*Motivation*::
-Trust artifacts arise from specific item exchanges; attaching them to the item prevents cross-linking or self-editing.
+*Rationale:*  
+Milestone 1 merged the garment and the act of offering it. The new model separates them, allowing a Piece to exist independently and be listed multiple times. This mirrors real reuse cycles where users relist items if unsold or pass them to others.
 
-*Impact*::
-Integrity of reputation; simpler aggregation; fewer ambiguity bugs.
+*Impact:*  
+- Adds a clean bridge between physical items and digital posts.  
+- Supports publish/edit/close actions.  
+- Enables analytics about active and closed listings.
 
----
+==== 2.5 Behavioral Vocabulary Changes
+*Change Summary:*  
+Terms like *Exchange Flow* and *Student Resale Price Band* were replaced by *Discovery Flow* and *Informal Price Band* to generalize and modernize the vocabulary.
 
-=== R3) Account/Auth vs User Profile
+*Rationale:*  
+These updates emphasize discovery and resale rather than charity. They maintain sociological grounding but make terms consistent with actual marketplace speech.
 
-*Original (M1)*::
-“User” combined auth identity with public profile.
+*Impact:*  
+- Improves domain readability and traceability.  
+- Makes AsciiDoc terminology align with student and community interviews.  
+- Strengthens consistency across documentation and system design.
 
-*Refactored (M2)*::
-Keep auth in the platform layer; **`UserProfile`** becomes a separate aggregate for editable public info (name, picture, location, bio), saved listings, and listing-scoped message threads. 
+==== 2.6 Function Signature Updates
+*Change Summary:*  
+Milestone 1 functions:
+----
+donate(Piece, Donator, Locale) → DonationEvent
+collect(Piece, Collector) → CollectionEvent
+rate(Piece, ConditionRating) → ConditionRating
+review(Collection, Review) → Review
+----
+Milestone 2 functions:
+----
+publishListing(Piece, Seller, Locale) → ListingPublished
+expressInterest(Listing, Buyer) → InterestExpressed
+closeListing(Listing) → ListingClosed
+rate(Piece, ConditionRating) → ConditionRating
+review(Seller, Buyer, Review) → ReviewSubmitted
+----
 
-*Motivation*::
-Profiles change frequently and are user-owned; reviews/ratings remain external projections (see R2).
+*Rationale:*  
+Functions now reflect a digital workflow with explicit actors and transitions, rather than implicit transfers of ownership.
 
-*Impact*::
-Cleaner permissions, clearer write boundaries, easier caching.
+*Impact:*  
+- Introduces preconditions and postconditions for every operation.  
+- Maps directly to potential API endpoints and automated tests.  
+- Makes domain events observable and traceable.
 
----
+==== 2.7 Expanded Domain Narrative
+*Change Summary:*  
+The story of donation and collection became a story of visibility, negotiation, and offline handoff.
 
-=== R4) Interest & Messaging as Listing-Scoped Threads
+*Rationale:*  
+Students and families described flows similar to marketplace behavior rather than pure donation. Milestone 2 updates the narrative accordingly, emphasizing discovery and trust instead of charity.
 
-*Original (M1)*::
-“Contact seller” was a generic action with no stable conceptual anchor.
+*Impact:*  
+- Aligns system behavior with real social practice.  
+- Improves continuity with personas, epics, and UI prototypes.  
+- Sets the basis for a trust-centric, transparency-driven platform story.
 
-*Refactored (M2)*::
-Define **Interest** (the first contact or save) and bind **MessageThread** to the listing/piece context; notifications and messages are grouped *by listing*. 
+==== 2.8 Reframed Environmental and Social Context
+*Change Summary:*  
+Milestone 1 stressed poverty and waste reduction as its primary motivators. Milestone 2 integrates sustainability and affordability but frames the domain as *student-led circular resale* rather than aid or relief.
 
-*Motivation*::
-Your domain events already distinguish *Interest Expressed*; grouping threads by listing mirrors real conversations and reduces orphaned chats. 
+*Rationale:*  
+This shift maintains social impact but situates the project in a more realistic, peer-to-peer context that can scale beyond charitable donation.
 
-*Impact*::
-Traceable contact flows; simpler moderation; better UX.
+*Impact:*  
+- Expands the range of target users (students, residents, informal sellers).  
+- Makes outreach and validation more relevant to UPRM’s real social environment.  
+- Strengthens long-term educational and sustainability goals.
 
----
+=== 3. Structural and Traceability Improvements
+Milestone 2 introduces clearer traceability between the descriptive and design parts of the documentation.
 
-=== R5) Status Machine Made Explicit
+[cols="3,3,3", options="header"]
+|===
+| Aspect | Milestone 1 | Milestone 2
 
-*Original (M1)*::
-Status semantics were implied, edits sometimes allowed after closure.
+| Primary Actors
+| Donator, Collector
+| Seller, Buyer
 
-*Refactored (M2)*::
-Enforce **`Active ↔ Reserved → Closed`** (no reopen). Close disables edits. Reserve only from Active; Close only from Active/Reserved. 
+| Core Object
+| Piece
+| Piece + Listing
 
-*Motivation*::
-Matches offline hand-off and prevents “zombie” edits on closed items.
+| Event Model
+| Donation, Collection
+| Listing lifecycle (`Publish`, `Interest`, `Close`)
 
-*Impact*::
-Consistent UI states; fewer race conditions; cleaner audit trail.
+| Process
+| Physical handoff
+| Digital discovery + offline exchange
 
----
+| Terminology
+| Exchange Flow, Price Band
+| Discovery Flow, Informal Price Band
 
-=== R6) Category/Type as Validated Attribute (not a mini-taxonomy inside the item)
+| Functions
+| Direct and static
+| Stateful with explicit pre/postconditions
 
-*Original (M1)*::
-Ad-hoc category choices risked misclassification.
+| Narrative
+| Charity-oriented
+| Marketplace-oriented
 
-*Refactored (M2)*::
-`categorize(Piece, Type)` validates against allowed types; does not affect visibility; remains an attribute under the Piece root.
+| Social Frame
+| Aid and donation
+| Circular resale and reuse
+|=== 
 
-*Motivation*::
-Better search/filter quality without coupling to listing persistence.
 
-*Impact*::
-Higher precision for discovery; simpler index strategies.
+=== 4. Conceptual Impact Summary
+* The domain evolved from an object-transfer model to a visibility and negotiation model.  
+* Events now represent state changes in the platform rather than physical exchanges.  
+* Entities gained clearer roles and invariants: Piece as aggregate root, Listing as visibility artifact, Seller/Buyer as actors.  
+* Vocabulary better matches stakeholder language and observed community behavior.  
+* Traceability improved through explicit functions and life cycles tied to each aggregate.
 
----
-
-=== R7) “Transaction” removed (Discovery-Only Clarification)
-
-*Original (M1)*::
-Early vocabulary hinted at in-app transactions.
-
-*Refactored (M2)*::
-Interfaces and flows explicitly avoid payments; the app facilitates visibility, search/filter, save, and contact only; exchange and payment occur **outside** the platform. 
-
-*Motivation*::
-Aligns model with real behavior and reduces scope/risks.
-
-*Impact*::
-Leaner model; fewer legal/security constraints; clearer acceptance tests.
-
----
-
-=== R8) Function Signatures aligned to events/guards
-
-*Original (M1)*::
-Functions loosely implied effects.
-
-*Refactored (M2)*::
-Signatures encode inputs, outputs, pre/postconditions, and guard the root (e.g., `publishListing(Piece,Seller,Locale) → ListingPublished`, `expressInterest(Listing,Buyer) → InterestExpressed`, `closeListing(Listing,Seller) → ListingClosed`). 
-
-*Motivation*::
-Make invariants enforceable and testable.
-
-*Impact*::
-Deterministic behaviors; acceptance tests map 1-to-1 with domain events.
-
----
-
-=== Measurable Improvements
-* **Model clarity:** single write point per aggregate (Piece/Profile); reviews provenance unambiguous. 
-* **Conceptual separation:** UI artifacts (cards/listings) vs domain entities (Piece) vs projections (profile ratings).
-* **Testability:** preconditions/postconditions codified in signatures and status machine.
-
----
-
-=== Reflection
-
-These refactorings aren’t cosmetic. They reflect deeper understanding of how discovery, contact, and offline exchange actually work in our setting, and they encode that understanding with DDD boundaries plus simple, enforceable invariants.
+=== 5. Conclusion
+The refactoring from Milestone 1 to Milestone 2 transformed the project from a *charity-based donation model* into a *student-driven circular marketplace model*. By redefining actors, events, and behaviors, the domain now better represents how real exchanges occur in Mayagüez. This clarity strengthens the foundation for subsequent requirements, architecture, and testing work while preserving the project’s original social mission.
