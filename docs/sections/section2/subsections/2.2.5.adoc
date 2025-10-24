@@ -6,16 +6,19 @@ The web server must support reliable and efficient operation of a React + JavaSc
 ==== Requirements
 
 *Performance*
+
 - The system shall return **search results within 2 seconds** on average, with a maximum of **4 seconds** under peak load (defined as 150 concurrent active users).
 - The system shall support **200 simultaneous browsing users** without response time exceeding 4 seconds, including actions such as searching, filtering, [.changed]#saving listings, and viewing listing details.#
 - [.added]#Listing creation and updates (e.g., uploading images, editing descriptions, updating status) shall complete within **3 seconds** on average.#
 
 *Reliability*
+
 - The web server shall maintain an uptime of **99.7% per month**, allowing no more than **2.1 hours** of unscheduled downtime.
 - [.changed]#Core operations — creating, editing, saving, and closing listings — must be processed reliably, with **no more than 0.1% of requests** failing due to server errors.#
 - Scheduled maintenance shall be limited to **3 hours per month**, announced with at least **48 hours of notice**.
 
 *Scalability*
+
 - The system shall scale to support **500 concurrent users** performing mixed actions [.changed]#(browsing, searching, creating listings, saving favorites, sending messages)# while maintaining average response times ≤ 3.5 seconds.
 - The system shall handle a database of up to **50,000 active listings** without significant degradation (response time increase ≤ 20% compared to baseline).
 - The system shall support both **vertical scaling** [.changed]#(increasing server resources) and **horizontal scaling** (adding more servers or instances) without major architectural changes.#
@@ -42,3 +45,25 @@ The web server must support reliable and efficient operation of a React + JavaSc
 - [.changed]#Monitor uptime logs to confirm 99.7% reliability.#  
 - [.added]#Benchmark database performance against a dataset of **50,000+ listings** with image attachments.#  
 - [.added]#Measure latency on both desktop and mobile clients to validate acceptable response times across devices.#  
+
+==== [.added]#Load Definitions#
+[.added]#Refined load definitions include:#
+- [.added]#*Peak Concurrent Users*: 500 users performing actions simultaneously.#
+- [.added]#*Average Concurrent Users*: 200 users during regular hours.#
+
+==== [.added]#User Mix Scenarios#
+1. [.added]#*Scenario 1: Browsing Listings*#
+   - [.added]#60% of users are browsing listings.#
+   - [.added]#Actions: Filtering, searching, and viewing item details.#
+
+2. [.added]#*Scenario 2: Creating Listings*#
+   - [.added]#20% of users are creating new listings.#
+   - [.added]#Actions: Uploading photos, entering item details, and submitting listings.#
+
+3. [.added]#*Scenario 3: Messaging*#
+   - [.added]#15% of users are messaging sellers or buyers.#
+   - [.added]#Actions: Sending and receiving messages.#
+
+4. [.added]#*Scenario 4: Administrative Actions*#
+   - [.added]#5% of users are performing administrative tasks.#
+   - [.added]#Actions: Moderating listings, resolving disputes.#

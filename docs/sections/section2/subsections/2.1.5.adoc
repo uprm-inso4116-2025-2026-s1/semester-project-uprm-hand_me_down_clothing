@@ -199,3 +199,71 @@
 [.added]#Each action triggers one or more observable events, and each entity serves as the anchor for those actions.#
 
 [.added]#This unified structure better reflects the natural interdependence of domain phenomena without artificial separation.#
+
+[.added]#This unified structure better reflects the natural interdependence of domain phenomena without artificial separation.#
+
+==== [.added]#Domain Aggregate Definition# 
+
+[.added]#The unified model of entities, actions, and events described above naturally forms bounded clusters of related concepts.# 
+[.added]#In the context of the clothing exchange domain, the **Piece** (representing a listing) acts as the **aggregate root**, governing all changes to its internal state and related sub-entities such as condition ratings, reviews, and reservations.#
+
+===== [.added]#Objective#
+[.added]#Document the domain aggregate aligned with a discovery-only platform. For this milestone, **Piece** is treated as the **aggregate root** that also fulfills the “listing” role.#
+[.added]#All mutations to elements inside the boundary occur **only** through the root.#
+
+===== [.added]#Aggregate Definition#
+[cols="^,^,3", options="header"]
+|===
+| Role | Kind | Notes
+| Piece | Aggregate Root | Discoverable item (listing) and single entry point for changes.
+| ConditionRating | Value Object | Integer in `[1..10]`; updated via root method only.
+| Review | Child Entity | `{id, reviewerId, rating (1–5), comment, createdAt}`; belongs to exactly one Piece.
+| Reservation | Value Object | `{buyerId, reservedAt}`; optional hold while parties coordinate offline.
+| Images | Collection of Value Objects | ≥ 1 image required when publishing (URI + metadata).
+| Status | Value Object | One of: `Active | Reserved | Closed`.
+| SellerId | Reference (Primitive/VO) | Owner identity outside the aggregate boundary.
+| Locale | Reference (Primitive/VO) | Optional area label to aid discovery (e.g., campus/borough).
+|===
+
+[NOTE]
+====
+[.added]#**Boundary Rule:** Client code obtains a **Piece** (aggregate root), invokes root-level operations (e.g., `reserveFor`, `close`, `addReview`), and persists the **Piece** via a repository that works at the **aggregate** level. No direct writes to inner members.#
+====
+
+===== [.added]#Invariants#
+[cols="2,1,1,3", options="header"]
+|===
+| Invariant | Enforced In | Temp. Violation? | Rationale
+| A Piece requires ≥ 1 image at publish time. | Factory / publish step | No | Visual trust for discovery.
+| `ConditionRating` ∈ `[1..10]`. | `rateCondition()` | No | Consistent quality scale.
+| A `Review` belongs to exactly one Piece. | `addReview()` | No | Prevents cross-linking reviews.
+| Status transitions follow `Active ↔ Reserved → Closed` (no reopen). | Root methods | Yes (within method only) | Coherent lifecycle; history integrity.
+| `reserveFor(buyerId)` allowed only when status = `Active`. | `reserveFor()` | No | Avoid double holds.
+| `close(reason)` allowed only when status ∈ {`Active`,`Reserved`}. | `close()` | No | Forbids illegal re-closing.
+| Editing details is blocked when status = `Closed`. | Root guards | No | Preserve record of completed exchanges.
+|===
+
+===== [.added]#Root Operations (Conceptual Surface)#
+- [.added]#`publish()` — (if drafts are modeled) make the Piece publicly visible.#
+- [.added]#`editDetails(updates)` — update title/description/attributes (forbidden when `Closed`).#
+- [.added]#`rateCondition(newRating)` — set/adjust condition in `[1..10]`.#
+- [.added]#`reserveFor(buyerId)` — `Active → Reserved` (hold while parties coordinate offline).#
+- [.added]#`releaseReservation()` — `Reserved → Active`.#
+- [.added]#`close(reason)` — `Active/Reserved → Closed` after offline handoff or withdrawal.#
+- [.added]#`addReview(reviewerId, rating, comment)` — attach feedback post-close.#
+
+===== [.added]#Factory (Conceptual)#
+[.added]#The **Piece Factory** constructs valid roots and applies initial invariants:#
+- [.added]#Ensures **≥ 1 image**.#
+- [.added]#Ensures **condition in `[1..10]`**.#
+- [.added]#Initializes **status = `Active`**, empty reviews, and no reservation.#
+
+===== [.added]#Repository (Conceptual)#
+[.added]#A repository that operates at the **aggregate level** (reads may provide projections for lists):#
+
+- [.added]#`findById(pieceId) → Piece?`#
+- [.added]#`save(piece) → void` (persists the whole aggregate and its members)#
+
+- [.added]#Read-model queries (projections for UI lists), e.g.:#
+  - [.added]#`findActiveByFilters(filters) → Page<PieceSummary>`#
+  - [.added]#`findBySeller(sellerId) → Page<PieceSummary>`#
