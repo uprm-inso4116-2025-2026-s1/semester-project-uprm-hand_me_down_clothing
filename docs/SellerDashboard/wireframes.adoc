@@ -38,9 +38,9 @@ This screen appears when the seller has no listings yet.
 == 2. Seller Listings Displayed
 
 [NOTE]
-====
+===
 This screen appears once the seller has added listings.
-====
+===
 
 ------------------------------------------------------------
 | [LOGO] Hand Me Down Clothing                              |
