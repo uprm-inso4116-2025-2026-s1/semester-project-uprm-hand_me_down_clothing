@@ -1,0 +1,54 @@
+== User Feedback Collection Report
+Collected feedback from 10 participants (peers and potential users) to evaluate the **frontend implementation and wireframes** of the *Hand-Me-Down Clothing Marketplace* built in **React + Next.js**.  
+
+The goal was to assess the project’s overall **usability, visual design, and clarity of purpose**, identifying early improvements before backend integration and full deployment.
+
+toc::[]
+
+== Objective
+Gather user insights to evaluate:
+- Visual design consistency  
+- Accessibility and readability  
+- Layout spacing and responsiveness  
+- Concept clarity and usability  
+
+== Methodology
+Participants were selected among peers and potential users familiar with donation-based marketplaces.  
+Each tester was asked to:
+1. Explore the **Featured Items**, **How it Works**, and **What Our Community Says** sections.  
+2. Provide observations on color palette, spacing, readability, and overall feel.  
+3. Suggest improvements that enhance usability or design flow.  
+
+Feedback was organized into categories: *UI Design*, *Accessibility & Readability*, *Usability & Clarity*, and *Improvement Suggestions.*
+
+== Participant Feedback Summary
+
+|===
+| Participant | Role | Key Feedback | Category
+
+| Kevin Gomez | Peer Developer | Suggested adding a **dark mode** and improving **widget responsiveness**, allowing components to **resize smoothly on smaller screens** for better accessibility and layout adaptability. | UI Design
+
+| William Flores | Developer | Noted that the **hint text in the search bar** on the listing page is *barely visible*. Suggested increasing contrast or using a darker shade for readability. | Accessibility & Readability
+
+| Yadriel Calderón | Developer | Recommended a **bigger and consistent spacing** between item cards and titles. | UI Design
+
+| Ronaldo Flores | Developer | Said the **main concept** of **donating** second-hand clothes was clear but suggested a short intro or tagline on the homepage for **selling** pieces too. | Clarity of Purpose
+
+| Anaís Vargas | Potential User | Found the **color palette** “too soft,” mentioning that all tones looked like **pastel or baby colors**, reducing contrast and readability. Suggested using slightly stronger accent colors. | UI Design
+
+| Luis Rivera | Potential User | Pointed out that there is **too little vertical spacing between the Featured Items filter and the item listings**. Suggested adding more padding or margin to improve visual separation and flow. | UI Design
+
+| Andrea Riego | Potential User | Requested a **visual hierarchy** to differentiate donated vs. for-sale items; icons or badges could help. | Usability / Clarity
+
+| Isbeth Rodriguez | Potential User | Observed **inconsistency in the vertical spacing** of the *How it works* section — it appears unevenly distributed compared to surrounding sections. Suggested standardizing the spacing to improve visual alignment. | UI Design
+
+| Luis Flores | Developer | Mentioned that the *What our community says* cards are **too close together**, making the layout feel cramped. Suggested adding more horizontal spacing between cards for a cleaner visual flow. | UI Design
+
+| Robert Roldan | Developer | Suggested adding a **placeholder or mock data** to better visualize item listings during testing. | Improvement Suggestion
+|===
+
+== Key Insights
+- **Color Palette:** The soft pastel colors evoke friendliness but reduce contrast. Users prefer slightly deeper accents for text and primary actions.  
+- **Spacing & Layout:** The interface feels tight in several areas — especially between the *Featured Items filter* and *listings*, and within testimonial cards. More consistent spacing and alignment would create a breathable, balanced feel.  
+- **Clarity of Purpose:** The donating concept is clear, but including a brief tagline or note about selling could make the dual purpose more explicit.  
+- **Readability:** Light placeholder text and subtle colors decrease visibility. Increasing contrast will enhance accessibility.  
