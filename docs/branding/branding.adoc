@@ -1,0 +1,75 @@
+// --
+// Author: Kenneth Sepulveda
+// Institution: University of Puerto Rico at Mayagüez
+// Date Created: 2025-10-24
+// Version: 1.0
+// Project: Hand-me-down Clothing
+// Purpose: Documentation for the branding guide
+// --
+= Hand Me Down Clothing – Branding Guide
+
+== Objective
+This document helps users to search for all the visual and stylistic branding elements used in *Hand Me Down Clothing*, including logos, colors, typography, and tone.  
+It ensures consistency across website components, sign-in pages, etc.
+
+== Logo
+=== Primary Logo
+Primary logo used across the platform.  
+All logos are located in `source_code\public\images`.
+
+=== Sign-In and Sign-Up Logos
+Use these colored logos for social sign-in and sign-up buttons.  
+All assets are stored in `source_code\public\images`.
+
+=== Footer Logos
+These monochrome icons are used exclusively in the website footer.  
+They can all be found in `source_code\public\images`.
+
+== Color Palette
+The color palette reflects the soft and welcoming tone of the Hand Me Down brand.  
+It is composed of pastel tones that convey warmth, trust, and simplicity.
+
+|===
+| Color Name | Hex Code | Description
+
+| Primary Pink | `#E7A4A4` | Main brand accent
+| Soft Mint | `#C7E2E0` | Fresh, gentle secondary tone
+| Warm Beige | `#F8E4D9` | Neutral background tone
+| Accent Red | `#E68A8A` | Highlight and alert color
+|===
+
+== Typography
+=== Font Size Hierarchy
+To maintain consistency across the platform, use the following proportional font sizes:
+
+* *128pt (Bold)* – Heading  
+* *90pt (Regular)* – Body (section dividers)  
+* *80pt (Regular)* – Captions (button text)
+
+=== Typography Guidelines Summary
+A typography guide defines how text should appear across the interface.  
+It ensures consistency, readability, and brand identity.
+
+Principles:
+
+* Define font type, size, color, and style.  
+* Limit use to a maximum of three typefaces.  
+* Use different fonts for headings, body text, and call-to-action buttons.  
+* Ensure all text meets accessibility contrast standards.
+
+=== Additional Typeface Options
+The chosen font combination is *Lato Heavy*.
+
+Alternative combinations that meet Hand Me Down’s design standards include:
+
+* *Fashion Retail:* Bebas Neue + Montserrat  
+* *Technology:* Roboto Condensed  
+* *Industrial:* Norwester + Kollektif + Montserrat  
+* *Web Design:* Lato  
+* *Review:* Source Sans Pro + Open Sans  
+* *Modern Classic:* Aileron
+
+== Tone & Visual Identity
+Hand Me Down Clothing promotes sustainability, community, and simplicity.  
+Tone should remain warm, inclusive, and casual.  
+Visual elements use soft spacing and a clean layout to enhance user experience.
