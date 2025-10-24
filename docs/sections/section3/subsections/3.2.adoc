@@ -1,37 +1,119 @@
 === *3.2 Validation and Verification*
 
-Validation and verification activities ensure that the Hand Me Down project’s deliverables meet the intended quality standards, align with stakeholder needs, and remain consistent with the domain description, requirements, and architecture. These activities are conducted as an ongoing, shared responsibility across all teams.
+[.removed]#Validation and verification activities ensure that the Hand Me Down project’s deliverables meet the intended quality standards, align with stakeholder needs, and remain consistent with the domain description, requirements, and architecture. These activities are conducted as an ongoing, shared responsibility across all teams.#
 
-==== Validation
+==== [.removed]#Validation#
 
-Validation activities focus on confirming that our understanding of the domain and requirements is accurate and complete, even before implementation:
+[.removed]#Validation activities focus on confirming that our understanding of the domain and requirements is accurate and complete, even before implementation:#
 
-* *Scenario Walkthroughs*:: Draft scenarios were created and reviewed internally within the team to test whether our domain terminology, requirements, and workflows are coherent. For example, walkthroughs of donation and resale flows helped highlight whether our categorization and pricing assumptions were consistent. 
-* *Requirement Exploration*:: At this stage, no external validation with students or families has been performed. Instead, internal reviews are used to identify potential gaps, such as safety practices for meetups or the way condition disclosure norms are represented.
+* [.removed]#*Scenario Walkthroughs*:: Draft scenarios were created and reviewed internally within the team to test whether our domain terminology, requirements, and workflows are coherent. For example, walkthroughs of donation and resale flows helped highlight whether our categorization and pricing assumptions were consistent.# 
+* [.removed]#*Requirement Exploration*:: At this stage, no external validation with students or families has been performed. Instead, internal reviews are used to identify potential gaps, such as safety practices for meetups or the way condition disclosure norms are represented.#
 
-[.removed]#*Planned A/B Testing*::#
-[.removed]#As the UI/UX evolves, A/B testing will be used to validate design hypotheses. Examples include testing filter placement in the item search page, or checkout button positioning. Metrics such as time-to-action and user satisfaction will guide design decisions.#
+==== [.removed]#Verification#
+
+[.removed]#Verification ensures that system components behave as prescribed and that deliverables can be tested against measurable criteria:#
+
+* [.removed]#*Unit Testing*:: Individual components of the system will be tested using unit tests to verify correctness in isolation. This includes authentication functions, item listing logic, and condition rating updates.#
+* [.removed]#*Integration Testing*:: Selected flows (e.g., creating a listing, completing a transaction) will be tested across multiple modules to ensure interactions remain consistent.#
+* [.removed]#*Load Testing with k6*:: Performance and scalability will be evaluated using the k6 framework. Initial load tests will target ~150 concurrent users, scaling up to 500, to verify that response times remain within the defined machine requirements.#
+* [.removed]#*Traceability Checks*:: Deliverables will be reviewed against the requirements and terminology to ensure completeness and consistency. Each requirement will be linked to validation and verification artifacts (test cases, scenarios).#
+* [.removed]#*Planned A/B Testing*:: As the UI/UX evolves, A/B testing will be used to validate design hypotheses. Examples include testing filter placement in the item search page, or checkout button positioning. Metrics such as time-to-action and user satisfaction will guide design decisions.#
+
+==== [.removed]#Roles and Responsibilities#
+
+[.removed]#Validation and verification are a *shared responsibility* across the team.#  
+[.removed]#While individual sub-teams focus on different aspects (e.g., listings, authentication, documentation), every member contributes to writing, reviewing, and executing tests and walkthroughs. This ensures that quality is embedded throughout the project rather than isolated in a single role.#
+
+==== [.removed]#Outcomes#
+
+[.removed]#The combination of walkthroughs, scenario-based validation, unit and integration testing, load testing, and A/B experimentation provides a balanced approach:#  
+
+* [.removed]#*Validation* ensures that the concepts and requirements are correctly understood and aligned with the domain.#  
+* [.removed]#*Verification* ensures that implementation artifacts conform to measurable standards and deliver the expected performance.#  
+
+[.removed]#Together, these practices guarantee that the Hand Me Down project remains trustworthy, usable, and scalable in the context of secondhand exchanges.#
 
 
-==== Verification
+[.added]#Validation and verification ensure that the Hand Me Down platform meets stakeholder needs,maintains internal consistency across modules, and satisfies measurable quality standards defined in the requirements. These activities are carried out continuously and collaboratively across all sub-teams—Documentation & Requirements, Authentication, Listings, Map/Search, and UI/UX—to preserve traceability from stakeholder needs through implementation and testing.#
 
-Verification ensures that system components behave as prescribed and that deliverables can be tested against measurable criteria:
+==== [.added]#Validation#
 
-* *Unit Testing*:: Individual components of the system will be tested using unit tests to verify correctness in isolation. This includes authentication functions, item listing logic, and condition rating updates.
-* *Integration Testing*:: Selected flows (e.g., creating a listing, completing a transaction) will be tested across multiple modules to ensure interactions remain consistent.
-* *Load Testing with k6*:: Performance and scalability will be evaluated using the k6 framework. Initial load tests will target ~150 concurrent users, scaling up to 500, to verify that response times remain within the defined machine requirements.
-* *Traceability Checks*:: Deliverables will be reviewed against the requirements and terminology to ensure completeness and consistency. Each requirement will be linked to validation and verification artifacts (test cases, scenarios).
-* [.added]#*Planned A/B Testing*:: As the UI/UX evolves, A/B testing will be used to validate design hypotheses. Examples include testing filter placement in the item search page, or checkout button positioning. Metrics such as time-to-action and user satisfaction will guide design decisions.#
+[.added]#*Domain and Requirements Validation*#::  
+[.added]#Validation of terminology and requirements was performed iteratively through internal documentation reviews. Each update to §§ 2.1 – 2.3 was examined to confirm that domain concepts such as *Piece*, *Listing*, *Condition Disclosure Norm*, and *Listing Closed* remained coherent and aligned with stakeholder needs (§ 1.2.2).#  
+[.added]#All requirements now employ definitive “shall/must” statements instead of uncertain language (“may,” “aims”) to ensure they are directly testable.#  
+[.added]#No external stakeholder validation sessions have yet occurred; these will take place in later milestones to confirm usability and trust cues with students and families.#
 
-==== Roles and Responsibilities
+[.added]#*Scenario Walkthroughs*#::  
+[.added]#Walkthroughs were conducted for the **publishing** process, tracing data flow from form submission to Supabase storage. No inconsistencies were found.#
+[.added]#Editing, closing, and saving workflows are planned for final-phase validation once their implementations are complete.#
 
-Validation and verification are a *shared responsibility* across the team. While individual sub-teams focus on different aspects (e.g., listings, authentication, documentation), every member contributes to writing, reviewing,  and executing tests and walkthroughs. This ensures that quality is embedded throughout the project rather than isolated in a single role.
+[.added]#*Category and Condition Refinement*::#  
+[.added]#Internal validation led to refinement of the category taxonomy and condition-rating scales,resolving ambiguities from the initial model. Terminology was standardized to **Donated Piece** and **Sold Piece** to ensure semantic consistency across documentation and database layers.#
 
-==== Outcomes
+[.added]#*Search and Map Validation*::#  
+[.added]#The Map & Search module was validated by cross-checking UI results against the actual data stored in Supabase. Each search query correctly displayed only listings matching its attributes, and filter walkthroughs confirmed accurate behavior for “Tops,” “Bottoms,” and “All.”#  
+[.added]#Usability was validated through manual inspection: map markers are accurately pinned,display complete popup information (name, address, hours), and maintain expected cluster and static behaviors. Search relevance and marker accuracy confirm correct data binding between UI and repository functions.#
 
-The combination of walkthroughs, scenario-based validation, unit and integration testing, load testing, and A/B experimentation provides a balanced approach:
+[.added]#*Authentication Validation*::#  
+[.added]#Supabase Auth integration was validated by confirming that users can **sign up, log in, and log out** successfully without confusion. The authentication flow follows Supabase and OWASP recommendations for secure web login. Manual tests were executed in Google Chrome, Firefox, and Brave on desktop devices. Error messages were displayed properly when login, signup, or logout failed. Mobile testing is scheduled for the next milestone.#
 
-* *Validation* ensures that the concepts and requirements are correctly understood and aligned with the domain.  
-* *Verification* ensures that implementation artifacts conform to measurable standards and deliver the expected performance. 
+[.added]#*UI/UX Validation*::#  
+[.added]#Informal validation was performed through manual walkthroughs and internal demos.Team members and classmates interacted with the interface to identify confusing or redundant elements and provided feedback on button labeling and visibility of listing-creation steps.#
+[.added]#Adjustments were applied iteratively, improving label clarity and layout alignment.  Accessibility was validated manually through color-contrast and tab-navigation checks.#
+[.added]#Primary text and buttons met readability standards, and form elements followed a logical tab order. Semantic HTML was verified for buttons and labels, while full ARIA labeling and automated accessibility audits are planned for the next milestone.#
 
-Together, these practices guarantee that the Hand Me Down project remains trustworthy, usable, and scalable in the context of secondhand exchanges.
+[.added]#*Planned Stakeholder Validation*::#  
+[.added]#A short validation session with student volunteers will be scheduled before the final milestone to evaluate clarity of interface terminology, filter usability, and trust indicators such as condition labels and safety guidance.#
+
+==== [.added]#Verification#
+
+[.added]#*Traceability and Acceptance Criteria*::#  
+[.added]#A preliminary *Need → Requirement → Test* mapping exists conceptually and will be formalized in `/docs/tests/traceability.adoc` for milestone 3. Each requirement includes measurable acceptance conditions:#
+
+– [.added]#Interface Requirements define button-state validation, inline error messaging, and toast feedback.# 
+– [.added]#Machine Requirements specify response-time thresholds (≤ 2 s average; ≤ 4 s peak) and uptime ≥ 99.7 %.#  
+– [.added]#Domain Requirements link directly to test cases verifying classification and visibility logic.#
+
+[.added]#*Unit Testing*::#  
+[.added]#Manual unit tests were completed for **publishListing()**, validating data verification, database insertion, and frontend feedback. All manual tests passed successfully.#
+[.added]#Additional automated unit tests for **closeListing()** and **editListing()** are scheduled for the next milestone. Authentication unit tests validated correct sign-up, login, and logout behavior, while error handling displayed expected feedback messages when failures occurred.#
+
+[.added]#*Integration Testing*::#  
+[.added]#End-to-end tests confirmed correct UI-to-database behavior: information entered in the listing form propagates through backend validation and is stored in Supabase as expected.#
+[.added]#Integration with Authentication (user ID linkage) will be completed in the final milestone.#
+[.added]#The Search module’s repository function (`PieceRepository.getPieces()` and `filterPieces()`) were validated indirectly through accurate data synchronization between Supabase queries and the rendered results.#  
+[.added]#Authentication privacy constraints were verified through **role-based access control** using Supabase **Row Level Security (RLS)** policies implemented in issue #301.#  
+[.added]#Interface behaviors—such as disabled Publish buttons until form validation passes, visible toast messages, and navigation flow correctness—were manually verified against the Interface Requirements. Visual consistency was confirmed across browsers.#
+
+[.added]#*Load and Performance Testing*::#  
+[.added]#Preliminary manual observations show average search responses in **≈ 1 second** and listing creation times under **0.5 seconds**—both within the defined machine-requirement limits.#
+[.added]#Formal automated load testing using **k6** will be added to simulate concurrent usage (150 – 500 users) and confirm scalability benchmarks.#
+[.added]#Authentication latency and API response times will also be measured in the next milestone.#
+
+[.added]#*Data Validation and Security Checks*::#  
+[.added]#Map-coordinate rendering logic filters out invalid or non-finite latitude/longitude values, preventing off-map markers. All markers are non-draggable, ensuring location data remains immutable in the UI.# 
+[.added]#RLS policies in Supabase protect user records by restricting read/write access based on authentication state and role.#  
+[.added]#UI components were visually validated across major browsers (Chrome, Edge) to ensure consistent layout, iconography, and branding defined in the global style guide.#
+
+[.added]#*Continuous Verification*::#  
+[.added]#A GitHub Actions workflow will execute linting and unit-test jobs on pull requests to maintain consistent quality and prevent regressions once automated tests are in place.#
+
+==== [.added]#Outcomes#
+
+– [.added]#Documentation, domain model, and requirements were aligned and validated through internal review cycles.#  
+
+– [.added]#Listing-publication backend passed all manual unit tests, achieving < 0.5 s creation time.#
+
+– [.added]#Search and map functionalities were validated against Supabase data, loading results in ≈ 1 s on average.#  
+
+– [.added]#Map markers were verified for nine sample donation centers.#  
+
+– [.added]#Authentication features (sign up, login, logout) were validated across major desktop browsers with secure RLS policies.#  
+
+– [.added]#UI elements and flows passed internal usability and accessibility checks; no critical issues were reported.#  
+
+– [.added]#Category and condition-rating systems were refined for accuracy and uniformity.#
+
+– [.added]#Traceability structure and automated CI testing are established for completion in the final milestone.#
+
+[.added]#Together, these validation and verification activities confirm that the system concepts are sound, the current implementation behaves as specified, and measurable criteria are in place to ensure the platform remains reliable, scalable, and aligned with stakeholder expectations as development continues.#
