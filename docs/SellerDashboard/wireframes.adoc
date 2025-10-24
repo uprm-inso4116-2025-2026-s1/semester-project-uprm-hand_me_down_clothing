@@ -1,0 +1,88 @@
+= Seller Dashboard Wireframe (Low Fidelity)
+
+== 1. Empty Listing State
+
+[NOTE]
+===
+This screen appears when the seller has no listings yet.
+===
+
+------------------------------------------------------------
+| [LOGO] Hand Me Down Clothing                              |
+|-----------------------------------------------------------|
+| [INFO BANNER] Free local pickups all week                 |
+|              Join our community swap on Saturday          |
+|-----------------------------------------------------------|
+| [NAV BAR] Browse | Map | Donate | About | Sign In/Sign Up |
+|          [CTA BUTTON] Get Started  | [ICON]  | [CART]     |
+------------------------------------------------------------
+
+[FRAME: MAIN CONTENT]
+------------------------------------------------------------
+| [MESSAGE BOX]                                             |
+|-----------------------------------------------------------|
+| TEXT: "OH! Looks like you haven’t put anything for sale/  |
+| donate!"                                                  |
+|                                                           |
+| [BUTTON] Add a Listing for sell/donate                    |
+|                                                           |
+| [IMAGE PLACEHOLDER] Example: workspace / sewing tools     |
+------------------------------------------------------------
+
+[FOOTER]
+------------------------------------------------------------
+| © 2025 Hand Me Down | Support | Terms                     |
+------------------------------------------------------------
+
+
+== 2. Seller Listings Displayed
+
+[NOTE]
+====
+This screen appears once the seller has added listings.
+====
+
+------------------------------------------------------------
+| [LOGO] Hand Me Down Clothing                              |
+|-----------------------------------------------------------|
+| [INFO BANNER] Free local pickups all week                 |
+|              Join our community swap on Saturday          |
+|-----------------------------------------------------------|
+| [NAV BAR] Browse | Map | Donate | About | Sign In/Sign Up |
+|          [CTA BUTTON] Get Started  | [ICON]  | [CART]     |
+------------------------------------------------------------
+
+[FRAME: MAIN CONTENT]
+-------------------------------------------------------------
+| [SECTION TITLE] Your Sell Listings:                        |
+| [BUTTON] Add Listing [+]   | [SEARCH BAR]    [_________]   |
+|------------------------------------------------------------|
+| [ITEM CARD] Item Name  | [$] | [Image Placeholder]         |
+| [ITEM CARD] Item Name  | [$] | [Image Placeholder]         |
+| [ITEM CARD] Item Name  | [$] | [Image Placeholder]         |
+| [ITEM CARD] Item Name  | [$] | [Image Placeholder]         |
+| [ITEM CARD] Item Name  | [$] | [Image Placeholder]         |
+| [ITEM CARD] Item Name  | [$] | [Image Placeholder]         |
+-------------------------------------------------------------
+
+[FOOTER]
+------------------------------------------------------------
+| © 2025 Hand Me Down | Support | Terms                     |
+------------------------------------------------------------
+
+
+== Legend / Annotations
+-------------------------------------------------------------------------
+| Symbol / Tag          | Description                                    |
+|------------------------|-----------------------------------------------|
+| [LOGO]                 | App or company logo area                      |
+| [INFO BANNER]          | Announcement / promotional banner             |
+| [NAV BAR]              | Navigation links for main pages               |
+| [CTA BUTTON]           | Primary call-to-action (e.g., “Get Started”)  |
+| [MESSAGE BOX]          | Central message to guide the user             |
+| [BUTTON]               | Interactive action button                     |
+| [IMAGE PLACEHOLDER]    | Visual area for photo or icon                 |
+| [SEARCH BAR]           | Search input with icon                        |
+| [ITEM CARD]            | Box representing one listing (image, name, $) |
+| [FOOTER]               | Site footer (legal + support links)           |
+-------------------------------------------------------------------------
