@@ -63,11 +63,10 @@ export default function SignupOneToOne() {
                   onBlur={() => onBlur("first")}
                   aria-invalid={!!errors.first && touched.first}
                   aria-describedby="first-help"
-                  className={`h-12 text-base ${
-                    touched.first && errors.first
+                  className={`h-12 text-base ${touched.first && errors.first
                       ? "border-red-500"
                       : "border-[#00000033]"
-                  }`}
+                    }`}
                 />
                 {touched.first && errors.first && (
                   <p id="first-help" className="mt-1 text-[13px] text-red-600">
@@ -84,11 +83,10 @@ export default function SignupOneToOne() {
                   onBlur={() => onBlur("last")}
                   aria-invalid={!!errors.last && touched.last}
                   aria-describedby="last-help"
-                  className={`h-12 text-base ${
-                    touched.last && errors.last
+                  className={`h-12 text-base ${touched.last && errors.last
                       ? "border-red-500"
                       : "border-[#00000033]"
-                  }`}
+                    }`}
                 />
                 {touched.last && errors.last && (
                   <p id="last-help" className="mt-1 text-[13px] text-red-600">
@@ -108,11 +106,10 @@ export default function SignupOneToOne() {
                 onBlur={() => onBlur("email")}
                 aria-invalid={!!errors.email && touched.email}
                 aria-describedby="email-help"
-                className={`h-12 text-base ${
-                  touched.email && errors.email
+                className={`h-12 text-base ${touched.email && errors.email
                     ? "border-red-500"
                     : "border-[#00000033]"
-                }`}
+                  }`}
               />
               {touched.email && errors.email && (
                 <p id="email-help" className="mt-1 text-[13px] text-red-600">
@@ -123,51 +120,49 @@ export default function SignupOneToOne() {
 
             {/* Password */}
             <div className="mt-4">
-            <div className="relative w-full">
+              <div className="relative w-full">
                 <Input
-                placeholder="Password"
-                type={showPassword ? "text" : "password"}
-                value={values.password}
-                onChange={(e) => setField("password", e.target.value)}
-                onBlur={() => onBlur("password")}
-                aria-invalid={!!errors.password && touched.password}
-                aria-describedby="password-help"
-                className={`pr-12 h-12 text-base w-full ${
-                    touched.password && errors.password
-                    ? "border-red-500"
-                    : "border-[#00000033]"
-                }`}
+                  placeholder="Password"
+                  type={showPassword ? "text" : "password"}
+                  value={values.password}
+                  onChange={(e) => setField("password", e.target.value)}
+                  onBlur={() => onBlur("password")}
+                  aria-invalid={!!errors.password && touched.password}
+                  aria-describedby="password-help"
+                  className={`pr-12 h-12 text-base w-full ${touched.password && errors.password
+                      ? "border-red-500"
+                      : "border-[#00000033]"
+                    }`}
                 />
 
                 {/* 👁 Eye icon wrapper */}
                 <button
-                type="button"
-                aria-label={showPassword ? "Hide password" : "Show password"}
-                onClick={() => setShowPassword((s) => !s)}
-                className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-500 hover:text-gray-700"
+                  type="button"
+                  aria-label={showPassword ? "Hide password" : "Show password"}
+                  onClick={() => setShowPassword((s) => !s)}
+                  className="absolute right-3 top-1/2 -translate-y-1/2 flex items-center justify-center text-gray-500 hover:text-gray-700"
                 >
-                {showPassword ? (
+                  {showPassword ? (
                     <EyeOff className="h-5 w-5" />
-                ) : (
+                  ) : (
                     <Eye className="h-5 w-5" />
-                )}
+                  )}
                 </button>
-            </div>
+              </div>
 
-            {touched.password && errors.password && (
+              {touched.password && errors.password && (
                 <p id="password-help" className="mt-1 text-[13px] text-red-600">
-                {errors.password}
+                  {errors.password}
                 </p>
-            )}
+              )}
             </div>
 
             {/* Primary CTA */}
             <button
               type="button"
               disabled={!isValid}
-              className={`mt-5 w-full rounded-md border border-[#00000033] bg-gray-300 text-gray-700 text-sm sm:text-base font-medium h-12 ${
-                !isValid ? "opacity-60 cursor-not-allowed" : ""
-              }`}
+              className={`mt-5 w-full rounded-md border border-[#00000033] bg-gray-300 text-gray-700 text-sm sm:text-base font-medium h-12 ${!isValid ? "opacity-60 cursor-not-allowed" : ""
+                }`}
             >
               Create personal account
             </button>
