@@ -85,13 +85,13 @@ No external stakeholder validation sessions have yet occurred; these will take p
 milestones to confirm usability and trust cues with students and families.
 
 *Scenario Walkthroughs*::  
-Walkthroughs were conducted for the *publishing* process, tracing data flow from
+Walkthroughs were conducted for the **publishing** process, tracing data flow from
 form submission to Supabase storage.  No inconsistencies were found.
 Editing, closing, and saving workflows are planned for final-phase validation once their
 implementations are complete.
 
 *Category and Condition Refinement*::  
-Internal validation led to refinement of category taxonomy and condition-rating scales,
+Internal validation led to refinement of the category taxonomy and condition-rating scales,
 resolving ambiguities from the initial model.  Terminology was standardized to
 **Donated Piece** and **Sold Piece** to ensure semantic consistency across documentation and database layers.
 
@@ -105,6 +105,14 @@ display complete popup information (name, address, hours), and maintain expected
 cluster and static behaviors.  
 Search relevance and marker accuracy jointly confirm correct data binding between UI
 and repository functions.
+
+*Authentication Validation*::  
+Supabase Auth integration was validated by confirming that users can **sign up, log in, and log out**
+successfully without confusion.  The authentication flow follows Supabase and OWASP
+recommendations for secure web login.  
+Manual tests were executed in Google Chrome, Firefox, and Brave on desktop devices.
+Error messages were displayed properly when login, signup, or logout failed.
+Mobile testing is scheduled for the next milestone.
 
 *Planned Stakeholder Validation*::  
 A short validation session with student volunteers will be scheduled before the final milestone
@@ -125,8 +133,8 @@ acceptance conditions:
 Manual unit tests were completed for **publishListing()**, validating data verification,
 database insertion, and frontend feedback.  All manual tests passed successfully.
 Additional automated unit tests for **closeListing()** and **editListing()** are scheduled for
-the next milestone.  Authentication functions will be verified using Jest once the
-Auth module is merged.
+the next milestone.  Authentication unit tests validated correct sign-up, login, and logout
+behavior, while error handling displayed expected feedback messages when failures occurred.
 
 *Integration Testing*::  
 End-to-end tests confirmed correct UI-to-database behavior: information entered in the
@@ -135,20 +143,23 @@ Integration with Authentication (user ID linkage) will be completed in the final
 The Search module’s repository functions
 (`PieceRepository.getPieces()` and `filterPieces()`)
 were validated indirectly through accurate data synchronization between Supabase
-queries and the rendered results.
+queries and the rendered results.  
+Authentication privacy constraints were verified through **role-based access control**
+using Supabase **Row Level Security (RLS) Policies** implemented in issue #301.
 
 *Load and Performance Testing*::  
 Preliminary manual observations show average search responses in **≈ 1 second**
 and listing creation times under **0.5 seconds**—both within the defined machine-requirement limits.
 Formal automated load testing using **k6** will be added to simulate concurrent usage
-(150–500 users) and confirm scalability benchmarks.
+(150 – 500 users) and confirm scalability benchmarks.
+Authentication latency and API response times will also be measured in the next milestone.
 
 *Data Validation and Security Checks*::  
-Map-coordinate rendering logic now filters out invalid or non-finite latitude/longitude
+Map-coordinate rendering logic filters out invalid or non-finite latitude/longitude
 values, preventing off-map markers.  
-All markers are non-draggable, ensuring that location data remains immutable in the UI.
-Auth and privacy testing will include Supabase RLS and access-policy verification in the
-next milestone to confirm that user data is properly scoped and secured.
+All markers are non-draggable, ensuring that location data remains immutable in the UI.  
+RLS policies in Supabase protect user records by restricting read/write access
+based on authentication state and role.
 
 *Continuous Verification*::  
 A GitHub Actions workflow will execute linting and unit-test jobs on pull requests to
@@ -160,7 +171,8 @@ maintain consistent quality and prevent regressions once automated tests are in 
 – Listing-publication backend passed all manual unit tests, achieving < 0.5 s creation time.  
 – Search and map functionalities were validated against Supabase data, loading results in ≈ 1 s on average.  
 – Map markers were verified for nine sample donation centers.  
-– Category and condition rating systems were refined for accuracy and uniformity.  
+– Authentication features (sign up, login, logout) were validated across major desktop browsers with secure RLS policies.  
+– Category and condition-rating systems were refined for accuracy and uniformity.  
 – Traceability structure and automated CI testing are established for completion in the final milestone.
 
 Together, these validation and verification activities confirm that the system
