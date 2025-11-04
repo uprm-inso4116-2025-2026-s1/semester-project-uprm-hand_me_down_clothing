@@ -1,3 +1,5 @@
+// Log in (sign in) an existing user
+import { setAuthPersistence } from './storage'
 import { supabase } from './supabaseClient'
 
 // Sign up (register) a new user
@@ -19,13 +21,41 @@ export async function signUp (
       }
     }
   })
+  if (error) return { data: null, error }
+  try {
+    const userId = data?.user?.id
+    if (userId) {
+      const { error: upsertErr } = await supabase.from('profiles').upsert(
+        {
+          id: userId,
+          email,
+          display_name: fullname,
+          firstname,
+          lastname,
+          role: 'user' // explicit default role
+        },
+        { onConflict: 'id' }
+      )
+      if (upsertErr) {
+        // non-fatal: log for debugging
+        console.warn('Profile upsert after signup failed:', upsertErr)
+      }
+    } else {
+      // No user ID returned now (common when email confirmation is required).
+      // Option: client can upsert profile later (on first successful sign-in).
+    }
+  } catch (e) {
+    console.warn('Unexpected error upserting profile after signup:', e)
+  }
+
   return { data, error }
 }
 
-// Log in (sign in) an existing user
-import { setAuthPersistence } from './storage'
-
-export async function signIn (email: string, password: string, remember = false) {
+export async function signIn (
+  email: string,
+  password: string,
+  remember = false
+) {
   // store persistence preference so the storage adapter picks it up
   try {
     setAuthPersistence(remember)
@@ -46,9 +76,8 @@ export async function signOut () {
   return { error }
 }
 
-
 // Request password reset email
-export async function requestPasswordReset(email: string) {
+export async function requestPasswordReset (email: string) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email)
   return { data, error }
 }
@@ -57,8 +86,10 @@ export async function requestPasswordReset(email: string) {
 
 // Password update is handled via Supabase's magic link flow.
 // After user clicks the reset link in their email, direct them to a page to set a new password using supabase.auth.updateUser({ password: newPassword })
-export async function updatePassword(newPassword: string) {
-  const { data, error } = await supabase.auth.updateUser({ password: newPassword })
+export async function updatePassword (newPassword: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword
+  })
   return { data, error }
 }
 
@@ -70,7 +101,34 @@ export async function updatePassword(newPassword: string) {
 // Handle email verification (Supabase uses magic links)
 // Typically, this is handled automatically when user clicks the link in their email.
 // You can check verification status via supabase.auth.getUser()
-export async function getUser() {
+export async function getUser () {
   const { data, error } = await supabase.auth.getUser()
+  return { data, error }
+}
+
+// --- Phone-based 2FA helpers ---
+// Send OTP to phone for sign-in or verification
+export async function signInWithPhone (phone: string) {
+  const { data, error } = await supabase.auth.signInWithOtp({ phone })
+  return { data, error }
+}
+
+// Verify phone OTP (type 'sms') and, on success, mark phone as verified in user metadata
+export async function verifyPhoneOtp (phone: string, token: string) {
+  const { data, error } = await supabase.auth.verifyOtp({
+    phone,
+    token,
+    type: 'sms'
+  })
+  if (error) return { data, error }
+
+  // On successful verification, update user's metadata to mark phone verification and enable 2FA
+  try {
+    // store phone and 2fa flag in user metadata
+    await supabase.auth.updateUser({ data: { phone, phone_2fa: 'enabled' } })
+  } catch (e) {
+    // ignore metadata update failure but return success for verification
+  }
+
   return { data, error }
 }

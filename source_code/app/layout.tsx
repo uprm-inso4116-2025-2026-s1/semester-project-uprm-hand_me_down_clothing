@@ -4,6 +4,8 @@ import "./globals.css";
 import AnnouncementBar from "@/src/components/announcementBar";
 import TopNav from "@/src/components/nav_bar";
 import Footer from "@/src/components/Footer";
+import SupabaseProvider from "./providers/SupabaseProvider";
+
 
 const lato = Lato({
   weight: ["400", "700"], // normal + bold
@@ -35,7 +37,7 @@ export default function RootLayout({
 
         {/* Page content + footer */}
         <main id="main" className="min-h-screen flex flex-col">
-          <div className="flex-grow">{children}</div>
+          <SupabaseProvider>{children}</SupabaseProvider>
           <Footer />
         </main>
       </body>

@@ -45,12 +45,13 @@ export default function TopNav() {
   const links = [
     { href: "/listings/sell_piece", label: "Browse" },
     { href: "/map", label: "Map" },
-    { href: "/listings/donate_piece", label: "Donate" },
+    { href: "/listings/donate", label: "Donate" },
     { href: "/about", label: "About" },
     { href: "/Login", label: "Sign in/Sign Up" },
+    { href: "/profile", label: "Profile" },
   ];
 
-  
+
   const favActive = mounted && pathname.toLowerCase().startsWith("/favorite");
 
   return (
@@ -65,7 +66,7 @@ export default function TopNav() {
       <div className="mx-auto max-w-7xl px-3 md:px-4">
         {/* Top row: logo | links | actions */}
         <div className="flex items-center justify-between gap-2 md:gap-4 py-2 md:py-3">
-          
+
           <Link href="/" className="shrink-0 inline-flex items-center gap-2 overflow-visible">
             <Image
               src="/images/logo.png"
@@ -135,7 +136,7 @@ export default function TopNav() {
 
             {/* Heart -> Favorite (turns pink on press, stays pink on /favorite) */}
             <Link
-              href="/Favorites" 
+              href="/Favorites"
               aria-label="Favorite"
               title="Favorite"
               aria-current={favActive ? "page" : undefined}
@@ -150,11 +151,11 @@ export default function TopNav() {
                 strokeWidth={2.25}
                 className={cx(
                   "h-8 w-10 md:h-8 md:w-8 transition-colors",
-                  
+
                   !favActive && "text-black",
-                  
+
                   favActive && "text-[#cea2a2] fill-current",
-                  
+
                   "group-active:text-[#cea2a2] group-active:fill-current"
                 )}
               />
