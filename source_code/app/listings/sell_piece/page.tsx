@@ -84,7 +84,7 @@ export default function SellPiece() {
     const repository = new PieceRepository();
 
     const piece = factory.makePiece({
-      id: "0",
+      id: 0,
       name: name,
       category: category,
       color: color,
@@ -99,10 +99,10 @@ export default function SellPiece() {
       // user_id: user.id, 
     });
 
-    const error = await repository.createPiece(piece);
+    const result = await repository.createPiece(piece);
 
-    if (error) {
-      alert("Failed to publish: " + error.message);
+    if (result instanceof Error) {
+      alert("Failed to publish: " + (result as Error).message);
     } else {
       alert("Piece published successfully!");
       router.push("/");

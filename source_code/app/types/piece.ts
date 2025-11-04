@@ -3,7 +3,7 @@ import { Category, Gender, Size, Condition } from "./classifications";
 export abstract class Piece {
 
     constructor(
-        public id: string,
+        public id: number,
         public name: string,
         public category: Category,
         public color: string,

@@ -3,7 +3,7 @@ import { Category, Gender, Size, Condition } from "./classifications";
 
 export class DonatedPiece extends Piece {
     constructor(
-        id: string,
+        id: number,
         name: string,
         category: Category,
         color: string,
