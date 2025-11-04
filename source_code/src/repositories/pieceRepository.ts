@@ -74,6 +74,23 @@ export class PieceRepository {
     }
 
     /**
+     * Retrieves all pieces corresponding to a user from the Supabase 'pieces' table.
+     * @param {String} user_id - The ID of the user whose pieces we want.
+     * @returns {Promise<Array<Piece>>} - An array of Piece objects.
+     */
+    public async getPiecesByUser(user_id : String): Promise<Array<Piece>> {
+        try {
+            const pieces_data = (await this.supabase.from('pieces').select("*").eq('user_id', user_id)).data;
+            if (!pieces_data) return [];
+            const pieces = pieces_data.map((item) => this.factory.makePiece(item));
+            return pieces;
+        } catch {
+            return [];
+        }
+    }
+    
+
+    /**
      * Inserts a new piece record into the database.
      * Returns the newly created Piece if successful, otherwise the error that impeded the creation.
      * @param {Piece} piece - The piece object to create.
