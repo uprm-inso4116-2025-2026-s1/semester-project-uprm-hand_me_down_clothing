@@ -1,7 +1,8 @@
 'use client';
 import { useState } from 'react';
 import * as filterListings from '../utils/filters/listingsFilter'
-import { Item } from '../utils/filters/listingsFilter'
+import { Category, Condition, Gender, Size } from "@/app/types/classifications";
+import { Piece } from '../types/piece';
 
 const featured_categories = [
   {id: 0, name: "All", filter: "all"},
@@ -17,9 +18,10 @@ const featured_categories = [
 
 export default function FilterableFeaturedItems({initialItems}: any) {
     const [filtered, setFilter] = useState(initialItems);
-
+ 
     // handles the click and which filter to apply to the items
     const handleFilter = (filter: string) => {
+
         let result;
 
         switch (filter) {
@@ -31,7 +33,7 @@ export default function FilterableFeaturedItems({initialItems}: any) {
             case 'dresses':
             case 'shoes':
             case 'outerwear':
-            case 'accesories':
+            case 'accessories':
                 result = filterListings.filterByCategory(initialItems, filter);
                 break;
             case 'unisex':
@@ -51,7 +53,7 @@ export default function FilterableFeaturedItems({initialItems}: any) {
     if (filtered.length > 0) {
       content = (
         <div className="grid grid-cols-4 gap-1 px-15 py-4">
-          {filtered.map((item: Item) => (
+          {filtered.map((item: Piece) => (
             <button
               key={item.id}
               id="Featured_Item_btn"
@@ -59,19 +61,19 @@ export default function FilterableFeaturedItems({initialItems}: any) {
             >
               <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
                 <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
-                  {item.condition}
+                  {Condition[item.condition]}
                 </div>
                 <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
-                  {item.price}$
+                  {item.getFormattedPrice()}$
                 </div>
                 <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">
                   ♥
                 </div>
               </div>
               <p className="text-lg font-bold italic pt-2">{item.name}</p>
-              <p className="text-md text-[#666666]">Size: {item.size}</p>
-              <p className="text-md text-[#666666]">Condition: {item.condition}</p>
-              <p className="text-md text-[#666666]">Category: {item.category}</p>
+              <p className="text-md text-[#666666]">Size: {Size[item.size]}</p>
+              <p className="text-md text-[#666666]">Condition: {Condition[item.condition]}</p>
+              <p className="text-md text-[#666666]">Category: {Category[item.category]}</p>
             </button>
           ))}
         </div>
