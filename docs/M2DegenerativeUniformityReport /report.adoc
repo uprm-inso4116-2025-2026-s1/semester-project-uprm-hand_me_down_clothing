@@ -1,0 +1,56 @@
+= Detect and Resolve Degenerating Uniformity in Domain Model
+:project: Hand Me Down Clothing
+:author: Ojani Figueroa Cruz
+:revdate: 2025-11-09
+
+== Synopsys
+This document provides an analysis of degenerating uniformity for the final M2 documentation.
+Its purpose is to use this report to resolve these issues for the M3 documentation.
+
+== Objective
+Prevent model fragmentation and semantic confusion by identifying places where identical concepts appear under multiple names (duplicate concepts) or identical terms refer to different ideas (false cognates). The goal is to restore a unified, consistent model and improve team communication and code clarity. 
+
+== Methodology
+This analysis reviews the Hand Me Down Clothing documentation (Sections 2.1–2.3) to identify conceptual splinters, duplicate concepts, and false cognates across domain, requirements, and implementation layers. Each finding includes:
+
+* **Type:** Splinter / Duplicate / False Cognate
+* **Description:** Explanation of the inconsistency
+* **Resolution:** Merge, refine, or explicitly separate
+
+== Conceptual Splinters
+|===
+| Concept(s) | Type | Description | Resolution Strategy
+
+| *Piece* vs *Listing* | Splinter | The term *Piece* represents a physical garment, while *Listing* is its online representation. Both are used interchangeably in later sections (aggregate root defined as Piece fulfilling “listing” role). | Explicit separation: keep *Piece* (domain entity) and *Listing* (system projection). Ensure the code and docs always distinguish physical vs. digital representation.
+
+| *Seller* vs *User (Seller role)* | Splinter | Some sections use *Seller* as a core entity, while implementation introduces a generic *User* model with seller/buyer roles. | Merge logically: unify into a single *User* entity with *role = {buyer, seller}* to preserve one identity model.
+
+| *Saved Listing* vs *Bookmark* | Splinter | Both terms describe a user’s act of marking a listing for later reference. *Saved Listing* appears as a persistent object in storage, while *Bookmark* is sometimes treated as an action (verb) or UI gesture. | Merge conceptually: unify them under *Saved Listing* as the domain object. Treat *Bookmark* as the user-facing action that creates or removes a Saved Listing.
+
+| *Meeting* vs *Offline Exchange* | Splinter | Both describe the same offline event where the handoff occurs. | Merge terminology: adopt *Offline Exchange* consistently, since it aligns better with behavioral naming and user stories.
+
+| *Piece* vs *Item* | Duplicate | The domain uses *Piece*, but interface and requirements often say *Item*. | Merge: standardize on either *Piece* or *Item* as the canonical term .
+
+|===
+
+== Duplicate Concepts
+|===
+| Concept | Locations | Redundancy Issue | Resolution
+
+| *Listing Closed* vs *Listing Deactivated* | Domain & Interface Requirements | Two end states with overlapping meaning. | Merge under single field *status = Closed* with reason codes (e.g., Sold, Withdrawn, Donated).
+
+| *ReviewSubmitted* vs *ReviewAdded* | Function Signatures & Events | Same event represented twice with slightly different names. | Standardize on *ReviewSubmitted* (verb consistency across functions).
+
+|===
+
+== Refined Domain Model (Textual UML Overview)
+
+== Resolution Summary
+
+* **Merged Concepts:** Buyer/Seller → User; Bookmark ↔ Saved Listing; ReviewSubmitted ↔ ReviewAdded.
+
+== Next Steps
+
+1. Update AsciiDoc and UML class diagrams to reflect unified terminology.
+2. Align Supabase schema fields with canonical names.
+3. Update frontend copy and UI labels to remove ambiguous terms.
