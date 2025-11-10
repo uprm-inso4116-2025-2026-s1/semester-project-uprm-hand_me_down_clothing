@@ -3,6 +3,7 @@
 A persona is a fictional yet plausible representation of a user within the platform’s ecosystem. The following personas illustrate different motivations, behaviors, and constraints to help align development goals with user needs.  
 They represent typical users participating in the *listing and discovery* of secondhand clothing, where all exchanges and payments occur directly between parties, outside the system.
 
+
 *Adriana Gómez*
 
 - *Age*: 20 years old  
@@ -10,12 +11,14 @@ They represent typical users participating in the *listing and discovery* of sec
 - *Build / Appearance*: Dark, straight hair; average height; dresses in vintage clothes and colorful accessories  
 - *Personality*: Creative, expressive, community-driven  
 
-Adriana loves expressing herself through unique outfits. She often mixes styles and prefers pre-owned or vintage pieces that stand out from mainstream fashion. However, she finds it difficult to locate affordable, distinctive items near Mayagüez since many local thrift stores have little to no online presence. Between classes and her part-time job, she has limited time to explore in person.
+Adriana loves expressing herself through unique outfits. She often mixes styles and prefers pre-owned or vintage pieces that stand out from mainstream fashion. However, she finds it difficult to locate affordable, distinctive items near Mayagüez since many local thrift stores have little to no online presence. Between classes and her part-time job, she has limited time to explore in person, so she depends on quick, mobile-friendly browsing and local visibility through verified sellers. 
 
 - *Pain Points*: Limited access to local secondhand clothing options; lack of time to search physically; difficulty finding one-of-a-kind pieces online.  
-- *Needs*: A trusted way to browse nearby listings from local sellers and individuals offering unique or free clothing.  
-- *Platform Interaction*: Scrolls listings during short study breaks, saves her favorite posts, and messages sellers when something catches her eye.  
+- *Needs*: A trusted and time-efficient way to browse nearby listings from verified local sellers and individuals offering unique or free clothing.  
+- *Platform Interaction*: Scrolls listings during short study breaks, saves her favorite posts, and messages sellers when something catches her eye. She occasionally leaves reviews to help other buyers identify reliable sellers.  
+- *Domain Role*: Buyer; contributes to trust and discovery behaviors through reviews and recurring interactions. 
 
+---
 
 *Manuel Torres*
 
@@ -24,12 +27,14 @@ Adriana loves expressing herself through unique outfits. She often mixes styles 
 - *Build / Appearance*: Brown, curly hair; average height; prefers casual, comfortable wear such as polos and witty t-shirts.  
 - *Personality*: Patient, organized, practical, approachable  
 
-Manuel is preparing to move apartments and wants to downsize. He has a closet full of gently used clothing that could benefit others, but he doesn’t want to waste time organizing garage sales or posting on multiple apps. He wants an easy, local way to share listings that reach people nearby without having to handle payments through the platform.
+Manuel is preparing to move apartments and wants to downsize. He has a closet full of gently used clothing that could benefit others, but he doesn’t want to waste time organizing garage sales or posting on multiple apps. He wants a simple, local way to share listings that reach nearby users without managing payments inside the platform.  
 
 - *Pain Points*: No streamlined way to share or list his pre-owned items locally.  
-- *Needs*: A simple listing tool that allows him to post clothing quickly and connect with potential buyers or donors without complicated transactions.  
+- *Needs*: A minimal-effort listing tool that lets him post clothing quickly, set symbolic prices or mark items as free, and reach nearby buyers without transaction complexity.  
 - *Platform Interaction*: Creates listings from his work computer, uploads a few photos, sets prices or marks items as free, and arranges pickups directly through chat.  
+- *Domain Role*: Seller; represents the supply side of the exchange flow and sustains informal resale and donation practices.  
 
+---
 
 *Daniela López*
 
@@ -38,8 +43,37 @@ Manuel is preparing to move apartments and wants to downsize. He has a closet fu
 - *Build / Appearance*: Tall, brunette with wavy hair; prefers relaxed styles such as denim, scrubs, and athleisure.  
 - *Personality*: Outspoken, empathetic, eco-conscious  
 
-Daniela believes in sustainability and fights against the culture of fast fashion. She values durability and ethics in clothing choices and enjoys supporting local reuse initiatives. When her favorite thrift store closed, she began looking for new ways to find secondhand clothes that align with her values, but she prefers interacting directly with other people instead of large e-commerce sites.
+Daniela believes in sustainability and fights against the culture of fast fashion. She values durability and ethics in clothing choices and enjoys supporting local reuse initiatives. After her favorite thrift store closed, she began looking for ways to connect directly with local sellers while upholding her environmental values.  
 
 - *Pain Points*: Frustrated by the dominance of fast fashion and the scarcity of convenient local alternatives.  
-- *Needs*: A platform that connects her directly with local sellers offering high-quality secondhand clothing, helping her make eco-conscious choices.  
+- *Needs*: A platform that connects her directly with nearby sellers offering high-quality secondhand clothing, with filters that emphasize condition and material to support sustainable choices.  
 - *Platform Interaction*: Uses search filters to narrow listings by condition and material, contacts sellers directly, and shares sustainable fashion tips in her messages.  
+- *Domain Role*: Advocate; promotes eco-conscious habits and influences other users to favor long-term reuse.  
+
+---
+
+*Dr. Rivera – Institutional Stakeholder (UPRM Sustainability Coordinator)*  
+
+- *Age*: 45 years old  
+- *Occupation*: Faculty member leading campus sustainability and circular-economy programs  
+- *Personality*: Analytical, civic-minded, data-driven  
+
+Dr. Rivera coordinates campus clothing drives and encourages sustainable habits among students. She views peer-to-peer clothing exchange platforms as educational tools that strengthen community engagement and environmental awareness.  
+
+- *Needs*: Access to aggregated circulation data (donations/exchanges), ability to share event or donation information, and assurance of alignment with campus goals.  
+- *Platform Interaction*: Reviews statistics, shares sustainability tips, and promotes student reuse initiatives within the platform.  
+- *Domain Role*: Institutional stakeholder; connects reuse activities to formal sustainability objectives.  
+
+---
+
+*Carlos Jiménez – Volunteer Reviewer (Trust Mediator)* 
+
+- *Age*: 29 years old  
+- *Occupation*: Local nonprofit volunteer assisting clothing drives  
+- *Personality*: Helpful, detail-oriented, socially engaged 
+
+Carlos helps ensure fair and transparent use of the platform. He occasionally reviews listings for accuracy, flags inappropriate content, and supports dispute resolution between users.
+
+- *Needs*: Visibility into reports or flagged listings; tools to validate reviews or correct misinformation.
+- *Platform Interaction*: Observes user feedback patterns and promotes proper communication norms in listings. 
+- *Domain Role*: Peripheral stakeholder; enhances reliability and user trust in exchanges. 
