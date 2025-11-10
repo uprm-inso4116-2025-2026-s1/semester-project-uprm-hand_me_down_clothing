@@ -1,0 +1,137 @@
+// --
+// Developer Refactorings: Intention-Revealing Interface
+// --
+
+= Intention-Revealing Interface (Lecture Topic — Issue #326)
+
+NOTE: This document is prepared as a lecture topic and is tracked under Issue #326. It is intended for teaching/reflection and contains before→after examples and guidance. It is not a production task by itself.
+
+== Objective
+Refactor classes so method names reveal their *intention* (business meaning), not low-level mechanics. This short guide demonstrates a real before→after example, explains why readability improves, and gives a small testing plan.
+
+== Why this matters
+Method names like `process()`, `handle()`, or `doTask()` force readers to open the method to learn what it actually does. Intention-revealing names (for example `calculateOrderTotal()` or `verifyDonationAmount()`) document behaviour through code and reduce the need for comments.
+
+== Before → After (example)
+
+=== Before: vague method names
+[source,typescript]
+----
+// docs/developer-refactorings/examples/before.ts
+export type Item = { id: string, price: number, quantity: number }
+
+export class OrderWorker {
+  items: Item[]
+  discount: number
+
+  constructor(items: Item[], discount = 0) {
+    this.items = items
+    this.discount = discount
+  }
+
+  // vague: process what?
+  process() {
+    let total = 0
+    for (const it of this.items) {
+      total += it.price * it.quantity
+    }
+    total = total - (total * this.discount)
+    return total
+  }
+
+  // vague: handle what?
+  handle() {
+    return this.items.filter(i => i.quantity > 0)
+  }
+
+  // vague: doTask
+  doTask() {
+    // pretend this notifies an external system
+    console.log('notifying about order')
+  }
+}
+----
+
+=== After: intention-revealing names
+[source,typescript]
+----
+// docs/developer-refactorings/examples/after.ts
+export type Item = { id: string, price: number, quantity: number }
+
+export class OrderCalculator {
+  items: Item[]
+  discountRate: number
+
+  constructor(items: Item[], discountRate = 0) {
+    this.items = items
+    this.discountRate = discountRate
+  }
+
+  // explicit: calculates the order total including discount
+  calculateOrderTotal(): number {
+    const subtotal = this.calculateSubtotal()
+    return this.applyDiscount(subtotal)
+  }
+
+  // explicit small helper with a single responsibility
+  calculateSubtotal(): number {
+    return this.items.reduce((s, it) => s + it.price * it.quantity, 0)
+  }
+
+  // explicit helper for discount application
+  applyDiscount(amount: number): number {
+    return amount - amount * this.discountRate
+  }
+
+  // explicit: return only valid items
+  filterValidItems() {
+    return this.items.filter(i => i.quantity > 0)
+  }
+
+  // explicit: side-effect named clearly
+  notifyOrderExternalSystem() {
+    console.log('notifying about order')
+  }
+}
+----
+
+== How readability improved
+* Call sites become self-documenting. Instead of `const x = worker.process()` a reader sees `const total = calc.calculateOrderTotal()` and immediately understands intent.
+* Smaller, well-named helper methods (e.g., `calculateSubtotal()`, `applyDiscount()`) clarify responsibilities and make unit testing easier.
+* Reduces need for external comments; code expresses behaviour.
+
+== Testing Plan
+1. Unit tests for both versions (if kept) to prove functional equivalence. Example test (pseudo):
+
+[source,typescript]
+----
+// pseudocode
+const items = [{id:'a', price:10, quantity:2}]
+const worker = new OrderWorker(items, 0.1)
+const calculator = new OrderCalculator(items, 0.1)
+assert(worker.process() === calculator.calculateOrderTotal())
+----
+
+2. Add small tests for edge cases: empty items, zero prices, 100% discount, negative quantities.
+3. Prefer adding tests for the refactored class only and remove or deprecate the old one after a migration/merge.
+
+== Migration strategy (safe, branch-based)
+* Create a feature branch (example: `feature/refactor-intention`).
+* Implement the refactor in-place or add a new refactored class next to the old one.
+* Add unit tests for the refactored class.
+* Update a single consumer at a time to use the new API.
+* Keep old implementation until all consumers are migrated; remove in a follow-up PR.
+
+== Notes & Recommendations
+* Favor small helper methods with descriptive names.
+* Avoid renaming public API methods without coordination — provide adapters when needed.
+* When renaming across many files, rely on automated IDE refactors and strong test coverage.
+
+== Files added in this guide
+* `docs/developer-refactorings/examples/before.ts` — original example
+* `docs/developer-refactorings/examples/after.ts` — refactored example
+
+
+Please review this example; if you'd like I can:
+* Implement a demonstration refactor on a real (low-risk) file in a feature branch and add tests, or
+* Expand this documentation with more before→after examples for Tasks #42 and #45.
