@@ -1,5 +1,6 @@
-'use client'
+ 'use client'
 import Link from 'next/link';
+import ChatWidget from '../chatbot/ui';
 import DonateWireframe from '../listings/donate_piece/page';
 import { supabase } from '../auth/supabaseClient';
 import FilterableFeaturedItems from './filterableListing';
@@ -188,6 +189,7 @@ export default function Homepage() {
           </div>
         ))}
       </div>
+      <ChatWidget />
     </div>
   );
 }
