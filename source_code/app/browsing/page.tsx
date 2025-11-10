@@ -4,6 +4,7 @@ import React, { useEffect, useState } from "react";
 import {fetchPieces, SearchPieces as handleSearch, mountPieceElements} from "./search";
 import ResultsPanel from "./search";
 import { useSearchParams } from "next/navigation";
+import DistanceFilterButton from "./distance_filter";
 import { Piece } from "../types/piece";
 import * as filterListings from '../utils/filters/listingsFilter'
 
@@ -97,6 +98,7 @@ export default function Browsing() {
                     className="w-150 h-13 px-4 py-2 mt-6 mb-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
                 </input>
                 </form>
+                <DistanceFilterButton />
             </div>
 
             <h2 className="text-3xl font-bold italic pl-15 ">Filter your search...</h2>
