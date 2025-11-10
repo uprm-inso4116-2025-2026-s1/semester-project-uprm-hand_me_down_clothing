@@ -1,139 +1,45 @@
 === *2.1.5 Events, Actions, and Behaviors*
-:location: Mayagüez, Puerto Rico (UPRM touchpoint)
-:period: 2025
 
-This section unifies the key entities, actions, and events that define how clothing exchanges operate in the real world around the University of Puerto Rico at Mayagüez.  
-Each domain concept is described together with its typical actions and the observable events that occur when those actions succeed.  
-All descriptions remain independent of any specific system-to-be and reflect naturally occurring interactions among participants.
+Each domain concept below is explicitly annotated as *Entity*, *Action*, *Event*, or *Behavior*.
+Entities provide structure, Actions trigger Events, and Behaviors describe recurring patterns observed in exchanges.
+This annotation clarifies the “diverse notions” called out in feedback and keeps domain vs. system concerns separate.
 
 ==== Listing and Discovery
 *Entity*::  
-A **Listing** represents an item made visible by a seller for reuse or resale. It includes attributes such as title, description, category, condition, and images.
+A **Listing** — *Entity* — represents an item made visible by a seller for reuse or resale. It includes attributes such as title, description, category, condition, and images.
 
 *Associated Actions*::  
-- Publishing a listing with sufficient information (title, category, photos).  
-- Editing details (price marker, condition, description).  
-- Deactivating or closing a listing once the item is no longer available.
+- *Action* — Publishing a listing with sufficient information (title, category, photos).  
+- *Action* — Editing details (price marker, condition, description).  
+- *Action* — Deactivating or closing a listing once the item is no longer available.
 
 *Events*::  
-- **Listing Published** — occurs when a seller makes an item visible to the public.  
-- **Listing Updated** — occurs when a listing’s information has just been modified.  
-- **Listing Closed** — occurs when the seller marks the listing as reserved or removed.
+- **Listing Published** — *Event* — occurs when a seller makes an item visible to the public.  
+- **Listing Updated** — *Event* — occurs when a listing’s information has just been modified.  
+- **Listing Closed** — *Event* — occurs when the seller marks the listing as reserved or removed.
 
 *Behavior*::  
-The continuous cycle in which sellers create, update, and close listings to maintain an accurate catalog of available items.
-
-==== Searching and Filtering
-*Entity*::  
-A **Search Session** represents a buyer’s activity of exploring available listings through keywords, filters, and sorting criteria.
-
-*Associated Actions*::  
-- Browsing listings by category or keyword.  
-- Applying filters (e.g., size, price, condition).  
-- Viewing item details.
-
-*Events*::  
-- **Search Performed** — occurs when a buyer initiates a search or filter operation.  
-- **Result Viewed** — occurs when a buyer opens a specific listing.
-
-*Behavior*::  
-A pattern of exploration where buyers continuously refine search parameters to identify relevant clothing items.
-
-==== Expression of Interest
-*Entity*::  
-An **Interest Record** is a social signal created when a buyer contacts a seller or bookmarks a listing.
-
-*Associated Actions*::  
-- Sending a message to inquire about availability.  
-- Saving a listing for later.  
-- Cancelling or withdrawing interest.
-
-*Events*::  
-- **Interest Expressed** — occurs when a buyer first contacts a seller.  
-- **Interest Withdrawn** — occurs when the buyer decides to remove the listing from their saved list.
-
-*Behavior*::  
-A dynamic exchange between buyers and sellers that initiates communication and potentially leads to offline meetups.
-
-==== Condition and Trust
-*Entity*::  
-**Condition Rating** and **Review** represent the evaluative aspects of the domain that foster reliability and transparency.
-
-*Associated Actions*::  
-- Uploading clear photos showing item condition.  
-- Providing a rating (1–10) or descriptive review after offline exchanges.  
-- Reporting misleading or inaccurate listings.
-
-*Events*::  
-- **Condition Rated** — occurs when a piece receives or updates its quality score.  
-- **Review Added** — occurs when a buyer posts feedback about a previous exchange.
-
-*Behavior*::  
-A trust-building process where consistent disclosure and transparent feedback strengthen the credibility of community exchanges.
-
-==== Offline Exchange and Closure
-*Entity*::  
-A **Meeting** represents an offline handoff between buyer and seller that concludes the exchange cycle.
-
-*Associated Actions*::  
-- Agreeing on a time and location (often a campus bench or public space).  
-- Inspecting the garment and finalizing the exchange offline.  
-- Marking the listing as closed afterward.
-
-*Events*::  
-- **Meetup Conducted** — occurs when both parties arrive and inspect the item.  
-- **Listing Closed** — occurs immediately after a successful offline exchange or withdrawal.
-
-*Behavior*::  
-The culmination of the exchange process, reinforcing trust and completion without platform mediation.
-
-==== Environmental Flow
-*Entity*::  
-A **Piece** of clothing progresses through various life stages: active use, dormant storage, listing, exchange, and eventual disposal.
-
-*Associated Actions*::  
-- Setting aside unused items (creating dormant stock).  
-- Deciding whether to relist, donate, or discard.  
-- Recycling or repurposing worn garments.
-
-*Events*::  
-- **Item Dormant** — occurs when a user sets aside an unused item.  
-- **Item Repurposed or Disposed** — occurs when a garment leaves active circulation.
-
-*Behavior*::  
-A long-term lifecycle pattern connecting reuse and sustainability efforts within the community.
-
-In this integrated view, entities, actions, and events are presented as parts of a continuous system of behavior.  
-Each action triggers one or more observable events, and each entity serves as the anchor for those actions.  
-This unified structure better reflects the natural interdependence of domain phenomena without artificial separation.
-
-==== Domain Aggregate Definition 
-
-The unified model of entities, actions, and events described above naturally forms bounded clusters of related concepts. 
-In the context of the clothing exchange domain, the **Piece** (representing a listing) acts as the **aggregate root**, 
-governing all changes to its internal state and related sub-entities such as condition ratings, reviews, and reservations.
-
-===== Objective
-Document the domain aggregate aligned with a discovery-only platform. For this milestone, **Piece** is treated as the **aggregate root** that also fulfills the “listing” role. 
-All mutations to elements inside the boundary occur **only** through the root.
+*Listing Lifecycle* — *Behavior* — the continuous cycle in which sellers create, update, and close listings to maintain an accurate catalog of available items.
 
 ===== Aggregate Definition
-[cols="^,^,3", options="header"]
+[cols="^1,^1,3", options="header"]
 |===
 | Role | Kind | Notes
+
 | Piece | Aggregate Root | Discoverable item (listing) and single entry point for changes.
 | ConditionRating | Value Object | Integer in `[1..10]`; updated via root method only.
-| Review | Child Entity | `{id, reviewerId, rating (1–5), comment, createdAt}`; belongs to exactly one Piece.
-| Reservation | Value Object | `{buyerId, reservedAt}`; optional hold while parties coordinate offline.
+| Review | Child Entity | `{id, reviewer, rating (1–5), comment, createdAt}`; belongs to exactly one Piece. // reviewer (concept), not just an ID
+| Reservation | Value Object | *Conceptually associates a Buyer with a Piece*; storage may use an internal identifier (e.g., buyerId) but the domain concept is *Buyer*.
 | Images | Collection of Value Objects | ≥ 1 image required when publishing (URI + metadata).
 | Status | Value Object | One of: `Active | Reserved | Closed`.
-| SellerId | Reference (Primitive/VO) | Owner identity outside the aggregate boundary.
+| Seller | Reference (Primitive/VO) | Owner identity outside the aggregate boundary (storage key may be `sellerId`).
 | Locale | Reference (Primitive/VO) | Optional area label to aid discovery (e.g., campus/borough).
 |===
 
 [NOTE]
 ====
-**Boundary Rule:** Client code obtains a **Piece** (aggregate root), invokes root-level operations (e.g., `reserveFor`, `close`, `addReview`), and persists the **Piece** via a repository that works at the **aggregate** level. No direct writes to inner members.
+*Domain Purity:* Read-model/presentation types such as `Page<PieceSummary>` belong to query/view layers.
+They must not be part of the *Piece* aggregate itself.
 ====
 
 ===== Invariants
@@ -144,8 +50,8 @@ All mutations to elements inside the boundary occur **only** through the root.
 | `ConditionRating` ∈ `[1..10]`. | `rateCondition()` | No | Consistent quality scale.
 | A `Review` belongs to exactly one Piece. | `addReview()` | No | Prevents cross-linking reviews.
 | Status transitions follow `Active ↔ Reserved → Closed` (no reopen). | Root methods | Yes (within method only) | Coherent lifecycle; history integrity.
-| `reserveFor(buyerId)` allowed only when status = `Active`. | `reserveFor()` | No | Avoid double holds.
-| `close(reason)` allowed only when status ∈ {`Active`,`Reserved`}. | `close()` | No | Forbids illegal re-closing.
+| `reserveFor(buyer)` only when status = `Active`. | `reserveFor()` | No | Avoid double holds; associates with *Buyer* (concept), not just a raw ID.
+| `close(reason)` only when status ∈ {`Active`,`Reserved`}. | `close()` | No | Forbids illegal re-closing.
 | Editing details is blocked when status = `Closed`. | Root guards | No | Preserve record of completed exchanges.
 |===
 
@@ -153,21 +59,15 @@ All mutations to elements inside the boundary occur **only** through the root.
 - `publish()` — (if drafts are modeled) make the Piece publicly visible.
 - `editDetails(updates)` — update title/description/attributes (forbidden when `Closed`).
 - `rateCondition(newRating)` — set/adjust condition in `[1..10]`.
-- `reserveFor(buyerId)` — `Active → Reserved` (hold while parties coordinate offline).
+- `reserveFor(buyer)` — `Active → Reserved` (hold while parties coordinate offline).
 - `releaseReservation()` — `Reserved → Active`.
 - `close(reason)` — `Active/Reserved → Closed` after offline handoff or withdrawal.
-- `addReview(reviewerId, rating, comment)` — attach feedback post-close.
-
-===== Factory (Conceptual)
-The **Piece Factory** constructs valid roots and applies initial invariants:
-- Ensures **≥ 1 image**.
-- Ensures **condition in `[1..10]`**.
-- Initializes **status = `Active`**, empty reviews, and no reservation.
+- `addReview(reviewer, rating, comment)` — attach feedback post-close.
 
 ===== Repository (Conceptual)
-A repository that operates at the **aggregate level** (reads may provide projections for lists):
+A repository operates at the *aggregate level* (reads may provide projections for lists):
 - `findById(pieceId) → Piece?`
 - `save(piece) → void` (persists the whole aggregate and its members)
-- Read-model queries (projections for UI lists), e.g.:
+- Read-model queries *(projections)* for UI lists, e.g.:
   - `findActiveByFilters(filters) → Page<PieceSummary>`
-  - `findBySeller(sellerId) → Page<PieceSummary>`
+  - `findBySeller(seller) → Page<PieceSummary>`
