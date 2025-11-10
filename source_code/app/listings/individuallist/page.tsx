@@ -7,6 +7,7 @@ export default function IndividualListing() {
     mint: "#C7E2E0",
     beige: "#F8E4D9",
     red: "#E68A8A",
+    borderStrong: "#B0B0B0",
   } as const;
 
   const product = {
@@ -128,10 +129,16 @@ export default function IndividualListing() {
               </dl>
 
               <div className="mt-4 grid grid-cols-3 gap-2">
-                <button className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm">
+                <button
+                  className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm"
+                  style={{ borderColor: brand.borderStrong }}
+                >
                   <span>💗</span> Save
                 </button>
-                <button className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm">
+                <button
+                  className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm"
+                  style={{ borderColor: brand.borderStrong }}
+                >
                   <span>↗</span> Share
                 </button>
                 <button
@@ -154,7 +161,15 @@ export default function IndividualListing() {
 
             <div className="rounded-2xl border border-neutral-200 p-4 flex items-center justify-between">
               <div className="flex items-center gap-3">
-                <div className="h-10 w-10 rounded-full bg-neutral-900 text-white flex items-center justify-center font-semibold">
+                <div
+                  className="flex items-center justify-center font-semibold text-white border shadow-sm aspect-square"
+                  style={{
+                    backgroundColor: '#1A1A1A',
+                    borderColor: brand.borderStrong,
+                    width: '48px',
+                    borderRadius: '50%',
+                  }}
+                >
                   {product.donor.initials}
                 </div>
                 <div>
@@ -162,7 +177,7 @@ export default function IndividualListing() {
                   <div className="text-xs text-neutral-600">{product.donor.rating} ★ • {product.donor.stats} • Response: {product.donor.response}</div>
                 </div>
               </div>
-              <button className="text-xs rounded-full border px-3 py-1.5 hover:bg-neutral-50">View profile</button>
+              <button className="text-xs rounded-full border px-3 py-1.5 hover:bg-neutral-50" style={{ borderColor: brand.borderStrong }}>View profile</button>
             </div>
           </div>
         </aside>
