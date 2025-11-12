@@ -1,61 +1,55 @@
-// Load dotenv from chatbot.env
-import { config } from "dotenv";
-import { fileURLToPath } from "url";
-import { dirname, resolve } from "path";
+import fetch from "node-fetch";
+import { stdout } from "process";
+import readline from "readline";
 
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = dirname(__filename);
-
-// Load environment variables from chatbot.env
-config({ path: resolve(__dirname, "openrouter.env") });
-
-// Imports
-import express from "express";
-import axios from "axios";
-import cors from "cors";
-import type { Request, Response } from "express";
-
-// Create Express app
-const app = express();
-app.use(cors());
-app.use(express.json());
-
-// Server port
-const PORT = 5000;
-
-// Chat endpoint
-app.post("/api/chat", async (req: Request, res: Response) => {
-  try {
-    const { message } = req.body;
-
-    console.log("Sending request to OpenRouter:", {
-      url: process.env.OPENROUTER_BASE_URL,
-      model: "google/gemini-2.0-flash-exp:free",
-      messages: [{ role: "user", content: message }],
-    });
-
-    const response = await axios.post(
-      process.env.OPENROUTER_BASE_URL!,
-      {
-        model: "google/gemini-2.0-flash-exp:free",
-        messages: [{ role: "user", content: message }],
-      },
-      {
-        headers: {
-          Authorization: `Bearer ${process.env.OPENROUTER_API_KEY}`,
-          "Content-Type": "application/json",
-        },
-      }
-    );
-
-    res.json(response.data);
-  } catch (error: any) {
-    console.error("Axios Error Response:", error.response?.data);
-    console.error("Axios Error Message:", error.message);
-    if (error.response) console.error(error.response.status, error.response.statusText);
-    res.status(500).json({ error: "Failed to fetch from OpenRouter" });
-  }
+const rl= readline.createInterface({
+  input: process.stdin,
+  output: process.stdout
 });
 
-// Start server
-app.listen(PORT, () => console.log(`✅ Server running on port ${PORT}`));
+interface ChatResponse {
+  response?: string;
+  error?: string;
+  details?: any;
+}
+
+async function sendMessage(message: string){
+
+  try{
+    const res= await fetch("https://dev2604.pythonanywhere.com/api/chat", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ message })
+    });
+
+    const data = (await res.json()) as ChatResponse;
+
+    if (data.response) {
+
+      console.log(`🤖 AI: ${data.response}`);
+    }
+
+    else{
+      console.log(`⚠️ Error: ${JSON.stringify(data)}`);
+    }
+
+  } catch (err){
+    console.error("Error sending message:", err);
+  }
+
+}
+
+function askQuestion(): void {
+  rl.question("🧑 You: ", async (input: string) => {
+    if (input.toLowerCase() === "exit") {
+      rl.close();
+      return;
+    }
+    await sendMessage(input);
+    askQuestion();
+  });
+}
+
+
+console.log("💬 Chat started! Type 'exit' to quit.");
+askQuestion();
