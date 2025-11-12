@@ -7,87 +7,114 @@
 
 = Research Context Mapping for Listings and Filters
 
-== Objective:
-Study how context mapping can improve modularity and reduce integration problems with category and condition filters.
+== Objective
+Analyze how context mapping can improve modularity and prevent integration conflicts in the handling of category, condition, and visibility filters across multiple views of listings.
 
-== Introduction:
+== Introduction
 As software systems grow in complexity, managing interactions between different modules becomes increasingly challenging.
 
-Bounded contexts and context mapping are key techniques in strategic design that help identify clear boundaries and integration points in complex systems.
+Bounded contexts and context mapping are fundamental techniques in strategic design that help identify clear boundaries and integration points in complex systems.
 
-For our platform, listings are filtered by category, condition, and visibility, and can be accessed from multiple views: a list view, a map view, and a search interface.
+In our platform, listings are filtered by category, condition, and visibility and can be accessed from multiple views: list, map, and search.
 
-Without proper context management, inconsistencies and integration conflicts may occur, especially when multiple users interact with the same filters simultaneously.
+Without proper context management, inconsistencies and integration conflicts may arise, particularly when multiple users interact with the same filters concurrently.
 
-== Research on Bounded Contexts and Context Mapping:
-1. A **bounded context** defines a clear boundary around a specific part of the system where a particular model is valid.
-2. **Context mapping** shows how these bounded contexts interact, helping teams coordinate integration and avoid duplication or conflicts.
+== Research on Bounded Contexts and Context Mapping
+1. A **bounded context** defines a clear boundary around a portion of the system in which a specific model is valid and authoritative.  
+2. **Context mapping** describes how these bounded contexts interact, guiding teams in coordinating integration and avoiding duplication or conflicts.
 
-== Identified Contexts:
-Based on the platform’s functionality, we can define the following bounded contexts:
+== Identified Contexts
+Based on platform functionality, the following bounded contexts are defined:
 
-1. Listings Context:
-- Core entities: Listing, Item, User
-- Operations: Create, Read, Update, Delete listings; manage visibility
-- Responsibilities: Ensure listing data integrity
+1. *Listings Context*
+- *_Core entities:_* Listing, Item, User
+- *_Operations:_* Create, Read, Update, Delete listings; manage visibility
+- *_Responsibilities:_* Maintain listing data integrity and serve as the authoritative source for listing information
 
-2. Filter Context:
-- Core entities: Category Filter, Condition Filter
-- Operations: Apply filters, store user preferences
-- Responsibilities: Provide consistent filtering logic across views
+2. *Filter Context*
+- *_Core entities:_* Category Filter, Condition Filter
+- *_Operations:_* Apply filters, store user preferences
+- *_Responsibilities:_* Ensure consistent filtering logic across all views
 
-3. Map View Context:
-- Core entities: Map, Map Marker, Geolocation
-- Operations: Display listings on map; update marker positions
-- Responsibilities: Translate listing data into geospatial representations
+3. *Map View Context*
+- *_Core entities:_* Map, Map Marker, Geolocation
+- *_Operations:_* Display listings on a map; update marker positions
+- *_Responsibilities:_* Translate listing data into geospatial representations for visualization
 
-4. Search Context:
-- Core entities: Search Query, Search Result
-- Operations: Execute search with filters; handle paging
-- Responsibilities: Ensure fast and accurate search results
+4. *Search Context*
+- *_Core entities:_* Search Query, Search Result
+- *_Operations:_* Execute searches with applied filters; handle pagination
+- *_Responsibilities:_* Provide accurate and efficient search results
 
-_**Note:** The names and entities listed are conceptual examples used to map bounded contexts. They do not necessarily correspond to literal identifiers in the codebase, but represent the underlying functionality and modules of the platform._
+_**Note:** The names and entities listed are conceptual examples used to illustrate bounded contexts. They do not necessarily match literal code identifiers but represent the underlying modules and functionality._
 
-== Context Mapping Proposal:
-image::MappingProposal.png[alt="Context Mapping Proposal Diagram", width=650, align=center]
+== Context Mapping
+The interactions between contexts are summarized in the following table:
+[cols="1,1,2", options="header"]
+|===
+| Source Context | Target Context | Interaction / Data Flow
 
-== Examples of Context Mapping in Modular Systems:
-- **Frontend**: Separate React modules for Listings, Filters, and Map View, each communicating via defined interfaces or events.
-- **Backend**: Microservices or modular services that handle listings data, filter logic, and search indexing independently but synchronize via APIs or message queues.
-- **Conflict Prevention**: By clearly defining which context owns the filter logic, we prevent inconsistencies such as mismatched category names or condition values.
+| Listings Context
+| Filter Context
+| Supplies listing data for filtering; updates in Listings trigger re-evaluation of filters
 
-== Testing & Validation:
-- To ensure context mapping works as intended:
-1. Map entities and operations into their respective bounded contexts.
-2. Apply filters in one view and verify consistent results in all views.
-3. Simulate concurrent access to listings and filters to check for race conditions or inconsistencies.
-4. Validate that filter changes propagate correctly without breaking unrelated contexts.
-5. Document any integration conflicts and adjust context boundaries as needed.
+| Listings Context
+| Map View Context
+| Provides listing coordinates and visibility; map context reads data without direct modification
 
-== Implementation Alignment:
-While some of the proposed contexts are already reflected in the current codebase, others represent near-term development goals. This mapping serves as a design foundation for modularizing upcoming features and clarifying ownership boundaries as the project evolves.
+| Listings Context
+| Search Context
+| Supplies listing data for search indexing and query results
 
-== Summary Table of Conflicts Avoided:
+| Filter Context
+| List View
+| Applies active filters to the listing set, ensuring consistent filtered views
 
+| Filter Context
+| Map View Context
+| Sends filter parameters (category, condition, visibility) to ensure correct marker display
+
+| Filter Context
+| Search Context
+| Provides filter parameters so that search results align with user preferences
+|===
+
+== Examples of Context Mapping in Modular Systems
+- **Frontend:** Separate React modules for Listings, Filters, and Map View, each communicating through defined interfaces or events. +
+- **Backend:** Modular services or microservices manage listings data, filter logic, and search indexing independently but synchronize via APIs or message queues. +
+- **Conflict Prevention:** Ownership of filter logic is clearly defined, preventing inconsistencies such as mismatched category names or condition values across views.
+
+== Testing & Validation
+To validate the effectiveness of context mapping: +
+1. Map entities and operations to their respective bounded contexts. +
+2. Apply filters in one view and verify consistent results in all other views. +
+3. Simulate concurrent access to listings and filters to detect race conditions or inconsistencies. +
+4. Confirm that filter changes propagate correctly without affecting unrelated contexts. +
+5. Document integration conflicts and adjust context boundaries as necessary.
+
+== Implementation Alignment
+Some proposed contexts already exist in the current codebase; others represent near-term development goals. This mapping provides a foundation for modularizing future features and clarifying ownership boundaries as the platform evolves.
+
+== Summary Table of Conflicts Avoided
 [cols="1,2,2", options="header"]
 |===
 | Context | Potential Conflict | Resolution via Context Mapping
 
 | Listings Context
-| Duplicate or inconsistent listing data between views
-| Filter and Search contexts access listings through defined interfaces; ownership clearly established
+| Duplicate or inconsistent listing data across views
+| All external contexts access listing data through Listings Context interfaces; ownership clearly defined
 
 | Filter Context
-| Mismatched filter logic across list, map, and search views
-| Filter context provides a single source of truth; all views consume the same rules
+| Inconsistent filter logic across list, map, and search views
+| Filter Context acts as a single source of truth; all views consume the same rules
 
 | Map View Context
-| Incorrect marker display due to outdated listings data
-| Map view retrieves listings through Listings Context API; no direct manipulation
+| Incorrect marker display due to outdated or direct-manipulated listing data
+| Map View only reads listings from Listings Context API
 
 | Search Context
 | Inconsistent search results due to independent filter implementations
-| Search context applies filters provided by Filter Context; avoids duplication
+| Search Context applies filters from Filter Context; duplication avoided
 |===
 
 == References
