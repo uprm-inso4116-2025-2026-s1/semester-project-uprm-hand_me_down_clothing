@@ -1,11 +1,13 @@
-'use client'
+ 'use client'
 import Link from 'next/link';
+import ChatWidget from '../chatbot/ui';
 import DonateWireframe from '../listings/donate_piece/page';
 import { supabase } from '../auth/supabaseClient';
 import FilterableFeaturedItems from './filterableListing';
-import { Item } from '../utils/filters/listingsFilter';
 import {useRouter} from "next/navigation";
 import {useEffect, useState} from 'react';
+import { PieceRepository } from '@/src/repositories/pieceRepository';
+import { Piece } from '../types/piece';
 
 // Categories for 'Browse by category' section
 const browse_categories = [
@@ -42,28 +44,18 @@ const steps = [
   { id: 3, step: "Meet up or ship sustainably", description: "Pick the eco-friendly option" },
 ];
 
-export async function getFeaturedItems() {
-  const {data: items, error } = await supabase
-    .from('pieces')
-    .select('*')
-    .limit(7);
-
-  if (error) {
-    console.log("Error fetching featured items: ", error);
-    return []
-  } else {
-    return items ?? [];
-  }
-}
-
 export default function Homepage() {
   const router= useRouter();
-  const [featuredItems, setFeaturedItems]= useState<Item[]>([]);
+  const [featuredItems, setFeaturedItems]= useState<Piece[]>([]);
 
   useEffect(()=>{
-    let alive= true;
-    getFeaturedItems().then(items=>{if (alive) setFeaturedItems(items)});
-    return ()=> {alive=false};
+    async function getFeaturedItems() {
+      const pieceRepo = new PieceRepository()
+      const pieces = pieceRepo.getPieces()
+      setFeaturedItems((await pieces).slice(0, 7));
+    }
+
+    getFeaturedItems();
   }, []);
 
   function open_browsing(e: React.FormEvent<HTMLFormElement>) {
@@ -73,6 +65,20 @@ export default function Homepage() {
     const query= input.value.trim();
     router.push(`../browsing?query=${encodeURIComponent(query)}`);
   }
+
+  if (featuredItems.length <= 0) {
+    return (
+        <div className="flex items-center justify-center w-full h-64">
+          <div className="flex flex-col items-center justify-center bg-[#F9F8F8] rounded-3xl border-2 border-[#E5E7EF] shadow-sm px-10 py-12">
+            <p className="text-2xl font-semibold italic text-[#666666]">
+              Loading Store...
+            </p>
+            <p className="text-md text-[#9A9A9A] mt-2">
+            </p>
+          </div>
+        </div>
+    )
+  } 
 
   return (
     <div className="p-3">
@@ -137,8 +143,6 @@ export default function Homepage() {
         ))}
       </div>
 
-      {/* This a client component which enables us to filter data as a response to the user clicking a button. We need a client component because 
-      server components cannot 'listen' to events happening on the client side. */}
       <FilterableFeaturedItems initialItems={featuredItems}/>
 
       {/* How it works: explanation of the platform process */}
@@ -188,6 +192,7 @@ export default function Homepage() {
           </div>
         ))}
       </div>
+      <ChatWidget />
     </div>
   );
 }

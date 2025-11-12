@@ -1,9 +1,11 @@
 "use client";
 
 import React, { useState } from "react";
-import { Eye, EyeOff } from "lucide-react";
-import type { StaticImageData } from "next/image";
+import { Eye, EyeOff, CheckCircle, AlertCircle } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
+import type { StaticImageData } from "next/image";
 import googleLogo from "@/logos/google.png";
 import facebookLogo from "@/logos/facebook.png";
 import appleLogo from "@/logos/apple.png";
@@ -13,7 +15,13 @@ import { validators } from "./validate";
 type FieldKey = keyof typeof validators;
 
 export default function SignupOneToOne() {
+  const supabase = useSupabaseClient();
+  const router = useRouter();
+
   const [showPassword, setShowPassword] = useState(false);
+  const [busy, setBusy] = useState(false);
+  const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<"success" | "error" | null>(null);
 
   const [values, setValues] = useState({
     first: "",
@@ -34,6 +42,46 @@ export default function SignupOneToOne() {
   const isValid = Object.entries(values).every(
     ([k, v]) => validators[k as FieldKey](v) === ""
   );
+
+  async function handleCreateAccount() {
+    setMessage(null);
+    setMessageType(null);
+    setBusy(true);
+
+    try {
+      const { data, error } = await supabase.auth.signUp({
+        email: values.email,
+        password: values.password,
+        options: {
+          data: {
+            fullname: `${values.first} ${values.last}`,
+            firstname: values.first,
+            lastname: values.last,
+          },
+        },
+      });
+
+      if (error) {
+        setMessage(error.message ?? "Sign-up failed. Please try again.");
+        setMessageType("error");
+        return;
+      }
+
+      if ((data as any)?.session) {
+        router.push("/profile");
+      } else {
+        setMessage(
+          "✅ Account created successfully! Please check your email to verify your account before signing in."
+        );
+        setMessageType("success");
+      }
+    } catch (err: any) {
+      setMessage(err?.message ?? "Unexpected error during signup.");
+      setMessageType("error");
+    } finally {
+      setBusy(false);
+    }
+  }
 
   return (
     <div className="min-h-screen w-full bg-white relative">
@@ -134,8 +182,6 @@ export default function SignupOneToOne() {
                       : "border-[#00000033]"
                     }`}
                 />
-
-                {/* 👁 Eye icon wrapper */}
                 <button
                   type="button"
                   aria-label={showPassword ? "Hide password" : "Show password"}
@@ -157,14 +203,32 @@ export default function SignupOneToOne() {
               )}
             </div>
 
+            {/* --- ✅ User Message Section --- */}
+            {message && (
+              <div
+                className={`mt-5 flex items-start gap-2 rounded-md p-3 text-sm ${messageType === "success"
+                    ? "bg-green-100 text-green-800 border border-green-300"
+                    : "bg-red-100 text-red-800 border border-red-300"
+                  }`}
+              >
+                {messageType === "success" ? (
+                  <CheckCircle className="h-5 w-5 mt-[2px]" />
+                ) : (
+                  <AlertCircle className="h-5 w-5 mt-[2px]" />
+                )}
+                <p>{message}</p>
+              </div>
+            )}
+
             {/* Primary CTA */}
             <button
               type="button"
               disabled={!isValid}
               className={`mt-5 w-full rounded-md border border-[#00000033] bg-gray-300 text-gray-700 text-sm sm:text-base font-medium h-12 ${!isValid ? "opacity-60 cursor-not-allowed" : ""
                 }`}
+              onClick={handleCreateAccount}
             >
-              Create personal account
+              {busy ? "Creating account..." : "Create personal account"}
             </button>
 
             {/* Divider */}

@@ -1,19 +1,15 @@
 'use client'
 
-import React, { useState, ReactNode } from 'react'
-import { SessionContextProvider } from '@supabase/auth-helpers-react'
+import React, { useState } from 'react'
 import { createPagesBrowserClient } from '@supabase/auth-helpers-nextjs'
-import { useEnsureProfileOnSignIn } from '../lib/useEnsureProfileOnSignIn'
+import { SessionContextProvider } from '@supabase/auth-helpers-react'
 
-export default function SupabaseProvider({ children }: { children: ReactNode }) {
-  // create browser supabase client once
+export default function SupabaseProvider({ children }: { children: React.ReactNode }) {
+  // createPagesBrowserClient returns a client that integrates with pages/api/auth/[...supabase].ts
   const [supabaseClient] = useState(() => createPagesBrowserClient())
 
-  // upsert profile automatically on SIGNED_IN
-  useEnsureProfileOnSignIn()
-
   return (
-    <SessionContextProvider supabaseClient={supabaseClient} initialSession={null}>
+    <SessionContextProvider supabaseClient={supabaseClient}>
       {children}
     </SessionContextProvider>
   )

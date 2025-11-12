@@ -1,21 +1,22 @@
-# Use official Node 20 image
+# Use Node 20
 FROM node:20
 
-# Set working directory inside the container
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy dependency files first for caching
-COPY package*.json ./
+# Copy package files
+COPY package.json package-lock.json* ./
 
 # Install dependencies
 RUN npm install
 
-# Copy the rest of your app's source code
+# Copy source code
 COPY . .
 
-# Expose port 3000 for Next.js dev server
+# Expose port
 EXPOSE 3000
 
-# Default command for dev environment
+# Start dev server
 CMD ["npm", "run", "dev"]
 
+ 

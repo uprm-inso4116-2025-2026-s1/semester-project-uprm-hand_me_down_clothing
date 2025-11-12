@@ -3,6 +3,8 @@ import React from "react";
 import { createRoot } from 'react-dom/client';
 import {Piece} from "../types/piece";
 import {PieceRepository} from "../../src/repositories/pieceRepository";
+import { unique } from "next/dist/build/utils";
+import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 
 
 type Props = {
@@ -13,9 +15,59 @@ type Props = {
 type MountableDiv= HTMLDivElement & {_root?: ReturnType<typeof createRoot>};
 
 //Displays found pieces
-export default function ResultsPanel({ id = 'search-results', className }: Props) {
-  return <div id={id} className={className ?? ''} />;
+type ResultsPanelProps = {
+    items: Piece[];
+    className?: string;
+};
+
+export default function ResultsPanel({ items, className }: ResultsPanelProps) {
+    let content;
+
+    if (items.length <= 0) {
+        content = (
+            <div className="flex items-center justify-center w-full h-64">
+                <div className="flex flex-col items-center justify-center bg-[#F9F8F8] rounded-3xl border-2 border-[#E5E7EF] shadow-sm px-10 py-12">
+                    <p className="text-2xl font-semibold italic text-[#666666]">
+                    No items found 😔
+                    </p>
+                    <p className="text-md text-[#9A9A9A] mt-2">
+                    Try adjusting your filters or check back later.
+                    </p>
+                </div>
+            </div>
+      );
+    } else {
+        content = (
+            <div className={className ?? ''}>
+                <div className="flex flex-wrap justify-center gap-6">
+                    {items.map(piece => (
+                        <div className="flex flex-wrap justify-center gap-6 mb-6">
+                            <button
+                                key={piece.id}
+                                id="Featured_Item_btn"
+                                className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
+                                <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
+                                <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{Condition[piece.condition]}</div>
+                                <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{piece.getFormattedPrice()}</div>
+                                <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">♥</div>
+                                </div>
+                                <p className="text-lg font-bold italic pt-2">{piece.name}</p>
+                                <p className="text-md text-[#666666]">Size: {Size[piece.size]}</p>
+                                <p className="text-md text-[#666666]">Condition: {Condition[piece.condition]}</p>
+                                <p className="text-md text-[#666666]">Category: {Category[piece.category]}</p>
+                            </button>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        )
+    }
+
+    return (
+        <>{content}</>
+    );
 }
+
 
 //splits query by words
 function splitQuery(query : string) : string[]{
@@ -84,24 +136,24 @@ async function filteredPieces(splitQuery : string[]){
     );
     //Creates the elements for evey piece in uniquePieces.
     const elements= uniquePieces.map((piece)=> (
-        <button
-            key={piece.id}
-            id="Featured_Item_btn"
-            className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
-            <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
-              <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{piece.getFormattedCondition()}</div>
-              <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{piece.getFormattedPrice()}</div>
-              <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">♥</div>
-            </div>
-            <p className="text-lg font-bold italic pt-2">{piece.name}</p>
-            <p className="text-md text-[#666666]">Size: {piece.getFormattedSize()}</p>
-            <p className="text-md text-[#666666]">Condition: {piece.getFormattedCondition()}</p>
-            <p className="text-md text-[#666666]">Category: {piece.getFormattedCategory()}</p>
-          </button>
+        <div className="flex flex-wrap justify-center gap-6">
+            <button
+                key={piece.id}
+                id="Featured_Item_btn"
+                className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
+                <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
+                <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{piece.getFormattedCondition()}</div>
+                <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">{piece.getFormattedPrice()}</div>
+                <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">♥</div>
+                </div>
+                <p className="text-lg font-bold italic pt-2">{piece.name}</p>
+                <p className="text-md text-[#666666]">Size: {piece.getFormattedSize()}</p>
+                <p className="text-md text-[#666666]">Condition: {piece.getFormattedCondition()}</p>
+                <p className="text-md text-[#666666]">Category: {piece.getFormattedCategory()}</p>
+            </button>
+        </div>
     ))
-    return   <div className="flex flex-wrap justify-center gap-6">
-                {elements}
-            </div>
+    return {elements, uniquePieces}
 
 }
 //Mounts the pieces to be displayed so Results Panel can render them.
@@ -118,7 +170,7 @@ export async function mountPieceElements(e : React.FormEvent<HTMLFormElement>,qu
     }
     const split_query : string[]= splitQuery(in_value);
     
-    const elements= await filteredPieces(split_query);
+    const {elements, uniquePieces} = await filteredPieces(split_query);
 
     let mount= document.getElementById('search-results') as MountableDiv | null;
     if(!mount){
@@ -131,15 +183,23 @@ export async function mountPieceElements(e : React.FormEvent<HTMLFormElement>,qu
     }
     mount._root.render(
         <div className= "mt-10 px-10 flex flex-col gap-6">
-            {elements}
+            <div className="flex flex-wrap justify-center gap-6"> {elements} </div>
         </div>
     );
+
+    return uniquePieces;
 }
 
 //main function
 export async function SearchPieces(e : React.FormEvent<HTMLFormElement>, query :string | null){
     e.preventDefault();
     mountPieceElements(e, query);
-    
+}
+
+// fetches and returns pieces without rendering
+export async function fetchPieces(query: string | null): Promise<Piece[]> {
+    const split_query = query ? splitQuery(query) : [];
+    const { uniquePieces } = await filteredPieces(split_query);
+    return uniquePieces; // the data, no rendering yet
 }
 

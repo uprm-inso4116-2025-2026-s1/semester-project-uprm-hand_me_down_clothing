@@ -48,8 +48,10 @@ export default function TopNav() {
     { href: "/listings/donate", label: "Donate" },
     { href: "/about", label: "About" },
     { href: "/Login", label: "Sign in/Sign Up" },
+    { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
     { href: "/profile", label: "Profile" },
   ];
+
 
 
   const favActive = mounted && pathname.toLowerCase().startsWith("/favorite");

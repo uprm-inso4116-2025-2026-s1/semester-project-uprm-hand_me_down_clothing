@@ -3,16 +3,6 @@ version: "3.9"
 services:
   web:
     build: .
-    container_name: nextjs-dev
     ports:
       - "3000:3000"
-    volumes:
-      # Mount source code so changes are reflected live
-      - .:/usr/src/app
-      # Prevent overwriting node_modules with your local folder
-      - /usr/src/app/node_modules
-    environment:
-      - NODE_ENV=development
-      - NEXT_PUBLIC_SUPABASE_URL=${NEXT_PUBLIC_SUPABASE_URL}
-      - NEXT_PUBLIC_SUPABASE_ANON_KEY=${NEXT_PUBLIC_SUPABASE_ANON_KEY}
-    command: npm run dev
+
