@@ -12,6 +12,7 @@
 
 # testing
 /coverage
+/tests/load/runLoadTests.sh
 
 # next.js
 /.next/
