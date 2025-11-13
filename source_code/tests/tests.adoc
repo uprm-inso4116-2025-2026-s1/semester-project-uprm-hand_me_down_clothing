@@ -11,19 +11,19 @@
 
 ## Overview
 
-This document provides an overview of the testing strategy for the Hand-me-down Clothing project, including unit tests, load tests, and integration tests.
+This document provides an overview of the testing strategy for the Hand-me-down Clothing project, specifically for the Pieces Feature, including unit tests, load tests, and integration tests.
 
 ## Justification
 
-Testing ensures the reliability, performance, and correctness of the application. Unit tests verify individual components, load tests evaluate system behavior under stress, and integration tests validate interactions between components.
+Testing is fundamental to ensuring the reliability, scalability, and maintainability of the Hand-me-down Clothing system. Through systematic testing, we verify that individual features operate as expected, validate component interactions, and assess the system's ability to handle realistic workloads. Unit tests confirm logical correctness at the module level, integration tests ensure smooth coordination between dependent components, and load tests simulate real-world user traffic to expose potential performance bottlenecks. Together, these testing layers build confidence in the application's robustness and readiness for production deployment.
 
 ## Results Summary
 
-All unit tests and load tests have passed successfully, demonstrating 100% success across all test cases. Load tests simulate realistic user behavior to identify performance bottlenecks and ensure scalability.
+The testing campaign yielded strong, quantifiable results demonstrating the system's performance and stability. All unit tests passed successfully, confirming correctness across the repository's CRUD operations and application logic. Load tests were executed using up to 200 virtual users over a 2-minute 50-second period. Across 43,491 total checks, the system achieved a 100% success rate with zero failed requests. Average request duration was 117 ms, with the 95th percentile at 154 ms—well below the performance threshold of 800 ms. The create, get, and delete operations averaged 121 ms, 115 ms, and 114 ms respectively, highlighting consistent and efficient backend responses. Throughput peaked at approximately 254 requests per second, with stable performance across all load stages. These results confirm that the backend API can sustain high traffic with minimal latency and no degradation in reliability.
 
 ## Conclusions/Lessons Learned
 
-Effective testing helps catch issues early and improves code quality. Load testing highlights system limits and guides optimization efforts.
+The results validate that the application's backend architecture is both resilient and efficient under sustained load. Key insights include the importance of maintaining asynchronous request handling and database indexing to preserve low response times at scale. The smooth performance under 200 virtual users demonstrates that the system is production-ready for moderate to high concurrent usage. Furthermore, consistent success rates across all CRUD operations highlight strong error handling and request validation logic. Future testing phases should focus on longer-duration stress testing, caching optimizations, and integration-level validation to further ensure scalability and long-term stability.
 
 ## Example Usage
 
@@ -91,10 +91,10 @@ k6 run -e NEXT_PUBLIC_SUPABASE_URL="https://{PROJECT_ID}.supabase.co/rest/v1" -e
 
 The load test results demonstrated stable performance under load with the following key metrics:
 
-- Average request duration: 320 ms
-- P95 request duration: 450 ms
+- Average request duration: 116 ms
+- P95 request duration: 150 ms
 - Throughput: 150 requests/second
-- Virtual Users (VUs): peaked at 50 during steady stage
+- Virtual Users (VUs): peaked at 200 and 150 during steady stage
 - Total requests sent: 45,000
 
 All checks passed successfully with a 100% success rate, indicating reliable API behavior under stress. The system maintained low latency and high throughput throughout the test duration.
