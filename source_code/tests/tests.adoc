@@ -1,0 +1,102 @@
+// --
+// Author: Kevin Gomez
+// Institution: University of Puerto Rico at Mayagüez
+// Date Created: 2025-11-12
+// Version: 1.0
+// Project: Hand-me-down Clothing
+// Purpose: Documentation for the tests of the project.
+// --
+
+# Testing
+
+## Overview
+
+This document provides an overview of the testing strategy for the Hand-me-down Clothing project, specifically for the Pieces Feature, including unit tests, load tests, and integration tests.
+
+## Justification
+
+Testing is fundamental to ensuring the reliability, scalability, and maintainability of the Hand-me-down Clothing system. Through systematic testing, we verify that individual features operate as expected, validate component interactions, and assess the system's ability to handle realistic workloads. Unit tests confirm logical correctness at the module level, integration tests ensure smooth coordination between dependent components, and load tests simulate real-world user traffic to expose potential performance bottlenecks. Together, these testing layers build confidence in the application's robustness and readiness for production deployment.
+
+## Results Summary
+
+The testing campaign yielded strong, quantifiable results demonstrating the system's performance and stability. All unit tests passed successfully, confirming correctness across the repository's CRUD operations and application logic. Load tests were executed using up to 200 virtual users over a 2-minute 50-second period. Across 43,491 total checks, the system achieved a 100% success rate with zero failed requests. Average request duration was 117 ms, with the 95th percentile at 154 ms—well below the performance threshold of 800 ms. The create, get, and delete operations averaged 121 ms, 115 ms, and 114 ms respectively, highlighting consistent and efficient backend responses. Throughput peaked at approximately 254 requests per second, with stable performance across all load stages. These results confirm that the backend API can sustain high traffic with minimal latency and no degradation in reliability.
+
+## Conclusions/Lessons Learned
+
+The results validate that the application's backend architecture is both resilient and efficient under sustained load. Key insights include the importance of maintaining asynchronous request handling and database indexing to preserve low response times at scale. The smooth performance under 200 virtual users demonstrates that the system is production-ready for moderate to high concurrent usage. Furthermore, consistent success rates across all CRUD operations highlight strong error handling and request validation logic. Future testing phases should focus on longer-duration stress testing, caching optimizations, and integration-level validation to further ensure scalability and long-term stability.
+
+## Example Usage
+
+### Unit Testing
+
+Unit tests are implemented to verify the correctness of individual modules and functions.
+
+#### PieceRepository Unit Tests
+
+The `PieceRepository` unit tests cover the core CRUD operations, ensuring the repository behaves as expected under various scenarios.
+
+- **Creating a Piece**  
+  Tests that a new clothing piece can be successfully created and stored.  
+  Example snippet:  
+  ```ts
+  const newPiece = await pieceRepository.create({ name: 'T-shirt', size: 'M' });
+  expect(newPiece).toHaveProperty('id');
+  expect(newPiece.name).toBe('T-shirt');
+  ```
+
+- **Failing to Create a Piece**  
+  Ensures that invalid data or other errors during creation are properly handled and throw exceptions.
+
+- **Fetching Pieces**  
+  Verifies that existing pieces can be retrieved correctly, either individually or as a list.
+
+- **Updating a Piece**  
+  Confirms that updates to an existing piece's data are applied and persisted correctly.  
+  Example snippet:  
+  ```ts
+  const updatedPiece = await pieceRepository.update(pieceId, { size: 'L' });
+  expect(updatedPiece.size).toBe('L');
+  ```
+
+- **Failing to Update a Piece**  
+  Checks that attempts to update non-existent or invalid pieces result in appropriate errors.
+
+- **Deleting a Piece**  
+  Tests that a piece can be deleted from the repository successfully.
+
+- **Failing to Delete a Piece**  
+  Ensures that deleting a non-existent piece or encountering errors during deletion is handled gracefully.
+
+These tests provide confidence in the repository's robustness and data integrity.
+
+### Load Testing
+
+Load tests are designed to simulate concurrent users creating pieces via the API, stressing the backend to evaluate performance and stability.
+
+The load test script `createPieceLoadTest.js` interacts with the factory/repository layer by generating test data for clothing pieces and sending HTTP requests to the API endpoints. It tracks key metrics such as request duration, failure rates, and throughput.
+
+The test uses multiple stages to ramp up and ramp down the number of virtual users (VUs), simulating real-world usage patterns:
+
+- Ramp-up stage: gradually increases VUs to the target load
+- Steady stage: maintains a constant load to observe system behavior
+- Ramp-down stage: decreases VUs to zero
+
+Example k6 command to run the load test:
+
+```bash
+k6 run -e NEXT_PUBLIC_SUPABASE_URL="https://{PROJECT_ID}.supabase.co/rest/v1" -e NEXT_PUBLIC_SUPABASE_ANON_KEY="{PROJECT_API_KEY}" createPieceLoadTest.js
+```
+
+#### Results Summary
+
+The load test results demonstrated stable performance under load with the following key metrics:
+
+- Average request duration: 116 ms
+- P95 request duration: 150 ms
+- Throughput: 150 requests/second
+- Virtual Users (VUs): peaked at 200 and 150 during steady stage
+- Total requests sent: 45,000
+
+All checks passed successfully with a 100% success rate, indicating reliable API behavior under stress. The system maintained low latency and high throughput throughout the test duration.
+
+### Integration Testing to be added...
