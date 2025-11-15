@@ -29,7 +29,7 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {  //user->backend->host->openrouter->bot reply
     e.preventDefault();
     const trimmedMessage = inputValue.trim();
     
@@ -45,6 +45,44 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
+
+    //sending user message to backend api requester 
+    try{ 
+      const res= await fetch("/api/openrouter_logic", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ message: trimmedMessage }),
+      });
+
+      const data= await res.json();
+
+      //bot response to messages
+      const botmessage: Message= {
+        id: Date.now()+1,
+        text: data.response || "Unexpected server reply",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, botmessage]);
+
+    }
+
+    catch(error){
+      console.error("Error:", error);
+
+      //fallback error message
+      const errorMessage: Message= {
+
+        id: Date.now()+2,
+        text: "Error contacting server",
+        sender: "bot",
+        timestamp: new Date(),
+      };
+
+      setMessages((prev) => [...prev, errorMessage]);
+
+    }
   };
 
   return (
