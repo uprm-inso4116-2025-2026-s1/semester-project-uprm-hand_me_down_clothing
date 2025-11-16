@@ -82,3 +82,65 @@ console.log(piece instanceof SoldPiece); // true
 const dto = factory.toDTO(piece);
 console.log(dto);
 ```
+// --
+// Author: Jorge L. De León Orama
+// Institution: University of Puerto Rico at Mayagüez
+// Date Created: 2025-11-13
+// Version: 1.0
+// Project: Hand-me-down Clothing
+// Purpose: Documentation for the factory layer. Specifically, the LocationFactory class responsible for creating Location domain objects and transforming them into Persistence Structure and viceversa.
+// -- 
+
+## Location Factory -> LocationFactory
+
+### Purpose 
+The `LocationFactory` class enforces the `Location` 's *aggregate invariants* by by envoking the value objects construction which provide all the required fields, rules, and validations for each identified *invariant* , effectively hidding the construction complexity and effectively seperating creation logic from behavior logic. This class will be dedicated to rebuilding `Location` attributes obtained from persistence (*Supabase*). 
+
+### Responsibilities
+- Construct the `Location` aggregate using only valid data, enforcing all domain invariants, and preventing construction of invalid aggregates.
+- Reconstitute a `Location` from persistence (*Supabase*), converting raw persistence data (*Value Objects*), rebuilding the full aggreagate without bypassing invariants, and translating persistence format -> domain format.=, and vice versa.
+- Provide a single construction point, the factory is the only place where the construction logic lives.
+- Guarantee layer isolation, the factory never talks to Supabase directly, its only job is transforming data -> domain & domain -> data.
+
+### Benefits
+- **Ensures Aggregate Integrity:** Centralizes contruction logic, guaranteeing that no invalid `Location` object can ever be created, enforcing all `Location` invariants consistently.
+- **Prevents bypassing of Domain Rules:** When reconstituting objects from persistence, the factory ensures that the database data cannot bypass validation, keeping the domain model safe from corrupted, duplications, or incomplete records.
+- **Safe loading from the database:** When reading from persistence, the factory converts that raw data into a proper `Location`. 
+- **Easier to change:** If the creation rules change, we only update the factory. This makes the code easier to maintain.
+
+## Methods Summary
+
+[options= "header", cols="^,^,^,^"]
+
+|===
+|Method | Return Type | Description | Example
+|toDomainFormat(rawLocation) | Location | Creates a `Location` instance based on the provided persistence formatted location. rawLocation -> domainLocation| toDomainFormat(store)
+|toPersistenceFormat(domainFormattedLocation) |PersistenceLocation | Flattens a `Location` instance based on the provided domain formatted location. domainLocation -> rawLocation|toDomainFormat(rawLocation)
+|===
+
+## Justification for Factory Pattern
+This Factory Pattern is used because the `Location` aggregate requires strict, consistent and validated construciton, which cannot be guaranteed if objectsa re instantiated freely throughout the system. By centralizing all creation inside the LocationFactory, we ensure:
+- **Invariant Enforcement:** is created only through value objects, ensuring all rules, constraints and validations are always applied, preventing invalid aggreagtes from entering the domain.
+- **Safe Reconstitution From Persistence:** When loading data from Superbase, the factory reconstructs a fully valid `Location` rather than allowing persistence records to bypass domain rules. This protects the domain model from incorrectly formed, incomplete, or corrupted data.
+- **Single Point of Change:** If cretion rules change (new invariants, new fields, new validations), only rhe factory needs updating. This reduces duplication and improves maintanabilty accross the system.
+- **Proper Layer Isolation:** The factory transforms raw persistence structures to domain objects, and domain objects to persistence structures without ever interacting with the Supabase directly, perserving a clean architecture boundaries. 
+
+## Example Usage
+
+```ts
+const LocationFactory= new LocationFactory();
+
+async fetchAllLocations() : Promise<Location[]>{
+        const {data, error} = await this.supabase.from("stores").select("*");
+        if(error){
+            throw new Error(`Could not fetch locations: ${error.message}`);
+        }
+        if(!data){
+            throw new Error("Could not fetch all locations, data not found.");
+        }
+
+        //Transforms rawLocation data (store) into a domain object.
+        const locationRecord: Location[]= data.map(store => LocationFactory.toDomainFormat(store) );
+        return locationRecord;
+    }
+```

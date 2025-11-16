@@ -6,6 +6,7 @@ import { useMapEvents } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Marker as LeafletMarker } from "leaflet";
 import SuperclusterLayer, { ClusterPoint } from "./cluster-layer";
+import { Location } from "../types/location";
 
 
 // Dynamically import React-Leaflet components
@@ -13,27 +14,27 @@ const Marker = dynamic(async () => (await import("react-leaflet")).Marker, { ssr
 const Popup = dynamic(async () => (await import("react-leaflet")).Popup, { ssr: false });
 
 // Export the type definition for a location
-export type LocationRecord = {
-  id: number;
-  name?: string;
-  description?: string;
-  latitude?: number;
-  longitude?: number;
-  thumbnailUrl?: string;
-  address?: string;
-  contact_info?: string;
-  store_hours?: store_hours;
-};
+// export type LocationRecord = {
+//   id: number;
+//   name?: string;
+//   description?: string;
+//   latitude?: number;
+//   longitude?: number;
+//   thumbnailUrl?: string;
+//   address?: string;
+//   contact_info?: string;
+//   store_hours?: store_hours;
+// };
 
-export type store_hours = {
-  monday?: {open: string; close: string};
-  tuesday?: {open: string; close: string};
-  wednesday?: {open: string; close: string};
-  thursday?: {open: string; close: string};
-  friday?: {open: string; close: string};
-  saturday?: {open: string; close: string};
-  sunday?: {open: string; close: string};
-};
+// export type store_hours = {
+//   monday?: {open: string; close: string};
+//   tuesday?: {open: string; close: string};
+//   wednesday?: {open: string; close: string};
+//   thursday?: {open: string; close: string};
+//   friday?: {open: string; close: string};
+//   saturday?: {open: string; close: string};
+//   sunday?: {open: string; close: string};
+// };
 
 // Custom hook to fix Leaflet's default marker icons in Next.js
 function useFixDefaultMarkerIcons() {
@@ -119,7 +120,7 @@ export function LocationMarkers({
   locations, 
   markersRef 
 }: { 
-  locations: LocationRecord[];
+  locations: Location[];
   markersRef?: React.MutableRefObject<Map<number, LeafletMarker>>;
 }) {
   useFixDefaultMarkerIcons();
@@ -140,14 +141,14 @@ export function LocationMarkers({
   }, []);
 
   // Convert to ClusterPoint[]
-  const points: ClusterPoint<LocationRecord>[] = useMemo(
+  const points: ClusterPoint<Location>[] = useMemo(
     () =>
       locations
-        .filter((loc) => Number.isFinite(loc.latitude) && Number.isFinite(loc.longitude))
+        .filter((loc) => Number.isFinite(loc.getLatitude()) && Number.isFinite(loc.getLongitude()))
         .map((loc) => ({
-          id: loc.id,
-          lat: loc.latitude as number,
-          lng: loc.longitude as number,
+          id: loc.getID(),
+          lat: loc.getLatitude() as number,
+          lng: loc.getLongitude() as number,
           data: loc,
         })),
     [locations]
@@ -156,7 +157,7 @@ export function LocationMarkers({
   return (
     <>
       <MapClickHandler markersRef={activeMarkersRef} />
-      <SuperclusterLayer<LocationRecord>
+      <SuperclusterLayer<Location>
         points={points}
         radius={60}
         maxZoom={18}
@@ -165,12 +166,12 @@ export function LocationMarkers({
 
         return (
           <Marker
-            key={loc.id}
+            key={loc.getID()}
             position={[p.lat, p.lng]}
             ref={(ref) => {
               if (ref) {
                 // @ts-ignore - ref is a React-Leaflet wrapper, need to access the Leaflet marker
-                activeMarkersRef.current.set(loc.id, ref);
+                activeMarkersRef.current.set(loc.getID(), ref);
               }
             }}
             eventHandlers={{
@@ -179,7 +180,7 @@ export function LocationMarkers({
                 e.originalEvent?.stopPropagation();
                 // Close other popups first
                 activeMarkersRef.current.forEach((marker, id) => {
-                  if (id !== loc.id) {
+                  if (id !== loc.getID()) {
                     marker.closePopup();
                   }
                 });
@@ -193,13 +194,13 @@ export function LocationMarkers({
                 {/* Popup Content */}
                 <div role="dialog" aria-labelledby={`h-${loc.id}`}>
                   <h3 id={`h-${loc.id}`} className="font-semibold text-base mb-1">
-                    {loc.name || "Untitled Location"}
+                    {loc.getName() || "Untitled Location"}
                   </h3>
 
-                  {loc.thumbnailUrl ? (
+                  {loc.getThumbnailUrl() ? (
                     <img
-                      src={loc.thumbnailUrl}
-                      alt={loc.name ? `${loc.name} thumbnail` : "Location image"}
+                      src={loc.getThumbnailUrl()}
+                      alt={loc.getName() ? `${loc.getName()} thumbnail` : "Location image"}
                       className="w-full max-w-[220px] rounded-md mb-2"
                     />
                   ) : (
@@ -208,15 +209,15 @@ export function LocationMarkers({
                     </div>
                   )}
 
-                  <p className="text-sm mb-1">{loc.description || "No description provided."}</p>
+                  <p className="text-sm mb-1">{loc.getDescription() || "No description provided."}</p>
 
                   <div className="text-xs leading-snug mb-2">
-                    {loc.address && <div className="mb-2"><strong>Address:</strong> {loc.address}</div>}
-                    {loc.contact_info && <div className="mb-2"><strong>Contact:</strong> {loc.contact_info}</div>}
-                    {loc.store_hours && (
+                    {loc.getAddress() && <div className="mb-2"><strong>Address:</strong> {loc.getAddress()}</div>}
+                    {loc.getContactInfo() && <div className="mb-2"><strong>Contact:</strong> {loc.getContactInfo()}</div>}
+                    {loc.getStoreHours() && (
                       <div><strong>Hours:</strong>
                         <div className="ml-2 mt-1 space-y-0.5">
-                          {Object.entries(loc.store_hours).map(([day, hours]) => 
+                          {Object.entries(loc.getStoreHours()).map(([day, hours]) => 
                             hours && typeof hours === 'object' && 'open' in hours && 'close' in hours && (
                               <div key={day} className="text-xs flex justify-between">
                                 <span className="capitalize font-medium">{day}:</span>

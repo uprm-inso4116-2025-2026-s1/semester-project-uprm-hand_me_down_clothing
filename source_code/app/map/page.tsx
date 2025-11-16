@@ -5,11 +5,12 @@ import dynamic from "next/dynamic";
 import 'leaflet/dist/leaflet.css';
 import 'leaflet.locatecontrol/dist/L.Control.Locate.min.css';
 import type { Map as LeafletMap, Marker as LeafletMarker } from "leaflet";
-import { LocationMarkers, LocationRecord } from "./data-cards";
+import { LocationMarkers } from "./data-cards";
 import type { FilterRecord } from '../utils/filters/mapFilter';
-import {supabase} from '../auth/supabaseClient';
 import {openNow, nearMe}  from '../utils/filters/mapFilter';
 import SearchLocation from "./searchLocation";
+import { Location } from "../types/location";
+import { LocationRepository } from "@/src/repositories/locationRepository";
 
 const MapContainer = dynamic(
   () => import("react-leaflet").then((mod) => mod.MapContainer),
@@ -73,7 +74,7 @@ function CustomControl({
   markersRef,
   filterFunction
 }: { 
-  locations: LocationRecord[];
+  locations: Location[];
   markersRef: React.MutableRefObject<Map<number, LeafletMarker>>;
   filterFunction: (filterName: string, map: LeafletMap) => void;
 }) {
@@ -117,8 +118,8 @@ function CustomControl({
           const mapMenu = L.DomUtil.create("div", "custom-map-menu", container);
           const locationsList = locations.length > 0 
             ? locations.map(loc => `
-                <li data-location-id="${loc.id}" style="padding: 8px; cursor: pointer; transition: background 0.2s, color 0.2s;">
-                  ${loc.name || 'Unnamed Location'}
+                <li data-location-id="${loc.getID()}" style="padding: 8px; cursor: pointer; transition: background 0.2s, color 0.2s;">
+                  ${loc.getName() || 'Unnamed Location'}
                 </li>
               `).join('')
             : '<li style="padding: 8px; color: #666;">No locations available</li>';
@@ -191,10 +192,10 @@ function CustomControl({
             const htmlLi = li as HTMLElement;
             htmlLi.onclick = () => {
               const locationId = parseInt(htmlLi.getAttribute("data-location-id") || "0");
-              const location = locations.find(loc => loc.id === locationId);
+              const location = locations.find(loc => loc.getID() === locationId);
               
-              if (location && location.latitude && location.longitude) {
-                map.setView([location.latitude, location.longitude], 16, {
+              if (location && location.getLatitude() && location.getLongitude()) {
+                map.setView([location.getLatitude(), location.getLongitude()], 16, {
                   animate: true,
                   duration: 1
                 });
@@ -264,7 +265,7 @@ function CustomControl({
 
 
 export default function Map() {
-  const [locations, setLocations] = React.useState<LocationRecord[]>([]);
+  const [locations, setLocations] = React.useState<Location[]>([]);
   const markersRef = useRef<globalThis.Map<number, LeafletMarker>>(new globalThis.Map());
   const [openNowFilter, setOpenNowFilter] = useState(false);
 
@@ -298,24 +299,10 @@ export default function Map() {
   useEffect(() => {
     if (locations.length > 0 || openNowFilter) return; // Only run when locations is empty or open now filter was ran and no locations were open
     (async () => {
-      const { data, error } = await supabase
-        .from('stores')
-        .select('id, name, latitude, longitude, address, contact_info, store_hours');
-      if (error) {
-        console.error("Error fetching locations:", error);
-      } else if (data) {
-        // Cast each item to LocationRecord
-        const castedLocations: LocationRecord[] = data.map(item => ({
-          id: item.id,
-          name: item.name,
-          latitude: item.latitude,
-          longitude: item.longitude,
-          address: item.address,
-          contact_info: item.contact_info,
-          store_hours: item.store_hours
-        }));
-        setLocations(castedLocations);
-      }
+  
+      const locationRepository = new LocationRepository();
+      const castedLocations : Location[] = await locationRepository.fetchAllLocations();
+      setLocations(castedLocations);
     })();
   }, [locations]);
   return (

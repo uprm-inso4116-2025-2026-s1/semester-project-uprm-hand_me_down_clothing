@@ -2,10 +2,10 @@
 import React, {useMemo, useState, useCallback} from 'react';
 import { useMap } from 'react-leaflet';
 import type { Marker as LeafletMarker, Map as LeafletMap } from 'leaflet';
-import type { LocationRecord } from './data-cards';
+import { Location } from '../types/location';
 
 type Props={
-    locations: LocationRecord[];
+    locations: Location[];
     markersRef: React.MutableRefObject<Map<number,LeafletMarker>>;
 };
 
@@ -19,7 +19,7 @@ export default function SearchLocation({locations, markersRef} : Props){
         if(!q) return[];
         const lower= q.toLowerCase();
         const filtered= locations.filter(
-            (loc)=> loc.name && loc.name.toLowerCase().startsWith(lower)
+            (loc)=> loc.getName() && loc.getName().toLowerCase().startsWith(lower)
         );
         return filtered.slice(0,4);   
     },[locations, query]);
@@ -33,15 +33,15 @@ export default function SearchLocation({locations, markersRef} : Props){
     },[]);
 
     const handleSelect= useCallback(
-        (loc:LocationRecord)=>{
-            if(loc.latitude != null && loc.longitude != null){
-                map.setView([loc.latitude, loc.longitude], 16, {animate: true, duration:1});
+        (loc:Location)=>{
+            if(loc.getLatitude() != null && loc.getLongitude() != null){
+                map.setView([loc.getLatitude(), loc.getLongitude()], 16, {animate: true, duration:1});
                 setTimeout(()=>{
-                    const marker= markersRef.current.get(loc.id);
+                    const marker= markersRef.current.get(loc.getID());
                     marker?.openPopup();
                 }, 450);
             }
-            setQuery(loc.name ?? "");
+            setQuery(loc.getName() ?? "");
             setOpen(false);
         },
         [map,markersRef]
@@ -80,7 +80,7 @@ export default function SearchLocation({locations, markersRef} : Props){
                 >
                     {matches.map((loc)=>(
                         <li
-                            key={loc.id}
+                            key={loc.getID()}
                             role="option"
                             aria-selected={false}
                             tabIndex={0}
@@ -88,7 +88,7 @@ export default function SearchLocation({locations, markersRef} : Props){
                             onClick={()=>handleSelect(loc)}
                             className='px-4 py-2 cursor-pointer hover:bg-[#F9F8F8]'
                             >
-                                {loc.name}
+                                {loc.getName()}
                             </li>
                     ))}
                 </ul>

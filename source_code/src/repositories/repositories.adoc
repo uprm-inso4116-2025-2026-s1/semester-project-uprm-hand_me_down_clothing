@@ -90,3 +90,66 @@ await repo.createPiece({
 const filtered = await repo.filterPieces({ category: "SHIRT", color: "red" });
 console.log(filtered.length);
 ```
+
+// --
+// Author: Jorge L De León Orama
+// Institution: University of Puerto Rico at Mayagüez
+// Date Created: 2025-11-16
+// Version: 1.0
+// Project: Hand-me-down Clothing
+// Purpose: Documentation for repository layer. Specifically, the LocationRepository class responsible for handling CRUD and filtering operations for Locations (Stores).
+// --
+
+## Location Repository -> LocationRepository
+
+### Purpose 
+Handles Create, Read, Update, Delete and filtering operations related to the Location domain object. It also handles database  to domain and domain to database data type formatting via the `LocationFactory`.
+
+### Responsibilities
+- Fetch all Locations from Supabase, converting each persistence record into a `Location` aggregate via `LocationFactory`, and returning them as `Location[]`.
+- Fetch a single location by ID, querying Supabase by primary key, validating that exactly one row is returned, and mapping it to a `Location` aggregate.
+- Create a new location, convering a `Location` aggregate into a persistence-friendly `PersistenceLocation` and inserting it into the `stores` table.
+- Update an existing location, flattening a `Location` aggregate to `PersistenceLocation`, updating the matching row in Supabase by `id`, and ensuring the row exists.
+- Delete a location, converting the `Location` aggregate to its persistence form and deleting the corresponding row in Supabase by `id`.
+- Delegate all domain <-> persistence transfomations to `LocationFactory`, ensuring that the repository never constructs or validates `Location` directly.
+- Isolate persistence concerns, encapsulating all Supabase calls so that the rest of the application interacts only with the `LocationRepository` and domain `Location` objects.
+
+### Benefits
+- **Centralizes all Persistence Logic:** Keeps Supabase queries in one place and pervents database code from leaking into the domain layer.
+- **Ensures Consistent Data Validation:** Always converts records through the `LocationFactory`, preserving all aggreagte invariants.
+- **Improves Maintainability:** Changes to the database strucutre or querying logic only require updates in the repository layer.
+- **Guarantees Clean Architecture Boundaries:** Allows the rest of the system to work exclusively with domain `Location` objects instead of raw JSON.
+- **Simplifies Application Code:** Offers high-level CRUD operations without exposing low-level Supabase details.
+- **Reduces Duplication:** All database interactions and formatting steps are encapsulates in single, reusable methods. 
+
+---
+
+## Methods Summary
+[cols="1,1,2,1", options="header"]
+|===
+| Method | Return Type | Description | Example
+|getAllLocations() | Promise&lt;Array&lt;Location&gt;&gt; | Retrieves all locations from the database and maps them into domain objects | `repo.fetchAllLocations()`
+|getLocationById(id) | Promise&lt;Location&gt; | Fetches a single location by its unique ID, validating that only one result exists. | `repo.fetchLocationByID(101)`
+|createLocation(location) | Promise&lt;void&gt; | Inserts a new Location into the database after flattening it into persistence format | `repo.createLocation(newLocation)`
+|updateLocation(Location) | Promise&lt;void&gt; | Updates an existing Location in Supabase using flattened persistence data. | `repo.updateLocation(existingLocation)`
+|removeLocation(location) | Promise&lt;void&gt; | Deletes a location by matching the ID from the flattened persistence object. | `repo.removeLocation(locToDelete)`
+|===
+
+## Justification for Repository Pattern
+The Repository Pattern is used to hide Supabase details behind a clean, domain-focused API. `LocationRepository`` lets the rest of the application work only with `Location`` aggregates instead of raw JSON or SQL-like queries. All persistence logic (CRUD, filters, queries) is centralized in one place, and all data passes through `LocationFactory``, ensuring invariants and validations are always enforced. This makes the codebase easier to change, safer (no invalid `Location`` objects), and more maintainable, since switching database technology or changing the schema only requires updating the repository, not the whole application.
+
+## Example Usage
+
+```ts
+...
+  useEffect(() => {
+      if (locations.length > 0 || openNowFilter) return; // Only run when locations is empty or open now filter was ran and no locations were open
+      (async () => {
+    
+        const locationRepository = new LocationRepository();
+        const castedLocations : Location[] = await locationRepository.fetchAllLocations();
+        setLocations(castedLocations);
+      })();
+    }, [locations]);
+...
+```
