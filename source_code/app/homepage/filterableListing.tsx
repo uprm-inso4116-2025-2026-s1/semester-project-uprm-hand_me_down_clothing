@@ -4,6 +4,36 @@ import * as filterListings from '../utils/filters/listingsFilter'
 import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 import { Piece } from '../types/piece';
 
+import { addFavorite, removeFavorite } from "../lib/favoritesApi";
+
+function FavoriteHeartButton({ listingId, isFavorite }: { listingId: string; isFavorite: boolean }) {
+  async function handleClick() {
+    try {
+      if (isFavorite) {
+        await removeFavorite(listingId);
+      } else {
+        await addFavorite(listingId);
+      }
+      // then update local state or let parent know
+    } catch (err) {
+      console.error(err);
+      alert("Could not update favorites");
+    }
+  }
+
+  return (
+    <button
+      type="button"
+      aria-pressed={isFavorite}
+      onClick={handleClick}
+      className="..." // styles
+    >
+      {isFavorite ? "♥" : "♡"}
+    </button>
+  );
+}
+
+
 const featured_categories = [
   {id: 0, name: "All", filter: "all"},
   { id: 1, name: "Tops", filter: "tops" },
@@ -67,7 +97,8 @@ export default function FilterableFeaturedItems({initialItems}: any) {
                   {item.getFormattedPrice()}$
                 </div>
                 <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">
-                  ♥
+                  <FavoriteHeartButton listingId={String(item.id)} isFavorite={false} />
+        
                 </div>
               </div>
               <p className="text-lg font-bold italic pt-2">{item.name}</p>

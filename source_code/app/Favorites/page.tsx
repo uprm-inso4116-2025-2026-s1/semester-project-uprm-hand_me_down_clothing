@@ -1,5 +1,7 @@
 "use client";
 import React from "react";
+import { FavoriteItem } from "../lib/favoritesApi";
+import { removeFavorite } from "../lib/favoritesApi";
 
 /* -------------------- Tiny inline SVG icons (no deps) -------------------- */
 const Icon = {
@@ -26,8 +28,71 @@ const Icon = {
   ),
 };
 
+
+
+
 export default function FavoritesLayout() {
   const skeletonCards = Array.from({ length: 8 });
+
+  //Yamilette Alemany: Loading safeguards
+    const [favorites, setFavorites] = React.useState<FavoriteItem[]>([]);
+    const [status, setStatus] = React.useState<"idle" | "loading" | "success" | "error">("idle");
+    const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+
+  //Yamilette Alemany: End here
+
+  async function handleRemoveFavorite(listingId: string) {
+    const previous = favorites;
+    setFavorites((curr) => curr.filter((f) => f.id !== listingId));
+
+    try {
+      await removeFavorite(listingId); // calls your API file
+    } catch (err) {
+      setFavorites(previous); // rollback
+      console.error(err);
+      alert("Could not remove from favorites.");
+    }
+  }
+
+    // Yamilette Alemany: call api
+
+    React.useEffect(() => {
+      async function loadFavorites() {
+      setStatus("loading");
+      setErrorMessage(null);
+
+      try {
+        // ⬇️ CHANGE THIS to match real backend URL
+        const res = await fetch("/api/favorites", {
+        });
+
+        if (!res.ok) {
+          throw new Error("Failed to load favorites");
+        }
+
+        const data = (await res.json()) as FavoriteItem[];
+        setFavorites(data);
+        setStatus("success");
+      } catch (err) {
+        console.error(err);
+        setStatus("error");
+        setErrorMessage((err as Error).message);
+      }
+    }
+
+      loadFavorites();
+    }, []);
+
+  //Yamilette Alemany: these variables will help with conditional rendering later. All skeleton cards load regardless of data state. When 
+  //integrating with backend, these will help show the right UI states.
+
+  const showSkeletons = status === "loading" || status === "idle";
+  const showEmpty = status === "success" && favorites.length === 0;
+  const showList = status === "success" && favorites.length > 0;
+
+
+  //Yamilette Alemany: End here
+
 
   return (
     <div
@@ -97,11 +162,29 @@ export default function FavoritesLayout() {
       </section>
 
       {/* Items grid — skeleton cards only */}
+
+      {/* Yamilette Alemany - modified skeleton keys to show real data when available */}
+
       <main className="mx-auto max-w-7xl px-6 py-10">
+      {/* Error message, if any */}
+        {status === "error" && (
+          <div
+            role="alert"
+            className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
+          >
+            We couldn’t load your favorites. Please refresh or try again later.
+            {errorMessage && (
+              <span className="block text-xs mt-1 opacity-70">{errorMessage}</span>
+            )}
+          </div>
+      )}
+
+      {/* Loading skeletons */}
+      {showSkeletons && (
         <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
           {skeletonCards.map((_, i) => (
             <li key={i}>
-              <article className="flex flex-col rounded-3xl border border-[#E5E7EF] bg-white">
+                    <article className="flex flex-col rounded-3xl border border-[#E5E7EF] bg-white">
                 {/* Top container with chips + heart */}
                 <div className="w-full h-52 bg-[#aac7c0] p-3 rounded-3xl">
                   <div className="flex items-center gap-2">
@@ -120,26 +203,75 @@ export default function FavoritesLayout() {
                       ♥
                     </button>
                   </div>
+                </div>
+              </article>
+            </li>
+           ))}
+          </ul>
+      )}
 
-                  {/* Image placeholder */}
-                  <div className="mt-3 h-[140px] w-full rounded-xl border border-white/40 bg-white/30 animate-pulse" />
+      {/* Empty state */}
+      {showEmpty && (
+        <div className="flex flex-col items-center justify-center py-20 text-center">
+          <Icon.Heart className="h-10 w-10 text-[#d6b1b1]" aria-hidden />
+          <h2 className="mt-4 text-2xl font-semibold">No favorites yet</h2>
+          <p className="mt-2 max-w-md text-sm text-zinc-600">
+            Start exploring listings and tap the heart icon to save items you love.
+          </p>
+        </div>
+      )}
+
+      {/* List of real favorites */}
+      {showList && (
+        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+          {favorites.map((item) => (
+            <li key={item.id}>
+              <article className="flex flex-col rounded-3xl border border-[#E5E7EF] bg-white">
+                {/* Top container with chips + heart */}
+                <div className="w-full h-52 bg-[#aac7c0] p-3 rounded-3xl">
+                  <div className="flex items-center gap-2">
+                    <span className="inline-flex items-center justify-center h-6 px-3 bg-[#f6e5e6] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
+                      {item.conditionLabel}
+                    </span>
+                    <span className="inline-flex items-center justify-center h-6 px-3 bg-[#F9F8F8] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
+                      ${item.priceLabel}
+                    </span>
+                    <button
+                      type="button"
+                      className="ml-auto inline-flex items-center justify-center w-8 h-8 bg-[#F9F8F8] border border-[#E5E7EF] text-xl text-[#f495ba] rounded-full cursor-default"
+                      aria-label="Remove from favorites"
+                      aria-pressed="true"
+                      onClick={() => handleRemoveFavorite(item.listingId)}
+                    >
+                      ♥
+                    </button>
+                  </div>
+
+                  {/* Image */}
+                  <div className="mt-3 h-[140px] w-full rounded-xl border border-white/40 bg-white/30 overflow-hidden">
+                    {item.imageUrl ? (
+                      <img
+                        src={item.imageUrl}
+                        alt={item.title}
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <div className="h-full w-full bg-white/40" />
+                    )}
+                  </div>
                 </div>
 
-                {/* Body placeholders */}
+                {/* Body */}
                 <div className="px-5 py-3">
-                  <div className="h-5 w-3/4 bg-zinc-200 rounded mb-2 animate-pulse" />
-                  <div className="space-y-1">
-                    <div className="h-3 w-5/6 bg-zinc-200 rounded animate-pulse" />
-                    <div className="h-3 w-1/2 bg-zinc-200 rounded animate-pulse" />
-                  </div>
+                  <h3 className="font-semibold text-sm truncate">{item.title}</h3>
                   <div className="mt-2 flex flex-wrap gap-1">
-                    {[0, 1, 2].map((k) => (
+                    {item.tags.map((tag) => (
                       <span
-                        key={k}
+                        key={tag}
                         className="inline-flex items-center gap-1 rounded-full border border-[#E5E7EF] px-2 py-0.5 text-[0.8rem] text-zinc-600"
                       >
                         <Icon.Tag className="h-3 w-3" />
-                        <span className="h-3 w-10 bg-zinc-200 rounded animate-pulse inline-block" />
+                        <span>{tag}</span>
                       </span>
                     ))}
                   </div>
@@ -148,10 +280,35 @@ export default function FavoritesLayout() {
             </li>
           ))}
         </ul>
-      </main>
+      )}
+    </main>
+
+
+    {/* Image placeholder */}
+    <div className="mt-3 h-[140px] w-full rounded-xl border border-white/40 bg-white/30 animate-pulse" />
+
+    {/* Body placeholders */}
+    <div className="px-5 py-3">
+      <div className="h-5 w-3/4 bg-zinc-200 rounded mb-2 animate-pulse" />
+      <div className="space-y-1">
+        <div className="h-3 w-5/6 bg-zinc-200 rounded animate-pulse" />
+        <div className="h-3 w-1/2 bg-zinc-200 rounded animate-pulse" />
+      </div>
+      <div className="mt-2 flex flex-wrap gap-1">
+        {[0, 1, 2].map((k) => (
+          <span
+            key={k}
+            className="inline-flex items-center gap-1 rounded-full border border-[#E5E7EF] px-2 py-0.5 text-[0.8rem] text-zinc-600"
+          >
+            <Icon.Tag className="h-3 w-3" />
+            <span className="h-3 w-10 bg-zinc-200 rounded animate-pulse inline-block" />
+          </span>
+        ))}
+      </div>
     </div>
+  </div>
   );
-}
+  }
 
 /* -------------------- Presentational Subcomponents -------------------- */
 
