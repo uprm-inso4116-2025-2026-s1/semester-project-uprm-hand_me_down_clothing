@@ -27,14 +27,47 @@ export default function DonatePiece() {
     description: ''
   })
 
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
   // Temporary listing ID for ImageUploader
   const listingId = `donate-${Date.now()}`
 
   const handleSubmit = async () => {
+    // Validation
     if (!formData.image_urls || formData.image_urls.length === 0) {
       alert("Please upload at least one image.")
       return
     }
+    if (!formData.city.trim()) {
+      alert("Please enter a city.")
+      return
+    }
+    if (!formData.handoff) {
+      alert("Please select a handoff method.")
+      return
+    }
+    if (!formData.title.trim()) {
+      alert("Please enter an item name.")
+      return
+    }
+    if (!formData.category) {
+      alert("Please select a category.")
+      return
+    }
+    if (!formData.condition) {
+      alert("Please select a condition.")
+      return
+    }
+    if (!formData.size) {
+      alert("Please select a size.")
+      return
+    }
+    if (!formData.sex) {
+      alert("Please select a gender.")
+      return
+    }
+
+    setIsSubmitting(true)
 
     try {
       const { data, error } = await supabase
@@ -61,7 +94,8 @@ export default function DonatePiece() {
       if (error) throw error
 
       alert("Donation listing submitted successfully!")
-      // Optionally: reset form
+      
+      // Reset form
       setFormData({
         image_urls: [],
         city: '',
@@ -79,6 +113,8 @@ export default function DonatePiece() {
     } catch (err) {
       console.error("Error creating donation listing:", err)
       alert("Failed to submit donation. Please try again.")
+    } finally {
+      setIsSubmitting(false)
     }
   }
 
@@ -156,23 +192,23 @@ export default function DonatePiece() {
                 <div className="mt-4 space-y-3">
                   <label htmlFor="pickup" className="flex items-center gap-2">
                     <input 
-                    id="pickup" 
-                    name="handoff" 
-                    type="radio" 
-                    className="accent-[#abc8c1]" 
-                    checked={formData.handoff === 'pickup'}
-                    onChange={() => setFormData({ ...formData, handoff: 'pickup' })}
+                      id="pickup" 
+                      name="handoff" 
+                      type="radio" 
+                      className="accent-[#abc8c1]" 
+                      checked={formData.handoff === 'pickup'}
+                      onChange={() => setFormData({ ...formData, handoff: 'pickup' })}
                     />
                     <span>Pickup at my location</span>
                   </label>
                   <label htmlFor="dropoff" className="flex items-center gap-2">
                     <input 
-                    id="dropoff" 
-                    name="handoff" 
-                    type="radio" 
-                    className="accent-[#abc8c1]" 
-                    checked={formData.handoff === 'dropoff'}
-                    onChange={() => setFormData({ ...formData, handoff: 'dropoff' })}
+                      id="dropoff" 
+                      name="handoff" 
+                      type="radio" 
+                      className="accent-[#abc8c1]" 
+                      checked={formData.handoff === 'dropoff'}
+                      onChange={() => setFormData({ ...formData, handoff: 'dropoff' })}
                     />
                     <span>Drop-off at designated point</span>
                   </label>
@@ -186,7 +222,8 @@ export default function DonatePiece() {
                 id="contact"
                 name="contact"
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
-                defaultValue="In-app messages"
+                value={formData.contact}
+                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
               >
                 <option>In-app messages</option>
                 <option>Phone</option>
@@ -218,8 +255,9 @@ export default function DonatePiece() {
               <select
                 id="category"
                 name="category"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
                 <option value="" disabled>Select a category</option>
                 <option>Shirt</option>
@@ -239,8 +277,9 @@ export default function DonatePiece() {
               <select
                 id="condition"
                 name="condition"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.condition}
+                onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
               >
                 <option value="" disabled>Select condition</option>
                 <option>New</option>
@@ -260,6 +299,8 @@ export default function DonatePiece() {
                 min={1}
                 placeholder="e.g., 1"
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.quantity}
+                onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
               />
             </div>
 
@@ -268,8 +309,9 @@ export default function DonatePiece() {
               <select
                 id="size"
                 name="size"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.size}
+                onChange={(e) => setFormData({ ...formData, size: e.target.value })}
               >
                 <option value="" disabled>Select size</option>
                 <option>2x-Small</option>
@@ -288,8 +330,9 @@ export default function DonatePiece() {
               <select
                 id="sex"
                 name="sex"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.sex}
+                onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
               >
                 <option value="" disabled>Select sex</option>
                 <option>Male</option>
@@ -306,6 +349,8 @@ export default function DonatePiece() {
                 rows={4}
                 placeholder="Highlight what makes this item special for someone else. Include material, style, and/or flaws."
                 className="mt-2 block w-full rounded-2xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
             </div>
           </div>
@@ -316,11 +361,16 @@ export default function DonatePiece() {
           <button
             type="button"
             onClick={handleSubmit}
-            className="px-5 py-2 h-13 bg-[#abc8c1] hover:bg-[#8bb5aa] rounded-full inline-flex items-center text-white transition-colors"
+            disabled={isSubmitting}
+            className={`px-5 py-2 h-13 rounded-full inline-flex items-center text-white transition-colors ${
+              isSubmitting 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-[#abc8c1] hover:bg-[#8bb5aa]'
+            }`}
             aria-label="Submit donation"
           >
             <CheckIcon className="mr-2 size-5" aria-hidden="true" />
-            Submit Donation!
+            {isSubmitting ? 'Submitting...' : 'Submit Donation!'}
           </button>
         </div>
       </div>

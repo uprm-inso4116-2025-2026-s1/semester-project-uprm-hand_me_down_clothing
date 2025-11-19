@@ -4,7 +4,8 @@ import { supabase } from "../../app/auth/supabaseClient";
 
 interface ImageUploaderProps {
   listingId: string;
-  onUploadComplete?: (urls: string[]) => void; // Return uploaded URLs
+  onUploadComplete?: (urls: string[]) => void;
+  autoUpload?: boolean; // New prop to control upload behavior
 }
 
 const MIN_IMAGES = 1;
@@ -15,6 +16,7 @@ const ALLOWED_TYPES = ["image/jpeg", "image/png", "image/webp"];
 export const ImageUploader: React.FC<ImageUploaderProps> = ({
   listingId,
   onUploadComplete,
+  autoUpload = false, // Default to false for manual upload
 }) => {
   const [files, setFiles] = useState<(FileWithPath & { preview: string })[]>([]);
   const [uploading, setUploading] = useState(false);
@@ -46,7 +48,6 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     setError("");
   };
 
-  // TypeScript-safe dropzone
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
     onDrop,
     multiple: true,
@@ -65,7 +66,7 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
     setFiles((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Upload images to Supabase Storage
+  // Upload images to Supabase Storage (without updating database)
   const handleUpload = async () => {
     if (files.length < MIN_IMAGES) {
       setError(`Please upload at least ${MIN_IMAGES} image(s).`);
@@ -97,20 +98,13 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         urls.push(publicUrl);
       }
 
-      // Update listing record with image URLs
-      const { error: dbError } = await supabase
-        .from("listings")
-        .update({ image_urls: urls })
-        .eq("id", listingId);
-
-      if (dbError) throw dbError;
-
       setUploadedUrls(urls);
       setFiles([]);
-      alert("Images uploaded successfully!");
-
+      
       // Return URLs to parent component
       if (onUploadComplete) onUploadComplete(urls);
+      
+      alert("Images uploaded successfully!");
     } catch (err) {
       console.error(err);
       setError("Upload failed, please try again.");
@@ -161,25 +155,28 @@ export const ImageUploader: React.FC<ImageUploaderProps> = ({
         ))}
       </div>
 
-      {/* Upload button */}
-      <button
-        onClick={handleUpload}
-        disabled={uploading || files.length < MIN_IMAGES}
-        className={`mt-4 px-4 py-2 rounded-full text-white transition ${
-          uploading || files.length < MIN_IMAGES
-            ? "bg-gray-400 cursor-not-allowed"
-            : "bg-[#abc8c1] hover:bg-[#8bb5aa]"
-        }`}
-      >
-        {uploading ? "Uploading..." : "Upload Images"}
-      </button>
+      {/* Upload button - only show if not auto-uploading */}
+      {!autoUpload && (
+        <button
+          type="button"
+          onClick={handleUpload}
+          disabled={uploading || files.length < MIN_IMAGES}
+          className={`mt-4 px-4 py-2 rounded-full text-white transition ${
+            uploading || files.length < MIN_IMAGES
+              ? "bg-gray-400 cursor-not-allowed"
+              : "bg-[#abc8c1] hover:bg-[#8bb5aa]"
+          }`}
+        >
+          {uploading ? "Uploading..." : "Upload Images"}
+        </button>
+      )}
 
       {/* Image count info */}
       <p className="text-sm text-gray-500 mt-2">
         {files.length}/{MAX_IMAGES} selected
       </p>
 
-      {/* Uploaded images summary (after successful upload) */}
+      {/* Uploaded images summary */}
       {uploadedUrls.length > 0 && (
         <div className="mt-3 text-sm text-green-600">
           {uploadedUrls.length} image(s) successfully uploaded.
