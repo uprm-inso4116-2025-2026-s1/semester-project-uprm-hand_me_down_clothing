@@ -9,3 +9,5 @@ export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
 		storage: storageAdapter
 	}
 })
+
+export { createClient }
