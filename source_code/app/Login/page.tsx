@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { signIn } from "@/app/auth/auth";
 
 
 export default function LoginPage() {
@@ -22,17 +23,36 @@ export default function LoginPage() {
     e.preventDefault();
     setErr(null);
 
-    if (!email || !pw) return setErr("Email and password are required.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setErr("Enter a valid email.");
+    if (!email || !pw) {
+      return setErr("Email and password are required.");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return setErr("Enter a valid email.");
+    }
 
     setBusy(true);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      if (pw !== "handmedown") throw new Error("Invalid credentials"); // TEMP PASSWORD!!!!!!
+      // 🔑 Real Supabase sign-in
+      const { data, error } = await signIn(email, pw, remember);
 
-      if (remember) { try { localStorage.setItem("hmd_last_email", email); } catch { } }
-      else { try { localStorage.removeItem("hmd_last_email"); } catch { } }
+      if (error) {
+        // Supabase will send helpful messages like "Invalid login credentials"
+        setErr(error.message || "Invalid email or password.");
+        return;
+      }
 
+      // Optionally keep your “last email” helper UX
+      try {
+        if (remember) {
+          localStorage.setItem("hmd_last_email", email);
+        } else {
+          localStorage.removeItem("hmd_last_email");
+        }
+      } catch {
+        // non-fatal
+      }
+
+      // If sign-in succeeded, redirect
       router.push("/");
     } catch (e: any) {
       setErr(e?.message || "Something went wrong.");

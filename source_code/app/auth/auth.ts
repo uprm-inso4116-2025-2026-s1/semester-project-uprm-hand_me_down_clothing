@@ -1,3 +1,5 @@
+// Client-side auth helpers (use in "use client" components)
+
 // Log in (sign in) an existing user
 import { setAuthPersistence } from './storage'
 import { supabase } from './supabaseClient'
