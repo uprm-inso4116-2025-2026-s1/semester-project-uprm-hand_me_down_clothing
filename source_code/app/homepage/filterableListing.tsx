@@ -4,34 +4,35 @@ import * as filterListings from '../utils/filters/listingsFilter'
 import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 import { Piece } from '../types/piece';
 
-import { addFavorite, removeFavorite } from "../lib/favoritesApi";
+import { useFavorites } from "@/app/Favorites/FavoritesProvider"; // adjust path if needed
 
-function FavoriteHeartButton({ listingId, isFavorite }: { listingId: string; isFavorite: boolean }) {
-  async function handleClick() {
-    try {
-      if (isFavorite) {
-        await removeFavorite(listingId);
-      } else {
-        await addFavorite(listingId);
-      }
-      // then update local state or let parent know
-    } catch (err) {
-      console.error(err);
-      alert("Could not update favorites");
-    }
+
+function FavoriteHeartButton({ listingId }: { listingId: number }) {
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const active = isFavorite(listingId);
+
+  async function handleClick(e: React.MouseEvent) {
+    // prevent clicking the heart from triggering the outer card button
+    e.stopPropagation();
+    toggleFavorite(listingId);
   }
 
   return (
     <button
       type="button"
-      aria-pressed={isFavorite}
+      aria-pressed={active}
       onClick={handleClick}
-      className="..." // styles
+      className="w-8 h-8 flex items-center justify-center rounded-full bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl
+                 transition hover:scale-105"
+      aria-label={active ? "Remove from favorites" : "Add to favorites"}
     >
-      {isFavorite ? "♥" : "♡"}
+      <span className={active ? "text-[#f495ba]" : "text-[#9a9a9a]"}>
+        {active ? "♥" : "♡"}
+      </span>
     </button>
   );
 }
+
 
 
 const featured_categories = [
@@ -97,8 +98,7 @@ export default function FilterableFeaturedItems({initialItems}: any) {
                   {item.getFormattedPrice()}$
                 </div>
                 <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">
-                  <FavoriteHeartButton listingId={String(item.id)} isFavorite={false} />
-        
+                  <FavoriteHeartButton listingId={item.id} />
                 </div>
               </div>
               <p className="text-lg font-bold italic pt-2">{item.name}</p>

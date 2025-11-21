@@ -1,7 +1,11 @@
 "use client";
 import React, { useState } from "react";
+import { useFavorites } from "@/app/Favorites/FavoritesProvider";
+
 
 export default function IndividualListing() {
+
+
   const brand = {
     pink: "#E7A4A4",
     mint: "#C7E2E0",
@@ -11,6 +15,7 @@ export default function IndividualListing() {
   } as const;
 
   const product = {
+    
     title: "Nike Hoodie — Lavender",
     categoryTrail: ["Home", "Hoodies"],
     description: {
@@ -54,6 +59,11 @@ export default function IndividualListing() {
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
+
+  
+  const listingId = 1;
+  const { isFavorite, toggleFavorite } = useFavorites();
+  const isSaved = isFavorite(listingId);
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
@@ -130,14 +140,17 @@ export default function IndividualListing() {
 
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <button
-                  className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm"
-                  style={{ borderColor: brand.borderStrong }}
-                >
-                  <span>💗</span> Save
+                  onClick={() => toggleFavorite(listingId)}
+                    className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
+                    style={{ borderColor: brand.borderStrong }}
+                    aria-pressed={isSaved}
+                    aria-label={isSaved ? "Remove from favorites" : "Save to favorites"}
+                  >
+                    <span className={isSaved ? "text-[#f495ba]" : "text-neutral-500"}>
+                      {isSaved ? "♥" : "💗"}
+                    </span>
+                    <span>{isSaved ? "Saved" : "Save"}</span>
                 </button>
-
-                {/*^ Call to api to add to favorites array */}
-
 
                 <button
                   className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm"

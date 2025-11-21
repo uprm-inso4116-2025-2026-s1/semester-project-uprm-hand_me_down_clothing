@@ -5,6 +5,7 @@ import AnnouncementBar from "@/src/components/announcementBar";
 import TopNav from "@/src/components/nav_bar";
 import Footer from "@/src/components/Footer";
 import SupabaseProvider from "./providers/SupabaseProvider";
+import { FavoritesProvider } from "./Favorites/FavoritesProvider";
 
 
 const lato = Lato({
@@ -37,7 +38,7 @@ export default function RootLayout({
 
         {/* Page content + footer */}
         <main id="main" className="min-h-screen flex flex-col">
-          <SupabaseProvider>{children}</SupabaseProvider>
+          <SupabaseProvider> <FavoritesProvider> {children} </FavoritesProvider></SupabaseProvider>
           <Footer />
         </main>
       </body>

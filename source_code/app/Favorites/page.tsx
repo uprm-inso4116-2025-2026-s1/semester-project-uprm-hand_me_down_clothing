@@ -1,9 +1,42 @@
 "use client";
+
 import React from "react";
-import { FavoriteItem } from "../lib/favoritesApi";
-import { removeFavorite } from "../lib/favoritesApi";
+import { useFavorites } from "@/app/Favorites/FavoritesProvider";
+
+/* -------------------- Types & mock data -------------------- */
+
+type Listing = {
+  id: number;
+  title: string;
+  priceLabel: string;
+  conditionLabel: string;
+  tags: string[];
+  imageUrl?: string | null;
+};
+
+// TODO: replace this with your real listings source
+const ALL_LISTINGS: Listing[] = [
+  {
+    id: 1,
+    title: "Oversized Denim Jacket",
+    priceLabel: "24.00",
+    conditionLabel: "Like New",
+    tags: ["Denim", "M", "Unisex"],
+    imageUrl: "/placeholder-denim.jpg",
+  },
+  {
+    id: 2,
+    title: "Floral Summer Dress",
+    priceLabel: "18.00",
+    conditionLabel: "Gently Used",
+    tags: ["Dress", "S"],
+    imageUrl: "/placeholder-dress.jpg",
+  },
+  // add or replace with real data
+];
 
 /* -------------------- Tiny inline SVG icons (no deps) -------------------- */
+
 const Icon = {
   Search: (props: React.SVGProps<SVGSVGElement>) => (
     <svg viewBox="0 0 24 24" width="1em" height="1em" aria-hidden focusable="false" {...props}>
@@ -28,71 +61,19 @@ const Icon = {
   ),
 };
 
-
-
-
 export default function FavoritesLayout() {
   const skeletonCards = Array.from({ length: 8 });
 
-  //Yamilette Alemany: Loading safeguards
-    const [favorites, setFavorites] = React.useState<FavoriteItem[]>([]);
-    const [status, setStatus] = React.useState<"idle" | "loading" | "success" | "error">("idle");
-    const [errorMessage, setErrorMessage] = React.useState<string | null>(null);
+  const { favorites: favoriteIds, toggleFavorite } = useFavorites();
 
-  //Yamilette Alemany: End here
+  const favoriteListings = React.useMemo(
+    () => ALL_LISTINGS.filter((item) => favoriteIds.includes(item.id)),
+    [favoriteIds]
+  );
 
-  async function handleRemoveFavorite(listingId: string) {
-    const previous = favorites;
-    setFavorites((curr) => curr.filter((f) => f.id !== listingId));
-
-    try {
-      await removeFavorite(listingId); // calls your API file
-    } catch (err) {
-      setFavorites(previous); // rollback
-      console.error(err);
-      alert("Could not remove from favorites.");
-    }
-  }
-
-    // Yamilette Alemany: call api
-
-    React.useEffect(() => {
-      async function loadFavorites() {
-      setStatus("loading");
-      setErrorMessage(null);
-
-      try {
-        // ⬇️ CHANGE THIS to match real backend URL
-        const res = await fetch("/api/favorites", {
-        });
-
-        if (!res.ok) {
-          throw new Error("Failed to load favorites");
-        }
-
-        const data = (await res.json()) as FavoriteItem[];
-        setFavorites(data);
-        setStatus("success");
-      } catch (err) {
-        console.error(err);
-        setStatus("error");
-        setErrorMessage((err as Error).message);
-      }
-    }
-
-      loadFavorites();
-    }, []);
-
-  //Yamilette Alemany: these variables will help with conditional rendering later. All skeleton cards load regardless of data state. When 
-  //integrating with backend, these will help show the right UI states.
-
-  const showSkeletons = status === "loading" || status === "idle";
-  const showEmpty = status === "success" && favorites.length === 0;
-  const showList = status === "success" && favorites.length > 0;
-
-
-  //Yamilette Alemany: End here
-
+  const showEmpty = favoriteListings.length === 0;
+  const showList = favoriteListings.length > 0;
+  const showSkeletons = false;
 
   return (
     <div
@@ -108,7 +89,6 @@ export default function FavoritesLayout() {
         <div className="mx-auto max-w-7xl px-6 py-8 flex flex-wrap gap-6 items-center justify-between">
           <h1 className="font-bold leading-tight text-5xl sm:text-6xl">Favorites</h1>
 
-          {/* Search (presentational) */}
           <label className="relative w-full max-w-xl" aria-label="Search favorites">
             <span className="absolute left-4 top-1/2 -translate-y-1/2" aria-hidden>
               <Icon.Search className="h-5 w-5 text-[#989A9D]" />
@@ -127,19 +107,20 @@ export default function FavoritesLayout() {
       <section className="mx-auto max-w-7xl px-6 pt-8">
         <h2 className="font-bold text-3xl">Featured</h2>
         <div className="mt-4 flex flex-wrap gap-3">
-          {["Tops", "Bottoms", "Dresses", "Shoes", "Outerwear", "Accessories", "Kids", "Unisex"].map((name) => (
-            <button
-              key={name}
-              className="h-11 px-5 rounded-full bg-[#e6dac7] hover:bg-[#d8c8b4] focus:bg-[#c9b8a2] text-[#333333] font-normal cursor-default"
-              type="button"
-              aria-disabled
-            >
-              {name}
-            </button>
-          ))}
+          {["Tops", "Bottoms", "Dresses", "Shoes", "Outerwear", "Accessories", "Kids", "Unisex"].map(
+            (name) => (
+              <button
+                key={name}
+                className="h-11 px-5 rounded-full bg-[#e6dac7] hover:bg-[#d8c8b4] focus:bg-[#c9b8a2] text-[#333333] font-normal cursor-default"
+                type="button"
+                aria-disabled
+              >
+                {name}
+              </button>
+            )
+          )}
         </div>
       </section>
-
 
       {/* Controls row (static chips + select-look) */}
       <section className="mx-auto max-w-7xl px-6 pt-10">
@@ -161,154 +142,111 @@ export default function FavoritesLayout() {
         </div>
       </section>
 
-      {/* Items grid — skeleton cards only */}
-
-      {/* Yamilette Alemany - modified skeleton keys to show real data when available */}
-
+      {/* Main content */}
       <main className="mx-auto max-w-7xl px-6 py-10">
-      {/* Error message, if any */}
-        {status === "error" && (
-          <div
-            role="alert"
-            className="mb-6 rounded-2xl border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-800"
-          >
-            We couldn’t load your favorites. Please refresh or try again later.
-            {errorMessage && (
-              <span className="block text-xs mt-1 opacity-70">{errorMessage}</span>
-            )}
-          </div>
-      )}
-
-      {/* Loading skeletons */}
-      {showSkeletons && (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {skeletonCards.map((_, i) => (
-            <li key={i}>
-                    <article className="flex flex-col rounded-3xl border border-[#E5E7EF] bg-white">
-                {/* Top container with chips + heart */}
-                <div className="w-full h-52 bg-[#aac7c0] p-3 rounded-3xl">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center justify-center h-6 px-3 bg-[#f6e5e6] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
-                      Condition
-                    </span>
-                    <span className="inline-flex items-center justify-center h-6 px-3 bg-[#F9F8F8] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
-                      Price
-                    </span>
-                    <button
-                      type="button"
-                      className="ml-auto inline-flex items-center justify-center w-8 h-8 bg-[#F9F8F8] border border-[#E5E7EF] text-xl text-[#f495ba] rounded-full cursor-default"
-                      aria-label="Remove from favorites"
-                      aria-disabled
-                    >
-                      ♥
-                    </button>
-                  </div>
-                </div>
-              </article>
-            </li>
-           ))}
-          </ul>
-      )}
-
-      {/* Empty state */}
-      {showEmpty && (
-        <div className="flex flex-col items-center justify-center py-20 text-center">
-          <Icon.Heart className="h-10 w-10 text-[#d6b1b1]" aria-hidden />
-          <h2 className="mt-4 text-2xl font-semibold">No favorites yet</h2>
-          <p className="mt-2 max-w-md text-sm text-zinc-600">
-            Start exploring listings and tap the heart icon to save items you love.
-          </p>
-        </div>
-      )}
-
-      {/* List of real favorites */}
-      {showList && (
-        <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
-          {favorites.map((item) => (
-            <li key={item.id}>
-              <article className="flex flex-col rounded-3xl border border-[#E5E7EF] bg-white">
-                {/* Top container with chips + heart */}
-                <div className="w-full h-52 bg-[#aac7c0] p-3 rounded-3xl">
-                  <div className="flex items-center gap-2">
-                    <span className="inline-flex items-center justify-center h-6 px-3 bg-[#f6e5e6] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
-                      {item.conditionLabel}
-                    </span>
-                    <span className="inline-flex items-center justify-center h-6 px-3 bg-[#F9F8F8] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
-                      ${item.priceLabel}
-                    </span>
-                    <button
-                      type="button"
-                      className="ml-auto inline-flex items-center justify-center w-8 h-8 bg-[#F9F8F8] border border-[#E5E7EF] text-xl text-[#f495ba] rounded-full cursor-default"
-                      aria-label="Remove from favorites"
-                      aria-pressed="true"
-                      onClick={() => handleRemoveFavorite(item.listingId)}
-                    >
-                      ♥
-                    </button>
-                  </div>
-
-                  {/* Image */}
-                  <div className="mt-3 h-[140px] w-full rounded-xl border border-white/40 bg-white/30 overflow-hidden">
-                    {item.imageUrl ? (
-                      <img
-                        src={item.imageUrl}
-                        alt={item.title}
-                        className="h-full w-full object-cover"
-                      />
-                    ) : (
-                      <div className="h-full w-full bg-white/40" />
-                    )}
-                  </div>
-                </div>
-
-                {/* Body */}
-                <div className="px-5 py-3">
-                  <h3 className="font-semibold text-sm truncate">{item.title}</h3>
-                  <div className="mt-2 flex flex-wrap gap-1">
-                    {item.tags.map((tag) => (
-                      <span
-                        key={tag}
-                        className="inline-flex items-center gap-1 rounded-full border border-[#E5E7EF] px-2 py-0.5 text-[0.8rem] text-zinc-600"
-                      >
-                        <Icon.Tag className="h-3 w-3" />
-                        <span>{tag}</span>
+        {/* Optional: skeletons if you really want them for “hydration” */}
+        {showSkeletons && (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {skeletonCards.map((_, i) => (
+              <li key={i}>
+                <article className="flex flex-col rounded-3xl border border-[#E5E7EF] bg-white">
+                  <div className="w-full h-52 bg-[#aac7c0] p-3 rounded-3xl">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center h-6 px-3 bg-[#f6e5e6] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
+                        Condition
                       </span>
-                    ))}
+                      <span className="inline-flex items-center justify-center h-6 px-3 bg-[#F9F8F8] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
+                        Price
+                      </span>
+                      <button
+                        type="button"
+                        className="ml-auto inline-flex items-center justify-center w-8 h-8 bg-[#F9F8F8] border border-[#E5E7EF] text-xl text-[#f495ba] rounded-full cursor-default"
+                        aria-label="Remove from favorites"
+                        aria-disabled
+                      >
+                        ♥
+                      </button>
+                    </div>
+                    <div className="mt-3 h-[140px] w-full rounded-xl border border-white/40 bg-white/30 animate-pulse" />
                   </div>
-                </div>
-              </article>
-            </li>
-          ))}
-        </ul>
-      )}
-    </main>
+                </article>
+              </li>
+            ))}
+          </ul>
+        )}
 
+        {/* Empty state */}
+        {showEmpty && (
+          <div className="flex flex-col items-center justify-center py-20 text-center">
+            <Icon.Heart className="h-10 w-10 text-[#d6b1b1]" aria-hidden />
+            <h2 className="mt-4 text-2xl font-semibold">No favorites yet</h2>
+            <p className="mt-2 max-w-md text-sm text:zinc-600">
+              Start exploring listings and tap the heart icon to save items you love.
+            </p>
+          </div>
+        )}
 
-    {/* Image placeholder */}
-    <div className="mt-3 h-[140px] w-full rounded-xl border border-white/40 bg-white/30 animate-pulse" />
+        {/* List of real favorites */}
+        {showList && (
+          <ul className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-5">
+            {favoriteListings.map((item) => (
+              <li key={item.id}>
+                <article className="flex flex-col rounded-3xl border border-[#E5E7EF] bg-white">
+                  <div className="w-full h-52 bg-[#aac7c0] p-3 rounded-3xl">
+                    <div className="flex items-center gap-2">
+                      <span className="inline-flex items-center justify-center h-6 px-3 bg-[#f6e5e6] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
+                        {item.conditionLabel}
+                      </span>
+                      <span className="inline-flex items-center justify-center h-6 px-3 bg-[#F9F8F8] border border-[#E5E7EF] text-sm text-[#444] rounded-xl">
+                        ${item.priceLabel}
+                      </span>
+                      <button
+                        type="button"
+                        className="ml-auto inline-flex items-center justify-center w-8 h-8 bg-[#F9F8F8] border border-[#E5E7EF] text-xl text-[#f495ba] rounded-full"
+                        aria-label="Remove from favorites"
+                        aria-pressed="true"
+                        onClick={() => toggleFavorite(item.id)} // 👈 removes locally
+                      >
+                        ♥
+                      </button>
+                    </div>
 
-    {/* Body placeholders */}
-    <div className="px-5 py-3">
-      <div className="h-5 w-3/4 bg-zinc-200 rounded mb-2 animate-pulse" />
-      <div className="space-y-1">
-        <div className="h-3 w-5/6 bg-zinc-200 rounded animate-pulse" />
-        <div className="h-3 w-1/2 bg-zinc-200 rounded animate-pulse" />
-      </div>
-      <div className="mt-2 flex flex-wrap gap-1">
-        {[0, 1, 2].map((k) => (
-          <span
-            key={k}
-            className="inline-flex items-center gap-1 rounded-full border border-[#E5E7EF] px-2 py-0.5 text-[0.8rem] text-zinc-600"
-          >
-            <Icon.Tag className="h-3 w-3" />
-            <span className="h-3 w-10 bg-zinc-200 rounded animate-pulse inline-block" />
-          </span>
-        ))}
-      </div>
+                    <div className="mt-3 h-[140px] w-full rounded-xl border border:white/40 bg:white/30 overflow-hidden">
+                      {item.imageUrl ? (
+                        <img
+                          src={item.imageUrl}
+                          alt={item.title}
+                          className="h-full w-full object-cover"
+                        />
+                      ) : (
+                        <div className="h-full w-full bg-white/40" />
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="px-5 py-3">
+                    <h3 className="font-semibold text-sm truncate">{item.title}</h3>
+                    <div className="mt-2 flex flex-wrap gap-1">
+                      {item.tags.map((tag) => (
+                        <span
+                          key={tag}
+                          className="inline-flex items-center gap-1 rounded-full border border-[#E5E7EF] px-2 py-0.5 text-[0.8rem] text-zinc-600"
+                        >
+                          <Icon.Tag className="h-3 w-3" />
+                          <span>{tag}</span>
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                </article>
+              </li>
+            ))}
+          </ul>
+        )}
+      </main>
     </div>
-  </div>
   );
-  }
+}
 
 /* -------------------- Presentational Subcomponents -------------------- */
 
@@ -318,7 +256,7 @@ function ChipGroup({ label, options }: { label: string; options: (string | numbe
       <span className="text-sm text-[#666666]">{label}</span>
       <div className="flex flex-wrap gap-2">
         {options.map((opt, idx) => {
-          const isFirst = idx === 0; // visually indicate a "selected" chip
+          const isFirst = idx === 0;
           return (
             <button
               key={String(opt)}
