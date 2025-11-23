@@ -1,7 +1,123 @@
 import { CheckIcon } from '@heroicons/react/20/solid'
+import { useState } from 'react'
+import { ImageUploader } from '../../../src/components/imageUploader.tsx'
+import { createClient } from '../../../app/auth/supabaseClient.ts';
 import Link from 'next/link'
 
 export default function DonatePiece() {
+
+  const supabase = createClient(
+    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
+    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
+  )
+
+  // Form state including image URLs
+  const [formData, setFormData] = useState({
+    image_urls: [] as string[],
+    city: '',
+    neighborhood: '',
+    handoff: '',
+    contact: 'In-app messages',
+    title: '',
+    category: '',
+    condition: '',
+    quantity: 1,
+    size: '',
+    sex: '',
+    description: ''
+  })
+
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  // Temporary listing ID for ImageUploader
+  const listingId = `donate-${Date.now()}`
+
+  const handleSubmit = async () => {
+    // Validation
+    if (!formData.image_urls || formData.image_urls.length === 0) {
+      alert("Please upload at least one image.")
+      return
+    }
+    if (!formData.city.trim()) {
+      alert("Please enter a city.")
+      return
+    }
+    if (!formData.handoff) {
+      alert("Please select a handoff method.")
+      return
+    }
+    if (!formData.title.trim()) {
+      alert("Please enter an item name.")
+      return
+    }
+    if (!formData.category) {
+      alert("Please select a category.")
+      return
+    }
+    if (!formData.condition) {
+      alert("Please select a condition.")
+      return
+    }
+    if (!formData.size) {
+      alert("Please select a size.")
+      return
+    }
+    if (!formData.sex) {
+      alert("Please select a gender.")
+      return
+    }
+
+    setIsSubmitting(true)
+
+    try {
+      const { data, error } = await supabase
+        .from("listings")
+        .insert([
+          {
+            title: formData.title,
+            category: formData.category,
+            condition: formData.condition,
+            quantity: formData.quantity,
+            size: formData.size,
+            sex: formData.sex,
+            description: formData.description,
+            city: formData.city,
+            neighborhood: formData.neighborhood,
+            handoff: formData.handoff,
+            contact: formData.contact,
+            image_urls: formData.image_urls,
+            type: 'donation',
+            created_at: new Date()
+          }
+        ])
+
+      if (error) throw error
+
+      alert("Donation listing submitted successfully!")
+      
+      // Reset form
+      setFormData({
+        image_urls: [],
+        city: '',
+        neighborhood: '',
+        handoff: '',
+        contact: 'In-app messages',
+        title: '',
+        category: '',
+        condition: '',
+        quantity: 1,
+        size: '',
+        sex: '',
+        description: ''
+      })
+    } catch (err) {
+      console.error("Error creating donation listing:", err)
+      alert("Failed to submit donation. Please try again.")
+    } finally {
+      setIsSubmitting(false)
+    }
+  }
+
   return (
     <main className="p-3 text-[#2b2b2b] dark:text-[#f5f5dc]">
       {/* Title */}
@@ -33,21 +149,12 @@ export default function DonatePiece() {
         <section id="photos" className="bg-white border-2 border-[#E5E7EF] rounded-3xl p-6 sm:p-8">
           <h2 className="text-3xl font-bold italic mb-2">Add photos*</h2>
           <p className="text-[#666666] mb-6">Show your item clearly so it finds a new home! [Min. 1, Max. 8]</p>
-          <div className="flex justify-center rounded-2xl border-2 border-dashed border-[#E5E7EF] bg-white/50 px-6 py-10">
-            <div className="text-center">
-              <p className="mb-2 text-[#666666]">Upload photos</p>
-              {/* Green upload button */}
-              <label
-                htmlFor="file-upload"
-                className="relative cursor-pointer rounded-full px-4 py-2 bg-[#abc8c1] hover:bg-[#8bb5aa] text-white inline-block transition-colors"
-              >
-                <span className="font-semibold italic">Upload a file</span>
-                <input id="file-upload" name="file-upload" type="file" className="sr-only" multiple />
-              </label>
-              <p className="pl-1 text-[#666666]">or drag and drop</p>
-              <p className="text-xs text-[#666666] mt-2">PNG, JPG, GIF up to 10MB</p>
-            </div>
-          </div>
+
+          {/* Integrated ImageUploader */}
+          <ImageUploader
+            listingId={listingId}
+            onUploadComplete={(urls) => setFormData({ ...formData, image_urls: urls })}
+          />
         </section>
 
         {/* Location & Handoff */}
@@ -62,6 +169,8 @@ export default function DonatePiece() {
                 type="text"
                 placeholder="e.g., Mayagüez"
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.city}
+                onChange={(e) => setFormData({ ...formData, city: e.target.value })}
               />
             </div>
             <div className="sm:col-span-3">
@@ -72,6 +181,8 @@ export default function DonatePiece() {
                 type="text"
                 placeholder="e.g., Terrace"
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.neighborhood}
+                onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
               />
             </div>
 
@@ -80,11 +191,25 @@ export default function DonatePiece() {
                 <legend className="text-sm font-medium">Handoff method *</legend>
                 <div className="mt-4 space-y-3">
                   <label htmlFor="pickup" className="flex items-center gap-2">
-                    <input id="pickup" name="handoff" type="radio" className="accent-[#abc8c1]" />
+                    <input 
+                      id="pickup" 
+                      name="handoff" 
+                      type="radio" 
+                      className="accent-[#abc8c1]" 
+                      checked={formData.handoff === 'pickup'}
+                      onChange={() => setFormData({ ...formData, handoff: 'pickup' })}
+                    />
                     <span>Pickup at my location</span>
                   </label>
                   <label htmlFor="dropoff" className="flex items-center gap-2">
-                    <input id="dropoff" name="handoff" type="radio" className="accent-[#abc8c1]" />
+                    <input 
+                      id="dropoff" 
+                      name="handoff" 
+                      type="radio" 
+                      className="accent-[#abc8c1]" 
+                      checked={formData.handoff === 'dropoff'}
+                      onChange={() => setFormData({ ...formData, handoff: 'dropoff' })}
+                    />
                     <span>Drop-off at designated point</span>
                   </label>
                 </div>
@@ -97,7 +222,8 @@ export default function DonatePiece() {
                 id="contact"
                 name="contact"
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
-                defaultValue="In-app messages"
+                value={formData.contact}
+                onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
               >
                 <option>In-app messages</option>
                 <option>Phone</option>
@@ -119,6 +245,8 @@ export default function DonatePiece() {
                 type="text"
                 placeholder="e.g., Nike Hoodie — Lavender"
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.title}
+                onChange={(e) => setFormData({ ...formData, title: e.target.value })}
               />
             </div>
 
@@ -127,8 +255,9 @@ export default function DonatePiece() {
               <select
                 id="category"
                 name="category"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.category}
+                onChange={(e) => setFormData({ ...formData, category: e.target.value })}
               >
                 <option value="" disabled>Select a category</option>
                 <option>Shirt</option>
@@ -148,8 +277,9 @@ export default function DonatePiece() {
               <select
                 id="condition"
                 name="condition"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.condition}
+                onChange={(e) => setFormData({ ...formData, condition: e.target.value })}
               >
                 <option value="" disabled>Select condition</option>
                 <option>New</option>
@@ -169,6 +299,8 @@ export default function DonatePiece() {
                 min={1}
                 placeholder="e.g., 1"
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.quantity}
+                onChange={(e) => setFormData({ ...formData, quantity: parseInt(e.target.value) || 1 })}
               />
             </div>
 
@@ -177,8 +309,9 @@ export default function DonatePiece() {
               <select
                 id="size"
                 name="size"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.size}
+                onChange={(e) => setFormData({ ...formData, size: e.target.value })}
               >
                 <option value="" disabled>Select size</option>
                 <option>2x-Small</option>
@@ -197,8 +330,9 @@ export default function DonatePiece() {
               <select
                 id="sex"
                 name="sex"
-                defaultValue=""
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.sex}
+                onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
               >
                 <option value="" disabled>Select sex</option>
                 <option>Male</option>
@@ -215,6 +349,8 @@ export default function DonatePiece() {
                 rows={4}
                 placeholder="Highlight what makes this item special for someone else. Include material, style, and/or flaws."
                 className="mt-2 block w-full rounded-2xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
+                value={formData.description}
+                onChange={(e) => setFormData({ ...formData, description: e.target.value })}
               />
             </div>
           </div>
@@ -224,11 +360,17 @@ export default function DonatePiece() {
         <div className="flex flex-wrap gap-3 justify-end">
           <button
             type="button"
-            className="px-5 py-2 h-13 bg-[#abc8c1] hover:bg-[#8bb5aa] rounded-full inline-flex items-center text-white transition-colors"
+            onClick={handleSubmit}
+            disabled={isSubmitting}
+            className={`px-5 py-2 h-13 rounded-full inline-flex items-center text-white transition-colors ${
+              isSubmitting 
+                ? 'bg-gray-400 cursor-not-allowed' 
+                : 'bg-[#abc8c1] hover:bg-[#8bb5aa]'
+            }`}
             aria-label="Submit donation"
           >
             <CheckIcon className="mr-2 size-5" aria-hidden="true" />
-            Submit Donation!
+            {isSubmitting ? 'Submitting...' : 'Submit Donation!'}
           </button>
         </div>
       </div>
