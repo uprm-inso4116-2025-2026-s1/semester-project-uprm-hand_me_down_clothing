@@ -2,9 +2,12 @@
 // you have to download in the terminal because it is a icon library:  npm i lucide-react
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { Heart, ShoppingBag } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
+
+import { supabase } from "@/app/auth/supabaseClient";
+import { useSupabaseAuth } from "@/app/auth/useSupabaseAuth";
 
 function cx(...c: (string | false | undefined)[]) {
   return c.filter(Boolean).join(" ");
@@ -12,7 +15,10 @@ function cx(...c: (string | false | undefined)[]) {
 
 export default function TopNav() {
   const pathname = usePathname();
+  const router = useRouter();
   const [mounted, setMounted] = useState(false);
+  const { user, loading } = useSupabaseAuth(); // 👈 auth context
+
 
   // --- dynamic behavior: sticky + hide-on-scroll + shadow ---
   const [hidden, setHidden] = useState(false);
@@ -21,6 +27,9 @@ export default function TopNav() {
   const prefersReducedMotion =
     typeof window !== "undefined" &&
     window.matchMedia?.("(prefers-reduced-motion: reduce)")?.matches;
+
+  const [loggingOut, setLoggingOut] = useState(false);
+
 
   useEffect(() => setMounted(true), []);
 
@@ -42,19 +51,37 @@ export default function TopNav() {
     return () => window.removeEventListener("scroll", onScroll);
   }, [prefersReducedMotion]);
 
+  // 🔓 Logout handler
+  async function handleLogout() {
+    try {
+      setLoggingOut(true);
+      await supabase.auth.signOut(); // or your signOut() helper
+      router.push("/login");
+    } catch (e) {
+      console.error("Error logging out:", e);
+    } finally {
+      setLoggingOut(false);
+    }
+  }
+
   const links = [
     { href: "/listings/sell_piece", label: "Browse" },
     { href: "/map", label: "Map" },
     { href: "/listings/donate", label: "Donate" },
     { href: "/about", label: "About" },
-    { href: "/Login", label: "Sign in/Sign Up" },
+    { href: "/login", label: "Sign in/Sign Up" },
     { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
     { href: "/profile", label: "Profile" },
   ];
 
+  // Filter links based on auth state:
+  const visibleLinks = links.filter(({ href }) => {
+    if (href === "/login" && user) return false; // hide sign in when logged in
+    if ((href === "/dashboard" || href === "/profile") && !user) return false; // hide authed-only links when logged out
+    return true;
+  });
 
-
-  const favActive = mounted && pathname.toLowerCase().startsWith("/favorite");
+  const favActive = mounted && pathname?.toLowerCase().startsWith("/favorite");
 
   return (
     <header
@@ -96,9 +123,9 @@ export default function TopNav() {
             )}
           >
             <ul className="flex items-center justify-start md:justify-center gap-2 md:gap-4">
-              {links.map(({ href, label }) => {
+              {visibleLinks.map(({ href, label }) => {
                 const active =
-                  mounted && (pathname === href || pathname.startsWith(href + "/"));
+                  mounted && (pathname === href || pathname?.startsWith(href + "/"));
                 return (
                   <li key={href} className="shrink-0">
                     <Link
@@ -122,8 +149,14 @@ export default function TopNav() {
 
           {/* Right: Actions */}
           <div className="shrink-0 flex items-center gap-2 md:gap-3">
+            {/* Show user email if logged in
+            {user && (
+              <span className="hidden md:inline text-sm text-gray-600 mr-1">
+                Hi, {user.email}
+              </span>
+            )} */}
             <Link
-              href="/sell_piece"
+              href={user ? "/sell_piece" : "/login"}
               className={cx(
                 "inline-flex items-center justify-center rounded-full",
                 "px-4 md:px-5 py-1.5 md:py-2 text-sm md:text-base font-semibold",
@@ -177,6 +210,23 @@ export default function TopNav() {
             >
               <ShoppingBag strokeWidth={2.25} className="h-8 w-10 md:h-8 md:w-8 text-black" />
             </Link>
+
+            {/* Logout button – only when logged in */}
+            {!loading && user && (
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={loggingOut}
+                className={cx(
+                  "inline-flex items-center justify-center rounded-full border border-gray-300",
+                  "px-3 md:px-4 py-1.5 text-xs md:text-sm font-medium text-gray-700 bg-white",
+                  "hover:bg-gray-100 active:bg-gray-200 active:scale-95 transition",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black/40"
+                )}
+              >
+                {loggingOut ? "Logging out…" : "Log out"}
+              </button>
+            )}
           </div>
         </div>
       </div>
