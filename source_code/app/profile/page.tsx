@@ -7,9 +7,7 @@ import Link from "next/link";
 import ProfileForm from "./ProfileForm";
 import { supabase } from "@/app/auth/supabaseClient";
 import { useSupabaseAuth } from "@/app/auth/useSupabaseAuth";
-
-// You can tighten this type to match your `profiles` table
-type Profile = any;
+import { getAuthUserWithProfile, getProfileByUserId, Profile } from "../auth/auth";
 
 export default function ProfilePage() {
   const { user, loading } = useSupabaseAuth();
@@ -32,13 +30,13 @@ export default function ProfilePage() {
       setProfileLoading(true);
       setProfileError(null);
 
-      const { data, error } = await supabase
-        .from("profiles")
-        .select("*")
-        .eq("id", user?.id)
-        .single();
-
-      console.log("Fetched profile data", { data, error });
+      if (!user?.id) {
+        setProfile(null);
+        setProfileError("User ID is missing.");
+        setProfileLoading(false);
+        return;
+      }
+      const { profile, error } = await getProfileByUserId(supabase, user.id);
 
       if (cancelled) return;
 
@@ -47,7 +45,8 @@ export default function ProfilePage() {
         setProfile(null);
         setProfileError(error.message);
       } else {
-        setProfile(data);
+        setProfile(profile);
+        setProfileError(null);
       }
 
       setProfileLoading(false);
