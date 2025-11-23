@@ -13,9 +13,20 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(true);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [authInfo, setAuthInfo] = useState<string | null>(null); // 👈 NEW
+
   const router = useRouter();
 
   useEffect(() => {
+    try {
+      const msg = window.sessionStorage.getItem("hmdd:auth:lastError");
+      if (msg) {
+        setAuthInfo(msg);
+        window.sessionStorage.removeItem("hmdd:auth:lastError");
+      }
+    } catch {
+      // ignore
+    }
     try { const saved = localStorage.getItem("hmd_last_email"); if (saved) setEmail(saved); } catch { }
   }, []);
 
@@ -69,6 +80,13 @@ export default function LoginPage() {
           <h1 className="text-3xl font-extrabold">Welcome back!</h1>
           <p className="text-2xl text-black-800 font-bold">Sign in to your account</p>
         </div>
+
+        {/* 🔔 One-time auth info message (e.g. expired session) */}
+        {authInfo && (
+          <div className="mb-4 text-sm text-blue-800 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+            {authInfo}
+          </div>
+        )}
 
         <form className="space-y-4" onSubmit={onSubmit} noValidate>
           {err && <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{err}</div>}
