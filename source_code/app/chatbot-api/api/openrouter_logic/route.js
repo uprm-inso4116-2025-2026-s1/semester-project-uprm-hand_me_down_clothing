@@ -1,6 +1,8 @@
 // app/api/chat/route.js
 import { NextResponse } from "next/server";
 import { LocationRepository } from "@/src/repositories/locationRepository";
+import { PieceRepository } from "@/src/repositories/pieceRepository";
+import { Category, Gender, Size, Condition } from "@/app/types/classifications";
 
 // Server-side function to fetch stores directly from Supabase
 // This function runs on the server only and never exposes database to the frontend
@@ -26,6 +28,29 @@ async function fetchStoresFromDatabase() {
   } catch (error) {
     console.error("Error fetching stores from Supabase:", error);
     return [];
+  }
+}
+
+async function fetchPiecesFromDatabase() {
+  try {
+    const pieceRepo = new PieceRepository();
+    const pieces = await pieceRepo.getPieces();
+
+    const piecesData = pieces.map(piece => ({
+      name: piece.name,
+      category: piece.category,
+      color: piece.color,
+      brand: piece.brand,
+      gender: piece.gender,
+      size: piece.size,
+      price: piece.price,
+      condition: piece.condition,
+    }));
+
+    return piecesData;
+  } catch (error) {
+    console.error("Error fetching listings from Supabase: ", error);
+    return []
   }
 }
 
@@ -71,6 +96,43 @@ function formatStoreDataForAI(stores) {
   }).join('\n');
 }
 
+// Helper function to format store data for AI context
+function formatPiecesDataForAI(pieces) {
+  if (!pieces || pieces.length === 0) {
+    return "No pieces information available.";
+  }
+
+  return pieces.map((piece, index) => {
+    let pieceInfo = `\n${index + 1}. ${piece.name || 'Unnamed piece'}`;
+    
+    if (piece.category) {
+      pieceInfo += `\n   Category: ${Category[piece.category]}`;
+    }
+    
+    if (piece.color) {
+      pieceInfo += `\n   Color: ${piece.color}`;
+    }
+    
+    if (piece.brand) {
+      pieceInfo += `\n   Brand: ${piece.brand}`;
+    }
+
+    if (piece.gender) {
+      pieceInfo += `\n   Gender: ${Gender[piece.gender]}`;
+    }
+
+    if (piece.size) {
+      pieceInfo += `\n   Size: ${Size[piece.size]}`;
+    }
+
+    if (piece.condition) {
+      pieceInfo += `\n   Condition: ${Condition[piece.condition]}`;
+    }
+    
+    return pieceInfo;
+  }).join('\n');
+}
+
 export async function POST(req) {    
   const { message } = await req.json();  //req is incoming message from frontend
 
@@ -86,9 +148,17 @@ export async function POST(req) {
       // Continue without store context if fetch fails
     }
 
+    let piecesContext = "";
+    try {
+      const piecesData = await fetchPiecesFromDatabase();
+      piecesContext = formatPiecesDataForAI(piecesData);
+    } catch(piecesError) {
+      console.error("Error fetching pieces data from Supabase:", piecesError);
+    }
+
     // Create enhanced message with store context
-    const enhancedMessage = storeContext 
-      ? `[SYSTEM CONTEXT - Store Information]\n${storeContext}\n\n[USER QUESTION]\n${message}`
+    const enhancedMessage = storeContext + "\n" + piecesContext
+      ? `[SYSTEM CONTEXT - Store Information]\n${storeContext}\n\n[SYSTEM CONTEXT - Pieces Information]\n${piecesContext}\n\n[USER QUESTION]\n${message}`
       : message;
 
     //forwarding message to pythonanywhere 
@@ -105,4 +175,3 @@ export async function POST(req) {
     return NextResponse.json({ error: "Error contacting PythonAnywhere API" }, { status: 500 });
   }
 }
-
