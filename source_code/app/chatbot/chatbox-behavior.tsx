@@ -1,12 +1,6 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
-
-interface Message {
-  id: number;
-  text: string;
-  sender: "user" | "bot";
-  timestamp: Date;
-}
+import { ChatMessage } from "@/app/types/chat";
 
 interface ChatBoxProps {
   onClose: () => void;
@@ -40,7 +34,7 @@ const getRandomAcknowledgment = () => {
 };
 
 export default function ChatBox({ onClose }: ChatBoxProps) {
-  const [messages, setMessages] = useState<Message[]>([]);
+  const [messages, setMessages] = useState<ChatMessage[]>([]);
   const [inputValue, setInputValue] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const [dimensions, setDimensions] = useState({ width: 320, height: 384 }); // w-80 = 320px, h-96 = 384px
@@ -54,33 +48,27 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
     if (savedMessages) {
       try {
         const parsed = JSON.parse(savedMessages);
-        // Convert timestamp strings back to Date objects
-        const messagesWithDates = parsed.map((msg: Message) => ({
-          ...msg,
-          timestamp: new Date(msg.timestamp)
-        }));
+        // Convert timestamp strings back to Date objects and create ChatMessage instances
+        const messagesWithDates = parsed.map((msg: any) => 
+          ChatMessage.fromObject({
+            id: msg.id,
+            text: msg.text,
+            sender: msg.sender,
+            timestamp: msg.timestamp
+          })
+        );
         setMessages(messagesWithDates);
       } catch (error) {
         console.error('Failed to load chat history:', error);
         // If loading fails, start with random greeting
         setMessages([
-          {
-            id: 1,
-            text: getRandomGreeting(),
-            sender: "bot",
-            timestamp: new Date(),
-          },
+          new ChatMessage(1, getRandomGreeting(), "bot", new Date())
         ]);
       }
     } else {
       // No saved messages, start with random welcome message
       setMessages([
-        {
-          id: 1,
-          text: getRandomGreeting(),
-          sender: "bot",
-          timestamp: new Date(),
-        },
+        new ChatMessage(1, getRandomGreeting(), "bot", new Date())
       ]);
     }
   }, []);
@@ -88,7 +76,7 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
   // Save messages to localStorage whenever they change
   useEffect(() => {
     if (messages.length > 0) {
-      localStorage.setItem('chatbot-messages', JSON.stringify(messages));
+      localStorage.setItem('chatbot-messages', JSON.stringify(messages.map(msg => msg.toJSON())));
     }
   }, [messages]);
 
@@ -132,14 +120,14 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
   const handleClearHistory = () => {
     const confirmClear = window.confirm('Are you sure you want to clear the chat history?');
     if (confirmClear) {
-      const welcomeMessage: Message = {
-        id: Date.now(),
-        text: getRandomGreeting(),
-        sender: "bot",
-        timestamp: new Date(),
-      };
+      const welcomeMessage = new ChatMessage(
+        Date.now(),
+        getRandomGreeting(),
+        "bot",
+        new Date()
+      );
       setMessages([welcomeMessage]);
-      localStorage.setItem('chatbot-messages', JSON.stringify([welcomeMessage]));
+      localStorage.setItem('chatbot-messages', JSON.stringify([welcomeMessage.toJSON()]));
     }
   };
 
@@ -150,24 +138,24 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
     if (!trimmedMessage) return;
 
     // Add user message
-    const userMessage: Message = {
-      id: Date.now(),
-      text: trimmedMessage,
-      sender: "user",
-      timestamp: new Date(),
-    };
+    const userMessage = new ChatMessage(
+      Date.now(),
+      trimmedMessage,
+      "user",
+      new Date()
+    );
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
 
     // Show random acknowledgment message
     const acknowledgment = getRandomAcknowledgment();
-    const acknowledgmentMessage: Message = {
-      id: Date.now() + 1,
-      text: acknowledgment,
-      sender: "bot",
-      timestamp: new Date(),
-    };
+    const acknowledgmentMessage = new ChatMessage(
+      Date.now() + 1,
+      acknowledgment,
+      "bot",
+      new Date()
+    );
     
     setMessages((prev) => [...prev, acknowledgmentMessage]);
     
@@ -187,12 +175,12 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
       const data= await res.json();
 
       //bot response to messages
-      const botmessage: Message= {
-        id: Date.now()+2,
-        text: data.response || "Unexpected server reply",
-        sender: "bot",
-        timestamp: new Date(),
-      };
+      const botmessage = new ChatMessage(
+        Date.now() + 2,
+        data.response || "Unexpected server reply",
+        "bot",
+        new Date()
+      );
 
       setIsTyping(false); // Hide typing indicator
       setMessages((prev) => [...prev, botmessage]);
@@ -203,13 +191,12 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
       console.error("Error:", error);
 
       //fallback error message
-      const errorMessage: Message= {
-
-        id: Date.now()+3,
-        text: "Error contacting server",
-        sender: "bot",
-        timestamp: new Date(),
-      };
+      const errorMessage = new ChatMessage(
+        Date.now() + 3,
+        "Error contacting server",
+        "bot",
+        new Date()
+      );
 
       setIsTyping(false); // Hide typing indicator
       setMessages((prev) => [...prev, errorMessage]);
@@ -253,17 +240,17 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
       <div className="flex-1 overflow-auto mt-2 mb-2 space-y-2">
         {messages.map((message) => (
           <div
-            key={message.id}
-            className={`flex ${message.sender === "user" ? "justify-end" : "justify-start"}`}
+            key={message.getId()}
+            className={`flex ${message.isUserSender ? "justify-end" : "justify-start"}`}
           >
             <div
               className={`max-w-[75%] px-3 py-2 rounded-lg text-sm chat-bubble-enter ${
-                message.sender === "user"
+                message.isUserSender
                   ? "bg-[#e6dac7] text-[#333333] chat-bubble-user"
                   : "bg-[#F9F8F8] text-[#666666] border border-[#E5E7EF] chat-bubble-bot"
               }`}
             >
-              {message.text}
+              {message.getText()}
             </div>
           </div>
         ))}
