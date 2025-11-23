@@ -136,7 +136,7 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
 
     //sending user message to backend api requester 
     try{ 
-      const res= await fetch("/api/openrouter_logic", {
+      const res= await fetch("chatbot-api/api/openrouter_logic", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ message: trimmedMessage }),

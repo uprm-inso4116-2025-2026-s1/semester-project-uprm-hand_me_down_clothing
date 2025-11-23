@@ -41,7 +41,7 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "app/components/Footer.tsx"
-, "app/api/openrouter_logic/route.js"  ],
+, "app/chatbot-api/api/openrouter_logic/route.js"  ],
   "exclude": [
     "node_modules"
   ]
