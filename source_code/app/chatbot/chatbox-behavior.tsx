@@ -1,6 +1,7 @@
 "use client";
 import { useState, useRef, useEffect } from "react";
 import { ChatMessage } from "@/app/types/chat";
+import { Message } from "@/app/types/message";
 
 interface ChatBoxProps {
   onClose: () => void;
@@ -47,9 +48,9 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
     const savedMessages = localStorage.getItem('chatbot-messages');
     if (savedMessages) {
       try {
-        const parsed = JSON.parse(savedMessages);
+        const parsed: Message[] = JSON.parse(savedMessages);
         // Convert timestamp strings back to Date objects and create ChatMessage instances
-        const messagesWithDates = parsed.map((msg: any) => 
+        const messagesWithDates = parsed.map((msg: Message) => 
           ChatMessage.fromObject({
             id: msg.id,
             text: msg.text,
