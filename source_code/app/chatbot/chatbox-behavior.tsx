@@ -12,6 +12,33 @@ interface ChatBoxProps {
   onClose: () => void;
 }
 
+// Array of greeting phrases for bot to randomly choose from
+const greetingPhrases = [
+  "Hi there! I am Sleevy!",
+  "Hello! I am Sleevy, here to help you with anything you need.",
+  "Greetings! Sleevy at your service. What can I do for you today?",
+  "Hey! I'm Sleevy! How may I assist you?",
+  "Welcome! I'm Sleevy!"
+];
+
+// Helper function to get a random greeting
+const getRandomGreeting = () => {
+  return greetingPhrases[Math.floor(Math.random() * greetingPhrases.length)]  + " I am able to assist you with various tasks. Feel free to ask me about store locations, open and closed hours, and listings about items in Hands Me Down Clothing.";
+};
+
+const acknowledgmentPhrases = [
+  "Got it!",
+  "One moment please.",
+  "I'll take care of that.",
+  "Right away!",
+  "Understood!"
+];
+
+// Helper function to get a random acknowledgment
+const getRandomAcknowledgment = () => {
+  return acknowledgmentPhrases[Math.floor(Math.random() * acknowledgmentPhrases.length)];
+};
+
 export default function ChatBox({ onClose }: ChatBoxProps) {
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -35,22 +62,22 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
         setMessages(messagesWithDates);
       } catch (error) {
         console.error('Failed to load chat history:', error);
-        // If loading fails, start with default message
+        // If loading fails, start with random greeting
         setMessages([
           {
             id: 1,
-            text: "Hi there! I am Sleevy, your virtual assistant! How can I assist you today?",
+            text: getRandomGreeting(),
             sender: "bot",
             timestamp: new Date(),
           },
         ]);
       }
     } else {
-      // No saved messages, start with default welcome message
+      // No saved messages, start with random welcome message
       setMessages([
         {
           id: 1,
-          text: "Hi there! I am Sleevy, your virtual assistant! How can I assist you today?",
+          text: getRandomGreeting(),
           sender: "bot",
           timestamp: new Date(),
         },
@@ -107,7 +134,7 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
     if (confirmClear) {
       const welcomeMessage: Message = {
         id: Date.now(),
-        text: "Hi there! I am Sleevy, your virtual assistant! How can I assist you today?",
+        text: getRandomGreeting(),
         sender: "bot",
         timestamp: new Date(),
       };
@@ -132,6 +159,21 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
 
     setMessages((prev) => [...prev, userMessage]);
     setInputValue("");
+
+    // Show random acknowledgment message
+    const acknowledgment = getRandomAcknowledgment();
+    const acknowledgmentMessage: Message = {
+      id: Date.now() + 1,
+      text: acknowledgment,
+      sender: "bot",
+      timestamp: new Date(),
+    };
+    
+    setMessages((prev) => [...prev, acknowledgmentMessage]);
+    
+    // Wait 2 seconds before showing typing indicator and fetching response
+    await new Promise(resolve => setTimeout(resolve, 2000));
+    
     setIsTyping(true); // Show typing indicator
 
     //sending user message to backend api requester 
@@ -146,7 +188,7 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
 
       //bot response to messages
       const botmessage: Message= {
-        id: Date.now()+1,
+        id: Date.now()+2,
         text: data.response || "Unexpected server reply",
         sender: "bot",
         timestamp: new Date(),
@@ -163,7 +205,7 @@ export default function ChatBox({ onClose }: ChatBoxProps) {
       //fallback error message
       const errorMessage: Message= {
 
-        id: Date.now()+2,
+        id: Date.now()+3,
         text: "Error contacting server",
         sender: "bot",
         timestamp: new Date(),
