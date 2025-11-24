@@ -43,13 +43,12 @@ export default function TopNav() {
   }, [prefersReducedMotion]);
 
   const links = [
-    { href: "/listings/sell_piece", label: "Browse" },
+    { href: "/", label: "Home"},
+    { href: "/browsing", label: "Browse"},
     { href: "/map", label: "Map" },
-    { href: "/listings/donate", label: "Donate" },
     { href: "/about", label: "About" },
-    { href: "/Login", label: "Sign in/Sign Up" },
     { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
-    { href: "/profile", label: "Profile" },
+    { href: "/profilepage", label: "Profile" },
   ];
 
 
@@ -123,7 +122,7 @@ export default function TopNav() {
           {/* Right: Actions */}
           <div className="shrink-0 flex items-center gap-2 md:gap-3">
             <Link
-              href="/sell_piece"
+              href="/sign-up"
               className={cx(
                 "inline-flex items-center justify-center rounded-full",
                 "px-4 md:px-5 py-1.5 md:py-2 text-sm md:text-base font-semibold",
@@ -161,21 +160,6 @@ export default function TopNav() {
                   "group-active:text-[#cea2a2] group-active:fill-current"
                 )}
               />
-            </Link>
-
-            {/* Cart -> Listings */}
-            <Link
-              href="/listings"
-              aria-label="Cart"
-              title="Cart"
-              className={cx(
-                "inline-flex h-12 w-12 md:h-12 md:w-12 items-center justify-center rounded-full",
-                "hover:bg-gray-100 active:bg-gray-200 active:scale-95 transition",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black/40",
-                "touch-manipulation"
-              )}
-            >
-              <ShoppingBag strokeWidth={2.25} className="h-8 w-10 md:h-8 md:w-8 text-black" />
             </Link>
           </div>
         </div>

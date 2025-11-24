@@ -40,13 +40,13 @@ export default async function DashboardPage() {
               </h3>
               <div className="flex flex-wrap justify-center gap-2 text-sm">
                 <Link
-                  href="/sell_piece"
+                  href="/listings/sell_piece"
                   className="px-4 py-2 rounded-full bg-[#d7b1b1] hover:bg-[#cda0a0] text-white font-semibold italic transition-colors"
                 >
                   Sell a new piece
                 </Link>
                 <Link
-                  href="/listings"
+                  href="/browsing"
                   className="px-4 py-2 rounded-full bg-white/80 hover:bg-white text-[#2b2b2b] font-semibold italic border border-white/60 transition-colors"
                 >
                   Browse listings
