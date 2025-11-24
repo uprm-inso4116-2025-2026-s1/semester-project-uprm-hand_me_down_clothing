@@ -85,7 +85,7 @@ export default function SignupOneToOne() {
       {/* Top-right helper link */}
       <div className="absolute right-8 top-6 text-sm text-gray-500">
         <span className="hidden sm:inline">Already registered?</span>{" "}
-        <a href="#" className="font-medium text-gray-800 hover:underline">
+        <a href="/Login" className="font-medium text-gray-800 hover:underline">
           Sign in
         </a>
       </div>

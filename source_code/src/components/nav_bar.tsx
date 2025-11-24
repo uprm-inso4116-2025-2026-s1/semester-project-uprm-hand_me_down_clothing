@@ -65,13 +65,12 @@ export default function TopNav() {
   }
 
   const links = [
-    { href: "/listings/sell_piece", label: "Browse" },
+    { href: "/", label: "Home"},
+    { href: "/browsing", label: "Browse"},
     { href: "/map", label: "Map" },
-    { href: "/listings/donate", label: "Donate" },
     { href: "/about", label: "About" },
-    { href: "/login", label: "Sign in/Sign Up" },
     { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
-    { href: "/profile", label: "Profile" },
+    { href: "/profilepage", label: "Profile" },
   ];
 
   // Filter links based on auth state:
@@ -156,7 +155,7 @@ export default function TopNav() {
               </span>
             )} */}
             <Link
-              href={user ? "/sell_piece" : "/login"}
+              href="/sign-up"
               className={cx(
                 "inline-flex items-center justify-center rounded-full",
                 "px-4 md:px-5 py-1.5 md:py-2 text-sm md:text-base font-semibold",
