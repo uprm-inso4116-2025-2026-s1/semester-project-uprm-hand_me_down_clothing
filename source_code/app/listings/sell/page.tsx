@@ -13,7 +13,7 @@ export default function Sell() {
           borderRadius: "20px",
           margin: "0 auto",
           position: "relative", 
-          overflow: "hidden",   
+          overflow: "hidden",
         }}
       >
        
