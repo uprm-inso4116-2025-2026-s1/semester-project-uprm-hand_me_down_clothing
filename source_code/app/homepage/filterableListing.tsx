@@ -3,18 +3,17 @@ import { useState } from 'react';
 import * as filterListings from '../utils/filters/listingsFilter'
 import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 import { Piece } from '../types/piece';
-
-import { useFavorites } from "@/app/Favorites/FavoritesProvider"; // adjust path if needed
+import { useFavoritesReader, useFavoritesMutator} from "@/app/Favorites/FavoritesProvider";
 
 
 function FavoriteHeartButton({ listingId }: { listingId: number }) {
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { isFavorite } = useFavoritesReader();
+  const { toggleFavorite } = useFavoritesMutator();
   const active = isFavorite(listingId);
 
   async function handleClick(e: React.MouseEvent) {
-    // prevent clicking the heart from triggering the outer card button
     e.stopPropagation();
-    toggleFavorite(listingId);
+    await toggleFavorite(listingId);
   }
 
   return (

@@ -1,6 +1,6 @@
 "use client";
 import React, { useState } from "react";
-import { useFavorites } from "@/app/Favorites/FavoritesProvider";
+import { useFavoritesReader, useFavoritesMutator } from "@/app/Favorites/FavoritesProvider";
 
 
 export default function IndividualListing() {
@@ -62,8 +62,10 @@ export default function IndividualListing() {
 
   
   const listingId = 1;
-  const { isFavorite, toggleFavorite } = useFavorites();
+  const { isFavorite } = useFavoritesReader();
+  const { toggleFavorite } = useFavoritesMutator();
   const isSaved = isFavorite(listingId);
+
 
   return (
     <div className="min-h-screen bg-white text-neutral-900">
@@ -140,7 +142,9 @@ export default function IndividualListing() {
 
               <div className="mt-4 grid grid-cols-3 gap-2">
                 <button
-                  onClick={() => toggleFavorite(listingId)}
+                   onClick={async () => {
+                        await toggleFavorite(listingId);
+                      }}
                     className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
                     style={{ borderColor: brand.borderStrong }}
                     aria-pressed={isSaved}

@@ -1,9 +1,9 @@
 "use client";
 
 import React from "react";
-import { useFavorites } from "@/app/Favorites/FavoritesProvider";
+import { useFavoritesReader, useFavoritesMutator } from "@/app/Favorites/FavoritesProvider";
 
-/* -------------------- Types & mock data -------------------- */
+/*  Types & mock data  */
 
 type Listing = {
   id: number;
@@ -14,7 +14,7 @@ type Listing = {
   imageUrl?: string | null;
 };
 
-// TODO: replace this with your real listings source
+// TODO: replace this with real listings source
 const ALL_LISTINGS: Listing[] = [
   {
     id: 1,
@@ -62,9 +62,10 @@ const Icon = {
 };
 
 export default function FavoritesLayout() {
-  const skeletonCards = Array.from({ length: 8 });
 
-  const { favorites: favoriteIds, toggleFavorite } = useFavorites();
+  const { favorites: favoriteIds } = useFavoritesReader();
+  const { toggleFavorite } = useFavoritesMutator();
+  const skeletonCards = Array.from({ length: 8 });
 
   const favoriteListings = React.useMemo(
     () => ALL_LISTINGS.filter((item) => favoriteIds.includes(item.id)),
@@ -205,7 +206,9 @@ export default function FavoritesLayout() {
                         className="ml-auto inline-flex items-center justify-center w-8 h-8 bg-[#F9F8F8] border border-[#E5E7EF] text-xl text-[#f495ba] rounded-full"
                         aria-label="Remove from favorites"
                         aria-pressed="true"
-                        onClick={() => toggleFavorite(item.id)} // 👈 removes locally
+                        onClick={async () => {
+                          await toggleFavorite(item.id);
+                        }}
                       >
                         ♥
                       </button>
