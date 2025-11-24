@@ -4,7 +4,7 @@ import "./globals.css";
 import AnnouncementBar from "@/src/components/announcementBar";
 import TopNav from "@/src/components/nav_bar";
 import Footer from "@/src/components/Footer";
-import SupabaseProvider from "./providers/SupabaseProvider";
+import { SupabaseAuthProvider } from "@/app/auth/SupabaseAuthProvider";
 import { FavoritesProvider } from "./Favorites/FavoritesProvider";
 
 
@@ -26,21 +26,24 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${lato.variable} antialiased`}>
         {/* Skip link for accessibility */}
-        <a
-          href="#main"
-          className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-50 rounded bg-white px-3 py-2 shadow"
-        >
-          Skip to content
-        </a>
+        <SupabaseAuthProvider>
 
-        <AnnouncementBar />
-        <TopNav />
+          <a
+            href="#main"
+            className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 z-50 rounded bg-white px-3 py-2 shadow"
+          >
+            Skip to content
+          </a>
 
-        {/* Page content + footer */}
-        <main id="main" className="min-h-screen flex flex-col">
-          <SupabaseProvider> <FavoritesProvider> {children} </FavoritesProvider></SupabaseProvider>
-          <Footer />
-        </main>
+          <AnnouncementBar />
+          <TopNav />
+
+          {/* Page content + footer */}
+          <main id="main" className="min-h-screen flex flex-col">
+            {children}
+            <Footer />
+          </main>
+        </SupabaseAuthProvider>
       </body>
     </html>
   );
