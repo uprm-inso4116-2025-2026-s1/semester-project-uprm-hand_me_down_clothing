@@ -1,0 +1,306 @@
+// --
+// Author: Yamilette Alemañy Vázquez
+// User: @yamilette-alemany
+// Project: Hand-me-down Clothing
+// GitHub Issue: #290
+// --
+
+== Domain Model Checklist Evaluation
+
+This Lecture Topic Tasks consisted of creating a domain model audit checklist for the Hand-Me-Down project. The purpose of this checklist was to evaluate the domain model’s consistency and clarity when it came to terminology, specifically the concepts defined in Section 2.1.2 (Seller, Buyer, Piece, Listing, Events, and Functions). The metrics that were used to evaluate these aspects are the following:
+
+Consistency and clarity in:
+
+*Entities*- an object whose identity matters over time and whose attributes may be modified without altering its identity.
+*Value Objects*- an object with no meaningful identity. Only its values matter.
+State Transitions- all valid transitions in the lifecycle of an entity. 
+
+The key domain areas to be evaluated are: Pieces, Listings, Users (Seller/Buyer), Favorites, Filters, and Reviews.
+
+Because the implementation is still in progress, this audit is based on the temporary model fields currently available in the project.
+
+
+== 1.Pieces:
+
+A Piece represents a physical clothing item in the real world. It has a persistent identity because it exists independently of the platform.
+
+    Piece {
+        id: PieceId,
+        name,
+        category,
+        color,
+        brand,
+        gender,
+        size,
+        price,
+        condition,
+        reason,
+        images[],
+        user_id,
+    }
+
+
+    Value Objects:
+
+        id (PieceId)
+        category (Category)
+        gender (Gender)
+        size (Size)
+        price
+        condition (Condition)
+        images[]
+        reason (optional description)
+        color
+        brand
+
+    No state machine or transitions are needed for Pieces. The lifecycle of a piece is expressed via Listings and the events that affect those listings.
+
+
+== 2.Listings (as representation of Piece)
+
+Represents the publication of a Piece on the platform, linking a Piece to its visibility and lifecycle (published, closed, etc.).
+
+
+    Listing {
+        listingId: ListingId,
+        pieceId: PieceId,
+        sellerId: string,   // or user_id from Piece
+        status,
+        createdAt,
+        updatedAt,
+    }
+
+    Value Objects:
+
+        listingId
+        pieceId
+        sellerId
+        status
+        createdAt
+        updatedAt
+
+
+    State Transitions (from the Domain Object Life Cycle Specification):
+
+        [Initial] -> Active       (Create)
+        Active -> Active          (Modify)
+        Active -> Archived        (Archive)
+        Archived -> Deleted       (Soft delete)
+        Deleted -> [Final]        (Permanent delete)
+
+
+
+== 3.Users/Profile (Seller/Donor or Buyer)
+
+Represents the user account in the system. Its identity (id) persists over time even if attributes such as name or email change. A single user can act in different roles in the domain (e.g., seller, buyer, donor), but these are roles on top of the same underlying entity.
+
+
+    Profile {
+        id,
+        email,
+        display_name,
+        firstname,
+        lastname,
+        role, // domain/application role (e.g., seller, buyer, donor)
+    }
+
+    Value Objects:
+
+        id,
+        email,
+        display_name,
+        firstname,
+        lastname,
+        role,
+
+        In the official documentation and related design materials, user roles are sometimes referred to as Seller and Buyer, while the Clothing Item schema uses donor_id. All of these are considered roles of the same underlying User/Profile entity.
+
+    State Transitions:
+
+        PendingVerification -> Active
+        Active -> Suspended
+        Suspended -> Active
+        Active -> Deleted (soft delete)
+
+
+
+== 4.Favorites:
+
+Represents a user’s saved reference to a Listing (which itself is a representation of a Piece/Clothing Item). Favorites do not affect the lifecycle of the Listing or Clothing Item; they exist solely as a user-level preference and can be freely created or removed.
+
+    Favorite {
+        favoriteId,
+        userId,
+        listingId,
+        createdAt,
+        status,
+    }
+
+
+    Value Objects:
+
+        favoriteId,
+        userId,
+        listingId,
+        createdAt,
+        status,
+
+    State Transitions:
+
+        None -> Active
+        Active -> Removed
+
+== 5.Filters
+
+Represents temporary search criteria used by a user when browsing Listings. Filters do not persist, do not have identity, and do not undergo a lifecycle.
+They are created on demand, applied, and discarded. Hence, they are not entities but Value Objects.
+
+Value Objects involved in filtering:
+
+    Category – classification of the Piece (e.g., SHIRT, JACKET, PANTS, DRESS, COAT, SCARF).
+
+    Condition – description of quality for the Piece (e.g., NEW, LIKE_NEW, USED, WORN, OLD).
+
+    Gender – target gender classification (e.g., MALE, FEMALE, UNISEX) as defined in the enum.
+
+    Size – clothing size classification (e.g., SMALL, MEDIUM, LARGE, extended sizes).
+
+    Group labels (strings) such as 'tops', 'bottoms', 'outerwear', 'accessories' that map to sets of Category values through filterTypes.
+
+    String criteria passed to the filter functions (category, condition, size, gender, accessories, ageGroup).
+
+    filterByAge is currently a stub and always returns an empty array, because at the time of implementation, age groups were not yet modeled in the database. 
+
+    Filters are created and applied on demand. They are not stored or transitioned between states. At most, their states can be expressed as “Applied” and “Cleared/Changed”.
+
+
+== 6.Reviews
+
+Represents feedback left by a user about another user or about an exchange. In the official documentation, a Review is associated with a completed exchange between a Seller/Buyer (or donor/receiver).
+
+At the time of this audit, there is no concrete Review domain object implemented in the repository, so this model is design-only and derived from the documentation.
+
+    Review {
+        reviewId,
+        authorUserId,   // user who writes the review
+        targetUserId,   // user being reviewed
+        pieceId?,       // optional reference to the Clothing Item / Piece
+        rating,
+        comment,
+        status,
+        createdAt,
+    }
+
+    Value Objects:
+
+        reviewId – identifier used to track a review if/when implemented.
+        authorUserId – identity of the user who wrote the review.
+        targetUserId – identity of the user receiving the review.
+        pieceId – optional link to the item involved in the exchange.
+        rating
+        comment
+        status – conceptual moderation state (e.g., submitted, published, flagged, removed).
+        createdAt
+
+    State Transitions (Conceptual / Design-Only):
+
+        Since there is no actual implementation, the following lifecycle is proposed, not enforced by the current code:
+
+            Submitted -> Published
+            Published -> Flagged
+            Flagged -> Removed
+            Flagged -> Published (reinstated after review)
+
+
+
+== Based on this, I will create this Domain Model Clarity & Consistency Checklist:
+
+
+1. Identity Clarity  
+   - Does every entity have a clearly defined and stable identifier?
+
+2. Entity vs Value Object  
+   - Are we correctly classifying objects with identity as Entities and objects defined only by their values as Value Objects?
+
+3. Naming Consistency  
+   - Are names consistent across the domain (e.g., “pieceId” or “clothingItemId” always used instead of mixing “itemId”, “id”, etc. for the same concept)?
+
+4. Field Purpose  
+   - Does every field in the model have a clear meaning and domain purpose?
+
+5. Value Object Integrity  
+   - Are Value Objects treated as immutable and validated as a whole (e.g., Size, Condition, Category)?
+
+6. State Definitions  
+   - Are all possible states for each Entity explicitly defined (e.g., Active, Archived, Deleted for Clothing Items; PendingVerification, Active, Suspended, Deleted for Users)?
+
+7. Valid State Transitions  
+   - Are transitions between states fully defined and preventing invalid transitions (e.g., you cannot go directly from Active to permanently deleted without passing through Deleted/archived states if the lifecycle requires it)?
+
+8. Relationships & Boundaries  
+   - Are relationships between entities clear and respecting aggregate boundaries?  
+     (e.g., User → Clothing Items (donor_id), User → Favorites, Clothing Item / Piece → Listing, User → Reviews (conceptual))
+
+9. Optional vs Required Fields  
+   - Are optional fields marked correctly and required fields enforced consistently?
+
+10. Domain Rules  
+   - Are the core domain rules clear, documented, and enforced (e.g., an item must be Active to appear in user-facing listings; soft-deleted items must not show up in normal queries)?
+
+11. Consistency Across Models  
+   - Do model definitions avoid duplication or contradiction across sections (e.g., the meaning of “status” and allowed values is the same in all places it appears)?
+
+12. Future Scalability  
+   - Does the model avoid premature coupling that might break when new features are added (e.g., reviews, age groups, or additional item categories)?
+
+
+
+
+
+== Now, I will apply this list to one part of the model. In this case, I will choose Listings:
+
+
+1. Identity Clarity  
+   - Yes. The primary domain entity is the Piece / Clothing Item (Section 3.1), which is given a stable identifier (“id”). Listings in the requirements and UI sections are representations of these items and also have clear identifiers in the implementation.
+
+2. Entity vs Value Object  
+   - Yes. Piece/Clothing Item is treated as an entity. Classifications such as Type/Category, Size, Condition, and tags behave as value objects. Locale is an entity-level concept in the terminology, and ConditionRating is an attribute/function rather than a separate entity.
+
+3. Naming Consistency  
+   - Mixed. Section 2.1.2 and user stories use “Seller”/”Buyer” and “Listing”, Section 3 introduces “User” and “Piece”, and the lifecycle spec uses “Clothing Item” with   “donor_id”. These all point to the same real-world actors and items, but the vocabulary is not fully unified. The core idea is consistent, but terms vary across documents.
+
+4. Field Purpose  
+   - Yes. For Clothing Item, fields such as “title”, “description”, “size”, “condition”, “images”, “donor_id”, “status”, “created_at”, “updated_at”, “archived_at”, “deleted_at”, “version”, “tags”, and “price” have clear roles in the lifecycle and match the examples in Section 2.3 and the lifecycle specification.
+
+5. Value Object Integrity  
+   - Mostly. Size, Condition, Category/Type, and tags are used as controlled vocabularies or enums and treated as atomic values in filters and listing creation. ConditionRating is defined conceptually but not fully realized in the current implementation.
+
+6. State Definitions  
+   - Yes, at two levels. The lifecycle spec defines states “active”, “archived”, and “deleted” for Clothing Items. The interface requirements define workflow states “Active -> Reserved -> Closed” for Listings. Both are clearly described, but they belong to different contexts (data lifecycle vs. listing workflow) and this separation should be made explicit.
+
+7. Valid State Transitions  
+   - Yes. For the lifecycle, the PlantUML diagram specifies transitions “Active -> Active -> Archived-> Deleted-> [final]” with clear rules around soft vs. permanent deletion. For Listings, the interface requirements restrict transitions to “Active -> Reserved -> Closed” without skipping states. No contradictory transitions were found, but the relationship between the two status systems is implicit.
+
+8. Relationships & Boundaries  
+   - Partially clear. A Listing is a representation of a Piece/Clothing Item, and each item is associated with a user (“Seller”/”donor_id”). Favorites, reviews, and messages are described in requirements and architecture as linked to listings and users. However, the Review entity is only defined conceptually; there is no concrete Review implementation yet.
+
+9. Optional vs Required Fields  
+   - Partially explicit. The interface requirements clearly distinguish required vs. optional fields in the Create Listing form (Title, Image, Category as required; Price/Free, Condition, Size as optional), but the lifecycle schema and domain docs do not always mark which fields are nullable. The use of “archived_at” and “deleted_at” as nullables is implied rather than formally stated.
+
+10. Domain Rules  
+    - Yes. The docs consistently state that all exchanges are completed offline and that the platform does not process payments. Condition disclosure norms, trust/safety practices, and the rule that Closed listings are no longer editable are all described in Sections 2.1.1, 2.1.5, and 2.2.4.
+
+11. Consistency Across Models  
+    - Mixed. The high-level story is consistent (secondhand clothing exchange, offline handoff, listings, saved items, reviews), but naming varies: “Piece” vs. “Clothing Item”, “Seller”/”Buyer” vs. “User”/”donor_id”. Reviews exist in epics, features, and architecture but not in the current domain model or implementation. Filters are described in both domain and UI but age-based filtering is only present as a stub in code.
+
+12. Future Scalability  
+    - Good. The separation between Piece/Clothing Item, Listing representations, and supporting concepts (Favorites, Filters, Map/Services) leaves room for future features (age groups, richer reviews, more categories) without breaking existing structures. The lifecycle’s archive/delete model also supports long-term retention and cleanup.
+
+
+== Findings:
+
+
+The domain documentation is generally well-structured and consistent, especially regarding the Clothing Item/Piece entity, its fields, and its lifecycle states. Listings are also represented uniformly across the interface requirements and user stories, with clear workflow transitions (Active -> Reserved -> Closed) that complement, but cause no conflicts with the lifecycle states (active, archived, deleted). Filters, favorites, and user profiles behave as expected, and the separation described in Section 2.3 supports scalability and maintainability. The only incomplete area in terms of implementation is Reviews, which appear in epics, features, and UI descriptions but do not yet exist as a concrete domain object or lifecycle within the implementation.
+
+The main inconsistencies involve terminology inconsistencies across sections, like Piece vs. Clothing Item, Seller/Buyer vs. User, and donor_id vs. seller_id, which refer to the same roles. Filters are implemented as stateless functions matching the domain requirements, though age-based filtering is only a placeholder. Some field constraints (such as which lifecycle fields are nullable) are implied rather than explicitly documented. Overall, the model is coherent and scalable, but future revisions should formalize the vocabulary, implement a proper Review domain model, and make nullability/constraints explicit for clarity and correctness.
+
