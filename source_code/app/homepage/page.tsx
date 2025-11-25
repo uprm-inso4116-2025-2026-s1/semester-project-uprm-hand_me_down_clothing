@@ -8,6 +8,7 @@ import {useRouter} from "next/navigation";
 import {useEffect, useState} from 'react';
 import { PieceRepository } from '@/src/repositories/pieceRepository';
 import { Piece } from '../types/piece';
+import { ListingCard } from "@/src/components/ReusableListingCard";
 
 // Categories for 'Browse by category' section
 const browse_categories = [
@@ -147,17 +148,9 @@ export default function Homepage() {
 
       {/* How it works: explanation of the platform process */}
       <h2 className="text-3xl font-bold italic pl-15 pt-10">How it works</h2>
-      <div className="flex space-x-auto px-12 pt-4">
-        {steps.map((cat) => (
-          <div
-            key={cat.id}  
-            className="w-100 h-35 bg-[#F9F8F8] border-[#E5E7EF] border-2 p-4 m-auto rounded-xl">
-            <div className="flex space-x-2 py-3">
-              <div className="rounded-full py-2 mx-3 w-8 h-8 bg-[#D6B1B1] text-center text-sm font-bold italic text-[#ffffff]">{cat.id}</div>
-              <h3 className="text-lg font-bold italic indent-2">{cat.step}</h3>
-            </div>
-            <p className="text-sm text-[#666666] text-left indent-3 pl-9">{cat.description}</p>
-          </div>
+      <div className="grid grid-cols-4 gap-1 px-15 py-4">
+        {featuredItems.map((item) => (
+          <ListingCard key={item.id} listing={item} />
         ))}
       </div>
 

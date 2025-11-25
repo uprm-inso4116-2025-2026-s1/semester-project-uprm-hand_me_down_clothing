@@ -26,7 +26,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${lato.variable} antialiased`}>
         {/* Skip link for accessibility */}
-        <SupabaseAuthProvider>
+        <FavoritesProvider>
+          <SupabaseAuthProvider>
 
           <a
             href="#main"
@@ -44,6 +45,7 @@ export default function RootLayout({
             <Footer />
           </main>
         </SupabaseAuthProvider>
+        </FavoritesProvider>
       </body>
     </html>
   );

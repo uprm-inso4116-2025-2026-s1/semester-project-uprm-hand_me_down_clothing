@@ -1,139 +1,84 @@
-"use client";
-
-import React, {
-  createContext,
-  useContext,
-  useState,
-  useEffect,
-} from "react";
-
-export type FavoriteId = number;
-
 // This file implements a FavoritesProvider using React Context and hooks,
 // following the Interface Segregation Principle (ISP) by splitting reader
 // and mutator roles. The latter is part of a Lecture Topic Task.
 
 // ISP: split into reader and mutator roles
 
-export type FavoritesReader = {
+"use client";
+
+import React, {
+  createContext,
+  useContext,
+  useEffect,
+  useState,
+} from "react";
+
+export type FavoriteId = number;
+
+type FavoritesContextValue = {
   favorites: FavoriteId[];
   isFavorite: (id: FavoriteId) => boolean;
+  addFavorite: (id: FavoriteId) => void;
+  removeFavorite: (id: FavoriteId) => void;
+  toggleFavorite: (id: FavoriteId) => void;
 };
-
-export type FavoritesMutator = {
-  addFavorite: (id: FavoriteId) => Promise<void>;
-  removeFavorite: (id: FavoriteId) => Promise<void>;
-  toggleFavorite: (id: FavoriteId) => Promise<void>;
-};
-
-// Internal “fat” service = reader + mutator
-type FavoritesContextValue = FavoritesReader & FavoritesMutator;
 
 const FavoritesContext = createContext<FavoritesContextValue | undefined>(
   undefined
 );
 
-const STORAGE_KEY = "hm_favorites";
+// 🔹 ISP: reader-only interface
+export type FavoritesReader = {
+  favorites: FavoriteId[];
+  isFavorite: (id: FavoriteId) => boolean;
+};
+
+// 🔹 ISP: writer-only interface
+export type FavoritesMutator = {
+  addFavorite: (id: FavoriteId) => void;
+  removeFavorite: (id: FavoriteId) => void;
+  toggleFavorite: (id: FavoriteId) => void;
+};
 
 export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   const [favorites, setFavorites] = useState<FavoriteId[]>([]);
 
-  // This is a placeholder while the the auth system's implementation is finished.
-  const userId: string | null = null;
-
-  // Backend interactions (currently placeholders)
-
-  async function loadFavoritesFromBackend(): Promise<FavoriteId[]> {
-    // TODO: Replace with api call
-    //
-    // const { data, error } = await supabase
-    //   .from("favorites")
-    //   .select("listing_id")
-    //   .eq("user_id", userId);
-    // if (error) throw error;
-    // return data.map((row) => row.listing_id as FavoriteId);
-
-    // Temporary implementation using local storage
-    if (typeof window === "undefined") return [];
-    const stored = window.localStorage.getItem(STORAGE_KEY);
-    if (!stored) return [];
-    try {
-      return JSON.parse(stored) as FavoriteId[];
-    } catch {
-      return [];
-    }
-  }
-
-  async function persistFavoriteAdd(id: FavoriteId): Promise<void> {
-    // TODO: when auth is ready, call database to insert to favorites array
-
-    // if (!userId) return;
-
-    if (typeof window === "undefined") return;
-    const merged = Array.from(new Set([...favorites, id]));
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(merged));
-  }
-
-  async function persistFavoriteRemove(id: FavoriteId): Promise<void> {
-        // TODO: when auth is ready, call database to delete from favorites array
-
-    if (typeof window === "undefined") return;
-    const filtered = favorites.filter((f) => f !== id);
-    window.localStorage.setItem(STORAGE_KEY, JSON.stringify(filtered));
-  }
-
-
+  // Load from localStorage
   useEffect(() => {
-  
-    loadFavoritesFromBackend()
-      .then((loaded) => setFavorites(loaded))
-      .catch((err) => {
-        console.error("Failed to load favorites", err);
-        setFavorites([]);
-      });
+    if (typeof window === "undefined") return;
+    const stored = window.localStorage.getItem("hm_favorites");
+    if (stored) {
+      try {
+        const parsed = JSON.parse(stored) as FavoriteId[];
+        setFavorites(parsed);
+      } catch {
+        // ignore bad JSON
+      }
+    }
   }, []);
 
-  // isFavorite functions as a reader method.
+  // Persist to localStorage
+  useEffect(() => {
+    if (typeof window === "undefined") return;
+    window.localStorage.setItem("hm_favorites", JSON.stringify(favorites));
+  }, [favorites]);
 
   function isFavorite(id: FavoriteId) {
     return favorites.includes(id);
   }
 
-  // addFavorite, remove Favorite, and toggleFavorite are mutator methods.
-
-  async function addFavorite(id: FavoriteId) {
-    setFavorites((prev) => {
-      if (prev.includes(id)) return prev;
-      const next = [...prev, id];
-
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      }
-      return next;
-    });
-
-    // temporary, missing call to backend
-    await persistFavoriteAdd(id);
+  function addFavorite(id: FavoriteId) {
+    setFavorites((prev) => (prev.includes(id) ? prev : [...prev, id]));
   }
 
-  async function removeFavorite(id: FavoriteId) {
-    setFavorites((prev) => {
-      const next = prev.filter((x) => x !== id);
-      if (typeof window !== "undefined") {
-        window.localStorage.setItem(STORAGE_KEY, JSON.stringify(next));
-      }
-      return next;
-    });
-
-    await persistFavoriteRemove(id);
+  function removeFavorite(id: FavoriteId) {
+    setFavorites((prev) => prev.filter((x) => x !== id));
   }
 
-  async function toggleFavorite(id: FavoriteId) {
-    if (isFavorite(id)) {
-      await removeFavorite(id);
-    } else {
-      await addFavorite(id);
-    }
+  function toggleFavorite(id: FavoriteId) {
+    setFavorites((prev) =>
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
+    );
   }
 
   const value: FavoritesContextValue = {
@@ -151,26 +96,25 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-
-function useFavoritesInternal(): FavoritesContextValue {
+// 🔹 ISP: reader-only hook
+export function useFavoritesReader(): FavoritesReader {
   const ctx = useContext(FavoritesContext);
   if (!ctx) {
-    throw new Error(
-      "Favorites hooks must be used within a FavoritesProvider"
-    );
+    throw new Error("useFavoritesReader must be used within a FavoritesProvider");
   }
-  return ctx;
-}
-
-// ISP: public narrow hooks
-
-export function useFavoritesReader(): FavoritesReader {
-  const { favorites, isFavorite } = useFavoritesInternal();
+  const { favorites, isFavorite } = ctx;
   return { favorites, isFavorite };
 }
 
+// 🔹 ISP: writer-only hook
 export function useFavoritesMutator(): FavoritesMutator {
-  const { addFavorite, removeFavorite, toggleFavorite } = useFavoritesInternal();
+  const ctx = useContext(FavoritesContext);
+  if (!ctx) {
+    throw new Error("useFavoritesMutator must be used within a FavoritesProvider");
+  }
+  const { addFavorite, removeFavorite, toggleFavorite } = ctx;
   return { addFavorite, removeFavorite, toggleFavorite };
 }
 
+// (Optional) legacy full hook if you still need it anywhere:
+// export function useFavorites(): FavoritesContextValue { ... }
