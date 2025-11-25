@@ -1,0 +1,86 @@
+= Bridging Communication and Design: Applying Ubiquitous Language in Chatbot Interface Development
+Devlin Hahn
+Hand Me Down Clothing
+INSO4116 – Software Design
+
+The chatbot proposed for the project *Hand Me Down Clothing*, named *Sleevey*, serves as a case study in how ubiquitous language connects conversation design, user experience, and technical implementation.  
+The goal is to ensure that every visual and functional element—such as the UI, error handling, dialogue flows, and API logic—uses language that all designers, developers, and domain experts can understand and apply consistently.
+
+== Ubiquitous Language Across Chatbot Domains
+
+=== 1. Conversation Design and User Flow
+
+The chatbot’s conversational patterns were designed using shared terminology.
+
+[cols="1,1,1", options="header"]
+|===
+| Communication Concept
+| Design Implementation
+| Technical Implementation
+
+| Greeting Flow
+| Welcome message
+| `ConversationStarter` component
+
+| Product Inquiry
+| "What brand are you looking for?", "What size?"
+| `ProductSearchDialog` state
+
+| Clarification Request
+| "Did you mean Nike shoes or Nike shirts?"
+| `AmbiguityResolver` middleware
+
+| Error Recovery
+| "I didn't understand that. Try retyping the question."
+| `FallbackIntentHandler`
+|===
+
+=== 2. Interface and Interaction Design
+
+The visual design reinforces these conversation patterns:
+
+* Typing indicators reflect *BotResponse* in progress.
+* Size/Color specifications in user messages are treated as *AttributePickers*.
+
+=== 3. Technical Architecture and AI Integration
+
+The system architecture maps directly to conversational concepts:
+
+* *Core Chatbot Components:*
+  ** `DialogManager` – Controls conversational flow and context.
+  ** `IntentClassifier` – Determines user intent (search, help, etc.).
+  ** `ResponseGenerator` – Produces appropriate `BotResponse` objects.
+  ** `SessionMemory` – Maintains conversation history and user context.
+
+=== 4. Error Handling and Edge Cases
+
+Ubiquitous language extends into error scenarios:
+
+* **No Results Found:** `EmptySearchResult` response type  
+* **Multiple Options:** `DisambiguationDialog` flow  
+* **API Timeout:** `FallbackResponse` with retry option  
+
+== Complete System Data Flow
+
+. User initiates `GreetingFlow` through the welcome message.
+. `IntentClassifier` analyzes the `UserMessage`.
+. `DialogManager` routes to the correct conversation handler.
+. `ResponseGenerator` forms the corresponding `BotResponse` using the LLM.
+. `SessionMemory` updates context.
+. The frontend renders appropriate UI components based on the response type.
+
+== Design–Development Alignment
+
+Shared vocabulary ensures seamless collaboration:
+
+* Designers can prototype *ErrorStates* that developers implement as `FallbackHandlers`.
+* Testers validate *ConversationPaths* using the same terminology.
+* Developers optimize *IntentRecognition* using business-domain labels.
+
+== Benefits Beyond the Interface
+
+By applying ubiquitous language throughout the chatbot system:
+
+* Designers can specify dialogue trees that map directly to code components.
+* Developers can implement labels that help the chatbot identify intents.
+* Success metrics become aligned using shared terms such as `CompletionRate` and `FallbackRate`.
