@@ -6,8 +6,8 @@ import { ImageUploader } from '../../../src/components/imageUploader'
 import { useParams, useRouter } from 'next/navigation'
 import { PieceRepository } from '@/src/repositories/pieceRepository'
 import { Piece } from '@/app/types/piece'
-import { Category, Condition, Gender, Size } from '@/app/types/classifications'
 import { createClient } from '@/app/utils/supabase/client'
+import { PieceFactory } from '@/src/factories/pieceFactory'
 
 const MAX_IMAGES = 8
 
@@ -15,6 +15,7 @@ export default function EditPiece() {
   const router = useRouter()
   const params = useParams()
   const listingId = params?.id || ''
+
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [formData, setFormData] = useState({
@@ -36,6 +37,7 @@ export default function EditPiece() {
   const [isSubmitting, setIsSubmitting] = useState(false)
 
   const pieceRepository = new PieceRepository()
+  const pieceFactory = new PieceFactory()
   const supabaseAuth = createClient()
 
   // Check authentication and fetch listing
@@ -112,56 +114,37 @@ export default function EditPiece() {
     setRemovedImages([...removedImages, url])
   }
 
-  // Check if we can add more images
-  const canAddMoreImages = formData.image_urls.length < MAX_IMAGES
+  // Check if we can add more images using repository validation concept
+  const canAddMoreImages = pieceRepository.canAddMoreImages(formData.image_urls, MAX_IMAGES)
 
-  // Validate form data
+  // Validate form data using repository pattern
   const validateForm = (): string | null => {
-    if (!formData.image_urls || formData.image_urls.length === 0) {
-      return 'Please upload at least one image.'
-    }
-    if (formData.image_urls.length > MAX_IMAGES) {
-      return `Maximum ${MAX_IMAGES} images allowed.`
-    }
-    if (!formData.city.trim()) {
-      return 'Please enter a city.'
-    }
-    if (!formData.handoff) {
-      return 'Please select a handoff method.'
-    }
-    if (!formData.title.trim()) {
-      return 'Please enter an item name.'
-    }
-    if (!formData.category) {
-      return 'Please select a category.'
-    }
-    if (!formData.condition) {
-      return 'Please select a condition.'
-    }
-    if (!formData.size) {
-      return 'Please select a size.'
-    }
-    if (!formData.sex) {
-      return 'Please select a gender.'
-    }
-    if (formData.quantity < 1) {
-      return 'Quantity must be at least 1.'
-    }
-    return null
+    return pieceRepository.validatePieceFormData(
+      formData.image_urls,
+      formData.city,
+      formData.handoff,
+      formData.title,
+      formData.category,
+      formData.condition,
+      formData.size,
+      formData.sex,
+      formData.quantity,
+      MAX_IMAGES
+    )
   }
 
-  // Convert form data to Piece domain object
+  // Convert form data to Piece domain object using factory
   const formDataToPiece = (): Piece => {
     const pieceId = parseInt(listingId as string)
     
-    const data: any = {
+    const pieceData: Record<string, any> = {
       id: pieceId,
       name: formData.title,
-      category: formData.category as unknown as Category,
-      size: formData.size as unknown as Size,
-      gender: formData.sex as unknown as Gender,
-      condition: formData.condition as unknown as Condition,
+      category: formData.category,
+      gender: formData.sex,
+      size: formData.size,
       price: 0,
+      condition: formData.condition,
       reason: formData.description,
       images: formData.image_urls,
       user_id: currentUser.id,
@@ -173,7 +156,8 @@ export default function EditPiece() {
       created_at: new Date().toISOString(),
       updated_at: new Date().toISOString()
     }
-    return data as Piece
+    
+    return pieceFactory.makePiece(pieceData)
   }
 
   // Handle save using repository pattern

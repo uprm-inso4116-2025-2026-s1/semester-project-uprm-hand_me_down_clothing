@@ -207,4 +207,59 @@ export class PieceRepository {
 
         return error == null;
     }
+
+    /**
+     * Validates if more images can be added based on current count and max limit
+     */
+    public canAddMoreImages(currentImages: string[], maxImages: number): boolean {
+        return currentImages.length < maxImages;
+    }
+
+    /**
+     * Validates piece form data and returns error message or null if valid
+     */
+    public validatePieceFormData(
+        imageUrls: string[],
+        city: string,
+        handoff: string,
+        title: string,
+        category: string,
+        condition: string,
+        size: string,
+        sex: string,
+        quantity: number,
+        maxImages: number
+        ): string | null {
+        if (!imageUrls || imageUrls.length === 0) {
+            return 'Please upload at least one image.';
+        }
+        if (imageUrls.length > maxImages) {
+            return `Maximum ${maxImages} images allowed.`;
+        }
+        if (!city.trim()) {
+            return 'Please enter a city.';
+        }
+        if (!handoff) {
+            return 'Please select a handoff method.';
+        }
+        if (!title.trim()) {
+            return 'Please enter an item name.';
+        }
+        if (!category) {
+            return 'Please select a category.';
+        }
+        if (!condition) {
+            return 'Please select a condition.';
+        }
+        if (!size) {
+            return 'Please select a size.';
+        }
+        if (!sex) {
+            return 'Please select a gender.';
+        }
+        if (quantity < 1) {
+            return 'Quantity must be at least 1.';
+        }
+        return null;
+    }
 }
