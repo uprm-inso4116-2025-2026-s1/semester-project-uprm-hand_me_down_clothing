@@ -96,7 +96,7 @@ export default function FilterableFeaturedItems({initialItems}: any) {
                 <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
                   {item.getFormattedPrice()}$
                 </div>
-                <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">
+                <div className="ml-auto">
                   <FavoriteHeartButton listingId={item.id} />
                 </div>
               </div>

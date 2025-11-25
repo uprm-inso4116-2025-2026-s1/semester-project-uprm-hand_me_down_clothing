@@ -147,10 +147,16 @@ export default function Homepage() {
       <FilterableFeaturedItems initialItems={featuredItems}/>
 
       {/* How it works: explanation of the platform process */}
-      <h2 className="text-3xl font-bold italic pl-15 pt-10">How it works</h2>
-      <div className="grid grid-cols-4 gap-1 px-15 py-4">
-        {featuredItems.map((item) => (
-          <ListingCard key={item.id} listing={item} />
+     <h2 className="text-3xl font-bold italic pl-15 pt-10">How it works</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-15 py-4">
+        {steps.map((step) => (
+          <div
+            key={step.id}
+            className="bg-[#F9F8F8] border-2 border-[#E5E7EF] rounded-2xl p-4"
+          >
+            <h3 className="text-xl font-bold italic mb-2">{step.step}</h3>
+            <p className="text-sm text-[#666666]">{step.description}</p>
+          </div>
         ))}
       </div>
 

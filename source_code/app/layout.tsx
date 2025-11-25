@@ -4,7 +4,7 @@ import "./globals.css";
 import AnnouncementBar from "@/src/components/announcementBar";
 import TopNav from "@/src/components/nav_bar";
 import Footer from "@/src/components/Footer";
-import { SupabaseAuthProvider } from "@/app/auth/SupabaseAuthProvider";
+// import { SupabaseAuthProvider } from "@/app/auth/SupabaseAuthProvider";
 import { FavoritesProvider } from "./Favorites/FavoritesProvider";
 
 
@@ -27,7 +27,7 @@ export default function RootLayout({
       <body className={`${lato.variable} antialiased`}>
         {/* Skip link for accessibility */}
         <FavoritesProvider>
-          <SupabaseAuthProvider>
+          {/* <SupabaseAuthProvider> */}
 
           <a
             href="#main"
@@ -44,7 +44,7 @@ export default function RootLayout({
             {children}
             <Footer />
           </main>
-        </SupabaseAuthProvider>
+        {/* </SupabaseAuthProvider> */}
         </FavoritesProvider>
       </body>
     </html>

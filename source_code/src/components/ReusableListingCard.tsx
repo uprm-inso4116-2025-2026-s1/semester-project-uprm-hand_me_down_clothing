@@ -3,22 +3,41 @@
 import React from "react";
 import { Category, Condition, Size } from "@/app/types/classifications";
 import type { Piece } from "@/app/types/piece";
-import { FavoriteHeartButton } from "@/app/Favorites/FavoriteHeartButton";
+import { FavoriteHeartButton } from "@/app/Favorites/FavoriteHeartButton"; // if you split it, else inline below
 
-export function ListingCard({ listing }: { listing: Piece }) {
+type ListingCardProps = {
+  listing: Piece;
+};
+
+export function ListingCard({ listing }: ListingCardProps) {
   return (
-    <button className="flex flex-col ...">
-      <div className="w-full h-50 ...">
-        <div>{Condition[listing.condition]}</div>
-        <div>{listing.getFormattedPrice()}$</div>
+    <article className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
+      {/* Top section with condition, price and heart in top-right */}
+      <div className="relative w-full h-50 bg-[#aac7c0] p-3 rounded-3xl">
+        <div className="flex space-x-2">
+          <div className="px-3 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl flex items-center">
+            {Condition[listing.condition]}
+          </div>
+          <div className="px-3 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl flex items-center">
+            {listing.getFormattedPrice()}$
+          </div>
+        </div>
 
-        <FavoriteHeartButton listingId={listing.id} />
+        {/* ♥ top-right */}
+        <div className="absolute top-3 right-3">
+          <FavoriteHeartButton listingId={listing.id} />
+        </div>
       </div>
 
-      <p>{listing.name}</p>
-      <p>Size: {Size[listing.size]}</p>
-      <p>Condition: {Condition[listing.condition]}</p>
-      <p>Category: {Category[listing.category]}</p>
-    </button>
+      {/* Text section */}
+      <p className="text-lg font-bold italic pt-2">{listing.name}</p>
+      <p className="text-md text-[#666666]">Size: {Size[listing.size]}</p>
+      <p className="text-md text-[#666666]">
+        Condition: {Condition[listing.condition]}
+      </p>
+      <p className="text-md text-[#666666]">
+        Category: {Category[listing.category]}
+      </p>
+    </article>
   );
 }
