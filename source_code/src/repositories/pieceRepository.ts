@@ -191,4 +191,20 @@ export class PieceRepository {
             return [];
         }
     }
+
+    /**
+     * Deletes one or more image files from Supabase Storage.
+     * Used when a user removes images during edit.
+     * @param {string[]} imagePaths - Array of image storage paths.
+     * @returns {Promise<boolean>} - True if all deletions succeeded.
+     */
+    public async deleteImages(imagePaths: string[]): Promise<boolean> {
+        if (!imagePaths || imagePaths.length === 0) return true;
+
+        const { error } = await this.supabase.storage
+            .from("piece_images")        // your bucket name
+            .remove(imagePaths);
+
+        return error == null;
+    }
 }

@@ -3,8 +3,11 @@
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { useState, useEffect } from 'react'
 import { ImageUploader } from '../../../src/components/imageUploader'
-import { createClient } from '../../../app/auth/supabaseClient'
 import { useParams, useRouter } from 'next/navigation'
+import { PieceRepository } from '@/src/repositories/pieceRepository'
+import { Piece } from '@/app/types/piece'
+import { Category, Condition, Gender, Size } from '@/app/types/classifications'
+import { createClient } from '@/app/utils/supabase/client'
 
 const MAX_IMAGES = 8
 
@@ -12,18 +15,11 @@ export default function EditPiece() {
   const router = useRouter()
   const params = useParams()
   const listingId = params?.id || ''
-
-  const supabase = createClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL as string,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY as string
-  )
-
   const [currentUser, setCurrentUser] = useState<any>(null)
   const [isLoading, setIsLoading] = useState(true)
   const [formData, setFormData] = useState({
     image_urls: [] as string[],
     city: '',
-    neighborhood: '',
     handoff: '',
     contact: 'In-app messages',
     title: '',
@@ -39,68 +35,58 @@ export default function EditPiece() {
   const [removedImages, setRemovedImages] = useState<string[]>([])
   const [isSubmitting, setIsSubmitting] = useState(false)
 
-  // Check authentication
+  const pieceRepository = new PieceRepository()
+  const supabaseAuth = createClient()
+
+  // Check authentication and fetch listing
   useEffect(() => {
-    const checkAuth = async () => {
+    const initializePage = async () => {
       try {
-        const { data: { user }, error } = await supabase.auth.getUser()
+        // Check authentication using separate auth client
+        const { data: { user }, error } = await supabaseAuth.auth.getUser()
         if (error || !user) {
           alert('You must be logged in to edit listings.')
           router.push('/login')
           return
         }
         setCurrentUser(user)
-      } catch (err) {
-        console.error('Auth error:', err)
-        alert('Authentication error. Please try logging in again.')
-        router.push('/login')
-      }
-    }
-    checkAuth()
-  }, [router, supabase.auth])
 
-  // Fetch existing listing
-  useEffect(() => {
-    const fetchListing = async () => {
-      if (!listingId || !currentUser) return
+        // Fetch listing data
+        const pieceId = parseInt(listingId as string)
+        if (isNaN(pieceId)) {
+          throw new Error('Invalid listing ID')
+        }
 
-      setIsLoading(true)
-      try {
-        const { data, error } = await supabase
-          .from('listings')
-          .select('*')
-          .eq('id', listingId)
-          .single()
-
-        if (error) {
-          console.error('Error fetching listing:', error)
+        const piece = await pieceRepository.getPieceById(pieceId)
+        
+        if (!piece) {
           alert('Unable to load listing. It may not exist or may have been deleted.')
           router.push('/dashboard')
           return
         }
 
-        // Authorization check - verify user owns this listing
-        if (data.user_id !== currentUser.id) {
+        // Authorization check
+        if (piece.user_id !== user.id) {
           alert('You do not have permission to edit this listing.')
           router.push('/dashboard')
           return
         }
 
+        // Pre-fill form with existing data
         setFormData({
-          image_urls: data.image_urls || [],
-          city: data.city || '',
-          neighborhood: data.neighborhood || '',
-          handoff: data.handoff || '',
-          contact: data.contact || 'In-app messages',
-          title: data.title || '',
-          category: data.category || '',
-          condition: data.condition || '',
-          quantity: data.quantity || 1,
-          size: data.size || '',
-          sex: data.sex || '',
-          description: data.description || ''
+          image_urls: (piece as any).images || [],
+          city: (piece as any).city || '',
+          handoff: (piece as any).handoff || '',
+          contact: (piece as any).contact || 'In-app messages',
+          title: piece.name || '',
+          category: piece.category ? String(piece.category) : '',
+          condition: piece.condition ? String(piece.condition) : '',
+          quantity: (piece as any).quantity ?? 1,
+          size: piece.size ? String(piece.size) : '',
+          sex: piece.gender ? String(piece.gender) : '',
+          description: (piece as any).description || ''
         })
-        setExistingImages(data.image_urls || [])
+        setExistingImages(((piece as any).images || []) as string[])
       } catch (err) {
         console.error('Error loading listing:', err)
         alert('An unexpected error occurred while loading the listing.')
@@ -110,8 +96,8 @@ export default function EditPiece() {
       }
     }
 
-    fetchListing()
-  }, [listingId, currentUser, router, supabase])
+    initializePage()
+  }, [listingId, router])
 
   // Handle image removal
   const handleRemoveImage = (url: string) => {
@@ -129,92 +115,101 @@ export default function EditPiece() {
   // Check if we can add more images
   const canAddMoreImages = formData.image_urls.length < MAX_IMAGES
 
-  // Handle save
-  const handleSubmit = async () => {
-    // Basic validation
+  // Validate form data
+  const validateForm = (): string | null => {
     if (!formData.image_urls || formData.image_urls.length === 0) {
-      alert('Please upload at least one image.')
-      return
+      return 'Please upload at least one image.'
     }
     if (formData.image_urls.length > MAX_IMAGES) {
-      alert(`Maximum ${MAX_IMAGES} images allowed.`)
-      return
+      return `Maximum ${MAX_IMAGES} images allowed.`
     }
     if (!formData.city.trim()) {
-      alert('Please enter a city.')
-      return
+      return 'Please enter a city.'
     }
     if (!formData.handoff) {
-      alert('Please select a handoff method.')
-      return
+      return 'Please select a handoff method.'
     }
     if (!formData.title.trim()) {
-      alert('Please enter an item name.')
-      return
+      return 'Please enter an item name.'
     }
     if (!formData.category) {
-      alert('Please select a category.')
-      return
+      return 'Please select a category.'
     }
     if (!formData.condition) {
-      alert('Please select a condition.')
-      return
+      return 'Please select a condition.'
     }
     if (!formData.size) {
-      alert('Please select a size.')
-      return
+      return 'Please select a size.'
     }
     if (!formData.sex) {
-      alert('Please select a gender.')
-      return
+      return 'Please select a gender.'
     }
     if (formData.quantity < 1) {
-      alert('Quantity must be at least 1.')
+      return 'Quantity must be at least 1.'
+    }
+    return null
+  }
+
+  // Convert form data to Piece domain object
+  const formDataToPiece = (): Piece => {
+    const pieceId = parseInt(listingId as string)
+    
+    const data: any = {
+      id: pieceId,
+      name: formData.title,
+      category: formData.category as unknown as Category,
+      size: formData.size as unknown as Size,
+      gender: formData.sex as unknown as Gender,
+      condition: formData.condition as unknown as Condition,
+      price: 0,
+      reason: formData.description,
+      images: formData.image_urls,
+      user_id: currentUser.id,
+      city: formData.city,
+      handoff: formData.handoff,
+      contact: formData.contact,
+      quantity: formData.quantity,
+      description: formData.description,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString()
+    }
+    return data as Piece
+  }
+
+  // Handle save using repository pattern
+  const handleSubmit = async () => {
+    const validationError = validateForm()
+    if (validationError) {
+      alert(validationError)
       return
     }
 
     setIsSubmitting(true)
 
     try {
-      // Update listing
-      const { error } = await supabase
-        .from('listings')
-        .update({
-          ...formData,
-          image_urls: formData.image_urls,
-          updated_at: new Date().toISOString()
-        })
-        .eq('id', listingId)
+      // Convert form data to Piece domain object and update using repository
+      const piece = formDataToPiece()
+      const result = await pieceRepository.updatePiece(piece)
 
-      if (error) {
-        console.error('Database update error:', error)
+      if (result instanceof Error) {
         throw new Error('Failed to update listing in database.')
       }
 
-      // Delete removed images from Supabase Storage
-      for (const url of removedImages) {
-        try {
-          const path = url.split('/storage/v1/object/public/listings-images/')[1]
-          if (path) {
-            const { error: delError } = await supabase.storage
-              .from('listings-images')
-              .remove([path])
-            if (delError) {
-              console.error('Error deleting image:', delError)
-            }
-          }
-        } catch (imgErr) {
-          console.error('Error processing image deletion:', imgErr)
-          // Continue anyway - don't block the update
-        }
+      // Delete removed images from storage using repository
+      if (removedImages.length > 0) {
+        const imagePaths = removedImages.map(url => {
+          const path = url.split('/storage/v1/object/public/piece_images/')[1]
+          return path || url
+        })
+
+        await pieceRepository.deleteImages(imagePaths)
       }
 
       alert('Listing updated successfully!')
-      setRemovedImages([])
       router.push(`/listings/${listingId}`)
     } catch (err) {
       console.error('Error updating listing:', err)
-      alert(err instanceof Error ? err.message : 'Failed to update listing. Please check your connection and try again.')
+      alert(err instanceof Error ? err.message : 'Failed to update listing. Please try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -272,7 +267,7 @@ export default function EditPiece() {
             </div>
           )}
 
-          {/* New uploads */}
+          {/* Image uploader */}
           {canAddMoreImages ? (
             <ImageUploader
               listingId={`edit-${listingId}-${Date.now()}`}
@@ -311,18 +306,6 @@ export default function EditPiece() {
                 className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
                 value={formData.city}
                 onChange={(e) => setFormData({ ...formData, city: e.target.value })}
-              />
-            </div>
-            <div className="sm:col-span-3">
-              <label htmlFor="neighborhood" className="block text-sm font-medium">Neighborhood (optional)</label>
-              <input
-                id="neighborhood"
-                name="neighborhood"
-                type="text"
-                placeholder="e.g., Terrace"
-                className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#abc8c1]"
-                value={formData.neighborhood}
-                onChange={(e) => setFormData({ ...formData, neighborhood: e.target.value })}
               />
             </div>
 
