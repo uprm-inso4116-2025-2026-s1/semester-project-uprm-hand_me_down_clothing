@@ -140,6 +140,8 @@ export class PieceFactory {
             reason: piece.reason,
             images: piece.images,
             user_id: piece.user_id,
+            latitude: piece.latitude,
+            longitude: piece.longitude,
             status: Status[piece.status],
         };
     }
