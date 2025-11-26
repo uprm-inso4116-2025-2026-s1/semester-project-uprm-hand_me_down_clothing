@@ -6,13 +6,17 @@ import {
   useFavoritesMutator,
 } from "@/app/Favorites/FavoritesProvider";
 
+/* In this file a Heart Button component is created for the Favorites logic.
+Additionally, the Interface Segregation Principle is applied as part of a LTT.*/
+
+
 type Props = {
   listingId: number;
 };
 
 export function FavoriteHeartButton({ listingId }: Props) {
-  const { isFavorite } = useFavoritesReader();   // 🔹 read-only
-  const { toggleFavorite } = useFavoritesMutator(); // 🔹 write-only
+  const { isFavorite } = useFavoritesReader();   // read-only
+  const { toggleFavorite } = useFavoritesMutator(); // write-only
 
   const active = isFavorite(listingId);
 

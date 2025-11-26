@@ -3,35 +3,7 @@ import { useState } from 'react';
 import * as filterListings from '../utils/filters/listingsFilter'
 import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 import { Piece } from '../types/piece';
-import { useFavoritesReader, useFavoritesMutator} from "@/app/Favorites/FavoritesProvider";
-
-
-function FavoriteHeartButton({ listingId }: { listingId: number }) {
-  const { isFavorite } = useFavoritesReader();
-  const { toggleFavorite } = useFavoritesMutator();
-  const active = isFavorite(listingId);
-
-  async function handleClick(e: React.MouseEvent) {
-    e.stopPropagation();
-    await toggleFavorite(listingId);
-  }
-
-  return (
-    <button
-      type="button"
-      aria-pressed={active}
-      onClick={handleClick}
-      className="w-8 h-8 flex items-center justify-center rounded-full bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl
-                 transition hover:scale-105"
-      aria-label={active ? "Remove from favorites" : "Add to favorites"}
-    >
-      <span className={active ? "text-[#f495ba]" : "text-[#9a9a9a]"}>
-        {active ? "♥" : "♡"}
-      </span>
-    </button>
-  );
-}
-
+import { FavoriteHeartButton } from '../Favorites/FavoriteHeartButton';
 
 
 const featured_categories = [
@@ -45,6 +17,10 @@ const featured_categories = [
   { id: 7, name: "Kids", filter: "kids" },
   { id: 8, name: "Unisex", filter: "unisex" },
 ];
+
+type Props = {
+  initialItems: Piece[];
+};
 
 export default function FilterableFeaturedItems({initialItems}: any) {
     const [filtered, setFilter] = useState(initialItems);
@@ -84,7 +60,8 @@ export default function FilterableFeaturedItems({initialItems}: any) {
       content = (
         <div className="grid grid-cols-4 gap-1 px-15 py-4">
           {filtered.map((item: Piece) => (
-            <button
+            // changed from <button> to <div> so we don’t nest a button inside
+            <div
               key={item.id}
               id="Featured_Item_btn"
               className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl"
@@ -96,6 +73,7 @@ export default function FilterableFeaturedItems({initialItems}: any) {
                 <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
                   {item.getFormattedPrice()}$
                 </div>
+                {/* right-aligned heart button using shared favorites logic */}
                 <div className="ml-auto">
                   <FavoriteHeartButton listingId={item.id} />
                 </div>
@@ -104,7 +82,7 @@ export default function FilterableFeaturedItems({initialItems}: any) {
               <p className="text-md text-[#666666]">Size: {Size[item.size]}</p>
               <p className="text-md text-[#666666]">Condition: {Condition[item.condition]}</p>
               <p className="text-md text-[#666666]">Category: {Category[item.category]}</p>
-            </button>
+            </div>
           ))}
         </div>
       );
@@ -146,4 +124,3 @@ export default function FilterableFeaturedItems({initialItems}: any) {
     </>
   );
 }
-

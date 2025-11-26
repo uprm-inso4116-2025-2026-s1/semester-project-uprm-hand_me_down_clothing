@@ -1,6 +1,10 @@
-// This file implements a FavoritesProvider using React Context and hooks,
-// following the Interface Segregation Principle (ISP) by splitting reader
-// and mutator roles. The latter is part of a Lecture Topic Task.
+/* This file implements a FavoritesProvider using React Context and hooks,
+following the Interface Segregation Principle (ISP) by splitting reader
+and mutator roles. The latter is part of a Lecture Topic Task. */
+
+// This file is meant to function as a kind of API for managing favorite listings.
+
+
 
 // ISP: split into reader and mutator roles
 
@@ -27,13 +31,13 @@ const FavoritesContext = createContext<FavoritesContextValue | undefined>(
   undefined
 );
 
-// 🔹 ISP: reader-only interface
+// ISP: reader-only interface
 export type FavoritesReader = {
   favorites: FavoriteId[];
   isFavorite: (id: FavoriteId) => boolean;
 };
 
-// 🔹 ISP: writer-only interface
+// ISP: writer-only interface
 export type FavoritesMutator = {
   addFavorite: (id: FavoriteId) => void;
   removeFavorite: (id: FavoriteId) => void;
@@ -68,17 +72,35 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   }
 
   function addFavorite(id: FavoriteId) {
-    setFavorites((prev) => (prev.includes(id) ? prev : [...prev, id]));
+      setFavorites((prev) => {
+        //Ensures no duplicates
+        if (prev.includes(id)) return prev;
+        return [...prev, id];
+  });
   }
 
   function removeFavorite(id: FavoriteId) {
-    setFavorites((prev) => prev.filter((x) => x !== id));
+    setFavorites((prev) => {
+    const exists = prev.includes(id);
+
+    //Ensures id exists before removing
+    if (exists) {
+      return prev.filter((x) => x !== id);
+    }
+
+    return [...prev, id];
+
+   });
   }
 
   function toggleFavorite(id: FavoriteId) {
-    setFavorites((prev) =>
-      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
-    );
+    setFavorites((prev) => {
+      const exists = prev.includes(id);
+      if (exists) {
+        return prev.filter((x) => x !== id);
+      }
+      return [...prev, id];
+    });
   }
 
   const value: FavoritesContextValue = {
@@ -96,7 +118,7 @@ export function FavoritesProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-// 🔹 ISP: reader-only hook
+// ISP: reader-only hook
 export function useFavoritesReader(): FavoritesReader {
   const ctx = useContext(FavoritesContext);
   if (!ctx) {
@@ -106,7 +128,7 @@ export function useFavoritesReader(): FavoritesReader {
   return { favorites, isFavorite };
 }
 
-// 🔹 ISP: writer-only hook
+// ISP: writer-only hook
 export function useFavoritesMutator(): FavoritesMutator {
   const ctx = useContext(FavoritesContext);
   if (!ctx) {
@@ -115,6 +137,3 @@ export function useFavoritesMutator(): FavoritesMutator {
   const { addFavorite, removeFavorite, toggleFavorite } = ctx;
   return { addFavorite, removeFavorite, toggleFavorite };
 }
-
-// (Optional) legacy full hook if you still need it anywhere:
-// export function useFavorites(): FavoritesContextValue { ... }

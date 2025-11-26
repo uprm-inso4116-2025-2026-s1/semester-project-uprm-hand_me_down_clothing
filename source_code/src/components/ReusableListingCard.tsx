@@ -5,6 +5,10 @@ import { Category, Condition, Size } from "@/app/types/classifications";
 import type { Piece } from "@/app/types/piece";
 import { FavoriteHeartButton } from "@/app/Favorites/FavoriteHeartButton"; // if you split it, else inline below
 
+
+/*This Reusable Listing Component was created during the data integration for the Favorites page.
+The intent was to have a reusable ui component for the listings that could be called from anywhere.*/
+
 type ListingCardProps = {
   listing: Piece;
 };

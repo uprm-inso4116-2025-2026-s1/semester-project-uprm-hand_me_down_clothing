@@ -3,17 +3,19 @@
 import React, { useEffect, useState } from "react";
 import { useFavoritesReader } from "@/app/Favorites/FavoritesProvider";
 import type { Piece } from "@/app/types/piece";
-import { PieceRepository } from '@/src/repositories/pieceRepository';
+import { PieceRepository } from "@/src/repositories/pieceRepository";
 import { ListingCard } from "@/src/components/ReusableListingCard";
 
 export default function FavoritesPage() {
-  const { favorites } = useFavoritesReader(); // 🔹 reader-only usage
+  const { favorites } = useFavoritesReader(); // reader-only usage
   const [items, setItems] = useState<Piece[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!favorites.length) {
+    const uniqueIds = Array.from(new Set(favorites));
+
+    if (!uniqueIds.length) {
       setItems([]);
       setError(null);
       return;
@@ -29,7 +31,8 @@ export default function FavoritesPage() {
         const repo = new PieceRepository();
 
         const results = await Promise.all(
-          favorites.map((id) => repo.getPieceById(id))
+          // ✅ use uniqueIds instead of favorites
+          uniqueIds.map((id) => repo.getPieceById(id))
         );
 
         const valid = results.filter((p): p is Piece => Boolean(p));

@@ -8,7 +8,6 @@ import {useRouter} from "next/navigation";
 import {useEffect, useState} from 'react';
 import { PieceRepository } from '@/src/repositories/pieceRepository';
 import { Piece } from '../types/piece';
-import { ListingCard } from "@/src/components/ReusableListingCard";
 
 // Categories for 'Browse by category' section
 const browse_categories = [
@@ -51,9 +50,14 @@ export default function Homepage() {
 
   useEffect(()=>{
     async function getFeaturedItems() {
-      const pieceRepo = new PieceRepository()
-      const pieces = pieceRepo.getPieces()
-      setFeaturedItems((await pieces).slice(0, 7));
+      const pieceRepo = new PieceRepository();
+      const pieces = await pieceRepo.getPieces();
+
+      const uniqueById = Array.from(
+        new Map(pieces.map((p) => [p.id, p])).values()
+      );
+
+      setFeaturedItems(uniqueById.slice(1, 7));
     }
 
     getFeaturedItems();
