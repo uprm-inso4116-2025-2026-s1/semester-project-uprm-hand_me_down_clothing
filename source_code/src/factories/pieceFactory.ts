@@ -50,6 +50,8 @@ export class PieceFactory {
                 item['images'],
                 item['user_id'],
                 status,
+                item['latitude'],
+                item['longitude'],
             );
         }
         else {
@@ -66,6 +68,8 @@ export class PieceFactory {
                 item['images'],
                 item['user_id'],
                 status,
+                item['latitude'],
+                item['longitude'],
                 item['donation_center'] ?? null,
             );
         }

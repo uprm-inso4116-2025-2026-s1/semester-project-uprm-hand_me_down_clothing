@@ -16,6 +16,8 @@ export abstract class Piece {
         public images: Array<string>,
         public user_id: string,
         public status: Status,
+        public latitude: number | null,
+        public longitude: number | null,
     ) { }
 
     public getFormattedPrice(): string {
@@ -75,4 +77,12 @@ export abstract class Piece {
         return `Piece(id: ${this.id}, name: ${this.name}, category: ${this.category}, color: ${this.color}, brand: ${this.brand}, gender: ${this.gender}, size: ${this.size}, price: ${this.price}, condition: ${this.condition}, reason: ${this.reason}, images: ${this.images.toString()}, user_id: ${this.user_id}, status: ${this.status})`;
     }
 
+    public getLatitude(): number | null {
+        return this.latitude;
+    }
+
+    
+    public getLongitude(): number | null {
+        return this.longitude;
+    }
 }
