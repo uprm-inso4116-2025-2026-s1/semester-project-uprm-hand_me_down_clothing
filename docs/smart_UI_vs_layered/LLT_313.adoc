@@ -1,0 +1,102 @@
+= Smart UI vs Layered Architecture – Hand Me Down
+:author: Daniella Melero
+:lecture-task: #313
+:doctype: article
+:icons: font
+
+== Objective
+Implement a small feature in two ways to compare architecture styles:
+
+* *Smart UI*: All logic inside the component
+* *Layered*: Core logic extracted into a helper file
+
+> *Feature:* When the seller clicks **“Mark as Sold”**, the item changes its status from *available* to *sold*.
+
+== Rules
+* Item starts as *Available*
+* Only the seller can mark the item as *Sold*
+* Once sold, it cannot be sold again **unless order is cancelled**
+* No database, simulated item object
+
+== 1️.Smart UI Version (`SmartUIMarkAsSold.tsx`)
+A simple UI-driven implementation where business rules live *inside the component*.
+
+[source,tsx]
+----
+"use client";
+import { useState } from "react";
+
+export function SmartUIMarkAsSold({ currentUserId }: { currentUserId: string }) {
+  const [item, setItem] = useState({
+    title: "Vintage College Hoodie",
+    status: "available",
+    sellerId: "user-123",
+  });
+
+  const isSeller = currentUserId === item.sellerId;
+  const isSold = item.status === "sold";
+
+  const handleMarkAsSold = () => {
+    if (!isSeller) return alert("Only the seller can mark this item as sold.");
+    if (isSold) return;
+    setItem({ ...item, status: "sold" });
+  };
+
+  return (
+    <div>
+      <p>Status: <strong>{item.status}</strong></p>
+      <button onClick={handleMarkAsSold} disabled={!isSeller || isSold}>
+        {isSold ? "Sold" : "Mark as Sold"}
+      </button>
+    </div>
+  );
+}
+----
+
+== 2.Layered Version
+
+=== Logic Helper (`markAsSold.ts`)
+Business logic extracted into a reusable pure function.
+
+[source,ts]
+----
+export function markAsSold(item, userId) {
+  if (userId !== item.sellerId) return { ok: false, error: "not-seller" };
+  if (item.status === "sold") return { ok: false, error: "already-sold" };
+  return { ok: true, item: { ...item, status: "sold" } };
+}
+----
+
+=== UI using the helper (`LayeredMarkAsSold.tsx`)
+The UI delegates the business rule to the helper.
+
+[source,tsx]
+----
+"use client";
+import { useState } from "react";
+import { markAsSold } from "./markAsSold";
+
+export function LayeredMarkAsSold({ currentUserId }) {
+  const [item, setItem] = useState({
+    title: "Vintage College Hoodie",
+    status: "available",
+    sellerId: "user-123",
+  });
+
+  const handleClick = () => {
+    const result = markAsSold(item, currentUserId);
+    if (!result.ok) return alert("Action not allowed.");
+    setItem(result.item);
+  };
+
+  return (
+    <div>
+      <p>Status: <strong>{item.status}</strong></p>
+      <button disabled={item.status === "sold"} onClick={handleClick}>
+        {item.status === "sold" ? "Sold" : "Mark as Sold"}
+      </button>
+    </div>
+  );
+}
+----
+
