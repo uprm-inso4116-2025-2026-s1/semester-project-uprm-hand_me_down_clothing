@@ -1,73 +1,111 @@
 === *2.1.5 Events, Actions, and Behaviors*
 
-Each domain concept below is explicitly annotated as *Entity*, *Action*, *Event*, or *Behavior*.
-Entities provide structure, Actions trigger Events, and Behaviors describe recurring patterns observed in exchanges.
-This annotation clarifies the “diverse notions” called out in feedback and keeps domain vs. system concerns separate.
+This section describes only domain *actions*, *events*, and the *behaviors* they form.   Entities and structural concepts appear elsewhere and are not repeated here.
 
-==== Listing and Discovery
-*Entity*::  
-A **Listing** — *Entity* — represents an item made visible by a seller for reuse or resale. It includes attributes such as title, description, category, condition, and images.
+==== Events
 
-*Associated Actions*::  
-- *Action* — Publishing a listing with sufficient information (title, category, photos).  
-- *Action* — Editing details (price marker, condition, description).  
-- *Action* — Deactivating or closing a listing once the item is no longer available.
+*Listing Published*::  
+An instantaneous occurrence when a seller makes a clothing item publicly visible to others.
 
-*Events*::  
-- **Listing Published** — *Event* — occurs when a seller makes an item visible to the public.  
-- **Listing Updated** — *Event* — occurs when a listing’s information has just been modified.  
-- **Listing Closed** — *Event* — occurs when the seller marks the listing as reserved or removed.
+*Interest Expressed*::  
+An instantaneous occurrence when a buyer contacts a seller indicating they want more information or wish to acquire the item.
 
-*Behavior*::  
-*Listing Lifecycle* — *Behavior* — the continuous cycle in which sellers create, update, and close listings to maintain an accurate catalog of available items.
+*Listing Closed*::  
+A moment in which the seller marks that the item is no longer available after an offline exchange or withdrawal.
 
-===== Aggregate Definition
-[cols="^1,^1,3", options="header"]
+*Listing Updated*::  
+An instantaneous occurrence when a seller changes visible details (title, condition, images, category, etc.).
+
+==== Actions
+
+*Publish Item*::  
+A seller provides the information necessary to make an item visible (photos, condition, category).  
+_Triggers:_ **Listing Published**
+
+*Browse*::  
+A buyer looks through available items, optionally using categories, keywords, or filters.  
+_Does not trigger an event by itself._
+
+*Express Interest*::  
+A buyer sends a message or contact request asking about availability or arranging a meetup.  
+_Triggers:_ **Interest Expressed**
+
+*Update Listing*::  
+A seller modifies previously posted information.  
+_Triggers:_ **Listing Updated**
+
+*Close Listing*::  
+A seller marks the item as no longer available after an offline exchange or decision to withdraw it.  
+_Triggers:_ **Listing Closed**
+
+==== Behaviors
+
+A behavior is a recurring domain pattern composed of actions + events that appear across many exchanges.
+
+===== 1. Listing Lifecycle Behavior
+A recurring cycle in which a seller manages the visibility of an item.
+
+[cols="1,3"]
 |===
-| Role | Kind | Notes
-
-| Piece | Aggregate Root | Discoverable item (listing) and single entry point for changes.
-| ConditionRating | Value Object | Integer in `[1..10]`; updated via root method only.
-| Review | Child Entity | `{id, reviewer, rating (1–5), comment, createdAt}`; belongs to exactly one Piece. // reviewer (concept), not just an ID
-| Reservation | Value Object | *Conceptually associates a Buyer with a Piece*; storage may use an internal identifier (e.g., buyerId) but the domain concept is *Buyer*.
-| Images | Collection of Value Objects | ≥ 1 image required when publishing (URI + metadata).
-| Status | Value Object | One of: `Active | Reserved | Closed`.
-| Seller | Reference (Primitive/VO) | Owner identity outside the aggregate boundary (storage key may be `sellerId`).
-| Locale | Reference (Primitive/VO) | Optional area label to aid discovery (e.g., campus/borough).
+| *Trigger* | Seller decides to make an item available.
+| *Actors*  | Seller (primary)
+| *Actions + Events* |
+- Publish Item → *Listing Published*  
+- Update Listing (optional) → *Listing Updated*  
+- Close Listing → *Listing Closed*
+| *Observed Pattern* | Items enter visibility, may be refined, and eventually leave circulation.
 |===
 
-[NOTE]
-====
-*Domain Purity:* Read-model/presentation types such as `Page<PieceSummary>` belong to query/view layers.
-They must not be part of the *Piece* aggregate itself.
-====
+===== 2. Discovery Behavior
+The pattern by which buyers locate items of interest.
 
-===== Invariants
-[cols="2,1,1,3", options="header"]
+[cols="1,3"]
 |===
-| Invariant | Enforced In | Temp. Violation? | Rationale
-| A Piece requires ≥ 1 image at publish time. | Factory / publish step | No | Visual trust for discovery.
-| `ConditionRating` ∈ `[1..10]`. | `rateCondition()` | No | Consistent quality scale.
-| A `Review` belongs to exactly one Piece. | `addReview()` | No | Prevents cross-linking reviews.
-| Status transitions follow `Active ↔ Reserved → Closed` (no reopen). | Root methods | Yes (within method only) | Coherent lifecycle; history integrity.
-| `reserveFor(buyer)` only when status = `Active`. | `reserveFor()` | No | Avoid double holds; associates with *Buyer* (concept), not just a raw ID.
-| `close(reason)` only when status ∈ {`Active`,`Reserved`}. | `close()` | No | Forbids illegal re-closing.
-| Editing details is blocked when status = `Closed`. | Root guards | No | Preserve record of completed exchanges.
+| *Trigger* | Buyer searches for clothing or browses casually.
+| *Actors*  | Buyer (primary), Seller (indirect)
+| *Actions + Events* |
+- Browse (buyer)  
+- (optional) filtering or keyword search  
+_No event is triggered until buyer expresses interest._
+| *Observed Pattern* | Buyers scan available offerings opportunistically, often during brief windows of free time.
 |===
 
-===== Root Operations (Conceptual Surface)
-- `publish()` — (if drafts are modeled) make the Piece publicly visible.
-- `editDetails(updates)` — update title/description/attributes (forbidden when `Closed`).
-- `rateCondition(newRating)` — set/adjust condition in `[1..10]`.
-- `reserveFor(buyer)` — `Active → Reserved` (hold while parties coordinate offline).
-- `releaseReservation()` — `Reserved → Active`.
-- `close(reason)` — `Active/Reserved → Closed` after offline handoff or withdrawal.
-- `addReview(reviewer, rating, comment)` — attach feedback post-close.
+===== 3. Interest and Contact Behavior
+A recurring interaction when a buyer wants more information or wishes to acquire the item.
 
-===== Repository (Conceptual)
-A repository operates at the *aggregate level* (reads may provide projections for lists):
-- `findById(pieceId) → Piece?`
-- `save(piece) → void` (persists the whole aggregate and its members)
-- Read-model queries *(projections)* for UI lists, e.g.:
-  - `findActiveByFilters(filters) → Page<PieceSummary>`
-  - `findBySeller(seller) → Page<PieceSummary>`
+[cols="1,3"]
+|===
+| *Trigger* | Buyer identifies an interesting item during discovery.
+| *Actors*  | Buyer (primary), Seller (respondent)
+| *Actions + Events* |
+- Express Interest → *Interest Expressed*  
+- Seller responds (clarifications, availability confirmation)
+| *Observed Pattern* | Short informal message chains establish availability and next steps.
+|===
+
+===== 4. Offline Exchange Behavior
+The final handoff of the item, outside the platform.
+
+[cols="1,3"]
+|===
+| *Trigger* | Buyer and seller agree to meet after interest is established.
+| *Actors*  | Buyer and Seller
+| *Actions + Events* |
+- Coordinate meetup (time, place)  
+- Physical handoff  
+- Seller closes listing → *Listing Closed*
+| *Observed Pattern* | Exchanges occur face-to-face in familiar public areas; value transfer is informal.
+|===
+
+===== 5. Post-Exchange Feedback Behavior
+Reputation-related actions occurring after the physical exchange.
+
+[cols="1,3"]
+|===
+| *Trigger* | Exchange has concluded and listing has been closed.
+| *Actors*  | Buyer (primary), Community (indirect)
+| *Actions + Events* |
+- Buyer leaves informal comments or reviews through social channels  
+(No required event; this varies by community norms)
+| *Observed Pattern* | Positive experiences are shared informally; negative ones are quietly avoided.
+|===
