@@ -5,7 +5,7 @@ import Image from "next/image";
 import { Piece } from "../types/piece";
 import { fetchPieces } from "./search";
 
-// Haversine formula used to calculate two points in a sphere– distance in km
+// Haversine formula used to calculate two points in a sphere distance in km
 function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
   const R = 6371; // Earth radius in km
   const dLat = (lat2 - lat1) * (Math.PI / 180);
@@ -67,7 +67,7 @@ export default function DistanceFilterButton({
     return;
   }
 
-  //  Chosen distance will use geolocation & filter
+  // Chosen distance will use geolocation & filter
   if (!("geolocation" in navigator)) {
     setErrorMsg("Geolocation is not supported on this device.");
     if (onLocationDenied) onLocationDenied();
