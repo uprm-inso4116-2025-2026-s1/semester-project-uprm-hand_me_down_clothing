@@ -34,3 +34,10 @@ export enum Size {
     LARGE_X2,
     CUSTOM
 }
+
+export enum Status {
+  ACTIVE,
+  SOLD,
+  DONATED,
+  RETRACTED
+}
