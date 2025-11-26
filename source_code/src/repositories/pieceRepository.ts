@@ -1,7 +1,8 @@
-import { Piece } from '@/app/types/piece'
-import { createClient } from '@/app/auth/supabaseClient'
-import { PieceFactory } from '../factories/pieceFactory'
-import { Category, Condition, Gender, Size } from '@/app/types/classifications'
+import { Piece } from "@/app/types/piece";
+import { createClient } from '@/app/utils/supabase/client'
+import { PieceFactory } from "../factories/pieceFactory";
+import { Category, Condition, Gender, Size, Status } from "@/app/types/classifications";
+import { PieceSpecification } from "../specifications/piece_specifications";
 
 /**
  * Repository class responsible for all CRUD operations and data retrieval
@@ -20,8 +21,12 @@ import { Category, Condition, Gender, Size } from '@/app/types/classifications'
  * and return either domain objects, arrays of objects, or booleans indicating operation success.
  */
 export class PieceRepository {
-  private factory = new PieceFactory()
-  private supabase = createClient()
+    private factory = new PieceFactory();
+    private supabase;
+
+    constructor(supabaseClient = createClient()) {
+        this.supabase = supabaseClient;
+    }
 
   /**
    * Retrieves all pieces from the Supabase 'pieces' table.
@@ -38,10 +43,16 @@ export class PieceRepository {
     }
   }
 
-  private validatePieceData (piece: Piece) {
-    let missing = ''
-    if (piece.id < 0) {
-      missing += 'id '
+    private validatePieceData(piece: Piece) {
+        const missing: string[] = [];
+        if (piece.id == null || piece.id < 0) missing.push('id');
+        if (!piece.name || piece.name.trim().length === 0) missing.push('name');
+        if (!piece.brand || piece.brand.trim().length === 0) missing.push('brand');
+        if (!piece.user_id || piece.user_id.trim().length === 0) missing.push('user_id');
+
+        if (missing.length > 0) {
+            throw new Error('Piece validation failed: missing ' + missing.join(', '));
+        }
     }
     if (piece.name.length < 0) {
       missing += 'name '
@@ -76,21 +87,24 @@ export class PieceRepository {
     }
   }
 
-  /**
-   * Retrieves all pieces corresponding to a user from the Supabase 'pieces' table.
-   * @param {String} user_id - The ID of the user whose pieces we want.
-   * @returns {Promise<Array<Piece>>} - An array of Piece objects.
-   */
-  public async getPiecesByUser (user_id: String): Promise<Array<Piece>> {
-    try {
-      const pieces_data = (
-        await this.supabase.from('pieces').select('*').eq('user_id', user_id)
-      ).data
-      if (!pieces_data) return []
-      const pieces = pieces_data.map(item => this.factory.makePiece(item))
-      return pieces
-    } catch {
-      return []
+    /**
+     * Inserts a new piece record into the database.
+     * Returns the newly created Piece if successful, otherwise the error that impeded the creation.
+     * @param {Piece} piece - The piece object to create.
+     * @returns {Promise<Piece | Error>}
+     */
+    public async createPiece(piece: Piece): Promise<Piece | Error> {
+        try {
+            this.validatePieceData(piece);
+        } catch (e) {
+            return Error('Invalid data for piece: ' + piece.toString());
+        }
+
+        const dto = this.factory.toDTO(piece);
+        delete dto.id;
+        const { data, error } = await this.supabase.from('pieces').insert([dto]).select().single();
+        if (error != null) return error;
+        return this.factory.makePiece(data);
     }
   }
 
@@ -155,60 +169,84 @@ export class PieceRepository {
     return this.factory.makePiece(data)
   }
 
-  /**
-   * Deletes a piece record by its ID.
-   * Returns `true` if successful, otherwise `false`.
-   * @param {number} id - The ID of the piece to delete.
-   * @returns {Promise<boolean>}
-   */
-  public async deletePiece (id: number): Promise<boolean> {
-    try {
-      const error = await this.supabase
-        .from('pieces')
-        .delete()
-        .eq('id', id)
-        .select()
-      return error.data != null && error.data.length > 0
-    } catch {
-      return false
+    /**
+     * Closes a listing by updating its status in the database.
+     *
+     * This operation transitions a Piece into a terminal state such as SOLD, DONATED,
+     * or RETRACTED. A successful update returns the updated Piece domain object
+     * constructed through the PieceFactory. If the update fails, the Supabase error
+     * is returned instead.
+     *
+     * @param {number} id - The ID of the listing to close.
+     * @param {Status} status - The terminal status to apply (SOLD, DONATED, or RETRACTED).
+     * @returns {Promise<Piece | Error>} - The updated Piece if successful, or an Error on failure.
+     *
+     * @example
+     * const repo = new PieceRepository();
+     * await repo.closeListing(12, Status.SOLD);       // marks piece as sold
+     * await repo.closeListing(15, Status.DONATED);    // marks piece as donated
+     * await repo.closeListing(18, Status.RETRACTED);  // removes item from circulation
+     */
+    public async closeListing(id: number, status: Status): Promise<Piece | Error> {
+        const { data, error } = await this.supabase.from('pieces').update({ status: Status[status] }).eq('id', id).select().single();
+        if (error) return error;
+        return this.factory.makePiece(data);
     }
-  }
-  /**
-   * Filters pieces in the database based on optional criteria.
-   * Supports partial name search (case-insensitive) and exact matches for other fields.
-   *
-   * @param {Partial<Record<string, any>>} filters - Filter criteria such as:
-   * `{ name, category, brand, color, size, gender, price, condition }`
-   * @returns {Promise<Array<Piece>>} - Filtered array of Piece objects.
-   *
-   * @example
-   * const repo = new PieceRepository();
-   * const filtered = await repo.filterPieces({
-   *     name: "shirt",
-   *     category: "SHIRT",
-   *     color: "red",
-   * });
-   * console.log(filtered.length); // -> number of matching pieces
-   */
-  public async filterPieces (
-    filters: Partial<Record<string, any>>
-  ): Promise<Array<Piece>> {
-    try {
-      let query = this.supabase.from('pieces').select('*')
-      Object.entries(filters).forEach(([key, value]) => {
-        if (value == null || value === '') return
-        if (
-          key === 'name' ||
-          key === ' category' ||
-          key === 'color' ||
-          key === 'brand' ||
-          key === 'gender' ||
-          key === 'size' ||
-          key === 'condition'
-        ) {
-          query = query.ilike('name', `%${value}%`)
-        } else {
-          query = query.eq(key, value)
+
+    /**
+     * Deletes a piece record by its ID.
+     * Returns `true` if successful, otherwise `false`.
+     * @param {number} id - The ID of the piece to delete.
+     * @returns {Promise<boolean>}
+     */
+    public async deletePiece(id: number): Promise<boolean> {
+        try {
+            const { data, error } = await this.supabase.from('pieces').delete().eq('id', id).select();
+            if (error) return false;
+            return Array.isArray(data) ? data.length > 0 : !!data;
+        } catch {
+            return false;
+        }
+    }
+    /**
+     * Filters pieces in the database based on optional criteria.
+     * Supports partial name search (case-insensitive) and exact matches for other fields.
+     *
+     * @param {Partial<Record<string, any>>} filters - Filter criteria such as:
+     * `{ name, category, brand, color, size, gender, price, condition }`
+     * @returns {Promise<Array<Piece>>} - Filtered array of Piece objects.
+     *
+     * @example
+     * const repo = new PieceRepository();
+     * const filtered = await repo.filterPieces({
+     *     name: "shirt",
+     *     category: "SHIRT",
+     *     color: "red",
+     * });
+     * console.log(filtered.length); // -> number of matching pieces
+     */
+    public async filterPieces(filters: Partial<Record<string, any>>): Promise<Array<Piece>> {
+        try {
+            let query: any = this.supabase.from('pieces').select('*');
+
+            const searchFields = ['name', 'category', 'color', 'brand', 'gender', 'size', 'condition', 'status'];
+
+            Object.entries(filters).forEach(([key, value]) => {
+                if (value == null || value === '') return;
+
+                if (searchFields.includes(key)) {
+                    query = query.ilike(key, `%${value}%`);
+                    return;
+                }
+
+                query = query.eq(key, value);
+            });
+
+            const { data, error } = await query;
+            if (error || !data) return [];
+            return data.map((item : Record<string, any>) => this.factory.makePiece(item));
+        } catch {
+            return [];
         }
       })
       const { data, error } = await query
@@ -217,5 +255,75 @@ export class PieceRepository {
     } catch {
       return []
     }
-  }
+
+    /**
+     * Deletes one or more image files from Supabase Storage.
+     * Used when a user removes images during edit.
+     * @param {string[]} imagePaths - Array of image storage paths.
+     * @returns {Promise<boolean>} - True if all deletions succeeded.
+     */
+    public async deleteImages(imagePaths: string[]): Promise<boolean> {
+        if (!imagePaths || imagePaths.length === 0) return true;
+
+        const { error } = await this.supabase.storage
+            .from("piece_images")        // your bucket name
+            .remove(imagePaths);
+
+        return error == null;
+    }
+
+    /**
+     * Validates if more images can be added based on current count and max limit
+     */
+    public canAddMoreImages(currentImages: string[], maxImages: number): boolean {
+        return currentImages.length < maxImages;
+    }
+
+    /**
+     * Validates piece form data and returns error message or null if valid
+     */
+    public validatePieceFormData(
+        imageUrls: string[],
+        city: string,
+        handoff: string,
+        title: string,
+        category: string,
+        condition: string,
+        size: string,
+        sex: string,
+        quantity: number,
+        maxImages: number
+        ): string | null {
+        if (!imageUrls || imageUrls.length === 0) {
+            return 'Please upload at least one image.';
+        }
+        if (imageUrls.length > maxImages) {
+            return `Maximum ${maxImages} images allowed.`;
+        }
+        if (!city.trim()) {
+            return 'Please enter a city.';
+        }
+        if (!handoff) {
+            return 'Please select a handoff method.';
+        }
+        if (!title.trim()) {
+            return 'Please enter an item name.';
+        }
+        if (!category) {
+            return 'Please select a category.';
+        }
+        if (!condition) {
+            return 'Please select a condition.';
+        }
+        if (!size) {
+            return 'Please select a size.';
+        }
+        if (!sex) {
+            return 'Please select a gender.';
+        }
+        if (quantity < 1) {
+            return 'Quantity must be at least 1.';
+        }
+        return null;
+    }
 }
