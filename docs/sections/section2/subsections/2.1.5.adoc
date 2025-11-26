@@ -8,7 +8,8 @@ This section describes only domain *actions*, *events*, and the *behaviors* they
 An instantaneous occurrence when a seller makes a clothing item publicly visible to others.
 
 *Interest Expressed*::  
-An instantaneous occurrence when a buyer contacts a seller indicating they want more information or wish to acquire the item.
+An instantaneous occurrence when a buyer signals desire to acquire or inquire about a listing. This event marks the *creation* of an **Interest** entity connecting the buyer and seller.
+
 
 *Listing Closed*::  
 A moment in which the seller marks that the item is no longer available after an offline exchange or withdrawal.
@@ -79,6 +80,7 @@ A recurring interaction when a buyer wants more information or wishes to acquire
 | *Actors*  | Buyer (primary), Seller (respondent)
 | *Actions + Events* |
 - Express Interest → *Interest Expressed*  
+  (this event initiates the period during which buyer and seller coordinate)  
 - Seller responds (clarifications, availability confirmation)
 | *Observed Pattern* | Short informal message chains establish availability and next steps.
 |===

@@ -34,15 +34,21 @@ Postconditions:: Listing becomes visible; `ListingPublished` recorded.
 Notes:: Discovery-only; no in-platform payments.
 
 
-expressInterest : Listing >< Buyer -> Either[ContactError, InterestExpressed]
+expressInterest : Listing >< Buyer -> Either[ContactError, Interest]
 
-Description:: A Buyer signals interest in a Listing to start contact with the Seller.
+Description::  
+A Buyer signals interest in a Listing, creating a persistent Interest relationship between Buyer and Seller.
 
-Preconditions:: Listing is open; Buyer is authenticated.
+Preconditions::  
+Listing is open; Buyer is authenticated.
 
-Postconditions:: `InterestExpressed` links Buyer and Seller.
+Postconditions::  
+An **Interest** entity is created linking Buyer and Seller.  
+The event *Interest Expressed* is triggered at the moment of creation.
 
-Notes:: Returns `ContactError` if listing is closed/unavailable.
+Notes::  
+Returns `ContactError` if the listing is closed or unavailable.
+
 
 rate : Piece >< ConditionRating -> Option[ConditionRating]
 
