@@ -65,12 +65,12 @@ export default function TopNav() {
   }
 
   const links = [
-    { href: "/", label: "Home"},
-    { href: "/browsing", label: "Browse"},
+    { href: "/", label: "Home" },
+    { href: "/browsing", label: "Browse" },
     { href: "/map", label: "Map" },
     { href: "/about", label: "About" },
     { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
-    { href: "/profilepage", label: "Profile" },
+    { href: "/profile", label: "Profile" },
   ];
 
   // Filter links based on auth state:

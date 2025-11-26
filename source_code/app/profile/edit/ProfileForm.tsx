@@ -27,9 +27,6 @@ export default function ProfileForm({
   );
   const [firstname, setFirstname] = useState(initialProfile?.firstname ?? '');
   const [lastname, setLastname] = useState(initialProfile?.lastname ?? '');
-  const [displayName, setDisplayName] = useState(
-    initialProfile?.display_name ?? ''
-  );
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);
@@ -38,7 +35,6 @@ export default function ProfileForm({
     setEmail(initialProfile?.email ?? user?.email ?? '');
     setFirstname(initialProfile?.firstname ?? '');
     setLastname(initialProfile?.lastname ?? '');
-    setDisplayName(initialProfile?.display_name ?? '');
   }, [initialProfile, user]);
 
   // If somehow user is still missing, *then* show this:
@@ -52,10 +48,6 @@ export default function ProfileForm({
     setError(null);
 
     // Basic client validation
-    if (!displayName.trim()) {
-      setError('Display name is required.');
-      return;
-    }
     if (!validateEmail(email)) {
       setError('Please enter a valid email address.');
       return;
@@ -66,7 +58,6 @@ export default function ProfileForm({
       const upsertObj = {
         id: user?.id,
         email,
-        display_name: displayName,
         firstname,
         lastname,
         // DO NOT allow client to set role other than 'user'; server/RLS/trigger protects it.
@@ -94,20 +85,13 @@ export default function ProfileForm({
   return (
     <form onSubmit={handleSave} className="space-y-4">
       <div>
-        <label className="block text-sm font-medium">Display name</label>
-        <input
-          value={displayName}
-          onChange={(e) => setDisplayName(e.target.value)}
-          className="mt-1 block w-full rounded border px-3 py-2"
-        />
-      </div>
-
-      <div>
         <label className="block text-sm font-medium">First name</label>
         <input
           value={firstname}
           onChange={(e) => setFirstname(e.target.value)}
           className="mt-1 block w-full rounded border px-3 py-2"
+          title="First name"
+          placeholder="Enter your first name"
         />
       </div>
 
@@ -117,6 +101,8 @@ export default function ProfileForm({
           value={lastname}
           onChange={(e) => setLastname(e.target.value)}
           className="mt-1 block w-full rounded border px-3 py-2"
+          title="Last name"
+          placeholder="Enter your last name"
         />
       </div>
 
@@ -127,6 +113,8 @@ export default function ProfileForm({
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="mt-1 block w-full rounded border px-3 py-2"
+          title="Email"
+          placeholder="Enter your email address"
         />
       </div>
 
