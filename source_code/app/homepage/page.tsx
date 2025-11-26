@@ -1,6 +1,5 @@
- 'use client'
+'use client'
 import Link from 'next/link';
-import MiniMapModal from "../map/capture-coordinates";
 import ChatWidget from '../chatbot/ui';
 import DonateWireframe from '../listings/donate_piece/page';
 import { supabase } from '../auth/supabaseClient';
@@ -13,7 +12,7 @@ import dynamic from "next/dynamic";
 import "leaflet/dist/leaflet.css";
 import type { Map as LeafletMap } from "leaflet";
 
-// Categories for 'Browse by category' section
+// Categories for 'Browse by category'
 const browse_categories = [
   { id: 1, name: "Streetwear", filter: "streetwear" },
   { id: 2, name: "Formal", filter: "formal" },
@@ -22,18 +21,6 @@ const browse_categories = [
   { id: 5, name: "Kids", filter: "kids" },
 ];
 
-// Items for 'Featured items' section
-// const featured_items = [
-//   {id: 1, name: "Nike Hoodie", size: "M", condition: "Used", category: "Hoodie", price: "Free"},
-//   {id: 2, name: "Adidas Sneakers", size: "9", condition: "New", category: "Shoes", price: "$10"},
-//   {id: 3, name: "Zara Dress", size: "S", condition: "New", category: "Dress", price: "Free"},
-//   {id: 4, name: "Uniqlo", size: "L", condition: "Used", category: "Sweater", price: "$5"},
-//   {id: 5, name: "Levi's Jeans", size: "32", condition: "Used", category: "Jeans", price: "Free"},
-//   {id: 6, name: "Puma Jacket", size: "L", condition: "New", category: "Jacket", price: "$12"},
-//   {id: 7, name: "H&M Top", size: "M", condition: "New", category: "Top", price: "Free"},
-//   {id: 8, name: "Converse Shoes", size: "8", condition: "Used", category: "Shoes", price: "$8"},
-// ];
-
 // Comments for 'Community' section
 const comments = [
   {id: 1, username: "Dani", comment: "I swapped 3 items and saved $$$. Love the vibe!"},
@@ -41,7 +28,7 @@ const comments = [
   {id: 3, username: "Ana", comment: "Great for kids clothes that they outgrow fast."},
 ];
 
-// Steps for 'How it works' section
+// Steps
 const steps = [
   { id: 1, step: "List or request items", description: "Post what you have or need" },
   { id: 2, step: "Match & message", description: "We'll notify you instantly" },
@@ -49,16 +36,10 @@ const steps = [
 ];
 
 export default function Homepage() {
-  const router= useRouter();
+  const router = useRouter();
+  const [featuredItems, setFeaturedItems] = useState<Piece[]>([]);
 
-  const [featuredItems, setFeaturedItems]= useState<Piece[]>([]);
-  const [miniMapOpen, setMiniMapOpen] = useState(false);
-  const [selectedCoords, setSelectedCoords] = useState<{ lat: number; lng: number } | null>(null);
-  const [isMapOpen, setIsMapOpen] = useState(false);
-
-  const MiniMap = dynamic(() => import("../map/capture-coordinates"), { ssr: false });
-
-  useEffect(()=>{
+  useEffect(() => {
     async function getFeaturedItems() {
       const pieceRepo = new PieceRepository()
       const pieces = pieceRepo.getPieces()
@@ -78,32 +59,16 @@ export default function Homepage() {
 
   if (featuredItems.length <= 0) {
     return (
-        <div className="flex items-center justify-center w-full h-64">
-          <div className="flex flex-col items-center justify-center bg-[#F9F8F8] rounded-3xl border-2 border-[#E5E7EF] shadow-sm px-10 py-12">
-            <p className="text-2xl font-semibold italic text-[#666666]">
-              Loading Store...
-            </p>
-            <p className="text-md text-[#9A9A9A] mt-2">
-            </p>
-          </div>
+      <div className="flex items-center justify-center w-full h-64">
+        <div className="flex flex-col items-center justify-center bg-[#F9F8F8] rounded-3xl border-2 border-[#E5E7EF] shadow-sm px-10 py-12">
+          <p className="text-2xl font-semibold italic text-[#666666]">Loading Store...</p>
         </div>
+      </div>
     )
-  } 
+  }
 
   return (
     <div className="p-3">
-  
-      {/* ---------- Mini Map Modal State & Component ---------- */}
-      <MiniMapModal
-        isOpen={isMapOpen}
-        onClose={() => setIsMapOpen(false)}
-        onLocationSelect={(coords) => {
-          console.log("Selected:", coords);
-          setSelectedCoords(coords);
-          setIsMapOpen(false);
-        }}
-      />
-  
       {/* Hero section */}
       <div className="w-340 h-100 p-5 pl-10 mx-auto bg-[#f5f6f3] rounded-xl">
         <div className="flex space-x-4">
@@ -115,7 +80,7 @@ export default function Homepage() {
               Discover, donate, and share styles with your community —
               sustainably and affordably.
             </p>
-  
+
             <div className="flex space-x-4 pt-5 text-[#666666] font-bold italic">
               <Link href="../browsing">
                 <button
@@ -125,7 +90,7 @@ export default function Homepage() {
                   Start Browsing
                 </button>
               </Link>
-  
+
               <Link href="../listings/donate_piece">
                 <button
                   id="Donate_Item_btn"
@@ -134,7 +99,7 @@ export default function Homepage() {
                   Donate Item
                 </button>
               </Link>
-  
+
               <Link href="../listings/sell_piece">
                 <button
                   id="Donate_Item_btn"
@@ -144,8 +109,8 @@ export default function Homepage() {
                 </button>
               </Link>
             </div>
-  
-            {/* 🔍 Search Bar */}
+
+            {/* Search Bar */}
             <form onSubmit={open_browsing}>
               <input
                 name="Search_Bar"
@@ -154,16 +119,8 @@ export default function Homepage() {
                 className="w-150 h-13 px-4 py-2 mt-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]"
               />
             </form>
-  
-            {/* 🗺️ Mini Map Button */}
-            <button
-              onClick={() => setIsMapOpen(true)}
-              className="mt-5 px-4 py-2 bg-[#d6b1b1] text-white rounded-full hover:bg-[#c49fa0]"
-            >
-              Open Mini Map
-            </button>
           </div>
-  
+
           {/* IMAGE */}
           <img
             src="https://packstar.mx/wp-content/uploads/2024/04/como-el-empaque-afecta-la-imagen-de-tu-marca-3.jpg"
@@ -172,12 +129,12 @@ export default function Homepage() {
           />
         </div>
       </div>
-  
+
       {/* Browse by category */}
       <h2 className="text-3xl font-bold italic pl-15 pt-15">
         Browse by category
       </h2>
-  
+
       <div className="flex space-x-auto px-13 pt-4">
         {browse_categories.map((cat) => (
           <button
@@ -195,15 +152,13 @@ export default function Homepage() {
           </button>
         ))}
       </div>
-  
+
       {/* Featured Items */}
       <FilterableFeaturedItems initialItems={featuredItems} />
-  
+
       {/* How it works */}
-      <h2 className="text-3xl font-bold italic pl-15 pt-10">
-        How it works
-      </h2>
-  
+      <h2 className="text-3xl font-bold italic pl-15 pt-10">How it works</h2>
+
       <div className="flex space-x-auto px-12 pt-4">
         {steps.map((cat) => (
           <div
@@ -224,30 +179,30 @@ export default function Homepage() {
           </div>
         ))}
       </div>
-  
+
       {/* Impact stats */}
       <div className="flex rounded-3xl w-340 h-40 bg-[#e6dac7] mx-auto my-15">
         <div className="flex flex-col space-y-4 mx-auto justify-center text-center">
           <h2 className="text-4xl font-bold italic">12,4080</h2>
           <p className="text-sm text-[#666666]">Items re-homed</p>
         </div>
-  
+
         <div className="flex flex-col space-y-4 mx-auto justify-center text-center">
           <h2 className="text-4xl font-bold italic">18,200 lbs</h2>
           <p className="text-sm text-[#666666]">Textiles diverted</p>
         </div>
-  
+
         <div className="flex flex-col space-y-4 mx-auto justify-center text-center">
           <h2 className="text-4xl font-bold italic">3,150</h2>
           <p className="text-sm text-[#666666]">Active donors</p>
         </div>
       </div>
-  
-      {/* Community comments */}
+
+      {/* Comments */}
       <h2 className="text-3xl font-bold italic pl-15 pt-2">
         What our community says
       </h2>
-  
+
       <div className="flex space-x-auto px-18 pt-6">
         {comments.map((comment) => (
           <div
@@ -266,9 +221,8 @@ export default function Homepage() {
           </div>
         ))}
       </div>
-  
+
       <ChatWidget />
     </div>
   );
-  
 }
