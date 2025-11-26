@@ -13,7 +13,7 @@ export default function AboutPage() {
     <main className="min-h-screen bg-white text-gray-900">
       <div className="mx-auto max-w-6xl px-4 py-12 space-y-16">
         
-        {/* About Header */}
+
         <section className="space-y-4 max-w-2xl">
           <h1 className="text-6xl font-semibold tracking-tight">
             About Us
@@ -26,12 +26,12 @@ export default function AboutPage() {
           </p>
         </section>
 
-        {/* Mission & Vision */}
+
         <section className="space-y-6">
           <h2 className="text-2xl font-semibold">Mission & Vision</h2>
 
           <div className="grid md:grid-cols-2 gap-6">
-            {/* Mission */}
+
             <div className="rounded-xl bg-white border border-gray-200 shadow-sm p-6 space-y-3">
               <p className="text-xs font-semibold tracking-[0.25em] uppercase text-gray-700">
                 Mission
@@ -60,11 +60,9 @@ export default function AboutPage() {
           </div>
         </section>
 
-        {/* Who are we? */}
         <section className="space-y-6">
           <h2 className="text-2xl font-semibold">Who are we?</h2>
 
-          {/* First image + text */}
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="relative h-56 md:h-64 rounded-xl overflow-hidden border border-gray-300 shadow-sm">
               <Image
@@ -91,7 +89,7 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Second text + image */}
+
           <div className="grid md:grid-cols-2 gap-8 items-center">
             <div className="space-y-3">
               <p className="text-sm text-gray-700 leading-relaxed">
