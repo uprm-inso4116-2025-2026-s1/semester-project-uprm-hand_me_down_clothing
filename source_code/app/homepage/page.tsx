@@ -83,11 +83,10 @@ export default function Homepage() {
   return (
     <div className="p-3">
 
-      {/* HERO SECTION */}
+      {/* Hero Section */}
       <div className="w-full max-w-340 p-5 pl-10 mx-auto p-6 bg-[#f5f6f3] rounded-xl">
         <div className="flex flex-col lg:flex-row lg:space-x-6">
-          
-          {/* TEXT BLOCK */}
+      
           <div className="flex flex-col pt-3 flex-1">
             <h1 className="italic text-4xl sm:text-5xl lg:text-6xl font-bold mb-4">
               Give clothes a second life
@@ -96,7 +95,6 @@ export default function Homepage() {
               Discover, donate, and share styles with your community — sustainably and affordably.
             </p>
 
-            {/* BUTTONS */}
             <div className="flex flex-wrap gap-3 pt-5 text-[#666666] font-bold italic">
               <Link href="../browsing">
                 <button className="px-4 py-2 bg-[#e6dac7] hover:bg-[#d8c8b4] rounded-full">
@@ -117,7 +115,6 @@ export default function Homepage() {
               </Link>
             </div>
 
-            {/* SEARCH BAR */}
             <form onSubmit={open_browsing}>
               <input
                 name="Search_Bar"
@@ -128,7 +125,6 @@ export default function Homepage() {
             </form>
           </div>
 
-          {/* HERO IMAGE */}
           <img 
             src="https://packstar.mx/wp-content/uploads/2024/04/como-el-empaque-afecta-la-imagen-de-tu-marca-3.jpg"
             alt="Hero image"
@@ -137,7 +133,7 @@ export default function Homepage() {
         </div>
       </div>
 
-      {/* BROWSE BY CATEGORY */}
+      {/* Browse by Category */}
       <h2 className="text-3xl font-bold italic pt-10 text-center lg:text-left lg:pl-8">Browse by category</h2>
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-4 px-4 pt-4">
         {browse_categories.map((cat) => (
@@ -156,7 +152,7 @@ export default function Homepage() {
 
       <FilterableFeaturedItems initialItems={featuredItems}/>
 
-      {/* HOW IT WORKS */}
+      {/* How it works */}
       <h2 className="text-3xl font-bold italic pt-10 text-center lg:text-left lg:pl-8">How it works</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 pt-4">
         {steps.map((cat) => (
@@ -175,7 +171,7 @@ export default function Homepage() {
         ))}
       </div>
 
-      {/* STATS */}
+      {/* Statistics */}
       <div className="grid sm:grid-cols-3 gap-6 bg-[#e6dac7] rounded-3xl p-6 my-12 max-w-6xl mx-auto text-center">
         <div>
           <h2 className="text-4xl font-bold italic">12,4080</h2>
@@ -191,7 +187,7 @@ export default function Homepage() {
         </div>
       </div>
 
-      {/* COMMUNITY */}
+      {/* Reviews */}
       <h2 className="text-3xl font-bold italic pt-2 text-center lg:text-left lg:pl-8">What our community says</h2>
       <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 pt-6">
         {comments.map((comment) => (
@@ -212,118 +208,3 @@ export default function Homepage() {
     </div>
   );
 }
-//     <div className="p-3">
-
-//       {/* Hero section: intro message, tagline, and hero image */}
-//       <div className="w-340 h-100 p-5 pl-10 mx-auto bg-[#f5f6f3] rounded-xl">
-//         <div className="flex space-x-4">
-//           <div className="flex flex-col pt-3">
-//             <h1 className="italic text-6xl font-bold mb-4">Give clothes a second life</h1>
-//             <p className="text-xl text-[#666666]">
-//               Discover, donate, and share styles with your community — sustainably and affordably.
-//             </p>
-//             <div className="flex space-x-4 pt-5 text-[#666666] font-bold italic">
-//               <Link href="../browsing">
-//                 <button id="Start_Browsing_btn" className="px-4 py-2 w-55 h-13 bg-[#e6dac7] hover:bg-[#d8c8b4] rounded-full">
-//                   Start Browsing
-//                 </button>
-//               </Link>
-//               <Link href="../listings/donate_piece">
-//                 <button id="Donate_Item_btn" className="px-4 py-2 w-55 h-13 bg-[#f9f8f8] hover:bg-[#eceaea] border-[#E5E7EF] border-2 rounded-full">
-//                   Donate Item
-//                 </button>
-//               </Link>
-//               <Link href="../listings/sell_piece">
-//                 <button id="Donate_Item_btn" className="px-4 py-2 w-55 h-13 bg-[#f9f8f8] hover:bg-[#eceaea] border-[#E5E7EF] border-2 rounded-full">
-//                   Sell Item
-//                 </button>
-//               </Link>
-//             </div>
-//               <form onSubmit={open_browsing}>
-//                 <input
-//                     //onChange={(e)=> } use for Search Suggestions
-//                     name="Search_Bar"
-//                     type="text"
-//                     placeholder="Search for clothing..."
-//                     className="w-150 h-13 px-4 py-2 mt-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
-//                 </input>
-//             </form>
-//           </div>
-//           <img 
-//             src={"https://packstar.mx/wp-content/uploads/2024/04/como-el-empaque-afecta-la-imagen-de-tu-marca-3.jpg"}
-//             alt="Person putting folded clothes into a box"
-//             className="w-120 h-90 rounded-xl bg-[#aac7c0] ml-5 object-cover">
-//           </img>
-//         </div>
-//       </div>
-
-//       {/* Browse by category: Links to explore different clothing categories */}
-//       <h2 className="text-3xl font-bold italic pl-15 pt-15">Browse by category</h2>
-//       <div className="flex space-x-auto px-13 pt-4">
-//         {browse_categories.map((cat) => (
-//           <button 
-//             key={cat.id} 
-//             id="Browse_Category_btn" 
-//             className="w-55 h-40 bg-[#F9F8F8] hover:bg-[#eceaea] border-[#E5E7EF] border-2 px-4 m-auto rounded-xl">
-//             <div className="flex space-x-2 py-3">
-//               <div className="rounded-full w-7 h-7 bg-[#D6B1B1]"></div>
-//               <h3 className="text-lg font-bold italic">{cat.name}</h3>
-//             </div>
-//             <p className="text-sm text-[#666666] text-left pl-9">Explore {cat.filter} →</p>
-//           </button>
-//         ))}
-//       </div>
-
-//       <FilterableFeaturedItems initialItems={featuredItems}/>
-
-//       {/* How it works: explanation of the platform process */}
-//       <h2 className="text-3xl font-bold italic pl-15 pt-10">How it works</h2>
-//       <div className="flex space-x-auto px-12 pt-4">
-//         {steps.map((cat) => (
-//           <div
-//             key={cat.id}  
-//             className="w-100 h-35 bg-[#F9F8F8] border-[#E5E7EF] border-2 p-4 m-auto rounded-xl">
-//             <div className="flex space-x-2 py-3">
-//               <div className="rounded-full py-2 mx-3 w-8 h-8 bg-[#D6B1B1] text-center text-sm font-bold italic text-[#ffffff]">{cat.id}</div>
-//               <h3 className="text-lg font-bold italic indent-2">{cat.step}</h3>
-//             </div>
-//             <p className="text-sm text-[#666666] text-left indent-3 pl-9">{cat.description}</p>
-//           </div>
-//         ))}
-//       </div>
-
-//       {/* Impact statistics: summary metrics showing sustainability impact */}
-//       <div className="flex rounded-3xl w-340 h-40 bg-[#e6dac7] mx-auto my-15">
-//         <div className="flex flex-col space-y-4 mx-auto justify-center text-center">
-//           <h2 className="text-4xl font-bold italic">12,4080</h2>
-//           <p className="text-sm text-[#666666]">Items re-homed</p>
-//         </div>
-//         <div className="flex flex-col space-y-4 mx-auto justify-center text-center">
-//           <h2 className="text-4xl font-bold italic">18,200 lbs</h2>
-//           <p className="text-sm text-[#666666]">Textiles diverted</p>
-//         </div>
-//         <div className="flex flex-col space-y-4 mx-auto justify-center text-center">
-//           <h2 className="text-4xl font-bold italic">3,150</h2>
-//           <p className="text-sm text-[#666666]">Active donors</p>
-//         </div>
-//       </div>
-      
-//       {/* What our community says: quotes and feedback from platform users */}
-//       <h2 className="text-3xl font-bold italic pl-15 pt-2">What our community says</h2>
-//       <div className="flex space-x-auto px-18 pt-6">
-//         {comments.map((comment) => (
-//           <div
-//             key={comment.id}  
-//             className="w-110 h-35 bg-[#F9F8F8] border-[#E5E7EF] border-2 p-4 m-auto rounded-xl">
-//             <div className="flex space-x-2 py-3">
-//               <div className="rounded-full py-2 mx-3 w-8 h-8 bg-[#D6B1B1] text-center text-sm font-bold italic text-[#ffffff]"></div>
-//               <h3 className="text-lg font-bold italic indent-2">{comment.username}</h3>
-//             </div>
-//             <p className="text-sm text-[#666666] text-left indent-3 pl-9">{comment.comment}</p>
-//           </div>
-//         ))}
-//       </div>
-//       <ChatWidget />
-//     </div>
-//   );
-// }
