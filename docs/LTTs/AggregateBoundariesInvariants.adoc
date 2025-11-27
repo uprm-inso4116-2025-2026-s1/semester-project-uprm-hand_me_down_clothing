@@ -1,0 +1,168 @@
+==== Aggregate Boundaries and Invariants
+
+To maintain consistency and avoid over-coupling across domain objects, the system groups related concepts into aggregates. Each aggregate has a single root through which state changes are coordinated. This section describes the chosen aggregate roots, their boundaries, and the invariants they enforce.
+
+===== Piece / Listing Aggregate
+
+*Aggregate Root:*  
+Piece (or Listing, depending on implementation) — the main unit of reuse and discovery.
+
+*Inside the Aggregate:*  
+- Core descriptive data (title, description, size, type, tags).  
+- ConditionRating (as a Value Object).  
+- Status (Active, Reserved, Closed).  
+- Images (one or more Value Objects with URI + metadata).  
+- Reviews associated with this Piece / Listing.  
+- Optional internal Reservation information (who it is currently reserved for).
+
+*Outside the Aggregate (referenced by ID / VO):*  
+- Seller (User profile or account).  
+- Buyer (User profile or account).  
+- Locale (setting/label for meetup areas).  
+- Category / taxonomy structure (global classification tree).
+
+*Key Invariants Enforced by the Aggregate:*  
+- A Piece must have at least one image when it is first published.  
+- ConditionRating, if present, must stay within an agreed domain (e.g., 1–10).  
+- Status transitions follow a valid path (e.g., Active ↔ Reserved → Closed, but not Closed → Active).  
+- Editing listing details is not permitted once the status is Closed.  
+- Only one active reservation per Piece / Listing at a time (if reservations are modeled explicitly).
+
+*Justification:*  
+All of these fields share a single lifecycle and must be updated together to keep the representation of the item consistent. Concurrency issues (e.g., multiple users attempting to reserve or close the same item) are handled at the aggregate root. Separating Seller, Buyer, and Category prevents tight coupling between user accounts, taxonomy, and individual item lifecycles.
+
+===== Interest Aggregate
+
+*Aggregate Root:*  
+Interest — represents a persistent link between a Buyer and a specific Listing once
+Interest Expressed has occurred.
+
+*Inside the Aggregate:*  
+- Reference to Listing (by ID).  
+- Reference to Buyer (by ID).  
+- Timestamps (createdAt, optionally acknowledgedAt, expiredAt).  
+- Optional simple status (Created, Acknowledged, Expired, Cancelled).
+
+*Outside the Aggregate (referenced by ID / VO):*  
+- Seller (inferred from the Listing).  
+- Detailed Listing content (not embedded; resolved via Listing/Piece aggregate).  
+- Message history or chat logs (if modeled, handled separately).
+
+*Key Invariants Enforced by the Aggregate:*  
+- An Interest can only be created for a Listing that is still open/active.  
+- Each Interest always references exactly one Listing and one Buyer.  
+- State transitions must be valid (e.g., Created → Acknowledged → Expired/Cancelled).  
+- When the associated Listing is closed, open Interests cannot be moved back to Created.
+
+*Justification:*  
+Interest has its own identity and lifecycle separate from both Listing and Buyer. Several buyers may express interest in the same Listing, and those expressions must not be merged into a single structure. Modeling Interest as a separate aggregate allows the system to reason about concurrent interest expressions, acknowledgements, and expirations without corrupting the Listing’s core state.
+
+===== User Profile Aggregate
+
+*Aggregate Root:*  
+User (account/profile) — represents either a Buyer, a Seller, or a person who can play both roles over time.
+
+*Inside the Aggregate:*  
+- Identity and authentication details.  
+- Profile information (name, display picture, short bio).  
+- Aggregate view of reputation (e.g., rating summary, counts of completed exchanges).  
+
+*Outside the Aggregate (referenced by ID / VO):*  
+- Listings created by this user (managed by the Listing/Piece aggregate).  
+- Interests initiated by or targeting this user.  
+- Individual Review entities (owned by the Piece / Listing aggregate, but may reference the User).
+
+*Key Invariants Enforced by the Aggregate:*  
+- Identity data (email, institutional ID, etc.) remains unique where required.  
+- Profile changes remain internally consistent (e.g., no partially-applied updates).  
+- Reputation summaries reflect only confirmed/completed exchanges.
+
+*Justification:*  
+The User aggregate captures stable identity and profile information, while domain flows such as listing management and interest tracking are handled by separate aggregates. This avoids circular dependencies between Users, Listings, and Interests while still allowing each to reference the others by ID.
+
+===== Category / Taxonomy Aggregate
+
+*Aggregate Root:*  
+CategoryTree — represents the clothing taxonomy used for discovery and classification.
+
+*Inside the Aggregate:*  
+- Category nodes (e.g., Tops, Bottoms, Shoes, Accessories).  
+- Hierarchical relationships (parent/child links for subcategories).  
+- Optional metadata about category semantics (e.g., allowed item types).
+
+*Outside the Aggregate (referenced by ID / VO):*  
+- Individual Pieces / Listings (they refer to a Category by ID).  
+- Any external recommendation or analytics components.
+
+*Key Invariants Enforced by the Aggregate:*  
+- Every category has at most one parent (tree, not arbitrary graph).  
+- Category evolution (adding or deprecating categories) preserves a coherent structure.  
+- DR1–DR5 (single primary category per listing, hierarchical structure, distinction between resale and donation, compatibility rules, support for evolution) can be enforced here or supported by this structure.
+
+*Justification:*  
+Categories form a shared, global structure. Treating the taxonomy as its own aggregate avoids duplicating classification logic inside Listings or Users and keeps changes to the category tree coordinated and consistent.
+
+==== Aggregate Structure Diagram
+
+[listing]
+----
+                           +---------------------+
+                           |   User Aggregate    |
+                           |---------------------|
+                           |  User Profile       |
+                           |  Reputation Summary |
+                           +---------+-----------+
+                                     |
+                             references (ID)
+                                     v
++---------------------------------------------------------------+
+|                     Listing / Piece Aggregate                 |
+|---------------------------------------------------------------|
+|  [Aggregate Root] Piece / Listing                             |
+|                                                               |
+|   Inside:                                                     |
+|    - ConditionRating (VO)                                     |
+|    - Images (VO*)                                             |
+|    - Status (Active/Reserved/Closed)                          |
+|    - Reviews (Entity*)                                        |
+|                                                               |
+|   Outside (referenced):                                       |
+|    - Seller (User ID)                                         |
+|    - Category (Category ID)                                   |
+|    - Locale (VO)                                              |
++----------------------+--------------------------+-------------+
+                       ^                          |
+                       |                          |
+               references (ID)             listingId used here
+                       |                          |
++----------------------+--------------------------+-------------+
+|                       Interest Aggregate                      |
+|---------------------------------------------------------------|
+|   [Aggregate Root] Interest                                   |
+|                                                               |
+|   Inside:                                                     |
+|    - Buyer ID                                                 |
+|    - Listing ID                                               |
+|    - Interest state (Created/Acknowledged/Expired)            |
+|                                                               |
+|   Outside (referenced):                                       |
+|    - Listing details (Piece/Listings Aggregate)               |
+|    - Buyer/Seller (User Aggregate)                            |
++---------------------------------------------------------------+
+
+                         references (ID)
+                                 |
+                                 v
++---------------------------------------------------------------+
+|                  Category / Taxonomy Aggregate                |
+|---------------------------------------------------------------|
+|   [Aggregate Root] CategoryTree                               |
+|                                                               |
+|   Inside:                                                     |
+|    - Category Nodes                                           |
+|    - Parent/Child Links                                       |
+|                                                               |
+|   Outside (referenced):                                       |
+|    - Listings classify themselves under Category IDs          |
++---------------------------------------------------------------+
+----
