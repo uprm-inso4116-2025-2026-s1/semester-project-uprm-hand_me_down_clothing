@@ -1,0 +1,58 @@
+== Refactoring Toward Deeper Insight: From Piece-Centric to Listing-Centric Model
+
+During Milestone 1, our domain model treated *Piece* as the central object. A “listing” was implied but not explicitly modeled; it appeared in descriptions such as “post your clothes” or “share items for reuse.” Without a concrete Listing concept, the model lacked clarity around how pieces became available, how they changed state, and how buyers interacted with them. This created awkwardness: it was unclear where lifecycle rules belonged, and several user stories mentioned listing-like behavior without an actual Listing domain object.
+
+=== New Insight
+
+As the team progressed toward Milestone 2, we realized that a “Listing” is not just a piece being shown — it has its own lifecycle, states, and interactions. A Piece describes the physical properties of an item, but the Listing describes how that item enters and moves through the marketplace. We discovered that buyers never interact with just a Piece; they interact with a Listing that can be published, reserved, or closed. This insight made it clear that the Listing needed to become its own aggregate root with domain operations.
+
+=== After: Listing as a First-Class Domain Concept
+
+We introduced a `Listing` class as a central domain entity. It contains a Piece, a seller reference, a lifecycle state (Active, Reserved, or Closed), timestamps, and the operations that define its behavior: `publishListing`, `expressInterest`, and `closeListing`. This refactoring separates physical properties (Piece) from marketplace behavior (Listing), aligns with how users understand the platform, and prevents lifecycle logic from leaking into unrelated parts of the domain.
+
+=== UML Diagram: Updated Model
+
+[plantuml, listing-refactor, png]
+----
+@startuml
+class Piece {
+    + id
+    + category
+    + condition
+    + images
+}
+
+enum ListingStatus {
+    ACTIVE
+    RESERVED
+    CLOSED
+}
+
+class Listing {
+    + id
+    + piece: Piece
+    + sellerId
+    + status: ListingStatus
+    + publishListing()
+    + expressInterest(buyerId)
+    + closeListing()
+}
+
+class User {
+    + userId
+    + name
+}
+
+User --> Listing : creates
+Listing --> Piece : contains
+
+@enduml
+----
+
+=== Benefits of the Refactoring
+
+* **Clearer Ubiquitous Language** – The team now uses precise terms like “publish a listing,” “reserve a listing,” and “close a listing,” eliminating earlier ambiguity.
+* **Separated Responsibilities** – Piece handles physical item attributes; Listing handles marketplace behavior and lifecycle.
+* **Improved Extensibility** – Features such as reservations, buyer interest, or future rating rules attach naturally to Listing, not Piece.
+* **Aligned with User Behavior** – Buyers interact with listings, not raw pieces, making the model more accurate.
+* **Matches Lecture Guidance** – This change embodies “refactoring toward deeper insight”: replacing an awkward or incomplete model with one that reflects the domain more faithfully.

@@ -1,10 +1,9 @@
 === *2.1.2 - Terminology*
 
-The following terminology consolidates entities, events, actions, value objects, roles,
-and settings in the domain. Each entry specifies the concept type it represents and
-the phase in which it is introduced. This classification addresses the professor’s
-feedback regarding mixed, heterogeneous concepts by ensuring that each term has
-exactly one conceptual category.
+The following terminology consolidates entities, events, functions, and behaviors in the domain.  
+Each entry specifies the type of concept it represents and the phase in which it is introduced  
+(domain, requirements, design, implementation). This approach avoids circular definitions and  
+ensures alignment with both domain knowledge and system concerns.
 
 [cols="^,^,^,3", options="header", align=center]
 |===
