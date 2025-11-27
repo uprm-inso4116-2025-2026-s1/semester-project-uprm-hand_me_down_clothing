@@ -1,4 +1,4 @@
- 'use client'
+'use client'
 import Link from 'next/link';
 import ChatWidget from '../chatbot/ui';
 import DonateWireframe from '../listings/donate_piece/page';
