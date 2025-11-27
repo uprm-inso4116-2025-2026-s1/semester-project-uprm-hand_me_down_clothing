@@ -21,7 +21,7 @@ ensures alignment with both domain knowledge and system concerns.
 | Type | Value Object | Domain | Taxonomic clothing classification used to categorize Pieces (e.g., shirts, pants, shoes).
 | rate(Piece, ConditionRating) -> ConditionRating | Action | Design | Operation that evaluates or updates the condition rating of a Piece (pure transformation).
 | publishListing(Piece, Seller, Locale) -> ListingPublished | Action | Design | Action that causes the Listing Published event and results in a new system Listing.
-| expressInterest(Listing, Buyer) -> InterestExpressed | Action | Design | Action that triggers the Interest Expressed event between Buyer and Seller.
-| Interest | Entity | Domain | A persistent association created when a buyer shows interest in a listing; connects Buyer ↔ Seller during the coordination stage. Exists after the event *Interest Expressed*.
+| expressInterest(Listing, Buyer) -> InterestExpressed | Action | Design | Action that triggers the Interest Expressed event by creating an Interest that references the Buyer and Listing (the Seller is obtained through the Listing, not through a direct structural link).
+| Interest | Entity | Domain | A persistent association created when a buyer shows interest in a listing; the Interest references the Buyer and the Listing involved, with the Seller derived through the Listing.
 | closeListing(Listing, Seller) -> ListingClosed | Action | Design | Action that ends Listing availability and triggers the Listing Closed event.
 |===

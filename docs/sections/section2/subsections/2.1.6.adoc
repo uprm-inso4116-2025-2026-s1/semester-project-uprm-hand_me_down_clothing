@@ -95,11 +95,13 @@ Notes:: Discovery-only; no in-platform payments.
 expressInterest : Listing >< Buyer -> Either[ContactError, InterestExpressed]
 
 Description::  
-A Buyer signals interest in a Listing, creating a persistent Interest relationship between Buyer and Seller.
+A Buyer signals interest in a Listing, creating an Interest entity that references the Buyer and the Listing (the Seller is determined from the Listing).
+
 
 Preconditions:: Listing is available (open); Buyer is authenticated.
 
-Postconditions:: `InterestExpressed` is recorded linking Buyer, Seller, and Listing.
+Postconditions:: InterestExpressed is recorded as an Interest referencing the Buyer and the Listing; the Seller is indirectly determined through the Listing.
+
 
 rate : Piece >< ConditionRating -> Piece
 
@@ -115,7 +117,8 @@ Description:: Records a review after an offline exchange.
 
 Preconditions:: A prior successful exchange exists.
 
-Postconditions:: `ReviewSubmitted` is attached to the parties.
+Postconditions:: ReviewSubmitted maintains references to the Listing and the User being reviewed; Listings do not store or contain Reviews structurally.
+
 
 closeListing : Listing >< Seller -> Either[ClosedError, Listing]
 
