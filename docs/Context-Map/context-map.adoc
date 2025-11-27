@@ -1,0 +1,50 @@
+== Context Map
+
+The following diagram illustrates the bounded contexts in the Hand-Me-Down system, their responsibilities, and the strategic DDD relationships between them.
+
+[mermaid]
+----
+flowchart LR
+    %% === Internal Bounded Contexts ===
+    AUTH["Authentication & User Accounts (Team 2)"]
+    LIST["Listings / Catalog (Team 3)"]
+    SEARCH["Search & Map Integration (Team 4)"]
+
+    %% === External Systems ===
+    SA[(Supabase Auth)]
+    SDB[(Supabase DB & Storage)]
+    MAP[(Leaflet / Map APIs)]
+
+    %% === Internal Relationships ===
+    SEARCH -->|customer–supplier\needs listing data| LIST
+    LIST -->|conformist\uses user IDs| AUTH
+    SEARCH -->|conformist relies on sessions| AUTH
+
+    %% === External Connections ===
+    AUTH -->|conformist| SA
+    LIST -->|separate ways\persistence| SDB
+    SEARCH -->|separate ways\reads indexes| SDB
+    SEARCH -->|ACL\protects domain| MAP
+----
+
+== Bounded Context Descriptions
+
+=== Authentication & User Accounts (Team 2)
+This context manages login, logout, and user identity across the system. It provides the canonical user ID, session state, and authentication rules that all other contexts depend on. It does not manage listings or search functionality; it solely ensures users are securely identified.
+
+=== Listings / Catalog (Team 3)
+This context owns the core listing model: creating, editing, publishing, and closing listings. It maintains listing data, condition ratings, images, and seller references in persistent storage. It conforms to the Authentication context for user identity and acts as the supplier of listing data to the Search & Map Integration context.
+
+=== Search & Map Integration (Team 4)
+This context handles searching, filtering, and browsing listings, and it integrates map functionality to display listings and donation centers visually. It consumes listing data from the Listings / Catalog context and relies on Authentication for session information. It uses an Anti-Corruption Layer (ACL) to isolate the domain from raw Leaflet or map API details.
+
+== External Systems
+
+=== Supabase Auth
+Supabase's authentication provider is responsible for user accounts, passwords, and tokens. The Authentication context conforms to Supabase's identity model.
+
+=== Supabase DB & Storage
+Used as the external persistence layer that stores listings, images, reviews, and related data. Domain rules are handled inside bounded contexts, not the database.
+
+=== Leaflet / Map APIs
+External mapping engine providing map tiles, geolocation, and marker rendering. The Search & Map Integration context uses an ACL to prevent map-specific details from leaking into the domain model.

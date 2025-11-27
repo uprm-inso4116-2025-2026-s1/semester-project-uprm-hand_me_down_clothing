@@ -1,0 +1,58 @@
+== Assertions
+
+This section introduces formal preconditions and postconditions for key operations across the Authentication, Backend, and Map subsystems. These assertions improve clarity and support validation.
+
+**1. Authentication Operation: signUp(firstname, lastname, email, password)**
+
+The signUp operation creates a new authenticated user account.
+
+Preconditions:
+
+- userInput.email is syntactically valid.
+- userInput.password satisfies the password policy (must have a number or symbol and be at least 8 characters).
+- userInput.email is not associated with an existing account.
+- userInput.name is non-empty.
+
+Postconditions:
+
+- A new User account exists with the provided email.
+- The password is securely hashed, never stored in plain text.
+- A session token or authentication credential is generated and returned.
+- The user is marked as authenticated immediately after sign-up.
+
+**2. Backend Operation: createPiece(Piece)**
+
+The createPiece operation constructs a new Piece entity belonging to a seller. This inserts a new piece record into the database, but doesn't publish it as part of a Listing.
+
+Preconditions:
+
+- Seller is a valid and authenticated User.
+- pieceData.category is one of the domain’s allowed categories.
+- pieceData.attributes are compatible with the category (e.g., shoes must include shoeSize; accessories must not have a size attribute).
+- pieceData.condition ∈ {new, like-new, lightly-used, used, heavily-used}.
+- pieceData.description length ≤ maximum allowed length.
+
+Postconditions:
+
+- A new Piece object is created and is associated with seller.
+- The Piece receives a unique pieceID.
+- All provided category, condition, and attributes fields are stored exactly as passed.
+- The Piece enters the "unlisted" state (not yet part of any Listing).
+
+
+**3. Map Operation: nearMe(locations, userLocation)**
+
+The nearMe operation returns all listings within 8 kilometers of the user's current location or chosen map point.
+
+Preconditions:
+
+- userLocation contains valid latitude and longitude values.
+- listings is a non-null collection.
+- Every listing has a meetup location or seller locale with a valid geolocation.
+
+Postconditions:
+
+- The result contains only listings whose distance from userLocation is within 8km.
+- The original ordering of listings is preserved unless explicitly sorted afterward.
+- No listing outside radiusKm appears in the result.
+- The operation has no side effects (it does not modify listings nor store userLocation).

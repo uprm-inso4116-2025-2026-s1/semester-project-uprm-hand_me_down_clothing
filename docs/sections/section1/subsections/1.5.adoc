@@ -1,20 +1,24 @@
 === *1.5 Derived Goals*
 
-In addition to the primary goals (needs, scope, and core functionality), the project shall pursue secondary outcomes that respond to the realities of Mayagüez and the UPRM community. These outcomes emerge directly from the domain analysis — particularly from observed exchange norms, sustainability behaviors, affordability constraints, and the social structures that shape clothing reuse in the region.
+Derived goals provide higher-level motivations that inform the design of epics and features.  
+Each derived goal links to the epics it directly influences.
 
-These goals influence epics, features, and requirements that shape how discovery, classification, condition disclosure, and peer-to-peer trust mechanisms operate.
+[[DG-1]]
+*DG-1: Promote sustainability literacy and circular practices in Mayagüez*  
+The project shall normalize reuse, repair, and responsible disposal behaviors among students and families through donation and resale norms.  
+*Supports:* <<EPIC-1>>, <<EPIC-4>>  
+*Broader impact:* item lifecycles will be extended and textile waste pressure will be reduced.
 
-* Promote sustainability literacy and circular practices in Mayagüez::
-The platform shall help systematize and reinforce reuse, repair, and responsible disposal behaviors by making item condition, durability, and donation options visible and easy to act upon. Supporting structured reuse flows strengthens existing local norms where students already pass along clothing informally but lack a consistent medium for doing so.
+[[DG-2]]
+*DG-2: Strengthen community engagement and mutual aid through UPRM-led outreach*  
+The project will cultivate equitable sharing practices (donation, fair resale) centered on UPRM as the primary touchpoint.  
+*Supports:* <<EPIC-2>>, <<EPIC-5>>, <<EPIC-6>>  
+*Broader impact:* social capital will increase and households will respond more effectively to clothing and accessory needs.
 
-*Broader impact:* item lifecycles will be extended and textile waste pressure will be reduced without prescribing any specific technical solution. By reinforcing communityawareness of durability, repairability, and reuse, the platform contributes to a more widespread adoption of circular economy practices in the region.
+[[DG-3]]
+*DG-3: Raise awareness of affordability and access constraints faced by local households*  
+The project shall make visible how structured sharing reduces acquisition cost and effort for students and families.  
+*Supports:* <<EPIC-1>>, <<EPIC-3>>  
+*Broader impact:* schools and neighborhood groups will make more informed choices about drives and targeted outreach.
 
-* Strengthen community engagement and mutual aid through UPRM-led outreach::
-Peer-to-peer exchange at UPRM is grounded in interpersonal trust, reciprocity, and longstanding community ties. The platform shall amplify these dynamics by providing transparent seller histories, consistent communication channels, and donation/support flows that elevate community-driven contribution. These patterns build upon observable local habits where exchange, gifting, and informal aid already play a significant role in household clothing circulation.
-
-*Broader impact:* social capital will increase and households will respond more effectively to clothing and accessory needs across semesters and seasons. By improving visibility into trustworthy interactions and lowering barriers to giving and receiving, the platform reinforces mutual aid structures that already exist but are currently fragmented across personal networks.
-
-* Raise awareness of affordability and access constraints faced by local households:: 
-The platform shall highlight the economic and logistical burdens that influence how students and families acquire clothing. Structured filtering, clear condition indicators, donation visibility, and category organization all reduce the time, uncertainty, and effort associated with finding suitable items. By streamlining discovery and surfacing cost-saving options, the platform brings existing affordability constraints into clearer focus.
-
-*Broader impact:* schools and neighborhood groups will make more informed choices about drives, sizing priorities, and targeted outreach. Increased visibility of free and low- cost options helps households plan better across semesters and supports equitable access to clothing resources throughout the community.
+These derived goals guide outreach, education, and validation activities alongside the primary objectives.
