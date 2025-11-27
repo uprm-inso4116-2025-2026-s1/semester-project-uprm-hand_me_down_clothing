@@ -8,9 +8,11 @@ Define how users interact with the system through visible UI elements, controls,
 *Create Listing Form*
 - The authenticated user is implicitly the seller; **no seller field is displayed**.  
 - Required fields: **Title**, **at least one Image**, and **Category**. Optional fields: **Price** (if absent, listing is marked **Free**), **Description**, **Condition**, and **Size**.  
+- When selecting a **Category**, the system may show suggested categories based on the item’s title, description, or images. These suggestions help reduce misclassification but do **not** restrict the user’s choice.  
 - The **Publish** button is **disabled** until all required fields are valid.  
 - On submit with missing or invalid fields, show **inline errors**; **focus moves** to the first invalid field.  
 - On success, navigate to the **Listing Details** page and show a **toast**: “Listing published.”
+
 
 *Listing Details (Seller View)*
 - Shows editable fields (Title, Description, Images, Price, Condition) while **Status = Active**.  

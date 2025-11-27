@@ -49,7 +49,17 @@ Modeling donation explicitly allows these stakeholders (e.g., Fernando, Isidra, 
 For these reasons, the system must treat donation as its own domain concept rather than encoding it as a numeric edge case. This preserves clear intent, aligns with community expectations, and supports accurate categorization, filtering, reporting, and future integrations with sustainability efforts.
 
 [[REQ-DR4]]
-*DR4:* The system shall enforce item-to-category compatibility.  
+*DR4:* The system shall *support* item-to-category compatibility by helping users select an appropriate category for their listing. The system should provide suggestions or guidance, but shall not attempt to strictly enforce correctness.
+
+To assist users, the system may:
+- suggest likely categories based on the title, description, or user-selected attributes  
+- highlight common category choices for similar items  
+- warn when a category seems unusual (e.g., “Did you mean: Footwear?”)  
+- optionally use image recognition or LLM-assisted suggestions to improve accuracy
+
+This requirement does **not** imply strict enforcement or prevention of mismatches.  
+Its purpose is to reduce accidental misclassification while respecting user autonomy.
+
 *Supported by:* <<FEATURE-1.1>>, <<FEATURE-4.1>>
 
 [[REQ-DR5]]
