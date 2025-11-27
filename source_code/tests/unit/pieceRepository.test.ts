@@ -1,6 +1,6 @@
 import { PieceRepository } from "@/src/repositories/pieceRepository";
 import { Piece } from "@/app/types/piece";
-import { Category, Condition, Gender, Size } from "@/app/types/classifications";
+import { Category, Condition, Gender, Size, Status } from "@/app/types/classifications";
 import { PieceFactory } from "@/src/factories/pieceFactory";
 import { Lexend_Zetta } from "next/font/google";
 
@@ -28,6 +28,7 @@ describe("PieceRepository", () => {
             size: Size.MEDIUM,
             price: 40,
             condition: Condition.USED,
+            status: Status.ACTIVE,
             reason: "Test reason",
             images: [],
             user_id,
@@ -72,6 +73,7 @@ describe("PieceRepository", () => {
             size: Size.MEDIUM,
             price: 40,
             condition: Condition.USED,
+            status: Status.ACTIVE,
             reason: "Test reason",
             images: [],
             user_id,
@@ -105,6 +107,7 @@ describe("PieceRepository", () => {
             size: Size.SMALL,
             price: 25,
             condition: Condition.NEW,
+            status: Status.ACTIVE,
             reason: "Initial reason",
             images: [],
             user_id,
@@ -149,6 +152,7 @@ describe("PieceRepository", () => {
             size: Size.MEDIUM,
             price: 20,
             condition: Condition.NEW,
+            status: Status.ACTIVE,
             reason: "No reason",
             images: [],
             user_id,
@@ -171,6 +175,7 @@ describe("PieceRepository", () => {
             size: Size.LARGE,
             price: 10,
             condition: Condition.USED,
+            status: Status.ACTIVE,
             reason: "Cleaning test data",
             images: [],
             user_id,

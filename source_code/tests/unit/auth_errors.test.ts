@@ -1,7 +1,7 @@
-import { requestPasswordReset, signIn } from '../../../app/auth/auth';
-import { supabase } from '../../../app/auth/supabaseClient';
+import { requestPasswordReset, signIn } from '@/app/auth/auth';
+import { supabase } from '@/app/auth/supabaseClient';
 
-jest.mock('../../../app/auth/supabaseClient', () => ({
+jest.mock('@/app/auth/supabaseClient', () => ({
   supabase: {
     auth: {
       resetPasswordForEmail: jest.fn(),

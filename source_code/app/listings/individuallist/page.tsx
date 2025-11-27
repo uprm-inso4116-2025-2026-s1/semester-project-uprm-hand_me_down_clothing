@@ -1,14 +1,17 @@
 "use client";
 
 import React, { useState, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+import { useSearchParams, useRouter } from "next/navigation";
 import {
   useFavoritesReader,
   useFavoritesMutator,
 } from "@/app/Favorites/FavoritesProvider";
+import FieldRow from '@/src/components/FieldRow'
 import { PieceRepository } from "@/src/repositories/pieceRepository";
+import { createClient } from '@/app/utils/supabase/client'
 import type { Piece } from "@/app/types/piece";
 import { Category, Condition, Size } from "@/app/types/classifications";
+import { mapPieceToProduct } from '@/src/lib/mapPieceToProduct'
 
 const brand = {
   pink: "#E7A4A4",
@@ -28,6 +31,7 @@ export default function IndividualListing() {
   const searchParams = useSearchParams() ?? new URLSearchParams();
   const idParam = searchParams.get("id");
   const listingId = idParam ? Number(idParam) : NaN;
+  const router = useRouter();
 
   const { isFavorite } = useFavoritesReader();
   const { toggleFavorite } = useFavoritesMutator();
@@ -35,6 +39,7 @@ export default function IndividualListing() {
   const [piece, setPiece] = useState<Piece | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeIndex, setActiveIndex] = useState(0);
+  const [currentUser, setCurrentUser] = useState<any>(null)
 
   
   const isSaved =
@@ -68,6 +73,25 @@ export default function IndividualListing() {
     };
   }, [listingId]);
 
+  // Load current user from Supabase for permission checks
+  useEffect(() => {
+    const supabase = createClient()
+    let cancelled = false
+    const loadUser = async () => {
+      try {
+        const { data: { user }, error } = await supabase.auth.getUser()
+        if (!cancelled) {
+          if (!error) setCurrentUser(user)
+          else setCurrentUser(null)
+        }
+      } catch {
+        if (!cancelled) setCurrentUser(null)
+      }
+    }
+    loadUser()
+    return () => { cancelled = true }
+  }, [])
+
   if (Number.isNaN(listingId)) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -94,46 +118,8 @@ export default function IndividualListing() {
     );
   }
 
-  // Map Piece → your old "product" shape where needed
-  const product = {
-    title: piece.name,
-    categoryTrail: ["Home", "Hoodies"], // can make this smarter later
-    description: {
-      material: "80% Cotton, 20% Polyester",
-      care: "Machine wash cold, tumble dry low.",
-      measurements: [
-        { label: "Chest (pit-to-pit)", value: "21in" },
-        { label: "Length", value: "27in" },
-        { label: "Sleeve", value: "24in" },
-      ],
-      notes: [
-        "Comes from smoke-free, pet-free home",
-        "Slightly oversized fit",
-      ],
-      tip: "Meet in a public place for local swaps. For shipping, use tracked methods.",
-    },
-    price:
-      (piece as any).getFormattedPrice?.() ??
-      (piece.price != null ? piece.price.toString() : "0"),
-    badges: [
-      Condition[piece.condition] ?? "Used",
-      Size[piece.size] ?? "N/A",
-    ],
-    tags: ["Unisex fit", "New"],
-    details: {
-      category: Category[piece.category] ?? "Clothing",
-      location: "Mayagüez, PR", // placeholder; plug real location if you have it
-      condition: Condition[piece.condition] ?? "Used",
-      size: Size[piece.size] ?? "N/A",
-    },
-    donor: {
-      initials: "D",
-      name: "Donor",
-      rating: 4.8,
-      stats: "23 donations",
-      response: "High",
-    },
-  };
+  // Map Piece → product shape
+  const product = mapPieceToProduct(piece)
 
   const suggestions = [
     { title: "H&M Hoodie", meta: "Size: M • Like New" },
@@ -165,25 +151,33 @@ export default function IndividualListing() {
       {/* Main Content */}
       <main className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 mt-4 mb-16 grid grid-cols-1 lg:grid-cols-12 gap-6">
         <section className="lg:col-span-8">
-          <div
-            className="rounded-3xl overflow-hidden border border-neutral-200 aspect-[4/3] flex items-center justify-center"
-            style={{ backgroundColor: brand.mint }}
-          >
-            <div className="text-neutral-600">Main Image</div>
+          <div className="rounded-3xl overflow-hidden border border-neutral-200 aspect-[4/3] flex items-center justify-center bg-white">
+            {piece.images && piece.images.length > 0 ? (
+              // show selected image
+              <img
+                src={piece.images[activeIndex]}
+                alt={piece.name}
+                className="object-cover w-full h-full"
+              />
+            ) : (
+              <div className="text-neutral-600">No image available</div>
+            )}
           </div>
 
           <div className="mt-4 grid grid-cols-5 gap-4">
-            {[1, 2, 3, 4, 5].map((n, i) => (
+            {(piece.images && piece.images.length > 0 ? piece.images : [null, null, null, null, null]).map((url, i) => (
               <button
-                key={n}
+                key={i}
                 onClick={() => setActiveIndex(i)}
                 className={`rounded-2xl border bg-white aspect-[5/4] flex items-center justify-center text-xs ${
-                  activeIndex === i
-                    ? "border-neutral-400"
-                    : "border-neutral-200"
+                  activeIndex === i ? 'border-neutral-400' : 'border-neutral-200'
                 }`}
               >
-                Thumb {n}
+                {url ? (
+                  <img src={url} alt={`thumb-${i}`} className="w-full h-full object-cover rounded-lg" />
+                ) : (
+                  <span className="text-neutral-500">—</span>
+                )}
               </button>
             ))}
           </div>
@@ -222,52 +216,82 @@ export default function IndividualListing() {
                 ))}
               </div>
 
-              <dl className="mt-5 grid grid-cols-3 gap-y-2 text-sm">
-                <dt className="text-neutral-500">Category:</dt>
-                <dd className="col-span-2">{product.details.category}</dd>
-                <dt className="text-neutral-500">Location:</dt>
-                <dd className="col-span-2">{product.details.location}</dd>
-                <dt className="text-neutral-500">Condition:</dt>
-                <dd className="col-span-2">{product.details.condition}</dd>
-                <dt className="text-neutral-500">Size:</dt>
-                <dd className="col-span-2">{product.details.size}</dd>
-              </dl>
+              <div className="mt-5 grid grid-cols-1 gap-3 text-sm">
+                <FieldRow label="Category" value={product.details.category} />
+                <FieldRow label="Location" value={product.details.location} />
+                <FieldRow label="Condition" value={product.details.condition} />
+                <FieldRow label="Size" value={product.details.size} />
+              </div>
 
               <div className="mt-4 grid grid-cols-3 gap-2">
-                {/*Favorite button using real listingId from ?id=*/}
-                <button
-                  onClick={() => toggleFavorite(listingId)}
-                  className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
-                  style={{ borderColor: brand.borderStrong }}
-                  aria-pressed={isSaved}
-                  aria-label={
-                    isSaved
-                      ? "Remove from favorites"
-                      : "Save to favorites"
-                  }
-                >
-                  <span
-                    className={
-                      isSaved ? "text-[#f495ba]" : "text-neutral-500"
-                    }
-                  >
-                    {isSaved ? "♥" : "💗"}
-                  </span>
-                  <span>{isSaved ? "Saved" : "Save"}</span>
-                </button>
+                {/* Owner-specific actions */}
+                {currentUser && piece && currentUser.id === piece.user_id ? (
+                  <>
+                    <button
+                      onClick={() => router.push(`/listings/edit_piece?id=${listingId}`)}
+                      className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
+                      style={{ borderColor: brand.borderStrong }}
+                    >
+                      Edit
+                    </button>
 
-                <button
-                  className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm"
-                  style={{ borderColor: brand.borderStrong }}
-                >
-                  <span>↗</span> Share
-                </button>
-                <button
-                  className="inline-flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium hover:opacity-90"
-                  style={{ backgroundColor: brand.beige }}
-                >
-                  Contact
-                </button>
+                    <button
+                      onClick={async () => {
+                        if (!confirm('Are you sure you want to delete this listing? This cannot be undone.')) return
+                        const repo = new PieceRepository()
+                        const ok = await repo.deletePiece(listingId)
+                        if (ok) {
+                          alert('Listing deleted')
+                          router.push('/')
+                        } else {
+                          alert('Failed to delete listing')
+                        }
+                      }}
+                      className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
+                      style={{ borderColor: '#e55353' }}
+                    >
+                      Delete
+                    </button>
+
+                    <button
+                      className="inline-flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium hover:opacity-90"
+                      style={{ backgroundColor: brand.beige }}
+                      onClick={() => router.push(`/listings/${listingId}/manage`)}
+                    >
+                      Manage
+                    </button>
+                  </>
+                ) : (
+                  // Viewer actions
+                  <>
+                    <button
+                      onClick={() => toggleFavorite(listingId)}
+                      className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
+                      style={{ borderColor: brand.borderStrong }}
+                      aria-pressed={isSaved}
+                      aria-label={isSaved ? 'Remove from favorites' : 'Save to favorites'}
+                    >
+                      <span className={isSaved ? 'text-[#f495ba]' : 'text-neutral-500'}>
+                        {isSaved ? '♥' : '💗'}
+                      </span>
+                      <span>{isSaved ? 'Saved' : 'Save'}</span>
+                    </button>
+
+                    <button
+                      className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm"
+                      style={{ borderColor: brand.borderStrong }}
+                    >
+                      <span>↗</span> Share
+                    </button>
+
+                    <button
+                      className="inline-flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium hover:opacity-90"
+                      style={{ backgroundColor: brand.beige }}
+                    >
+                      Contact
+                    </button>
+                  </>
+                )}
               </div>
 
               <div className="mt-3 flex items-center gap-3 text-xs">
