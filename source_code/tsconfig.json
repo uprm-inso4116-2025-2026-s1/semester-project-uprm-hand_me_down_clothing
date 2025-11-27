@@ -16,7 +16,7 @@
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
-    "jsx": "preserve",
+    "jsx": "react-jsx",
     "types": [
       "react",
       "react-dom",
@@ -34,14 +34,15 @@
       ]
     }
   },
-
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/components/Footer.tsx"
-, "app/chatbot-api/api/openrouter_logic/route.js"  ],
+    "app/components/Footer.tsx",
+    "app/chatbot-api/api/openrouter_logic/route.js",
+    ".next/dev/types/**/*.ts"
+  ],
   "exclude": [
     "node_modules"
   ]

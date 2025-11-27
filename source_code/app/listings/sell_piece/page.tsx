@@ -5,6 +5,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { PieceRepository } from '@/src/repositories/pieceRepository';
 import { PieceFactory } from '@/src/factories/pieceFactory';
+import ListingPreview from '@/src/components/ListingPreview';
 
 const dummyUserId = "00000000-0000-0000-0000-000000000000"; // placeholder UUID
 
@@ -20,6 +21,7 @@ export default function SellPiece() {
   const [condition, setCondition] = useState("")
   const [reason, setReason] = useState("")
   const [images, setImages] = useState<Array<string>>([])
+  const [showPreview, setShowPreview] = useState(true)
 
   const router = useRouter();
 
@@ -338,7 +340,36 @@ export default function SellPiece() {
             </div>
           </section>
 
-          <div className="flex flex-wrap gap-3 justify-end mt-5">
+          {/* Preview Section */}
+          <section id="preview" className="space-y-4 mt-8">
+            <div className="flex items-center justify-between">
+              <h2 className="text-3xl font-bold italic">How it will look</h2>
+              <button
+                type="button"
+                className="text-sm text-[#36534b] underline hover:text-[#2b2b2b] transition-colors"
+                onClick={() => setShowPreview(!showPreview)}
+              >
+                {showPreview ? 'Hide' : 'Show'} preview
+              </button>
+            </div>
+
+            {showPreview && (
+              <div className="max-w-sm">
+                <ListingPreview
+                  image_urls={images}
+                  title={name}
+                  category={category}
+                  condition={condition}
+                  size={size}
+                  sex={gender}
+                  quantity={1}
+                  price={price}
+                />
+              </div>
+            )}
+          </section>
+
+          <div className="flex flex-wrap gap-3 justify-end mt-8">
             <button
               type="submit"
               className="px-5 py-2 h-13 bg-[#d7b1b1] hover:bg-[#cda0a0] rounded-full inline-flex items-center text-white transition-colors"
