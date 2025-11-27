@@ -11,8 +11,42 @@
 *Supported by:* <<FEATURE-1.1>>
 
 [[REQ-DR3]]
-*DR3:* The system must distinguish between Resale and Free/Donation listings.  
+*DR3:* The system must distinguish between **Resale** and **Free/Donation** listings.  
 *Supported by:* <<FEATURE-1.2>>, <<FEATURE-3.1>>, <<FEATURE-3.2>>, <<FEATURE-3.3>>, <<FEATURE-4.4>>, <<FEATURE-5.1>>, <<FEATURE-5.2>>, <<FEATURE-6.1>>, <<FEATURE-6.2>>
+
+
+==== *Justification: Why Donation Is Not Equivalent to a Zero-Price Sale*
+
+While both resale and donation result in a transfer of an item, they represent **fundamentally different domain phenomena** that must remain distinct in the model. Treating donation as simply “a sale at price = 0” erases critical behavioral, motivational, and social differences observed in the field:
+
+*Behavioral Motivation*  
+- **Resale** is economically motivated: sellers intend to recover value.  
+- **Donation** is altruistic: donors intend to help others, reduce waste, or give items a second life.  
+These intentions affect how users browse, filter, and evaluate listings.
+
+*Community Norms*  
+In observed platforms and local UPRM reuse culture, donation is framed as part of **mutual aid** and community support. A zero-price sale does not communicate the same norm of generosity or accessibility.
+
+*Visibility & Discovery Differences*  
+Users frequently search *only* for free items—especially students with financial constraints.  
+Treating donation as a sale at price 0 would require special-case logic to recreate a distinction that exists naturally in the domain.
+
+*Trust & Safety Implications*  
+Donation interactions often carry lighter expectations:  
+- no negotiation  
+- no price comparison  
+- less pressure to “justify” quality  
+Resale carries transactional expectations around condition, fairness, and accuracy.
+
+*Lifecycle & Data Semantics*  
+Donation signals a **different lifecycle path**, aligning with sustainability and circular-economy practices.  
+Platforms and institutions (e.g., sustainability coordinators, thrift partners) often track donation volumes separately from resale activity.
+
+*Legal & Institutional Context*  
+Some campus programs, community drives, or thrift partners only accept donation flows—not resales.  
+Modeling donation explicitly allows these stakeholders (e.g., Fernando, Isidra, Dr. Rivera) to interpret the platform’s impact correctly.
+
+For these reasons, the system must treat donation as its own domain concept rather than encoding it as a numeric edge case. This preserves clear intent, aligns with community expectations, and supports accurate categorization, filtering, reporting, and future integrations with sustainability efforts.
 
 [[REQ-DR4]]
 *DR4:* The system shall enforce item-to-category compatibility.  
