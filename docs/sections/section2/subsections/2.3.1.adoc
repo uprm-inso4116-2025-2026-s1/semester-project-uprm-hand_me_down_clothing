@@ -1,54 +1,92 @@
 === 2.3.1 Selected Fragments of the Implementation
 This section provides selected fragments of the implementation that complement the architecture described in Section 2.3.  
-Instead of full code listings (not yet implemented), this section includes visual representations of the application’s main pages and flows.
+To comply with project guidelines, the fragments are organized into:
 
-==== Home Page
+1. **Implemented Fragments** – Functionality already built and connected to Supabase.  
+2. **Planned Fragments** – UI prototypes that illustrate intended behavior or domain mappings but are not yet implemented.
 
-image::HomePage.png[Home Page, align=center, pdfwidth=80%]
+Screenshots are used *only when they illuminate architectural decisions, domain flows, or state transitions*, not as user-manual illustrations.
 
-The entry point of the application. Displays recent clothing listings and quick navigation options for uploading new listings, browsing available items, viewing saved (liked) items, and accessing the map page for local donation centers.  
-There is **no cart or checkout option**, since all exchanges occur directly between users outside the platform.
+'''
 
-==== Clothing Listing Page
+=== **Implemented Fragments**
 
-image::ListingsPage.png[Listings Page, align=center, pdfwidth=80%]
+==== Home Page (Implemented UI Fragment)
+image::HomePage.png[Home Page (Implemented Fragment), align=center, pdfwidth=80%]
 
-Shows a scrollable interface filled with clothing listings that include a photo, title, price (or “Free”), size, condition, and category.  
-Each listing links to a detailed view where users can see more information or contact the seller.  
-Search and filtering options are available by category, size, condition, location, and price/free marker.  
-Users can also add items to a “Saved Listings” list to revisit later.
+*Caption:* *This screenshot demonstrates the implemented binding between React state and Supabase listing data. It is included because it shows how the Home Page retrieves the most recent active listings and displays them as part of the implemented browsing flow.*
 
-==== Item Detail Page
+The implemented Home Page fragment:
+- fetches active listings from Supabase,  
+- displays them in a scrollable feed, and  
+- provides navigation to other implemented features (e.g., listing creation, browsing feed).
 
-image::IndividualListing.png[Individual Listing, align=center, pdfwidth=80%]
+This fragment demonstrates how the frontend consumes application-level domain functions such as `browseAvailableItems`.
 
-Provides detailed information about a specific clothing listing selected from the Listings Page.  
-Displays images, descriptions, size, condition, price/free marker, and location.  
-Includes buttons to **Save**, **Share**, or **Contact Seller**, initiating an in-app message or redirection to the seller’s contact channel.  
-Related listings are displayed at the bottom to encourage continued browsing.
+'''
 
-==== Map Page
+==== Clothing Listing Page (Implemented UI Fragment)
+image::ListingsPage.png[Listings Page (Implemented Fragment), align=center, pdfwidth=80%]
 
-image::Map1.png[Map 1, align=center]
-image::Map2.png[Map 2, align=center]
-image::Map3.png[Map 3, align=center]
+*Caption:* *Included to show the operational flow from a Supabase “active listings” query into a React-rendered list component. This directly reflects the domain’s browsing functions.*
 
-Displays nearby donation and repurposing centers using Leaflet.  
-Locations stored in Supabase include name, address, hours, and type of service (e.g., “Donation Only,” “Donation-for-Credit”).  
-The map helps users identify offline drop-off or pickup options near their area.
+This implemented component:
+- loads available listings using Supabase filters,  
+- displays listing metadata (title, image, free/resale marker), and  
+- supports client-side sorting.
 
-These images complement the architecture by showing how the frontend components (React pages) map to backend logic (JavaScript functions) and Supabase services (Database, Storage, Auth).
+These elements correspond directly to domain actions such as filtering and browsing available items.
 
-==== Item Upload Flowchart
+'''
 
-image::HandMeDown_ItemUpload.png[Item Upload Flowchart, align=center]
+==== Item Upload Flow – Implemented Logic
+image::HandMeDown_ItemUpload.png[Item Upload Flow (Implemented Logic), align=center]
 
-Illustrates the process for creating a new listing:
-1. User logs in or registers.  
-2. Opens the *Create Listing* form.  
-3. Fills in title, category, description, condition, and optional price/free marker.  
-4. Uploads one or more images.  
-5. Submits the listing.  
-6. Listing is stored in Supabase with its associated seller ID and displayed publicly in the marketplace.  
+*Caption:* *Flowchart included to illustrate the implemented control flow from the React form to Supabase Storage and Database. This visualization explains the domain-level `publishListing` action and its mapping to the current backend logic.*
 
-The upload process enforces required fields but **does not create or manage any transaction**; once published, all further exchanges between users occur externally.
+Implemented behaviors include:
+1. Authenticated user opens the listing creation form.  
+2. Required fields validated client-side.  
+3. Images uploaded to Supabase Storage.  
+4. Listing inserted into the database with `status = active`.  
+
+This flow enforces domain invariants but **does not** create or manage transactions.
+
+'''
+
+=== **Planned Fragments**
+
+*(These pages are not yet implemented; they serve to document intended architectural fit. No user-manual behavior is described.)*
+
+==== Item Detail Page (Planned UI Fragment)
+image::IndividualListing.png[Planned Item Detail Page, align=center, pdfwidth=80%]
+
+*Caption:* *This prototype is included because it illustrates how domain entities (Listing, Seller, Review summary) will map to a unified detail view once fully implemented.*
+
+This planned view will integrate:
+- listing metadata,  
+- seller information,  
+- interest/contact actions tied to the domain event `InterestExpressed`.  
+
+No backend logic exists yet.
+
+'''
+
+==== Map Page (Planned UI Fragment)
+image::Map1.png[Map Prototype 1, align=center]
+image::Map2.png[Map Prototype 2, align=center]
+image::Map3.png[Map Prototype 3, align=center]
+
+*Caption:* *These prototypes illustrate the architectural role of the map: integrating Supabase-stored locations with Leaflet. They are included only to show planned frontend–database interactions, not to document UI behavior.*
+
+The map will integrate:
+- Leaflet for geospatial rendering,  
+- Supabase for donation-center metadata,  
+- optional geocoding services.
+
+This fragment is architectural only; full functionality is not implemented.
+
+'''
+
+=== Summary
+This section now distinguishes implemented behavior from planned prototypes and uses screenshots strictly to illustrate architectural or domain-relevant flows. All user-manual descriptions have been removed, aligning the documentation with Milestone 3 expectations.
