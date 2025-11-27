@@ -17,8 +17,8 @@ export class DonatedPiece extends Piece {
         latitude: number | null,
         longitude: number | null,
         status: Status,
-        public donation_center: string | null = null, // TODO: consider adding this to the Supabase schema
+        donation_center: string | null = null,
     ) {
-        super(id, name, category, color, brand, gender, size, null, condition, reason, images, user_id, latitude, longitude, status);
+        super(id, name, category, color, brand, gender, size, null, condition, reason, images, user_id, latitude, longitude, status, donation_center);
     }
 }

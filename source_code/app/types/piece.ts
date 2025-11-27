@@ -18,6 +18,7 @@ export abstract class Piece {
         public latitude: number | null,
         public longitude: number | null,
         public status: Status,
+        public donation_center: string | null = null,
     ) { }
 
     public getFormattedPrice(): string {
@@ -71,6 +72,37 @@ export abstract class Piece {
         } catch {
             return String(this.condition);
         }
+    }
+
+    public getTitle(): string {
+        return this.name || 'Untitled item'
+    }
+
+    public getDescription(): string {
+        return this.reason || 'No description provided'
+    }
+
+    public getCategoryTrail(): string[] {
+        return ['Home', this.getFormattedCategory()]
+    }
+
+    public getBadges(): string[] {
+        return [this.getFormattedCondition() || 'Used', this.getFormattedSize() || 'N/A']
+    }
+
+    public getTags(): string[] {
+        return [this.getFormattedGender() || 'Unisex']
+    }
+
+    public getLocation(): string {
+        if (this.latitude != null && this.longitude != null) {
+            return `${this.latitude.toFixed(4)}, ${this.longitude.toFixed(4)}`
+        }
+        return 'N/A'
+    }
+
+    public getDonorInitials(): string {
+        return (this.user_id && this.user_id.slice(0, 1).toUpperCase()) || 'U'
     }
 
     public toString(): string {

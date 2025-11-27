@@ -6,12 +6,10 @@ import {
   useFavoritesReader,
   useFavoritesMutator,
 } from "@/app/Favorites/FavoritesProvider";
-import FieldRow from '@/src/components/FieldRow'
 import { PieceRepository } from "@/src/repositories/pieceRepository";
 import { createClient } from '@/app/utils/supabase/client'
 import type { Piece } from "@/app/types/piece";
-import { Category, Condition, Size } from "@/app/types/classifications";
-import { mapPieceToProduct } from '@/src/lib/mapPieceToProduct'
+import { HeartIcon, HeartFilledIcon, ShareIcon, MessageIcon, EditIcon, DeleteIcon, SettingsIcon } from '@/src/components/Icons'
 
 const brand = {
   pink: "#E7A4A4",
@@ -118,9 +116,6 @@ export default function IndividualListing() {
     );
   }
 
-  // Map Piece → product shape
-  const product = mapPieceToProduct(piece)
-
   const suggestions = [
     { title: "H&M Hoodie", meta: "Size: M • Like New" },
     { title: "Champion Crew", meta: "Size: M • Like New" },
@@ -134,7 +129,7 @@ export default function IndividualListing() {
       {/* Breadcrumb */}
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8 text-sm text-neutral-600 mt-6">
         <nav className="flex items-center gap-2">
-          {product.categoryTrail.map((c) => (
+          {piece.getCategoryTrail().map((c: string) => (
             <React.Fragment key={c}>
               <a href="#" className="hover:text-neutral-900">
                 {c}
@@ -143,7 +138,7 @@ export default function IndividualListing() {
             </React.Fragment>
           ))}
           <span className="text-neutral-900 font-medium">
-            {product.title}
+            {piece.getTitle()}
           </span>
         </nav>
       </div>
@@ -191,18 +186,18 @@ export default function IndividualListing() {
                   className="text-3xl md:text-4xl font-extrabold italic tracking-tight"
                   style={{ fontFamily: "Lato, system-ui, sans-serif" }}
                 >
-                  {product.title}
+                  {piece.getTitle()}
                 </h1>
                 <div
-                  className="text-2xl font-semibold"
+                  className="text-2xl md:text-4xl font-extrabold italic tracking-tight"
                   style={{ color: brand.mint }}
                 >
-                  {product.price}
+                  {piece.getFormattedPrice()}
                 </div>
               </div>
 
               <div className="mt-3 flex items-center gap-2">
-                {product.badges.map((b) => (
+                {piece.getBadges().map((b: string) => (
                   <span
                     key={b}
                     className="text-xs px-3 py-1 rounded-full border"
@@ -217,10 +212,22 @@ export default function IndividualListing() {
               </div>
 
               <div className="mt-5 grid grid-cols-1 gap-3 text-sm">
-                <FieldRow label="Category" value={product.details.category} />
-                <FieldRow label="Location" value={product.details.location} />
-                <FieldRow label="Condition" value={product.details.condition} />
-                <FieldRow label="Size" value={product.details.size} />
+                <div className="flex items-start gap-4">
+                  <dt className="w-28 text-neutral-500 text-sm">Category</dt>
+                  <dd className="text-sm text-neutral-800">{piece.getFormattedCategory() || 'N/A'}</dd>
+                </div>
+                <div className="flex items-start gap-4">
+                  <dt className="w-28 text-neutral-500 text-sm">Location</dt>
+                  <dd className="text-sm text-neutral-800">{piece.getLocation() || 'N/A'}</dd>
+                </div>
+                <div className="flex items-start gap-4">
+                  <dt className="w-28 text-neutral-500 text-sm">Condition</dt>
+                  <dd className="text-sm text-neutral-800">{piece.getFormattedCondition() || 'N/A'}</dd>
+                </div>
+                <div className="flex items-start gap-4">
+                  <dt className="w-28 text-neutral-500 text-sm">Size</dt>
+                  <dd className="text-sm text-neutral-800">{piece.getFormattedSize() || 'N/A'}</dd>
+                </div>
               </div>
 
               <div className="mt-4 grid grid-cols-3 gap-2">
@@ -232,7 +239,7 @@ export default function IndividualListing() {
                       className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
                       style={{ borderColor: brand.borderStrong }}
                     >
-                      Edit
+                      <EditIcon size={16} /> Edit
                     </button>
 
                     <button
@@ -250,15 +257,15 @@ export default function IndividualListing() {
                       className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm transition"
                       style={{ borderColor: '#e55353' }}
                     >
-                      Delete
+                      <DeleteIcon size={16} color="#e55353" /> Delete
                     </button>
 
                     <button
-                      className="inline-flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium hover:opacity-90"
+                      className="inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-medium hover:opacity-90"
                       style={{ backgroundColor: brand.beige }}
                       onClick={() => router.push(`/listings/${listingId}/manage`)}
                     >
-                      Manage
+                      <SettingsIcon size={16} /> Manage
                     </button>
                   </>
                 ) : (
@@ -271,9 +278,11 @@ export default function IndividualListing() {
                       aria-pressed={isSaved}
                       aria-label={isSaved ? 'Remove from favorites' : 'Save to favorites'}
                     >
-                      <span className={isSaved ? 'text-[#f495ba]' : 'text-neutral-500'}>
-                        {isSaved ? '♥' : '💗'}
-                      </span>
+                      {isSaved ? (
+                        <HeartFilledIcon size={16} />
+                      ) : (
+                        <HeartIcon size={16} />
+                      )}
                       <span>{isSaved ? 'Saved' : 'Save'}</span>
                     </button>
 
@@ -281,14 +290,14 @@ export default function IndividualListing() {
                       className="inline-flex items-center justify-center gap-2 rounded-full border px-3 py-2 text-xs hover:shadow-sm"
                       style={{ borderColor: brand.borderStrong }}
                     >
-                      <span>↗</span> Share
+                      <ShareIcon size={16} /> Share
                     </button>
 
                     <button
-                      className="inline-flex items-center justify-center rounded-full px-3 py-2 text-xs font-medium hover:opacity-90"
+                      className="inline-flex items-center justify-center gap-2 rounded-full px-3 py-2 text-xs font-medium hover:opacity-90"
                       style={{ backgroundColor: brand.beige }}
                     >
-                      Contact
+                      <MessageIcon size={16} /> Contact
                     </button>
                   </>
                 )}
@@ -302,7 +311,7 @@ export default function IndividualListing() {
                     borderColor: brand.beige,
                   }}
                 >
-                  {product.tags[0]}
+                  {piece.getTags()[0]}
                 </span>
                 <span
                   className="px-3 py-1 rounded-full border"
@@ -312,7 +321,7 @@ export default function IndividualListing() {
                     color: "#2b2b2b",
                   }}
                 >
-                  {product.tags[1]}
+                  {piece.getFormattedCondition()}
                 </span>
               </div>
             </div>
@@ -328,13 +337,13 @@ export default function IndividualListing() {
                     borderRadius: "50%",
                   }}
                 >
-                  {product.donor.initials}
+                  {piece.getDonorInitials()}
                 </div>
                 <div>
-                  <div className="font-medium">{product.donor.name}</div>
+                  <div className="font-medium">{piece.user_id || 'Unknown'}</div>
                   <div className="text-xs text-neutral-600">
-                    {product.donor.rating} ★ • {product.donor.stats} •
-                    Response: {product.donor.response}
+                    N/A ★ • N/A •
+                    Response: N/A
                   </div>
                 </div>
               </div>
