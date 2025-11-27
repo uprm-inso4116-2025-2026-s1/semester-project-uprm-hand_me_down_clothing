@@ -137,9 +137,6 @@ Features specify the functionality required to deliver the goals described in th
    *Supports:* <<EPIC-6>>  
    *Requires:* <<REQ-DR1>>, <<REQ-DR3>>
 
-
-// =================================================================
-
 === *User Stories*
 
 User stories are derived from Features, breaking them down into smaller, individual tasks to be added to the backlog. These stories focus on user needs and help make development more user-focused.
