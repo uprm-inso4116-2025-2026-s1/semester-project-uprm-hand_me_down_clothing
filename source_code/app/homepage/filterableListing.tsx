@@ -3,6 +3,8 @@ import { useState } from 'react';
 import * as filterListings from '../utils/filters/listingsFilter'
 import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 import { Piece } from '../types/piece';
+import { FavoriteHeartButton } from '../Favorites/FavoriteHeartButton';
+
 
 const featured_categories = [
   {id: 0, name: "All", filter: "all"},
@@ -15,6 +17,10 @@ const featured_categories = [
   { id: 7, name: "Kids", filter: "kids" },
   { id: 8, name: "Unisex", filter: "unisex" },
 ];
+
+type Props = {
+  initialItems: Piece[];
+};
 
 export default function FilterableFeaturedItems({initialItems}: any) {
     const [filtered, setFilter] = useState(initialItems);
@@ -54,7 +60,8 @@ export default function FilterableFeaturedItems({initialItems}: any) {
       content = (
         <div className="grid grid-cols-4 gap-1 px-15 py-4">
           {filtered.map((item: Piece) => (
-            <button
+            // changed from <button> to <div> so we don’t nest a button inside
+            <div
               key={item.id}
               id="Featured_Item_btn"
               className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl"
@@ -66,15 +73,16 @@ export default function FilterableFeaturedItems({initialItems}: any) {
                 <div className="w-18 h-6 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
                   {item.getFormattedPrice()}$
                 </div>
-                <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">
-                  ♥
+                {/* right-aligned heart button using shared favorites logic */}
+                <div className="ml-auto">
+                  <FavoriteHeartButton listingId={item.id} />
                 </div>
               </div>
               <p className="text-lg font-bold italic pt-2">{item.name}</p>
               <p className="text-md text-[#666666]">Size: {Size[item.size]}</p>
               <p className="text-md text-[#666666]">Condition: {Condition[item.condition]}</p>
               <p className="text-md text-[#666666]">Category: {Category[item.category]}</p>
-            </button>
+            </div>
           ))}
         </div>
       );
@@ -116,4 +124,3 @@ export default function FilterableFeaturedItems({initialItems}: any) {
     </>
   );
 }
-
