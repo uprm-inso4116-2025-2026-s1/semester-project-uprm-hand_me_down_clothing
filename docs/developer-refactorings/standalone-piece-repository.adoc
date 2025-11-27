@@ -1,0 +1,256 @@
+= StandalonePieceRepository — simple, practical guide
+
+== Why this doc exists
+
+If you're thinking about making the Piece repository easier to test and reuse,
+this doc shows a friendly, step-by-step way to make it "standalone":
+
+- No magic imports of app-specific clients.
+- Inject only what you need (a tiny DB adapter + a small factory).
+- Keep behavior the same for callers, but make testing painless.
+
+Think of this page as the recipe: it explains the ingredients, the steps, and the
+gotchas — without shipping actual implementation code.
+
+== What you get by doing this
+
+- Easier unit testing (no Supabase required in tests).
+- Clear separation of concerns (data access vs. domain transformation).
+- A code shape that’s simpler to reason about during reviews.
+
+== What you'll need (conceptually)
+
+- A very small DB adapter that exposes the few methods the repository uses:
+	`from(table)` -> query builder with `.select()`, `.eq()`, `.ilike()`,
+	`.insert()`, `.update()`, `.delete()`, and `.single()`.
+- A tiny factory with two methods: `makePiece(record)` and `toDTO(piece)`.
+
+No other dependencies are necessary.
+
+== Friendly, step-by-step implementation plan (for humans)
+
+1) Define small interfaces (optional but helpful)
+
+	 - Create `types/repository.ts` and write two small interfaces: one for the
+		 DB client and one for the factory. Keep them short — list only the
+		 methods you actually call.
+
+2) Implement the standalone repository file
+
+	 - File: `src/repositories/standalone/StandalonePieceRepository.ts` (or any
+		 preferred path).
+	 - Constructor arguments: an object with `db` and `factory` properties.
+	 - Methods to implement (mirror existing repo):
+		 * `getPieces()` — fetch rows and convert via `factory.makePiece`
+		 * `getPieceById(id)` — fetch single row, convert or return `null`
+		 * `createPiece(piece)` — lightweight validation -> `factory.toDTO` -> insert
+		 * `updatePiece(piece)` -> update and return converted result
+		 * `deletePiece(id)` -> return boolean
+		 * `filterPieces(filters)` -> apply simple filters using `.ilike`/`.eq`
+		 * `deleteImages(paths)` -> if `db.storage` exists call `remove`
+		 * small helpers: `canAddMoreImages`, `validatePieceFormData`
+
+	 Keep behavior friendly: return `[]`, `null`, `false` or `Error` objects for
+	 recoverable failures instead of throwing.
+
+3) Add unit tests (fast & local)
+
+	 - Mock the `db` object in tests by stubbing the `from` method and the
+		 chainable query builder it returns. Tests should not need network.
+	 - Mock the `factory` with very small functions that return predictable
+		 shapes.
+	 - Basic tests to include:
+		 * `getPieces`: returns list when DB has data; returns `[]` on error.
+		 * `getPieceById`: returns piece or `null`.
+		 * `createPiece`: rejects invalid input; returns created piece for success.
+		 * `deleteImages`: true when storage removal succeeds, false otherwise.
+
+4) (Optional) Integration tests
+
+	 If you want to verify real Supabase interaction, write a small integration
+	 test that runs against a test database. Keep these gated so CI doesn't run
+	 them by default.
+
+== Testing checklist (acceptance criteria)
+
+- Unit tests pass locally and in CI with no network calls.
+- Public API retains compatibility — callers should not need changes.
+
+== Migration plan (how to roll this out)
+
+1. Create a feature branch `feature/standalone-piece-repo-impl`.
+2. Implement the types and the repository (as described above).
+3. Run unit tests and fix issues.
+4. Create a PR and include this doc as part of the description for context.
+5. Merge and monitor staging.
+
+== Example test mocks (human-friendly pseudo code)
+
+DB mock (very small):
+
+```
+// db.from('pieces').select('*') -> Promise.resolve({ data: [ { id: 1, name: 'Shirt' } ], error: null })
+// db.from('pieces').select('*').eq('id', 1).single() -> { data: { id: 1, name: 'Shirt' }, error: null }
+// db.storage.from('piece_images').remove(['a.jpg']) -> { error: null }
+```
+
+Factory mock (very small):
+
+```
+// factory.makePiece(record) -> ({ ...record })
+// factory.toDTO(piece) -> ({ ...piece })
+```
+
+== Common mistakes and how to avoid them
+
+- Mistake: importing a concrete Supabase client inside the repository.
+	- Fix: inject the client via the constructor; that keeps the file portable.
+- Mistake: returning raw DB rows to callers.
+	- Fix: always run rows through `factory.makePiece` before returning.
+- Mistake: writing brittle integration tests that rely on external services.
+	- Fix: mock those services or keep integration tests optional.
+
+== Want me to help further?
+
+- I can create a PR skeleton with empty files and the types as a starting point
+	(still no implementation code unless you want it).
+- I can add a short README blurb that points to this doc.
+- I can convert this doc to Markdown if that fits your workflow better.
+
+Pick one and I’ll do it — all docs-only unless you say otherwise.
+ 
+== In-depth implementation plan (code-free)
+
+This section provides a precise, implementable plan for a developer to follow when
+they decide to actually implement the standalone repository. It contains interface
+shapes, step-by-step tasks, testing matrix, migration notes, and recommended
+sanity-checks — all without shipping any concrete code in this repo (per project
+request).
+
+=== Goals for the implementation
+
+- Keep the runtime footprint minimal: the repository should depend only on a small
+	interface for DB operations and a small factory-like interface for object
+	transformations.
+- Make all external dependencies injectable so unit tests can run without the
+	real database or network.
+- Preserve the original public behavior and error semantics (return safe values,
+	avoid throwing for expected errors).
+
+=== Interface shapes (pseudotype descriptions)
+
+These are descriptions (not files) of the small types the implementation should
+depend on. Use these as guidance when writing TypeScript interfaces.
+
+- SimpleDbClient
+
+	- Responsibilities: query a table, support `.select()`, `.eq()`, `.ilike()`,
+		`.insert()`, `.update()`, `.delete()` and (optionally) `.single()`; expose a
+		`storage` object with `from(bucket).remove(paths)` when storage operations are needed.
+	- Behaviour notes: methods return Promises that resolve to objects in the
+		shape `{ data?: any, error?: any }` or (for chained calls) return an object
+		exposing the next fluent method. The repository should treat `error` as the
+		failure signal.
+
+- PieceFactoryLike
+
+	- Responsibilities: convert raw database records to `Piece` domain objects
+		and convert `Piece` domain objects to DTOs suitable for persistence.
+	- Methods: `makePiece(record)` and `toDTO(piece)`.
+
+=== Step-by-step implementation checklist (developer-facing)
+
+1. Add type definitions (optional): create a small `types/repository.ts` to hold
+	 the `SimpleDbClient` and `PieceFactoryLike` TypeScript interfaces. Keep these
+	 minimal and document each method expected.
+
+2. Create `StandalonePieceRepository` file (implementation):
+
+	 - Constructor accepts an object with the properties `db: SimpleDbClient` and
+		 `factory: PieceFactoryLike`.
+	 - Implement the public methods described in this doc (getPieces,
+		 getPieceById, createPiece, updatePiece, deletePiece, filterPieces,
+		 deleteImages, canAddMoreImages, validatePieceFormData). For each method:
+		 - Validate inputs (lightweight) and return early with a safe value if
+			 validation fails.
+		 - Use `await` on DB operations and check the `{ error }` property to
+			 determine failure.
+		 - Convert DB records to domain objects using the injected factory.
+
+3. Keep error handling consistent with existing repository: return `[]`,
+	 `null`, `false`, or `Error` values rather than throwing for typical failures.
+
+4. Add JSDoc comments and a short contract at top of file describing inputs,
+	 outputs, and failure modes. Keep the comments precise so that maintainers can
+	 rely on them without reading internal code.
+
+5. Add unit tests (in a `tests/` folder) that do not require Supabase:
+
+	 - Mock the `db` object (small inline stub) returning predictable `{ data, error }` shapes.
+	 - Mock the `factory` with simple pass-through conversions.
+	 - Tests to include:
+		 * `getPieces()` returns an array when DB responds with data.
+		 * `getPieces()` returns `[]` when DB response is missing or error.
+		 * `getPieceById()` returns the converted piece when present, `null` when not.
+		 * `createPiece()` returns `Error` on invalid input and returns created piece
+			 when DB insert succeeds.
+		 * `deleteImages()` returns true when storage remove returns no error, false otherwise.
+
+6. (Optional) Provide an integration test that runs against a disposable/test
+	 Supabase instance or a local test double. Mark these tests as `integration` so
+	 CI can gate them separately.
+
+=== Testing matrix and acceptance criteria
+
+- Unit tests (fast, run on every PR): pass locally and in CI without network.
+- Integration tests (optional, gated): verify actual Supabase operations and
+	storage behavior in a sandboxed environment. These are not required for the
+	initial rollout.
+
+Acceptance criteria for the implementation (when/if done):
+
+- All unit tests pass.
+- Public API of the repository remains backward compatible with existing
+	consumers (call sites should not require changes).
+- The class is importable and usable by other modules by injecting a real
+	Supabase client and the real `PieceFactory`.
+
+=== Migration / rollout plan
+
+1. Create a feature branch `feature/standalone-piece-repo-impl`.
+2. Implement the `types/repository.ts` (small interfaces) and the repository.
+3. Add unit tests and run locally. Fix any type errors.
+4. Run lint and typecheck. Address any issues.
+5. Create a PR and request review; include the doc as part of the PR.
+6. After approval, merge to `main` and monitor application behavior in staging.
+
+=== Example mock shapes (for test authors — pseudocode only)
+
+- DB mock (conceptual):
+
+	- `db.from('pieces').select('*')` => resolves to `{ data: [ { id: 1, name: 'x' } ], error: null }`
+	- `db.from('pieces').select('*').eq('id', 1).single()` => resolves to `{ data: { id: 1, name: 'x' }, error: null }`
+	- `db.storage.from('piece_images').remove(['a.jpg'])` => resolves to `{ error: null }` on success
+
+- Factory mock (conceptual):
+
+	- `factory.makePiece(record)` => returns a plain object that matches the project's `Piece` shape.
+	- `factory.toDTO(piece)` => returns a JSON-ready object for persistence.
+
+=== Common pitfalls & recommended mitigations
+
+- Pitfall: eagerly importing the real Supabase helper in the repository file.
+	Mitigation: avoid importing `createClient()` inside the repository — inject it.
+- Pitfall: returning raw DB rows to callers. Mitigation: always convert rows via
+	the factory before returning domain objects.
+- Pitfall: brittle integration tests that rely on external SMS/S3-like services.
+	Mitigation: keep integration tests optional and mock external providers where possible.
+
+=== Follow-up tasks (if you want me to continue)
+
+- I can convert this plan into a step-by-step PR checklist and create the
+	feature branch with empty files and types (docs-only placeholder), leaving
+	implementation to your team.
+- I can add a Markdown summary for the project README linking to this doc.
+- I can prepare example TypeScript interface files in `types/` but keep them
+	commented out (still docs-only) — say the word and I'll prepare them.
