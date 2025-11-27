@@ -15,6 +15,8 @@ export abstract class Piece {
         public reason: string | null,
         public images: Array<string>,
         public user_id: string,
+        public latitude: number | null,
+        public longitude: number | null,
         public status: Status,
     ) { }
 
