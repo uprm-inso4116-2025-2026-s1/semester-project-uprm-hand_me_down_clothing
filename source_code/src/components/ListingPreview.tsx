@@ -1,31 +1,16 @@
 "use client"
 
 import React from 'react'
+import type { Piece } from '@/app/types/piece'
 
 export type ListingPreviewProps = {
-  image_urls: string[]
-  title: string
-  category: string
-  condition: string
-  size: string
-  sex: string
-  quantity: number
-  price?: string
+  piece: Piece
 }
 
-export default function ListingPreview({
-  image_urls,
-  title,
-  category,
-  condition,
-  size,
-  sex,
-  quantity,
-  price
-}: ListingPreviewProps) {
+export default function ListingPreview({ piece }: ListingPreviewProps) {
   const coverImage =
-    image_urls && image_urls.length > 0
-      ? image_urls[0]
+    piece.images && piece.images.length > 0
+      ? piece.images[0]
       : 'https://placehold.co/600x400?text=No+photos+yet'
 
   return (
@@ -41,10 +26,10 @@ export default function ListingPreview({
       <div className="p-4 space-y-3">
         <div>
           <h3 className="text-lg font-semibold text-[#2b2b2b]">
-            {title || 'Untitled item'}
+            {piece.name}
           </h3>
           <p className="text-xs text-gray-500 mt-1">
-            {category || 'No category'} • {condition || 'No condition'}
+            {piece.getFormattedCategory()} • {piece.getFormattedCondition()}
           </p>
         </div>
 
@@ -52,20 +37,16 @@ export default function ListingPreview({
         <div className="grid grid-cols-2 gap-2 text-sm">
           <div>
             <p className="font-medium text-gray-900">Size</p>
-            <p className="text-gray-600">{size || 'Not set'}</p>
+            <p className="text-gray-600">{piece.getFormattedSize()}</p>
           </div>
           <div>
             <p className="font-medium text-gray-900">For</p>
-            <p className="text-gray-600">{sex || 'Not set'}</p>
+            <p className="text-gray-600">{piece.getFormattedGender()}</p>
           </div>
-          <div>
-            <p className="font-medium text-gray-900">Qty</p>
-            <p className="text-gray-600">{quantity || 1}</p>
-          </div>
-          {price && (
+          {piece.price && piece.price > 0 && (
             <div>
               <p className="font-medium text-gray-900">Price</p>
-              <p className="text-gray-600">${price}</p>
+              <p className="text-gray-600">{piece.getFormattedPrice()}</p>
             </div>
           )}
         </div>
@@ -78,11 +59,11 @@ export default function ListingPreview({
         </div>
 
         {/* Additional Images */}
-        {image_urls && image_urls.length > 1 && (
+        {piece.images && piece.images.length > 1 && (
           <div>
-            <p className="text-xs font-medium text-gray-900 mb-2">Additional photos ({image_urls.length - 1})</p>
+            <p className="text-xs font-medium text-gray-900 mb-2">Additional photos ({piece.images.length - 1})</p>
             <div className="flex flex-wrap gap-2">
-              {image_urls.slice(1).map((url, index) => (
+              {piece.images.slice(1).map((url, index) => (
                 <img
                   key={url + index}
                   src={url}

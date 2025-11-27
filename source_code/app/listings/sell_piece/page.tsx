@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { PieceRepository } from '@/src/repositories/pieceRepository';
 import { PieceFactory } from '@/src/factories/pieceFactory';
 import ListingPreview from '@/src/components/ListingPreview';
+import { Status } from '@/app/types/classifications';
 
 const dummyUserId = "00000000-0000-0000-0000-000000000000"; // placeholder UUID
 
@@ -93,11 +94,12 @@ export default function SellPiece() {
       brand: brand,
       gender: gender,
       size: size,
-      price: parsedPrice.toFixed(2),
+      price: parsedPrice,
       condition: condition,
       reason: reason,
       images: images,
       user_id: dummyUserId,
+      status: Status.ACTIVE,
       // user_id: user.id, 
     });
 
@@ -355,16 +357,63 @@ export default function SellPiece() {
 
             {showPreview && (
               <div className="max-w-sm">
-                <ListingPreview
-                  image_urls={images}
-                  title={name}
-                  category={category}
-                  condition={condition}
-                  size={size}
-                  sex={gender}
-                  quantity={1}
-                  price={price}
-                />
+                {(() => {
+                  const hasEnumsSelected = Boolean(category && gender && size && condition);
+                  if (!hasEnumsSelected) {
+                    const coverImage = images && images.length > 0 ? images[0] : 'https://placehold.co/600x400?text=No+photos+yet';
+                    return (
+                      <div className="rounded-2xl border border-gray-200 overflow-hidden shadow-md bg-white">
+                        <img src={coverImage} alt="Listing cover" className="h-48 w-full object-cover" />
+                        <div className="p-4 space-y-3">
+                          <div>
+                            <h3 className="text-lg font-semibold text-[#2b2b2b]">{name || 'Untitled item'}</h3>
+                            <p className="text-xs text-gray-500 mt-1">{category || 'No category'} • {condition || 'No condition'}</p>
+                          </div>
+                          <div className="grid grid-cols-2 gap-2 text-sm">
+                            <div>
+                              <p className="font-medium text-gray-900">Size</p>
+                              <p className="text-gray-600">{size || 'Not set'}</p>
+                            </div>
+                            <div>
+                              <p className="font-medium text-gray-900">For</p>
+                              <p className="text-gray-600">{gender || 'Not set'}</p>
+                            </div>
+                            {price && (
+                              <div>
+                                <p className="font-medium text-gray-900">Price</p>
+                                <p className="text-gray-600">${price}</p>
+                              </div>
+                            )}
+                          </div>
+                          <div className="pt-2">
+                            <span className="inline-flex rounded-full bg-[#abc8c1]/20 text-[#36534b] px-3 py-1 text-xs font-medium">Fill required fields to preview</span>
+                          </div>
+                        </div>
+                      </div>
+                    );
+                  }
+
+                  // Create a temporary Piece object for preview from form data
+                  const factory = new PieceFactory();
+                  const previewPiece = factory.makePiece({
+                    id: 0,
+                    name: name || 'Untitled item',
+                    category: category,
+                    color: color,
+                    brand: brand,
+                    gender: gender,
+                    size: size,
+                    price: price ? Number(price) : 0,
+                    condition: condition,
+                    reason: reason,
+                    images: images,
+                    user_id: dummyUserId,
+                    latitude: null,
+                    longitude: null,
+                    status: Status.ACTIVE,
+                  });
+                  return <ListingPreview piece={previewPiece} />;
+                })()}
               </div>
             )}
           </section>

@@ -21,7 +21,7 @@ const featured_categories = [
 
 export default function Browsing() {
     const searchParams = useSearchParams();
-    const query = searchParams.get("query");
+    const query = searchParams?.get("query") ?? null;
 
     const [loading, setLoading] = useState(true);
     const [currentItems, setCurrentItems] = useState<Piece[]>([]);
