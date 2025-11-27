@@ -1,0 +1,40 @@
+// --
+// Author: Andrea P Segarra
+// User: @andreasegarra
+// Project: Hand-me-down Clothing
+// GitHub Issue: #334
+// --
+
+This document presents the refinement of a superficial domain model into a deeper one that captures actual business rules in the Hand Me Down Clothing project. The goal is to replace a simple data structure with a richer concept that expresses domain meaning more clearly and prevents invalid states.
+
+Superficial Model
+- Originally the domain treated a listing as an item with a price. The difference between a donation and a sale was handled only in the user interface. A donation was represented by setting the price to zero. This approach did not express the real business rule in the domain and allowed invalid combinations. A listing could accidentally be created with a donation flag but with a nonzero price or with a sale flag but with a price of zero. Nothing prevented these invalid states.
+
+Before Diagram
+- This model lacks clear meaning and does not protect the domain from invalid states.
+
+To capture the real business rules of the platform a new concept is introduced. This concept is ExchangeMode. It represents the mode in which a listing is offered to the community. ExchangeMode defines two possibilities. Donation and Sale.
+
+Donation represents a listing that must always have a price of zero. Sale represents a listing that must always have a positive price. These rules now live in the domain rather than being scattered in the user interface.
+
+After Diagram
+- The new abstraction eliminates ambiguity and expresses the real intent of the system. A listing can only be created through valid paths. A donation listing always has price zero and a sale listing always has a valid positive price.
+
+How the New Abstraction Changes Business Logic
+
+The deeper model changes how the system behaves. Before the refactor business rules existed only in the interface. The domain did not prevent invalid states. After the refactor the rules become part of the model itself. This protects the system and simplifies development.
+
+Listings are now created through meaningful operations. A donation listing uses the donation mode operation which always assigns a price of zero. A sale listing uses the sale mode operation which validates that the price is positive. Because these rules are enforced within the domain the rest of the system does not need to duplicate checks.
+
+Simplified Design
+- The design becomes simpler. Instead of checking flags or values in different screens the user interface selects the exchange mode directly. The domain model then enforces correctness. The result is a clearer and more expressive system that matches the actual workflow of the platform.
+
+Testing:
+To demonstrate the new behavior consider the following tests.
+
+1. Creating a donation listing always results in price equal zero.
+2. Attempting to create a sale listing with a nonpositive price is rejected.
+3. User interface flow becomes simpler because it only selects between donation mode and sale mode and the domain enforces the rest.
+
+These tests show that the new abstraction improves correctness and reduces complexity.
+> The refactor introduces a deeper domain concept that captures the real business rules of the Hand Me Down Clothing platform. By moving from a superficial listing with a price to a listing with an exchange mode the system becomes more expressive more consistent and more maintainable.
