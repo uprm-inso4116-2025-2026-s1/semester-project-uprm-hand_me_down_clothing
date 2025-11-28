@@ -1,0 +1,93 @@
+// --
+// Author: Alma Piñeiro Calero
+// User: @Alma-pineiro
+// Project: Hand-me-down Clothing Platform
+// GitHub Issue: #89
+// LTT: Applying Abstraction to a Real System
+// --
+
+== Why Applying Abstraction in the Design Process Is Important
+
+Applying abstraction in the design process allows us to simplify complex systems by focusing only on the essential details while hiding unnecessary implementation specifics. For the Hand-Me-Down Clothing application, abstraction is crucial because it enables us to divide the platform into meaningful, manageable components that represent real-world concepts without overwhelming the design with technical complexity.
+
+= Reducing Complexity Through Abstraction in the Hand-Me-Down Clothing Platform
+
+== BEFORE Abstraction
+The initial system design contained a large set of intertwined features without clear roles or boundaries. Every requirement coexisted in a single conceptual space, causing confusion and architectural overload.
+
+[plantuml, before-system, txt]
+....
++-----------------------------------------------------+
+| Hand-Me-Down Clothing System (Before Abstraction)    |
++-----------------------------------------------------+
+| User Registration/Login                              |
+| Manage Parent Profiles                               |
+| Create, Edit, Delete Listings                        |
+| Clothing Size, Condition, Seasons                    |
+| Sell or Donate Clothing                              |
+| Search by Category                                   |
+| Favorites / Saved Items                              |
++-----------------------------------------------------+
+....
+
+*Problem:*  
+Every feature appears equal in importance. No conceptual grouping exists.  
+The system offers no guidance for where new features should belong.
+
+---
+
+== APPLYING ABSTRACTION
+Abstraction groups related responsibilities into meaningful architectural contexts:
+
+* Authentication ↦ identity, access, user sessions  
+* Listings ↦ items offered for sale or donation  
+* Communication ↦ messages, pickup coordination
+
+Instead of dealing with **everything at once**, abstraction elevates our view so we only see essential structures.
+
+---
+
+== AFTER Abstraction
+
+[plantuml, after-system, txt]
+....
+                   +----------------------+
+                   | Authentication       |
+                   |----------------------|
+                   | Register/Login       |
+                   | User Identity        |
+                   | Roles & Permissions  |
+                   +----------+-----------+
+                              |
+                              |  
+                      +---------------| 
+                        | Listings                       
+                |------------------------------|  
+                | Create Sell/Donate Listing   |  
+                | Clothing Size/Condition      | 
+                | Search & Categories          |  
+                | Favorites                    |  
+                +------------------------------+
+....
+
+*Result:*  
+The platform now has **three well-defined modules**, each with a clear set of responsibilities.
+
+---
+
+== Abstraction Benefits
+
+| Aspect | Before | After |
+|-------|-------|-------|
+| Number of conceptual modules | 1 | 3 |
+| Responsibility clarity | Low | High |
+| Coupling | High & accidental | Explicit & intentional |
+| Scalability | Difficult | Structured & extendable |
+| Cognitive load | Overwhelming | Manageable |
+
+---
+
+== Explanation of Abstraction
+Abstraction removed unnecessary detail from the early architecture and allowed the system to be understood in terms of **what** it does, not **how** it implements it. Instead of a tangled list of features, we now have three conceptual building blocks, each representing a focused responsibility within the clothing reuse ecosystem.
+---
+
