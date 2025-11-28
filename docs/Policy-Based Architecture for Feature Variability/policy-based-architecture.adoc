@@ -1,0 +1,234 @@
+= Policy-Based Architecture for Password Rules
+Hand-Me-Down Documentation
+v1.0
+:toc:
+:toclevels: 4
+:sectnums:
+:icons: font
+:source-highlighter: coderay
+
+== Objective
+
+This document designs a **policy-based architecture** to support interchangeable and configurable password rule behaviors inside the Hand-Me-Down authentication subsystem.
+
+The goal is to enable maintainable, extensible password validation logic without modifying core components—supporting different password requirements for different environments, user types, and future security needs.
+
+== Context
+
+Password handling is a central part of authentication. Currently, password validation tends to evolve over time and often becomes hardcoded:
+
+* minimum length rules
+* complexity requirements
+* special rules for admin users
+* environment-based security (dev vs production)
+* future compliance requirements
+
+Without a modular design, these rules become embedded directly inside signup or reset flows, making the system rigid and harder to maintain.
+
+A **policy-based architecture** solves this by allowing password behavior to be selected, replaced, or extended without modifying core auth logic.
+
+== What Is Policy-Based Architecture?
+
+A *policy-based architecture* defines a component whose behavior is driven by one or more **policies** that are provided externally, often via configuration or dependency injection.
+
+*The main component does not know the details of each behavior—only the abstract policy interface.*
+
+Characteristics:
+
+* Extensible without modifying core logic (Open/Closed Principle).
+* Composable (multiple policies can coexist).
+* Behavior controlled by configuration instead of conditionals.
+* Designed for systems where rules may vary over time or across environments.
+
+=== Difference from the Strategy Pattern
+
+The **Strategy Pattern** selects *one behavior at runtime* (e.g., choosing OAuth vs email login).
+
+A **policy-based design** may use:
+* multiple policies simultaneously
+* policies determined by environment/configuration
+* policies that combine to define final behavior
+
+In short:
+
+*Strategy = one interchangeable algorithm*  
+*Policy-based design = a **set** of interchangeable rules governing system behavior.*
+
+== Feature With Variability: Password Requirements
+
+Password validation is an ideal candidate because it varies across:
+
+* production vs development environments
+* admin vs normal users
+* compliance or security requirements
+* future features like password reuse prevention
+
+Hardcoded validation (e.g., inline regex checks inside `signUp`) leads to code duplication and rigid behavior.
+
+A policy-based design improves flexibility and maintainability.
+
+== Proposed Architecture
+
+We define a generic `PasswordPolicy` interface:
+
+```ts
+export interface PasswordPolicy {
+  validate(password: string, context: PasswordContext): PasswordValidationResult;
+}
+```
+
+=== Context Data
+
+```ts
+export type PasswordContext = {
+  email: string;
+  isAdminSignup?: boolean;
+};
+```
+
+
+=== Validation Result
+
+```ts
+export type PasswordValidationResult = {
+  ok: boolean;
+  message?: string;
+};
+```
+
+== Policy Implementations
+
+=== BasicPasswordPolicy (example for dev/staging)
+
+```ts
+export class BasicPasswordPolicy implements PasswordPolicy {
+  validate(password: string): PasswordValidationResult {
+    if (password.length < 8) {
+      return { ok: false, message: "Password must be at least 8 characters." };
+    }
+    return { ok: true };
+  }
+}
+```
+
+=== StrictPasswordPolicy (example for production/admin)
+
+```ts
+export class StrictPasswordPolicy implements PasswordPolicy {
+  validate(password: string, ctx: PasswordContext): PasswordValidationResult {
+    if (password.length < 12) {
+      return { ok: false, message: "Password must be at least 12 characters." };
+    }
+    if (!/[A-Z]/.test(password) || !/[a-z]/.test(password)) {
+      return { ok: false, message: "Use both upper and lowercase letters." };
+    }
+    if (!/\d/.test(password)) {
+      return { ok: false, message: "Include at least one number." };
+    }
+    if (!/[^\w\s]/.test(password)) {
+      return { ok: false, message: "Include at least one symbol." };
+    }
+    if (ctx.isAdminSignup && password.toLowerCase().includes(ctx.email.split("@")[0].toLowerCase())) {
+      return { ok: false, message: "Admin passwords must not contain the email name." };
+    }
+    return { ok: true };
+  }
+}
+```
+
+== Integration in the Authentication Service
+
+```ts
+export class AuthService {
+  constructor(
+    private readonly passwordPolicy: PasswordPolicy,
+    private readonly authClient: SupabaseAuthClient
+  ) {}
+
+  async signUp(email: string, password: string, isAdminSignup = false) {
+    const result = this.passwordPolicy.validate(password, { email, isAdminSignup });
+    if (!result.ok) {
+      throw new Error(result.message ?? "Password rejected by policy.");
+    }
+    return this.authClient.signUp(email, password);
+  }
+
+  async resetPassword(userId: string, newPassword: string) {
+    const result = this.passwordPolicy.validate(newPassword, { email: "", isAdminSignup: false });
+    if (!result.ok) {
+      throw new Error(result.message ?? "Password rejected by policy.");
+    }
+    return this.authClient.updatePassword(userId, newPassword);
+  }
+}
+```
+
+== Configuration Example
+
+```ts
+// dev environment
+const policy = new BasicPasswordPolicy();
+
+// production
+// const policy = new StrictPasswordPolicy();
+
+const authService = new AuthService(policy, supabase);
+```
+
+== UML Diagram
+
+[plantuml,password-policy-architecture,svg]
+----
+@startuml
+interface PasswordPolicy {
+  + validate(password, context): PasswordValidationResult
+}
+
+class BasicPasswordPolicy
+class StrictPasswordPolicy
+
+class AuthService {
+  - passwordPolicy: PasswordPolicy
+  + signUp(email, password, isAdminSignup)
+  + resetPassword(userId, newPassword)
+}
+
+AuthService --> PasswordPolicy
+PasswordPolicy <|.. BasicPasswordPolicy
+PasswordPolicy <|.. StrictPasswordPolicy
+@enduml
+----
+
+
+== Benefits
+
+Clean separation of concerns.
+
+Easily replace rules without editing signUp/reset logic.
+
+Different rules for different deployments.
+
+Improved testability.
+
+Enables future extension with additional policies:
+LoginThrottlePolicy, SessionPersistencePolicy, RoleAssignmentPolicy, etc.
+
+== Suitability for Hand-Me-Down
+
+This architecture supports current and future requirements:
+
+stricter admin password policies
+
+varying rules in staging vs production
+
+consistent validation for signup + reset
+
+alignment with enterprise or institutional deployments
+
+future compatibility with multi-factor or high-security flows
+
+== Conclusion
+
+A policy-based architecture provides a flexible and maintainable way to handle password variability in the authentication system. It keeps core logic stable while allowing password rules to evolve through interchangeable policy modules.
+
+This approach positions the Hand-Me-Down system for long-term growth, security evolution, and architectural clarity.
