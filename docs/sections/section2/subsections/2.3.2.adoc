@@ -543,3 +543,121 @@ Here:
 
 * **Alignment with Course Guidance**  
   The refactor demonstrates Command–Query Separation by drawing a firm line between “asking” (validators) and “doing” (commands), while keeping domain rules explicit and intention-revealing.
+
+====== Additional CQS Example: signIn (Command) vs getUser (Query)
+
+The Auth subsystem also illustrates Command–Query Separation through a clear distinction between *commands* that change authentication state and *queries* that only read it. Here we document the evolution of the login flow from a mixed command/query function into a clean split between `signIn` (command) and `getUser` (query).
+
+======= Before: Login Flow Mixing Command and Query Responsibilities
+
+Initially, a single function handled both:
+
+* reading current authentication state
+* performing a login attempt (mutation)
+* deciding navigation behavior
+
+[source,typescript]
+----
+export async function handleSignIn(formData, supabase, router) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const { data: { user: existingUser } } = await supabase.auth.getUser();
+  if (existingUser) {
+    router.push("/dashboard");
+    return;
+  }
+
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    throw new Error(error.message);
+  }
+
+  router.push("/dashboard");
+}
+----
+
+Problems:
+
+* **Mixed responsibilities**: querying current user and performing sign-in in the same function.
+* **Harder to reuse**: any flow that only needed current user information still depended on login logic.
+* **More complex tests**: tests had to mock both the query (`getUser`) and the command (`signInWithPassword`) for this one function.
+* **Weaker intent**: it was not obvious from the API which parts *read* state and which parts *mutated* it.
+
+======= After: Explicit Query (`getAuthUser`) and Command (`signInCommand`)
+
+The logic was refactored into:
+
+* a **query** function `getAuthUser` that only reads current authentication state
+* a **command** function `signInCommand` that performs sign-in and produces side effects
+
+Query (no side effects):
+
+[source,typescript]
+----
+export async function getAuthUser(supabase) {
+  const { data: { user }, error } = await supabase.auth.getUser();
+
+  if (error) {
+    return { user: null, error };
+  }
+
+  return { user, error: null };
+}
+----
+
+Command (mutation + navigation):
+
+[source,typescript]
+----
+export async function signInCommand(
+  email: string,
+  password: string,
+  supabase,
+  router
+) {
+  const { data, error } = await supabase.auth.signInWithPassword({
+    email,
+    password,
+  });
+
+  if (error) {
+    return { ok: false, error: error.message };
+  }
+
+  router.push("/dashboard");
+  return { ok: true, error: null };
+}
+----
+
+The form handler then uses the query and command explicitly:
+
+[source,typescript]
+----
+export async function handleSignIn(formData, supabase, router) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+
+  const { user } = await getAuthUser(supabase);
+  if (user) {
+    router.push("/dashboard");
+    return;
+  }
+
+  const result = await signInCommand(email, password, supabase, router);
+  if (!result.ok) {
+    throw new Error(result.error ?? "Unable to sign in.");
+  }
+}
+----
+
+Benefits of this CQS refactor:
+
+* **Explicit intent**: `getAuthUser` clearly communicates that it only *reads* the current user, while `signInCommand` clearly *acts* to change authentication state.
+* **Improved reuse**: `getAuthUser` can be reused anywhere current user information is needed without pulling in sign-in logic.
+* **Easier testing**: query and command logic can be unit-tested independently with focused mocks.
+* **Consistent CQS story**: together with the side-effect-free validators and command handlers documented earlier, this example strengthens the project’s adherence to Command–Query Separation in the Auth subsystem.
