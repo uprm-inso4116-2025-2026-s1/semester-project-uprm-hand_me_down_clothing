@@ -21,6 +21,7 @@ ensures alignment with both domain knowledge and system concerns.
 | Type | Attribute | Domain | Category of clothing (dress, pants, shirt, etc.).
 | rate(Piece, ConditionRating) -> ConditionRating | Function | Design | Updates the condition rating of a Piece using the new rating value; no pre-existing rating is required.
 | publishListing(Piece, Seller, Locale) -> ListingPublished | Event Function | Design | Function that triggers the publication of a new Listing by a Seller at a given Locale.
+| bookmarkListing(Listing, Buyer) -> ListingBookmarked | Event Function | Design | Function that triggers the event when a Buyer bookmarks a Listing, making it appear in the Saved Listings page.
 | expressInterest(Listing, Buyer) -> InterestExpressed | Event Function | Design | Function that triggers the event when a Buyer contacts a Seller about a Listing.
 | closeListing(Listing, Seller) -> ListingClosed | Event Function | Design | Function that closes a Listing, indicating that the exchange has been completed offline or the item is no longer available.
 |===
