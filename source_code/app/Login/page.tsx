@@ -4,6 +4,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
 import { signIn } from "@/app/auth/auth";
+import { signInWithOAuth, type OAuthProvider } from "@/app/auth/auth";
 
 
 export default function LoginPage() {
@@ -14,6 +15,8 @@ export default function LoginPage() {
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
   const [authInfo, setAuthInfo] = useState<string | null>(null); // 👈 NEW
+  const [message, setMessage] = useState<string | null>(null);
+  const [messageType, setMessageType] = useState<string | null>(null);
 
   const router = useRouter();
 
@@ -71,6 +74,35 @@ export default function LoginPage() {
       setBusy(false);
     }
   }
+
+  async function handleOAuth(provider: OAuthProvider) {
+    setMessage(null);
+    setMessageType(null);
+    setBusy(true);
+
+    try {
+      const { error } = await signInWithOAuth(provider);
+
+      // If OAuth starts correctly, Supabase will redirect away, so this code
+      // usually won’t run. But if there is a config error, we can show it.
+      if (error) {
+        console.error("OAuth error:", error);
+        setMessage(
+          `We couldn't start the ${provider} sign-in. Please try again or use email/password.`
+        );
+        setMessageType("error");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Unexpected error starting social sign-in.");
+      setMessageType("error");
+    } finally {
+      // In a successful case the redirect happens before this,
+      // but it's fine to keep for failed cases.
+      setBusy(false);
+    }
+  }
+
 
 
   return (
@@ -134,19 +166,21 @@ export default function LoginPage() {
             {busy ? "Signing in..." : "Continue"}
           </button>
 
-
-          <div className="text-center font-semibold underline hover:opacity-80">
-            Forgot Password?</div>
-
+          <p className="text-center font-semibold underline hover:opacity-80">
+            <Link href="/forgot-password" className="underline">
+              Forgot your password?
+            </Link>
+          </p>
 
           <div className="relative text-center text-xs text-gray-500 py-2">
             <span className="bg-white px-2 relative z-10">Or</span>
             <div className="absolute inset-x-0 top-1/2 -translate-y-1/2 border-t" />
           </div>
 
-          <div className="grid grid-cols-3 gap-3">
+          <div>
             <button
               type="button"
+              onClick={async () => handleOAuth("google")}
               className="flex items-center justify-center w-full gap-3 rounded-[0.5vw] border border-black-300 bg-white px-6 py-2 shadow-sm hover:bg-gray-50 active:scale-[.99] transition"
             >
               <Image
@@ -158,32 +192,6 @@ export default function LoginPage() {
               />
               <span className="text-gray-700 font-bold">Google</span>
             </button>
-            <button
-              type="button"
-              className="flex items-center justify-center w-full gap-3 rounded-[0.5vw] border border-black-300 bg-white px-6 py-2 shadow-sm hover:bg-gray-50 active:scale-[.99] transition"
-            >
-              <Image
-                src="/images/fb2.png"
-                alt="Facebook logo"
-                width={20}
-                height={20}
-                className="w-5 h-5"
-              />
-              <span className="text-gray-700 font-bold">Facebook</span>
-            </button>
-            <button
-              type="button"
-              className="flex items-center justify-center w-full gap-3 rounded-[0.5vw] border border-black-300 bg-white px-6 py-2 shadow-sm hover:bg-gray-50 active:scale-[.99] transition">
-              <Image
-                src="/images/appleLogo.png"
-                alt="Apple logo"
-                width={20}
-                height={20}
-                className="w-5 h-5"
-              />
-              <span className="text-gray-700 font-bold">Apple</span>
-            </button>
-
           </div>
         </form>
 

@@ -1,7 +1,7 @@
  'use client'
 import Link from 'next/link';
 import ChatWidget from '../chatbot/ui';
-import DonateWireframe from '../listings/donate_piece/page';
+import {DonatePiecePage as DonateWireframe } from '../listings/transactions';
 import { supabase } from '../auth/supabaseClient';
 import FilterableFeaturedItems from './filterableListing';
 import {useRouter} from "next/navigation";
