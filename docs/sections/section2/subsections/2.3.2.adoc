@@ -386,3 +386,160 @@ By capturing the geospatial invariants explicitly, the Map subsystem aligns with
 ====== Summary
 
 These assertions clarify the system’s behavioral expectations and match the lecture recommendations for maintaining model integrity through explicit invariants. Each subsystem—Auth, Backend, and Map—uses assertions to ensure operations transition between valid states, prevent malformed inputs, and reinforce domain rules. Together, they contribute to a more predictable, verifiable, and maintainable design.
+
+===== Command–Query Separation (CQS) and Side-Effect-Free Validators
+
+Command–Query Separation (CQS) was applied in the Auth subsystem to distinguish **pure, side-effect-free validation** from **mutating commands** that change authentication state or persist data. This refactor simplifies reasoning about behavior, improves testability, and aligns with the course emphasis on supple design.
+
+====== Before: Mixed Validation and Side Effects in a Single Flow
+
+Originally, several Auth-related flows combined **input validation**, **Supabase calls**, and **navigation/redirects** into a single function. A typical “sign up” handler both validated inputs and performed mutations:
+
+[source,typescript]
+----
+export async function handleSignUp(formData, supabase, router) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const firstname = formData.get("firstname") as string;
+  const lastname = formData.get("lastname") as string;
+
+  // Inline validation
+  if (!email || !email.includes("@")) {
+    throw new Error("Invalid email.");
+  }
+  if (!password || password.length < 8) {
+    throw new Error("Password too short.");
+  }
+
+  // Auth + profile creation (side effects)
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { firstname, lastname },
+    },
+  });
+
+  if (error) {
+    throw error;
+  }
+
+  router.push("/dashboard");
+}
+----
+
+Problems:
+
+* Queries (validation) and commands (mutations) were mixed together.
+* The function had multiple responsibilities: validation, auth side effects, and navigation.
+* Unit testing required mocking Supabase and routing even when only validation was under test.
+* Intent was blurred: the *what* (validate vs. create) and the *how* (Supabase, router) were tangled.
+
+====== After: Pure Validators + Explicit Command Handlers
+
+The Auth Team refactored validation concerns into **pure functions** that take data and return validation results without side effects. Mutating logic was isolated in dedicated command handlers.
+
+Pure validators (queries):
+
+[source,typescript]
+----
+export function validateEmail(email: string): string[] {
+  const errors: string[] = [];
+  if (!email) {
+    errors.push("Email is required.");
+  } else if (!email.includes("@")) {
+    errors.push("Email must contain '@'.");
+  }
+  return errors;
+}
+
+export function validatePassword(password: string): string[] {
+  const errors: string[] = [];
+  if (!password || password.length < 8) {
+    errors.push("Password must be at least 8 characters.");
+  }
+  if (!/\d|\W/.test(password)) {
+    errors.push("Password must include a number or symbol.");
+  }
+  return errors;
+}
+
+export function validateProfileFields(firstname: string, lastname: string): string[] {
+  const errors: string[] = [];
+  if (!firstname.trim()) {
+    errors.push("First name is required.");
+  }
+  if (!lastname.trim()) {
+    errors.push("Last name is required.");
+  }
+  return errors;
+}
+----
+
+These functions:
+
+* Have **no side effects** (no Supabase calls, no router calls).
+* Always return the same output for the same input.
+* Are easy to unit-test in isolation.
+
+Command handler (mutation):
+
+[source,typescript]
+----
+export async function handleCreateAccount(formData, supabase, router) {
+  const email = formData.get("email") as string;
+  const password = formData.get("password") as string;
+  const firstname = formData.get("firstname") as string;
+  const lastname = formData.get("lastname") as string;
+
+  const errors = [
+    ...validateEmail(email),
+    ...validatePassword(password),
+    ...validateProfileFields(firstname, lastname),
+  ];
+
+  if (errors.length > 0) {
+    return { ok: false, errors };
+  }
+
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { firstname, lastname },
+    },
+  });
+
+  if (error) {
+    return { ok: false, errors: [error.message] };
+  }
+
+  router.push("/dashboard");
+  return { ok: true, errors: [] };
+}
+----
+
+Here:
+
+* The **command** (`handleCreateAccount`) is clearly responsible for *doing things*:
+  * calling Supabase (auth side effect),
+  * triggering navigation.
+* All **query-style logic** (validation) is delegated to pure functions.
+* The handler’s return structure (`{ ok, errors }`) makes behavior explicit and testable.
+
+====== Benefits of the CQS Refactor
+
+* **Clear Separation of Responsibilities**  
+  Validators answer questions (“Is this input valid?”) without changing state, while commands modify state or trigger navigation.
+
+* **Improved Testability**  
+  Pure validators can be tested without mocking Supabase or routing. Command handlers can be tested with targeted integration or mocking.
+
+* **Reduced Side Effects**  
+  Fewer functions can unexpectedly cause persistence or navigation; side effects are localized to command functions.
+
+* **Easier Reasoning and Maintenance**  
+  Developers can quickly see where mutations happen and reuse validators across multiple forms or flows.
+
+* **Alignment with Course Guidance**  
+  The refactor demonstrates Command–Query Separation by drawing a firm line between “asking” (validators) and “doing” (commands), while keeping domain rules explicit and intention-revealing.
