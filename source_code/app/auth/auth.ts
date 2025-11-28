@@ -1,7 +1,19 @@
+// Client-side auth helpers (use in "use client" components)
+
 // Log in (sign in) an existing user
+import SupabaseClient from '@supabase/supabase-js/dist/module/SupabaseClient'
 import { setAuthPersistence } from './storage'
 import { supabase } from './supabaseClient'
-import { mapAuthError, logAuthError } from './errorMapper'
+import { User } from '@supabase/supabase-js'
+
+export type Profile = {
+  id: string
+  email?: string | null
+  display_name?: string | null
+  firstname?: string | null
+  lastname?: string | null
+  role?: string | null
+}
 
 // Sign up (register) a new user
 export async function signUp (
@@ -159,4 +171,66 @@ export async function verifyPhoneOtp (phone: string, token: string) {
   }
 
   return { data, error }
+}
+
+export type UserWithProfileResult = {
+  user: User | null
+  profile: Profile | null
+  error: Error | null
+}
+
+/**
+ * Generic helper that works with both:
+ *  - client-side supabase client (browser)
+ *  - server-side supabase client (SSR / route handlers)
+ *
+ * You pass *your* supabase instance, we do:
+ *  - supabase.auth.getUser()
+ *  - SELECT * FROM profiles WHERE id = user.id
+ */
+export async function getAuthUserWithProfile (
+  supabaseClient: SupabaseClient
+): Promise<UserWithProfileResult> {
+  // 1) Get the current auth user
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser()
+
+  if (userError || !user) {
+    return {
+      user: null,
+      profile: null,
+      error: userError ?? new Error('No authenticated user')
+    }
+  }
+
+  // 2) Get that user's profile
+  const { data: profile, error: profileError } = await supabaseClient
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .maybeSingle<Profile>() // safer than .single() if row might not exist
+
+  return {
+    user,
+    profile: profile ?? null,
+    error: profileError ?? null
+  }
+}
+
+export async function getProfileByUserId (
+  supabaseClient: SupabaseClient,
+  userId: string
+): Promise<{ profile: Profile | null; error: Error | null }> {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .maybeSingle<Profile>()
+
+  return {
+    profile: data ?? null,
+    error: error ?? null
+  }
 }
