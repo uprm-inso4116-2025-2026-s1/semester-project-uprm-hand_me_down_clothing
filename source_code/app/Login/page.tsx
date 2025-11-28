@@ -166,10 +166,11 @@ export default function LoginPage() {
             {busy ? "Signing in..." : "Continue"}
           </button>
 
-
-          <div className="text-center font-semibold underline hover:opacity-80">
-            Forgot Password?</div>
-
+          <p className="text-center font-semibold underline hover:opacity-80">
+            <Link href="/forgot-password" className="underline">
+              Forgot your password?
+            </Link>
+          </p>
 
           <div className="relative text-center text-xs text-gray-500 py-2">
             <span className="bg-white px-2 relative z-10">Or</span>
