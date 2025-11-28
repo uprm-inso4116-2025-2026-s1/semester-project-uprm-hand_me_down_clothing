@@ -7,8 +7,9 @@ ensures alignment with both domain knowledge and system concerns.
 [cols="^,^,^,3", options="header", align=center]
 |===
 | Term | Concept Type | Phase Introduced | Definition / Notes
-| Seller | Entity | Domain | A person who posts a clothing item on the platform to make it visible for reuse or resale.
-| Buyer | Entity | Domain | A person who browses listings and contacts sellers to express interest in an item.
+| User | Entity | Domain | A person who interacts with the platform that can assume the role of a Seller or Buyer.
+| Seller | Attribute/Role | Domain | A User who posts a clothing item on the platform to make it visible for reuse or resale.
+| Buyer | Attribute/Role | Domain | A User who browses listings and contacts sellers to express interest in an item.
 | Piece | Entity | Domain | An individual clothing item, defined independently of the system.
 | Listing | Representation | Design | A published representation of a Piece in the platform, visible to potential buyers.
 | Listing Published | Event | Domain | Instantaneous occurrence when a Seller makes a clothing item publicly visible.
