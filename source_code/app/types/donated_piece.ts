@@ -1,5 +1,5 @@
 import { Piece } from './piece';
-import { Category, Gender, Size, Condition, Status } from "./classifications";
+import { Category, Gender, Size, Condition } from "./classifications";
 
 export class DonatedPiece extends Piece {
     constructor(

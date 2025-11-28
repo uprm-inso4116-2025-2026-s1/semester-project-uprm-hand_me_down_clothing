@@ -1,13 +1,23 @@
-import { createClient } from '@supabase/supabase-js'
+// app/auth/supabaseClient.ts
+
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import storageAdapter from './storage'
 
 const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!
 const supabaseAnonKey = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey, {
-	auth: {
-		storage: storageAdapter
-	}
+// Shared singleton client (good default)
+export const supabase = createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+  auth: {
+    storage: storageAdapter
+  }
 })
 
-export { createClient }
+// Optional factory if you ever need a fresh instance
+export function createClient () {
+  return createSupabaseClient(supabaseUrl, supabaseAnonKey, {
+    auth: {
+      storage: storageAdapter
+    }
+  })
+}
