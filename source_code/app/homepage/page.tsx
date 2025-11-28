@@ -1,4 +1,4 @@
- 'use client'
+'use client'
 import Link from 'next/link';
 import ChatWidget from '../chatbot/ui';
 import DonateWireframe from '../listings/donate_piece/page';
@@ -50,9 +50,14 @@ export default function Homepage() {
 
   useEffect(()=>{
     async function getFeaturedItems() {
-      const pieceRepo = new PieceRepository()
-      const pieces = pieceRepo.getPieces()
-      setFeaturedItems((await pieces).slice(0, 7));
+      const pieceRepo = new PieceRepository();
+      const pieces = await pieceRepo.getPieces();
+
+      const uniqueById = Array.from(
+        new Map(pieces.map((p) => [p.id, p])).values()
+      );
+
+      setFeaturedItems(uniqueById.slice(1, 7));
     }
 
     getFeaturedItems();
@@ -152,21 +157,16 @@ export default function Homepage() {
 
       <FilterableFeaturedItems initialItems={featuredItems}/>
 
-      {/* How it works */}
-      <h2 className="text-3xl font-bold italic pt-10 text-center lg:text-left lg:pl-8">How it works</h2>
-      <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6 px-4 pt-4">
-        {steps.map((cat) => (
+      {/* How it works: explanation of the platform process */}
+     <h2 className="text-3xl font-bold italic pl-15 pt-10">How it works</h2>
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-4 px-15 py-4">
+        {steps.map((step) => (
           <div
-            key={cat.id}
-            className="bg-[#F9F8F8] border-[#E5E7EF] border-2 p-4 rounded-xl"
+            key={step.id}
+            className="bg-[#F9F8F8] border-2 border-[#E5E7EF] rounded-2xl p-4"
           >
-            <div className="flex items-center gap-3">
-              <div className="rounded-full w-8 h-8 bg-[#D6B1B1] text-center text-sm font-bold italic text-white flex items-center justify-center">
-                {cat.id}
-              </div>
-              <h3 className="text-lg font-bold italic">{cat.step}</h3>
-            </div>
-            <p className="text-sm text-[#666666] pl-11">{cat.description}</p>
+            <h3 className="text-xl font-bold italic mb-2">{step.step}</h3>
+            <p className="text-sm text-[#666666]">{step.description}</p>
           </div>
         ))}
       </div>
