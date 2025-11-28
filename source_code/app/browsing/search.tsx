@@ -5,6 +5,7 @@ import {Piece} from "../types/piece";
 import {PieceRepository} from "../../src/repositories/pieceRepository";
 import { unique } from "next/dist/build/utils";
 import { Category, Condition, Gender, Size } from "@/app/types/classifications";
+import { frequently_searched_words } from "./frequent_words";
 
 
 type Props = {
@@ -202,4 +203,3 @@ export async function fetchPieces(query: string | null): Promise<Piece[]> {
     const { uniquePieces } = await filteredPieces(split_query);
     return uniquePieces; // the data, no rendering yet
 }
-
