@@ -1,14 +1,11 @@
-=== 2.3.2 Specification Pattern
-*Status: Added for Milestone 3 – Application of Techniques*
+=== *2.3.2 Application of Techniques*
 
-This section documents how the team applied the *Specification Pattern* to replace scattered conditional logic and move toward reusable, composable domain rules. The example below aligns with the Listing and Filter concepts defined in <<_2_1_domain_model_overview,Section 2.1 Domain Model Overview>> and with the architectural separation of concerns described in <<_2_2_architecture_and_layering,Section 2.2 Architecture & Layering>>.
+This subsection presents the concrete techniques applied by the team during Milestone 3, demonstrating how the project evolved from scattered, duplicated logic to modular, intention-revealing, and maintainable structures. The examples below come from real improvements implemented by the Map, Auth, and Backend teams. Each example includes a before/after transformation aligned with Domain-Driven Design principles and the architectural rules described in <<_2_2_architecture_and_layering,Section 2.2 Architecture & Layering>>.
 
-==== Before: Scattered Conditional Logic
-Originally, the logic for filtering listings or map markers existed as raw conditional statements mixed directly inside controller methods. These conditionals were repeated in multiple places (Map screen, Listing search endpoint, utility handlers).
+=== Specification Pattern: From Scattered Conditionals to Composable Rules
 
-This “Before” approach violated the principle of keeping business rules inside the domain layer (see <<_2_2_architecture_and_layering,Section 2.2>>), since controllers were deciding domain-level rules like *Near Me* or *Open Now*.
-
-Example of *Before* logic:
+==== Before
+Filtering logic in the Map and Listing domains was originally written using inline conditionals inside controllers, leading to duplication and tight coupling. Each filter—such as “Near Me,” “Open Now,” or “Category”—was evaluated manually:
 
 [source,typescript]
 ----
@@ -37,34 +34,23 @@ function filterResults(listings, filters) {
 }
 ----
 
-*Observed issues:*
-- Rules were mixed directly into UI/Controller code.
-- Logic duplicated across the project.
-- Adding new rules required editing multiple files.
-- No clear mapping to the `Filter` Value Object introduced in <<_2_1_domain_model_overview,Section 2.1>>.
+Problems:
+- Controller-level business logic.
+- Repeated conditions in multiple files.
+- Adding a new filter required editing several modules.
+- Hard to test filtering rules independently.
 
-==== New Insight
-While preparing Milestone 3, the team recognized that *filters are domain rules*, not UI concerns.  
-Each rule has meaning in the domain and should be modeled accordingly.
-
-This realization parallels the reasoning behind the Strategy Pattern previously documented in <<_2_3_1_strategy_pattern,Section 2.3.1 Strategy Pattern>>, where behavior was extracted into dedicated, interchangeable classes.
-
-Here, Specifications become a natural extension:  
-**Each filter = a Specification. Multiple filters = composed Specifications.**
-
-This also aligns directly with the new `Filter` Value Object defined in the domain.
-
-==== After: Reusable Specification Classes
-The Specification Pattern was applied by modeling each rule as a standalone class implementing a common contract:
+==== After
+Filters were refactored into **Specification objects**, each exposing a single, meaningful rule:
 
 [source,typescript]
 ----
-interface Specification<T> {
+export interface Specification<T> {
   isSatisfiedBy(candidate: T): boolean;
 }
 ----
 
-Concrete domain rules:
+Examples of concrete Specifications:
 
 [source,typescript]
 ----
@@ -81,90 +67,182 @@ export class OpenNowSpecification implements Specification<Listing> {
   constructor(private currentHour: number) {}
 
   isSatisfiedBy(listing: Listing): boolean {
-    return (
-      listing.openingHour <= this.currentHour &&
-      this.currentHour <= listing.closingHour
-    );
+    return listing.openingHour <= this.currentHour &&
+      this.currentHour <= listing.closingHour;
   }
 }
 ----
 
-Composition (from Section 2.1’s domain rules and the architecture constraints in Section 2.2):
+Specifications can be composed:
 
 [source,typescript]
 ----
 export class AndSpecification<T> implements Specification<T> {
   constructor(private left: Specification<T>, private right: Specification<T>) {}
 
-  isSatisfiedBy(candidate: T): boolean {
-    return this.left.isSatisfiedBy(candidate) && this.right.isSatisfiedBy(candidate);
+  isSatisfiedBy(candidate: T) {
+    return this.left.isSatisfiedBy(candidate) &&
+           this.right.isSatisfiedBy(candidate);
   }
 }
 ----
 
-Used in domain filtering:
-
-[source,typescript]
-----
-function applySpecifications(listings: Listing[], specs: Specification<Listing>[]) {
-  return listings.filter(l =>
-    specs.every(spec => spec.isSatisfiedBy(l))
-  );
-}
-----
-
-Combined filter application (maps cleanly to the Filter VO from Section 2.1):
+The call site becomes clean and intention-revealing:
 
 [source,typescript]
 ----
 const specs: Specification<Listing>[] = [];
 
-if (filterVO.nearMe) {
-  specs.push(new NearMeSpecification(userLoc, filterVO.radius));
-}
-
-if (filterVO.openNow) {
-  specs.push(new OpenNowSpecification(currentHour));
-}
+if (filterVO.nearMe) specs.push(new NearMeSpecification(userLoc, filterVO.radius));
+if (filterVO.openNow) specs.push(new OpenNowSpecification(currentHour));
 
 const result = applySpecifications(allListings, specs);
 ----
 
-==== Diagram: Specification Composition Flow
-[plantuml]
+Benefits:
+- Encapsulated filtering rules.
+- Easy to add new filters without modifying controllers.
+- Clear mapping to the Filter VO.
+- Fully testable and maintainable.
+
+
+=== Strategy Pattern: Interchangeable Routing Providers
+
+==== Before
+Routing was tightly coupled to Leaflet's OSRMv1 provider. Controllers directly instantiated the OSRM router:
+
+[source,typescript]
 ----
-@startuml
-interface Specification {
-  +isSatisfiedBy(candidate)
+const router = L.Routing.osrmv1({
+  serviceUrl: "https://router.project-osrm.org/route/v1",
+});
+
+router.route([origin, destination], callback);
+----
+
+Problems:
+- Hard-coded provider (OSRMv1).
+- No ability to switch to Google Maps, Mapbox, or custom routing.
+- Difficult to test routing behavior.
+
+==== After
+A routing abstraction was introduced:
+
+[source,typescript]
+----
+export interface RoutingStrategy {
+  getRoute(origin: LatLng, destination: LatLng): Promise<RouteResult>;
 }
-
-class NearMeSpecification
-class OpenNowSpecification
-class AndSpecification
-
-Specification <|.. NearMeSpecification
-Specification <|.. OpenNowSpecification
-Specification <|.. AndSpecification
-
-NearMeSpecification --> Listing : distance rule
-OpenNowSpecification --> Listing : time rule
-
-AndSpecification *-- Specification : left
-AndSpecification *-- Specification : right
-@enduml
 ----
 
-==== Benefits Achieved
-- **Follows Domain Layer boundaries** from <<_2_2_architecture_and_layering,Section 2.2>>.  
-- **Directly models rules described in the Listing and Filter VO** from <<_2_1_domain_model_overview,Section 2.1>>.  
-- **Consistent with behavioral extraction principles** from <<_2_3_1_strategy_pattern,Section 2.3.1 Strategy Pattern>>.  
-- **Reusable:** Same domain rules used by Map Team and backend filtering.  
-- **Composable:** Rules combine with AND/OR without modifying controller code.  
-- **Testable:** Each Specification is independently unit-tested.  
-- **Extensible:** Adding a new filter means adding a new Specification class only.
+Current implementation:
 
-==== Testing & Verification
-- AsciiDoc renders without warnings.
-- Specification logic matches real Listing, Map, and Filter VO code.
-- Cross-references are correct and point to actual earlier sections.
-- No inconsistencies remain between UI filters and backend filtering rules.
+[source,typescript]
+----
+export class OSRMRoutingStrategy implements RoutingStrategy {
+  private router = L.Routing.osrmv1({
+    serviceUrl: "https://router.project-osrm.org/route/v1",
+  });
+
+  async getRoute(origin, destination) {
+    return new Promise((resolve, reject) => {
+      this.router.route([origin, destination], (err, routes) =>
+        err ? reject(err) : resolve(routes[0])
+      );
+    });
+  }
+}
+----
+
+Planned strategies (documented but not implemented):
+
+- GoogleMapsRoutingStrategy
+- MapboxRoutingStrategy
+- CustomShortestPathStrategy
+
+Controller usage becomes:
+
+[source,typescript]
+----
+const routingStrategy: RoutingStrategy = new OSRMRoutingStrategy();
+const route = await routingStrategy.getRoute(origin, destination);
+----
+
+Benefits:
+- Decouples controllers from routing provider.
+- Enables future routing engines without refactoring.
+- Clean, unified interface for route retrieval.
+- Aligns with extensibility principles from Milestone 3.
+
+
+=== Intention-Revealing Interfaces: Centralizing Authentication Logic
+
+==== Before
+Each page manually performed Supabase authentication and profile retrieval:
+
+[source,typescript]
+----
+const { data: { user } } = await supabase.auth.getUser();
+const { data: profile } = await supabase.from("profiles")
+  .select("*")
+  .eq("id", user.id)
+  .single();
+----
+
+Problems:
+- Code duplicated across pages.
+- Mixed concerns (auth, profile lookup, redirects).
+- Hard to maintain consistent profile structure.
+
+==== After
+The team introduced intention-revealing helpers:
+
+[source,typescript]
+----
+export async function getAuthUserWithProfile(supabase) {
+  const { data: { user } } = await supabase.auth.getUser();
+  if (!user) return { user: null, profile: null };
+
+  const { data: profile } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  return { user, profile };
+}
+----
+
+And a reactive hook:
+
+[source,typescript]
+----
+export function useSupabaseAuth() {
+  const supabase = useSupabase();
+  const auth = ref({ user: null, loading: true });
+
+  supabase.auth.onAuthStateChange((event, session) => {
+    auth.value = {
+      user: session?.user ?? null,
+      loading: false,
+    };
+  });
+
+  return auth;
+}
+----
+
+Call sites become readable and meaningful:
+
+[source,typescript]
+----
+const { user, profile } = await getAuthUserWithProfile(supabase);
+if (!user) throw redirect(302, "/login");
+----
+
+Benefits:
+- Eliminates repetition.
+- Makes developer intent explicit.
+- Consistent profile retrieval.
+- Clear separation of concerns.
+

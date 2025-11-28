@@ -1,4 +1,4 @@
-=== 2.3.1 Selected Fragments of the Implementation
+=== *2.3.1 Selected Fragments of the Implementation*
 This section provides selected fragments of the implementation that complement the architecture described in Section 2.3.  
 To comply with project guidelines, the fragments are organized into:
 
