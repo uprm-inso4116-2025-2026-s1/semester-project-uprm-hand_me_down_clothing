@@ -1,83 +1,82 @@
-=== *2.2.5 — Machine Requirements*
+=== *2.2.5 Machine Requirements*
 
 ==== Objective
-The system shall operate reliably and efficiently as a web-based clothing discovery platform built with React and JavaScript.  
-Machine Requirements define measurable performance, reliability, and scalability goals to ensure that users can create, browse, filter, and save listings consistently.  
-The platform does not manage payments or handle transactional workflows; all exchanges occur offline after contact has been initiated.
+The web server must support reliable and efficient operation of a React + JavaScript clothing discovery platform.  
+To avoid ambiguity, all load-related terms (e.g., *simultaneous*, *average*, *peak*) are defined **before** the requirements.
 
-To avoid ambiguity, this section explicitly defines terms such as *simultaneous users*, *average load*, *peak load*, and *uptime window*.  
-These definitions appear in the Clarifications and Load Definitions subsections.
+These definitions are referenced throughout this section (see <<MR-Definitions>>), and the usage scenarios (see <<MR-Scenarios>>) include rationales for expected frequencies.
 
----
+[[MR-Definitions]]
+==== Load & Timing Definitions (Forward Reference)
+To eliminate ambiguity, the following timing windows are used consistently:
 
-== *Requirements*
+* *Simultaneous Users*:  
+Users who perform actions within the same **10-second activity window** (e.g., search, filter, view listing).
 
-=== Performance
-- The system shall return **search results within 2 seconds on average**, where “average” refers to the mean response time over a **5-minute rolling window** under normal operating conditions.  
-- Under **peak load**, defined as **150 concurrent active users** within a **10-second window**, the system shall maintain a maximum response time of **4 seconds**.  
-- The system shall support **200 simultaneous browsing users**, where “simultaneous” denotes users interacting within the same **10-second activity window** (e.g., filtering, searching, saving listings, viewing details).  
-- Listing creation and listing updates (including metadata changes) shall complete within **3 seconds on average**, excluding client-side image compression delays.
+* *Average Concurrent Users*:  
+Users active within a **1-minute operational window**, representing typical daytime traffic.
 
----
+* *Peak Concurrent Users*:  
+Users active within the same **10-second window** during high-demand periods (e.g., semester start, donation drives).
 
-=== Reliability
-- The system shall maintain an uptime of **99.7% per calendar month**, allowing no more than **2.1 hours** of unscheduled downtime.  
-- Core operations — including listing creation, editing, saving, and closing (sold/donated/retracted) — shall fail due to server error in **no more than 0.1%** of requests.  
-- Scheduled maintenance windows shall not exceed **3 hours per month** and shall be announced at least **48 hours** in advance.
+* *Response Time (Average)*:  
+The mean latency over a **rolling 5-minute window** under typical load.
 
----
+* *Response Time (Peak)*:  
+The 95th-percentile latency during **peak concurrent user activity**.
 
-=== Scalability
-- The system shall scale to support **500 concurrent users** performing mixed actions (browsing, searching, creating listings, saving favorites, sending messages) while maintaining average response times ≤ **3.5 seconds**.  
-- The platform shall handle up to **50,000 active listings** without more than a **20% increase** in response time relative to baseline performance.  
-- The architecture shall support both **vertical scaling** (increasing compute resources) and **horizontal scaling** (adding server instances) without substantial redesign.
+* *Uptime Window*:  
+Measured over a **calendar month**, consistent with industry operational standards.
+
+These definitions are applied in all performance, reliability, and scalability requirements below.
 
 ---
 
-== Clarifications [[MR-Clarifications]]
-- *Peak Load:* **≥ 150** concurrent active users interacting within the same **10-second window**, with at least **10%** performing listing creation or updates.  
-- *Average Load:* Approx. **200 concurrent users** active within a **1-minute window**, representing typical daytime usage.  
-- *Minimal Outages:* No more than **2.1 hours** of unplanned downtime per month.  
-- *Acceptable Performance:* **≤ 3.5 seconds** response time for **95% of requests**, measured over a rolling daily interval.
+==== Requirements
 
-These definitions apply across all subsequent subsections and performance measurements.
+===== *Performance*
+- The system shall return **search results within 2 seconds on average**, where “average” means the rolling 5-minute mean latency (see <<MR-Definitions>>).  
+- Under peak load (**150 simultaneous users** within a 10-second window), the system shall maintain a maximum response time of **4 seconds** for 95% of requests.  
+- The system shall support **200 simultaneous browsing users**, performing actions within a 10-second window.  
+- Listing creation and updates (metadata + images) shall complete within **3 seconds on average**, excluding client-side compression.
 
----
+===== *Reliability*
+- The server shall maintain **99.7% uptime per calendar month**, allowing **≤ 2.1 hours** of unplanned downtime.  
+- Core operations (create, edit, save, close listing) shall fail for **≤ 0.1%** of requests due to server errors.  
+- Scheduled maintenance shall not exceed **3 hours/month** and must be announced **≥ 48 hours** in advance.
 
-== Areas for Refinement
-- Stress tolerance for **extreme traffic spikes** (e.g., ≥ 1000 simultaneous users during semester openings or large community donation drives) remains under evaluation.  
-- Additional benchmarking is required to assess performance on **mobile devices with weak or unstable network conditions**.  
-- Concurrent image upload behavior and caching strategies shall undergo further load testing to validate performance during peak periods.
-
----
-
-== Justification
-Reliable machine performance is essential to support discovery-centric workflows and maintain user trust.  
-Clear definitions of “simultaneous,” “average,” “peak,” and “uptime window” ensure testability and enable consistent evaluation across deployment environments.  
-These metrics align with comparable lightweight listing platforms (e.g., Facebook Marketplace, OfferUp) and are tailored to expected demand patterns at UPRM, particularly at semester transitions and community donation events.
+===== *Scalability*
+- The system shall scale to **500 concurrent users** performing mixed actions while keeping average response time ≤ **3.5 seconds**.  
+- The database shall support **50,000 active listings** with ≤ **20% increase** in baseline response time.  
+- Architecture must allow **vertical and horizontal scaling** without major redesign.
 
 ---
 
-== Load Definitions
-- *Peak Concurrent Users:* 500 users performing actions within the same **10-second** interval.  
-- *Average Concurrent Users:* 200 users active within a **1-minute** interval.  
-- *Light Load:* Fewer than 80 active users interacting within a **1-minute** interval.
+[[MR-Scenarios]]
+==== User Mix Scenarios (With Frequency Rationale)
 
-These definitions structure load-testing scenarios and clarify operational expectations.
+These scenarios model the expected real-world activity distribution.  
+Frequencies are based on observations from UPRM informal reselling groups, typical campus marketplace usage, and usage spikes during academic transitions.
+
+1. *Scenario 1: Browsing Listings (≈ 60% of active users)*  
+   *Rationale:* Most platform interaction is **searching, scrolling, filtering**, similar to Facebook Marketplace usage patterns.
+
+2. *Scenario 2: Creating Listings (≈ 20%)*  
+   *Rationale:* Listing creation is less frequent; students typically post items in small batches (closet cleanouts, moving periods).
+
+3. *Scenario 3: Messaging / Contact Seller (≈ 15%)*  
+   *Rationale:* Only a fraction of browsing leads to contact. Matches expected marketplace conversion rates (~10–20%).
+
+4. *Scenario 4: Administrative or Moderation Tasks (≈ 5%)*  
+   *Rationale:* Admin/moderator actions occur sporadically, typically only during reported issues or verification checks.
+
+These percentages are used to model load distribution during performance testing and to validate server capabilities under normal and peak conditions.
 
 ---
 
-== User Mix Scenarios
-These scenarios help evaluate how mixed user traffic impacts performance and machine behavior.
+==== Justification
+Defining timing windows and usage frequencies explicitly ensures that “simultaneous,” “peak,” and “average” conditions become **testable, measurable, and reproducible**.  
+Forward references (<<MR-Definitions>>, <<MR-Scenarios>>) help reviewers locate definitions quickly and avoid ambiguity.
 
-1. *Scenario 1: Browsing Listings*  
-   - 60% of users browsing or filtering listings.
+This structure aligns the platform with operational standards used in lightweight marketplaces such as OfferUp, Depop, and Facebook Marketplace—especially during high-demand periods (semester start, back-to-school, donation drives).
 
-2. *Scenario 2: Creating Listings*  
-   - 20% of users uploading images, entering item details, or publishing new listings.
-
-3. *Scenario 3: Messaging*  
-   - 15% of users participating in buyer–seller message threads.
-
-4. *Scenario 4: Administrative Actions*  
-   - 5% of users performing moderation, flag review, or dispute resolution tasks.
