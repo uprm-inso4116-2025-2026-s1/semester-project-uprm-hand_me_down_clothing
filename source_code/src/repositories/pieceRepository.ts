@@ -28,20 +28,20 @@ export class PieceRepository {
         this.supabase = supabaseClient;
     }
 
-  /**
-   * Retrieves all pieces from the Supabase 'pieces' table.
-   * @returns {Promise<Array<Piece>>} - An array of Piece objects.
-   */
-  public async getPieces (): Promise<Array<Piece>> {
-    try {
-      const pieces_data = (await this.supabase.from('pieces').select('*')).data
-      if (!pieces_data) return []
-      const pieces = pieces_data.map(item => this.factory.makePiece(item))
-      return pieces
-    } catch {
-      return []
+    /**
+     * Retrieves all pieces from the Supabase 'pieces' table.
+     * @returns {Promise<Array<Piece>>} - An array of Piece objects.
+     */
+    public async getPieces(): Promise<Array<Piece>> {
+        try {
+            const pieces_data = (await this.supabase.from('pieces').select("*")).data;
+            if (!pieces_data) return [];
+            const pieces = pieces_data.map((item) => this.factory.makePiece(item));
+            return pieces;
+        } catch {
+            return [];
+        }
     }
-  }
 
     private validatePieceData(piece: Piece) {
         const missing: string[] = [];
@@ -54,38 +54,39 @@ export class PieceRepository {
             throw new Error('Piece validation failed: missing ' + missing.join(', '));
         }
     }
-    if (piece.name.length < 0) {
-      missing += 'name '
-    }
-    if (piece.brand.length < 0) {
-      missing += 'brand '
-    }
-    if (!piece.user_id) {
-      missing += 'user_id'
-    }
-    if (missing.trim().length > 0) {
-      throw new Error('Piece validation failed: missing ' + missing)
-    }
-  }
 
-  /**
-   * Retrieves a piece by its ID from the database.
-   * @param {number} id - The ID of the piece to retrieve.
-   * @returns {Promise<Piece | null>} - The Piece object if found, otherwise null.
-   */
-  public async getPieceById (id: number): Promise<Piece | null> {
-    try {
-      const { data, error } = await this.supabase
-        .from('pieces')
-        .select('*')
-        .eq('id', id)
-        .single()
-      if (error || !data) return null
-      return this.factory.makePiece(data)
-    } catch {
-      return null
+
+    /**
+     * Retrieves a piece by its ID from the database.
+     * @param {number} id - The ID of the piece to retrieve.
+     * @returns {Promise<Piece | null>} - The Piece object if found, otherwise null.
+     */
+    public async getPieceById(id: number): Promise<Piece | null> {
+        try {
+            const { data, error } = await this.supabase.from('pieces').select("*").eq('id', id).single();
+            if (error || !data) return null;
+            return this.factory.makePiece(data);
+        } catch {
+            return null;
+        }
     }
-  }
+
+    /**
+     * Retrieves all pieces corresponding to a user from the Supabase 'pieces' table.
+     * @param {String} user_id - The ID of the user whose pieces we want.
+     * @returns {Promise<Array<Piece>>} - An array of Piece objects.
+     */
+    public async getPiecesByUser(user_id : String): Promise<Array<Piece>> {
+        try {
+            const pieces_data = (await this.supabase.from('pieces').select("*").eq('user_id', user_id)).data;
+            if (!pieces_data) return [];
+            const pieces = pieces_data.map((item) => this.factory.makePiece(item));
+            return pieces;
+        } catch {
+            return [];
+        }
+    }
+    
 
     /**
      * Inserts a new piece record into the database.
@@ -106,68 +107,24 @@ export class PieceRepository {
         if (error != null) return error;
         return this.factory.makePiece(data);
     }
-  }
 
-  /**
-   * Inserts a new piece record into the database.
-   * Returns the newly created Piece if successful, otherwise the error that impeded the creation.
-   * @param {Piece} piece - The piece object to create.
-   * @returns {Promise<Piece | Error>}
-   */
-  public async createPiece (piece: Piece): Promise<Piece | Error> {
-    try {
-      this.validatePieceData(piece)
-    } catch {
-      return Error('Invalid data for piece: ' + piece.toString())
-    }
-    // TODO: convert dto
-    // const dto = this.factory.toDTO(piece);
-    const { data, error } = await this.supabase
-      .from('pieces')
-      .insert([
-        // dto
-        {
-          name: piece.name,
-          category: Category[piece.category],
-          color: piece.color,
-          brand: piece.brand,
-          gender: Gender[piece.gender],
-          size: Size[piece.size],
-          price: piece.price,
-          condition: Condition[piece.condition],
-          reason: piece.reason,
-          images: piece.images,
-          user_id: piece.user_id
+    /**
+     * Updates an existing piece record.
+     * Returns the updated Piece if successful, otherwise null.
+     * @param {Piece} piece - The piece object to update.
+     * @returns {Promise<Piece | Error>}
+     */
+    public async updatePiece(piece: Piece): Promise<Piece | Error> {
+        try {
+            this.validatePieceData(piece);
+        } catch {
+            return Error("Invalid data for piece: " + piece.toString());
         }
-      ])
-      .select()
-      .single()
-    if (error != null) return error
-    return this.factory.makePiece(data)
-  }
-
-  /**
-   * Updates an existing piece record.
-   * Returns the updated Piece if successful, otherwise null.
-   * @param {Piece} piece - The piece object to update.
-   * @returns {Promise<Piece | Error>}
-   */
-  public async updatePiece (piece: Piece): Promise<Piece | Error> {
-    try {
-      this.validatePieceData(piece)
-    } catch {
-      return Error('Invalid data for piece: ' + piece.toString())
+        const dto = this.factory.toDTO(piece);
+        const { data, error } = await this.supabase.from('pieces').update(dto).eq('id', piece.id).select().single();
+        if (error) return error;
+        return this.factory.makePiece(data);
     }
-    const dto = this.factory.toDTO(piece)
-    const { data, error } = await this.supabase
-      .from('pieces')
-      .update(dto)
-      .eq('id', piece.id)
-      .select()
-      .single()
-    if (error) return error
-    return this.factory.makePiece(data)
-  }
 
     /**
      * Closes a listing by updating its status in the database.
@@ -248,12 +205,6 @@ export class PieceRepository {
         } catch {
             return [];
         }
-      })
-      const { data, error } = await query
-      if (error || !data) return []
-      return data.map(item => this.factory.makePiece(item))
-    } catch {
-      return []
     }
 
     /**
