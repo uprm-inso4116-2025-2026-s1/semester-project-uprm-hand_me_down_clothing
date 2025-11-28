@@ -19,6 +19,32 @@ export type Profile = {
   donations_count: number
 }
 
+export type OAuthProvider = 'google' | 'facebook' | 'apple'
+
+/**
+ * Start an OAuth sign-in flow with Supabase.
+ * This will redirect the browser to the provider and then back to our app.
+ */
+export async function signInWithOAuth (
+  provider: OAuthProvider,
+  redirectPath: string = '/' // or "/" if you prefer
+) {
+  // In Next.js "use client" components, window is defined
+  const redirectTo =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${redirectPath}`
+      : undefined
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo // Supabase will send the user back here after login
+    }
+  })
+
+  return { data, error }
+}
+
 // Sign up (register) a new user
 export async function signUp (
   firstname: string,

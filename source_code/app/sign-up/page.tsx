@@ -12,7 +12,7 @@ import appleLogo from "@/logos/apple.png";
 
 import { validators } from "./validate";
 
-import { signUp } from "@/app/auth/auth";
+import { OAuthProvider, signInWithOAuth, signUp } from "@/app/auth/auth";
 
 
 type FieldKey = keyof typeof validators;
@@ -76,6 +76,54 @@ export default function SignupOneToOne() {
       setMessage(err?.message ?? "Unexpected error during signup.");
       setMessageType("error");
     } finally {
+      setBusy(false);
+    }
+  }
+
+  function SocialButton({
+    label,
+    imgSrc,
+  }: {
+    label: string;
+    imgSrc: string | StaticImageData;
+  }) {
+    const src = typeof imgSrc === "string" ? imgSrc : imgSrc.src;
+    return (
+      <button
+        type="button"
+        onClick={async () => handleOAuth('google')}
+        className="flex h-10 flex-1 items-center justify-center gap-3 rounded-md border border-[#00000033] bg-gray-100 px-3 text-sm sm:text-base text-gray-700 hover:bg-gray-200"
+      >
+        <img src={src} alt="" className="h-5 w-5 object-contain" />
+        <span className="leading-none">{label}</span>
+      </button>
+    );
+  }
+
+  async function handleOAuth(provider: OAuthProvider) {
+    setMessage(null);
+    setMessageType(null);
+    setBusy(true);
+
+    try {
+      const { error } = await signInWithOAuth(provider);
+
+      // If OAuth starts correctly, Supabase will redirect away, so this code
+      // usually won’t run. But if there is a config error, we can show it.
+      if (error) {
+        console.error("OAuth error:", error);
+        setMessage(
+          `We couldn't start the ${provider} sign-in. Please try again or use email/password.`
+        );
+        setMessageType("error");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Unexpected error starting social sign-in.");
+      setMessageType("error");
+    } finally {
+      // In a successful case the redirect happens before this,
+      // but it's fine to keep for failed cases.
       setBusy(false);
     }
   }
@@ -238,8 +286,6 @@ export default function SignupOneToOne() {
             {/* Social buttons */}
             <div className="flex items-center gap-4">
               <SocialButton label="Google" imgSrc={googleLogo} />
-              <SocialButton label="Facebook" imgSrc={facebookLogo} />
-              <SocialButton label="Apple" imgSrc={appleLogo} />
             </div>
           </div>
         </div>
@@ -266,21 +312,3 @@ function Input({
   );
 }
 
-function SocialButton({
-  label,
-  imgSrc,
-}: {
-  label: string;
-  imgSrc: string | StaticImageData;
-}) {
-  const src = typeof imgSrc === "string" ? imgSrc : imgSrc.src;
-  return (
-    <button
-      type="button"
-      className="flex h-10 flex-1 items-center justify-center gap-3 rounded-md border border-[#00000033] bg-gray-100 px-3 text-sm sm:text-base text-gray-700 hover:bg-gray-200"
-    >
-      <img src={src} alt="" className="h-5 w-5 object-contain" />
-      <span className="leading-none">{label}</span>
-    </button>
-  );
-}
