@@ -19,6 +19,9 @@ export type Profile = {
   donations_count: number
 }
 
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
 export type OAuthProvider = 'google' | 'facebook' | 'apple'
 
 /**
@@ -121,7 +124,30 @@ export async function signOut () {
 
 // Request password reset email
 export async function requestPasswordReset (email: string) {
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email)
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${SITE_URL}/reset-password` // 👈 this route we’ll create below
+  })
+
+  // IMPORTANT: for security, callers should *not* differ UI
+  // whether error is "user not found" or not. Just log and
+  // always show a generic success message.
+  if (error) {
+    console.warn('resetPasswordForEmail error:', error)
+  }
+
+  return { data, error }
+}
+
+// Complete password update (called from reset-password page)
+export async function finishPasswordReset (newPassword: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword
+  })
+
+  if (error) {
+    console.error('updateUser password error:', error)
+  }
+
   return { data, error }
 }
 
