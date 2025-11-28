@@ -1,71 +1,103 @@
-=== *2.2.4 Interface Requirements*
+=== *2.2.4 — Interface Requirements*
 
 ==== Objective
-Define how users interact with the system through visible UI elements, controls, states, and feedback. These *Interface Requirements* specify the behavior of forms, buttons, validation, navigation, and visibility rules. The platform facilitates listing and discovery but does not process payments or host transactions; all exchanges occur directly between buyers and sellers outside the system.
+Interface Requirements describe how users interact with the platform through visible UI components and controls.  
+They specify observable states, validation rules, and permissible interactions.  
+These requirements do *not* prescribe implementation details and do *not* function as a user manual.  
+All exchanges between buyers and sellers continue to occur offline.
 
-==== Interface Requirements
+---
 
-*Create Listing Form*
-- The authenticated user is implicitly the seller; **no seller field is displayed**.  
-- Required fields: **Title**, **at least one Image**, and **Category**. Optional fields: **Price** (if absent, listing is marked **Free**), **Description**, **Condition**, and **Size**.  
-- When selecting a **Category**, the system may show suggested categories based on the item’s title, description, or images. These suggestions help reduce misclassification but do **not** restrict the user’s choice.  
-- The **Publish** button is **disabled** until all required fields are valid.  
-- On submit with missing or invalid fields, show **inline errors**; **focus moves** to the first invalid field.  
-- On success, navigate to the **Listing Details** page and show a **toast**: “Listing published.”
+== *Interface Requirements*
 
+=== Create Listing Form
+- The authenticated user shall be implicitly treated as the seller; **no seller-selection field** is displayed.  
+- Required fields shall include: **Title**, **at least one Image**, and **Category**.  
+- Optional fields may include: **Price**, **Description**, **Condition**, and **Size**.  
+  - If **Price** is omitted, the listing shall be marked as **Free/Donation** to align with REQ-DR3.  
+- When selecting a **Category**, the interface may present **non-binding suggestions** derived from title, description, or images (supports REQ-DR4).  
+- The **Publish** control shall remain disabled until all required fields satisfy validation rules.  
+- Submissions with invalid or incomplete data shall trigger **inline validation messages**, with focus directed to the earliest failing field.  
+- On successful submission, the interface shall navigate to the **Listing Details** view and display a confirmation message.
 
-*Listing Details (Seller View)*
-- Shows editable fields (Title, Description, Images, Price, Condition) while **Status = Active**.  
-- Includes a **Status** dropdown with transitions: **Active → Reserved → Closed** (no skipping).  
-- When **Status = Closed**, all edit controls are **disabled**, and a **‘Closed’ badge** is displayed.  
-- Displays **Contact Requests** received for that listing, sorted by most recent.  
+---
 
-*Browse & Search (Buyer View)*
-- Buyers can **search by keyword** and **filter by Category, Condition, Size, and Price/Free marker**.  
-- Sorting options include **Newest first**, **Lowest price**, and **Condition rating**.  
-- Each listing card shows **Title, Thumbnail, Price/Free marker, Condition, and Seller rating (if available)**.  
-- Clicking a card opens **Listing Details**, where the **Contact Seller** button is visible if the viewer is not the owner.
+=== Listing Details (Seller View)
+- When the Listing is **Active**, editable attributes (Title, Description, Images, Price, Condition) shall be available.  
+- A status selector shall reflect the domain transitions:  
+  **Active → Reserved → Sold / Donated / Retracted**.  
+  - Backward transitions or skipping intermediate states shall not be permitted.  
+- When a Listing reaches a terminal state (Sold, Donated, Retracted), all editing controls shall be disabled and a corresponding status badge displayed.  
+- The interface shall present buyer contact requests associated with that Listing in reverse chronological order.
 
-*Saved Listings (Buyer View)*
-- Buyers can **Save/Unsave** a listing from both the card and details views.  
-- Saved items persist across sessions and appear in the **Saved Listings** section under the user menu.  
-- Saved icons visually change state (e.g., outlined vs. filled heart).  
+---
 
-*Contact Seller / Messaging*
-- **Contact Seller** opens a message composer prefilled with the listing title.  
-- On send, show confirmation (“Message sent”) and add it to **Message Threads**.  
-- Seller receives a **notification badge** in the header or inbox.  
-- Messages are displayed chronologically, grouped by listing.  
+=== Browse & Search (Buyer View)
+- Buyers shall be able to perform **keyword search** and apply filters for **Category**, **Condition**, **Size**, and **Price/Free marker**.  
+- Sorting controls shall permit ordering by **Newest**, **Lowest Price**, or **Condition Rating**.  
+- Each listing card shall display: **Title**, **Thumbnail**, **Price/Free indicator**, **Condition**, and **Seller Rating (if available)**.  
+- Selecting a listing shall open its **Listing Details** view.  
+- If the viewer is not the Listing’s owner, the interface shall display a **Contact Seller** action.
 
-*Profile & Reviews*
-- Sellers and buyers each have a **profile page** displaying their listings, ratings, and reviews.  
-- Users can **edit their own profile** (profile picture, bio, location).  
-- Reviews are **read-only** for the profile owner but can be submitted by others after an offline exchange.  
-- The **average rating** and total reviews are displayed prominently at the top of the profile.
+---
 
-*Accessibility & Feedback*
-- All interactive elements are **keyboard-accessible** (Tab/Shift+Tab) with visible **focus outlines**.  
-- Inline validation messages are **ARIA-live announced** to screen readers.  
-- Toasts and banners are **non-blocking** and dismissible via keyboard.  
-- Forms include descriptive labels and placeholder text for clarity.
+=== Saved Listings (Buyer View)
+- Buyers shall be able to mark a listing as **Saved** or **Unsaved** from both card and detail views.  
+- Saved items shall persist across sessions.  
+- Visual indicators shall reflect saved/unsaved state consistently across browsing and detail views.
 
-==== Examples
-1. **Create Listing**: A seller opens the *Create Listing* form. Title is empty and there are no images, so **Publish** is disabled. The user enters a title, selects a category, and uploads a photo. **Publish** becomes active. On submit, a success toast appears and the app redirects to the Listing Details page.  
-2. **Reserve Then Close**: A seller opens their Listing (Status = Active), selects **Reserved** from the dropdown. After completing the exchange offline, they select **Closed**, disabling all edit controls.  
-3. **Contact Seller**: A buyer opens a listing and clicks **Contact Seller**, writes a message, and sends it. A confirmation appears, and the seller’s header shows a **1** notification badge.
+---
 
-==== Relation to Domain Requirements
-- Domain Requirements define what must exist (e.g., Listing entity, User, Saved association).  
-- Interface Requirements define how users **create, view, modify, and interact** with those entities through UI components.  
-- Each interface rule directly supports a domain rule by providing a visible, testable interaction.  
+=== Contact Seller / Messaging
+- Activating **Contact Seller** shall open a message composer associated with the selected Listing.  
+- Upon sending a message, a confirmation shall appear, and the conversation shall be added to the buyer’s and seller’s message threads.  
+- Sellers shall receive a notification indicator when a new message arrives.  
+- Message threads shall be grouped by Listing and ordered chronologically.
 
-==== Justification
-This section ensures that UI behaviors are intuitive, consistent, and verifiable. It separates internal representation (domain) from what users experience, providing a clear mapping between actions and visible states. These behaviors reinforce trust and usability while aligning with accessibility and real-world discovery practices.
+---
 
-==== Testing Plan
-- Test each form and button for proper enable/disable states and validation.  
-- Confirm that “Publish” and “Close” actions trigger correct navigation and feedback messages.  
-- Verify that saved listings persist across sessions.  
-- Ensure that editing is disabled once a listing is closed.  
-- Check accessibility by tab-navigating forms and validating screen reader output.  
-- Confirm that notifications appear when a buyer sends a contact message.
+=== Profile & Reviews
+- Each user shall have a profile page showing:  
+  - their Listings (Active, Reserved, Sold/Donated/Retracted),  
+  - their Ratings and Reviews,  
+  - minimal profile metadata (e.g., bio or location) as allowed by privacy norms.  
+- Users may edit their **own** profile information.  
+- Reviews shall be read-only for the profile owner and may only be submitted by counterparties after an offline exchange.  
+- Seller rating summaries (average rating + count) shall be presented prominently.
+
+---
+
+=== Accessibility & Feedback
+- All interactive controls shall be keyboard-navigable with visible focus indicators.  
+- Inline validation messages shall be **ARIA-live announced** for screen readers.  
+- Toasts and banners shall be non-blocking and dismissible via keyboard.  
+- All forms shall contain descriptive labels and accessible placeholder text.
+
+---
+
+== Examples (Non-Exhaustive Illustrations)
+1. *Create Listing:* Required fields remain invalid until a Title, Category, and at least one Image are provided; once valid, Publish becomes enabled.  
+2. *Status Transitions:* A seller moves a listing from Active → Reserved → Sold; editing controls disappear once a terminal state is reached.  
+3. *Contact Seller:* A buyer sends a message; a confirmation appears and the seller receives a notification.
+
+---
+
+== Relation to Domain Requirements
+- Domain Requirements define **what must exist** in the domain (e.g., Listings, Saved Listings, Reviews).  
+- Interface Requirements define **how users interact with those domain concepts** through observable UI states.  
+- Each interface rule supports verification of domain behavior by exposing consistent, testable interactions.
+
+---
+
+== Justification
+These requirements ensure that UI-visible behavior remains predictable, accessible, and aligned with domain semantics.  
+They maintain a clear boundary between domain logic and interaction flow while supporting user trust, transparency, and usability.
+
+---
+
+== Testing Plan
+- Verify validation logic, required fields, and control enable/disable states.  
+- Confirm that transitions to terminal states disable editing as required.  
+- Ensure Saved Listings persist correctly across sessions.  
+- Test keyboard navigation and screen reader output for compliance.  
+- Validate notification behaviors following message exchanges.

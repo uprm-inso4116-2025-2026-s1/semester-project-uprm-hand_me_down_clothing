@@ -1,23 +1,81 @@
-=== *2.1.3 Domain Terminology in Relation to Domain Rough*
+=== *2.1.3 — Domain Terminology in Relation to Domain Rough*
 
-This section explains how several of the terms defined in *2.1.2 – Terminology* were derived through the analysis of the material captured in *2.1.1 – Domain Rough Sketch*. Its purpose is to make explicit the reasoning that transformed informal notes, phrases, and anecdotes into the concepts that organise our description of the hand-me-down clothing domain. It does not repeat the glossary presented in 2.1.2; instead, it narrates the steps that led from raw wording to stable vocabulary.
+This section explains how several of the terms defined in *2.1.2 – Terminology* emerged from the material captured in *2.1.1 – Domain Rough Sketch*. Here we focus on *deriving the stable vocabulary* that will later be analysed more fully in §3.1 (Concept Formation and Analysis). Each derived term is annotated with its **conceptual category** — such as Behavior, Action, Norm, Setting, Entity, Value Object, or Environmental Phenomenon — to clarify how the terms relate to and differ from one another.
 
-The rough sketch included an observation that students commonly *“look up an item, contact the seller, agree on price, size, and place, then meet to exchange the item.”* This line was analysed as evidence of a recurring, recognisable structure in how people organise exchanges. Rather than a random set of moves, it revealed a social routine for arranging garment handoffs: identify an article, reach out to whoever offers it, discuss its details, and complete the handoff face-to-face. From this analysis emerged the term *Exchange Flow*, which designates the sequence of actions that shapes informal clothing listings and exchanges in the Mayagüez/UPRM setting.
+---
 
-Several fragments in the sketch referred to sellers showing *a photograph of the size tag and full images of the garment, including any flaws*. These snippets suggested an implicit rule: before an exchange, the seller is expected to disclose enough detail to reassure the buyer about size, hygiene, and hidden damage. By organising these remarks, we formulated the term *Condition Disclosure Norm*, a name for the informal convention that garments be represented honestly, with visual evidence, before an offline exchange occurs. This term encapsulates how participants try to manage uncertainty and build trust.
+==== *Exchange Flow* (Behavior)
 
-Price information appeared in multiple places. Notes such as *“symbolic prices between eight and fifteen dollars are common reference points”* hinted at an unwritten valuation practice. The figures were neither arbitrary nor fixed by any authority; they functioned as a social guideline for what counts as reasonable in low-cost exchanges among students. Processing this evidence produced *Student Resale Price Band*, a phrase describing the monetary interval that frames conversations and distinguishes a low-cost resale from a donation.
+The rough sketch described students: *“look up an item, contact the seller, agree on price, size, and place, then meet to exchange the item.”*  
+This recurring structure reflects a **Behavior**: a sequence of orderly, socially-recognised steps that organise informal garment handoffs.  
+We derived *Exchange Flow* to denote this **multi-step behavioral pattern**, distinct from individual actions like “contact seller” or “meet to exchange.”
 
-Other material dealt with what happens when garments do not re-enter circulation. Mentions of *discarded clothes left in open areas or delivered directly to landfill, with only rare opportunities for recycling* highlighted a backdrop of disposal routes. These lines were interpreted as documenting the “exit channels” of clothing once it ceases to be worn. We named this phenomenon *Textile Waste Stream*, referring to the set of pathways — municipal collection, careless dumping, or limited recycling — through which clothing leaves everyday use. This term anchors the environmental dimension of the domain.
+---
 
-A different cluster of notes described *bags of outgrown clothing kept at home while owners decided whether to give them away or sell them*. Here the sketch captured a liminal state: garments were no longer needed, yet had not been reassigned. Analysing this condition produced *Dormant Stock*, a concept for clothing retained in domestic spaces after its initial life, awaiting a new role or final disposal.
+==== *Condition Disclosure Norm* (Norm)
 
-The sketch also documented preferred locations for handing over items: students mentioned *campus benches, apartment lobbies, and other familiar public corners*. Rather than isolated remarks, these examples pointed to a shared concern for safety and practicality. We consolidated them under the term *Meetup Spot*, which denotes semi-public environments chosen because they balance accessibility, visibility, and comfort during an exchange.
+The sketch noted sellers sharing *photos of size tags, full pictures, and visible flaws*.  
+These lines reveal an **informal expectation** rather than a specific action: sellers “should” disclose accurate condition information.  
+Thus we derived *Condition Disclosure Norm*, a **social rule** that governs trustworthy representation of garments.  
+It differs from a behavior because it prescribes *how* an action ought to occur.
 
-Another strand involved the digital places where clothing is discovered. Notes cited *Facebook Marketplace, WhatsApp groups, and Instagram stories* as typical sources. Instead of treating each separately, we recognised a broader category — lightly moderated online venues where offers, requests, and quick negotiations happen. From this reasoning came the expression *Ad-hoc Channel*, describing the informal communication spaces that enable the visibility of available garments.
+---
 
-Scattered remarks highlighted how participants assess reliability. Seeing clear pictures, recognising a name, or receiving bilingual messages were all said to make people more comfortable proceeding with an exchange. Bringing these hints together led to the concept *Trust Cue*, a label for the small but influential signals that reduce perceived risk in peer-to-peer exchanges.
+==== *Student Resale Price Band* (Value Object)
 
-Finally, the rough sketch posed questions about changes in activity during *back-to-school periods, semester starts, or seasonal weather*. Even without full data, the presence of these queries suggested that demand for particular items is not constant. To represent this dynamic aspect we coined *Seasonal Demand Pulse*, a term for the predictable fluctuations in which garments are offered or sought as academic and climatic cycles progress.
+Mentions of *“symbolic prices between $8 and $15”* indicated a shared sense of what is reasonable in student-to-student exchanges.  
+The resulting term, *Student Resale Price Band*, is a **Value Object** — a conceptual range used to frame pricing conversations.  
+It is neither a behavior nor a norm but rather a **reference interval** derived from repeated practice.
 
-By articulating these derivations, this section clarifies the analytical bridge between the exploratory material of the rough sketch and the structured vocabulary presented in the Terminology section. Understanding this path is essential for tracing how domain knowledge was built and for ensuring that later requirements remain anchored in the observed environment.
+---
+
+==== *Textile Waste Stream* (Environmental Phenomenon)
+
+Comments about clothes being *discarded in open areas, taken to landfill, or rarely recycled* pointed to the **end-of-life pathways** of garments.  
+We named this background process *Textile Waste Stream*, an **environmental phenomenon** describing how clothing exits circulation.  
+Unlike behaviors or norms, it refers to large-scale flows rather than user-driven interactions.
+
+---
+
+==== *Dormant Stock* (State / Entity Condition)
+
+Descriptions of *bags of outgrown clothes kept at home while owners decided what to do with them* revealed a transitional state.  
+We derived *Dormant Stock* to denote an **Entity Condition**: garments that still exist physically but have no active role.  
+It differs from behaviors or norms by describing a **state** rather than an action or expectation.
+
+---
+
+==== *Meetup Spot* (Setting)
+
+Students mentioned *campus benches, apartment lobbies, and familiar public corners* as handoff locations.  
+These locations share a functional purpose: safe, semi-public spaces suitable for in-person exchange.  
+Thus we formed *Meetup Spot*, a **Setting** used within the Exchange Flow.  
+It is not itself a behavior; rather, it is a *place* in which behaviors unfold.
+
+---
+
+==== *Ad-hoc Channel* (Setting / Communication Medium)
+
+The sketch referenced *Facebook Marketplace, WhatsApp groups, and Instagram stories*.  
+Instead of treating them individually, we saw these as **informal communication venues** for discovery and negotiation.  
+Hence *Ad-hoc Channel* is a **Communication Setting**: a medium supporting visibility and quick coordination.
+
+---
+
+==== *Trust Cue* (Value Object / Signal)
+
+Mentions of recognising a name, seeing clear photos, or receiving bilingual messages pointed to subtle **signals of reliability**.  
+We combined these into *Trust Cue*, a **conceptual signal** used by participants to judge risk.  
+It differs from norms because it is *interpreted*, not mandated.
+
+---
+
+==== *Seasonal Demand Pulse* (Environmental/Market Behavior)
+
+Questions about back-to-school periods, semester starts, or weather changes indicated **periodic fluctuations** in demand.  
+From this, we derived *Seasonal Demand Pulse*: a **cyclical behavioral pattern of the market**, not tied to individual users.  
+It differs from Exchange Flow because it occurs at a **population level**, not an individual level.
+
+---
+
+By annotating each derived term and clarifying how they differ in conceptual kind, this section makes explicit the steps that led from informal wording in the rough sketch to the structured terminology presented in §2.1.2. These categories support later analysis by establishing which concepts describe actions, which describe settings or norms, and which represent state or environmental structure.

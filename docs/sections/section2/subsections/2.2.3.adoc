@@ -1,67 +1,58 @@
-=== *2.2.3 Domain Requirements*
+=== *2.2.3 — Domain Requirements*
 
 [requirements]
 
 [[REQ-DR1]]
-*DR1:* The system must classify every listing under exactly one primary category.  
+*DR1:* The system **must** classify every listing under exactly one primary category.  
 *Supported by:* <<FEATURE-1.1>>, <<FEATURE-1.2>>, <<FEATURE-1.3>>, <<FEATURE-2.1>>, <<FEATURE-2.2>>, <<FEATURE-3.4>>, <<FEATURE-4.1>>, <<FEATURE-4.2>>, <<FEATURE-4.3>>, <<FEATURE-6.2>>
 
 [[REQ-DR2]]
-*DR2:* Categories may have hierarchical subcategories.  
+*DR2:* Categories **may** contain hierarchical subcategories to improve browsing and discovery.  
 *Supported by:* <<FEATURE-1.1>>
 
 [[REQ-DR3]]
-*DR3:* The system must distinguish between **Resale** and **Free/Donation** listings.  
+*DR3:* The system **must distinguish** between **Resale** and **Free/Donation** listings as separate domain concepts.  
 *Supported by:* <<FEATURE-1.2>>, <<FEATURE-3.1>>, <<FEATURE-3.2>>, <<FEATURE-3.3>>, <<FEATURE-4.4>>, <<FEATURE-5.1>>, <<FEATURE-5.2>>, <<FEATURE-6.1>>, <<FEATURE-6.2>>
-
 
 ==== *Justification: Why Donation Is Not Equivalent to a Zero-Price Sale*
 
-While both resale and donation result in a transfer of an item, they represent **fundamentally different domain phenomena** that must remain distinct in the model. Treating donation as simply “a sale at price = 0” erases critical behavioral, motivational, and social differences observed in the field:
+Although both resale and donation result in a transfer of a garment, they represent **different domain phenomena** with distinct motivations, norms, and semantic meanings. Treating donation as “a sale with price = 0” would remove important conceptual differences observed in the domain.
 
 *Behavioral Motivation*  
-- **Resale** is economically motivated: sellers intend to recover value.  
-- **Donation** is altruistic: donors intend to help others, reduce waste, or give items a second life.  
-These intentions affect how users browse, filter, and evaluate listings.
+- **Resale**: economically motivated; seller seeks to recover value.  
+- **Donation**: altruistic; donor intends to help others, reduce waste, or support sustainability efforts.  
 
 *Community Norms*  
-In observed platforms and local UPRM reuse culture, donation is framed as part of **mutual aid** and community support. A zero-price sale does not communicate the same norm of generosity or accessibility.
+Donation is associated with mutual aid and generosity in the UPRM community. A price of zero does not convey this norm.
 
-*Visibility & Discovery Differences*  
-Users frequently search *only* for free items—especially students with financial constraints.  
-Treating donation as a sale at price 0 would require special-case logic to recreate a distinction that exists naturally in the domain.
+*Visibility & Discovery*  
+Users explicitly search for **“free”** items. Donation must therefore remain a first-class filter option.
 
-*Trust & Safety Implications*  
-Donation interactions often carry lighter expectations:  
-- no negotiation  
-- no price comparison  
-- less pressure to “justify” quality  
-Resale carries transactional expectations around condition, fairness, and accuracy.
+*Trust & Safety*  
+Donation often involves fewer expectations (no negotiation, reduced pressure).  
+Resale more strongly depends on accuracy, fairness, and condition disclosure.
 
-*Lifecycle & Data Semantics*  
-Donation signals a **different lifecycle path**, aligning with sustainability and circular-economy practices.  
-Platforms and institutions (e.g., sustainability coordinators, thrift partners) often track donation volumes separately from resale activity.
+*Lifecycle Semantics*  
+Donation listings follow a different lifecycle aligned with sustainability initiatives and circular-economy metrics.
 
-*Legal & Institutional Context*  
-Some campus programs, community drives, or thrift partners only accept donation flows—not resales.  
-Modeling donation explicitly allows these stakeholders (e.g., Fernando, Isidra, Dr. Rivera) to interpret the platform’s impact correctly.
+*Institutional Relevance*  
+Thrift partners, clothing drives, and sustainability officers track donation flows distinctly. Modeling donation explicitly enables meaningful reporting and collaboration.
 
-For these reasons, the system must treat donation as its own domain concept rather than encoding it as a numeric edge case. This preserves clear intent, aligns with community expectations, and supports accurate categorization, filtering, reporting, and future integrations with sustainability efforts.
+**Conclusion:**  
+Donation must remain a **separate domain category**, not a numeric corner case, to preserve domain fidelity and support community-driven behaviors.
 
 [[REQ-DR4]]
-*DR4:* The system shall *support* item-to-category compatibility by helping users select an appropriate category for their listing. The system should provide suggestions or guidance, but shall not attempt to strictly enforce correctness.
+*DR4:* The system shall **support** (not enforce) item-to-category compatibility by providing guidance, suggestions, and warnings during listing creation.
 
-To assist users, the system may:
-- suggest likely categories based on the title, description, or user-selected attributes  
-- highlight common category choices for similar items  
-- warn when a category seems unusual (e.g., “Did you mean: Footwear?”)  
-- optionally use image recognition or LLM-assisted suggestions to improve accuracy
+This may include:
+- category suggestions based on title, description, or metadata  
+- highlighting frequently used categories for similar items  
+- warnings for unusual category choices  
+- optional LLM or image-recognition–based suggestions  
 
-This requirement does **not** imply strict enforcement or prevention of mismatches.  
-Its purpose is to reduce accidental misclassification while respecting user autonomy.
-
+This requirement does **not** authorize enforcement. Users retain autonomy over category selection.  
 *Supported by:* <<FEATURE-1.1>>, <<FEATURE-4.1>>
 
 [[REQ-DR5]]
-*DR5:* The system must support category evolution.  
+*DR5:* The system **must support category evolution**, allowing categories to be updated, merged, or extended as the domain grows.  
 *Supported by:* <<FEATURE-4.3>>

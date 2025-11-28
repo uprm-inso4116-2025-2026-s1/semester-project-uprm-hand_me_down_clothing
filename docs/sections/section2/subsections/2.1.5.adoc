@@ -1,34 +1,41 @@
-=== *2.1.5 Events, Actions, and Behaviors*
+=== *2.1.5 — Events, Actions, and Behaviors*
 
-This section describes only domain *actions*, *events*, and the *behaviors* they form.   Entities and structural concepts appear elsewhere and are not repeated here.
+This section contains only **events**, **actions**, and the **behaviors** they compose.  
+Entities, repositories, or structural concepts appear elsewhere and are not repeated here.
+
+---
 
 ==== Events
+Domain **events** are instantaneous occurrences that record that something of significance has happened in the domain.
 
 *Listing Published*::  
-An instantaneous occurrence when a seller makes a clothing item publicly visible to others.
+Occurs at the moment a seller makes an item publicly visible.
 
 *Interest Expressed*::  
-An instantaneous occurrence when a buyer signals desire to acquire or inquire about a listing. This event marks the *creation* of an **Interest** entity connecting the buyer and seller.
-
-
-*Listing Closed*::  
-A moment in which the seller marks that the item is no longer available after an offline exchange or withdrawal.
+Occurs when a buyer signals interest in a listing.  
+This marks the moment the *expression* of interest happens; the corresponding entity is handled elsewhere.
 
 *Listing Updated*::  
-An instantaneous occurrence when a seller changes visible details (title, condition, images, category, etc.).
+Occurs when visible listing attributes (images, title, condition, category, etc.) are modified.
+
+*Listing Closed*::  
+Occurs when a seller marks a listing as terminal (sold, donated, or retracted).
+
+---
 
 ==== Actions
+Domain **actions** are deliberate operations performed by actors that may trigger events.
 
 *Publish Item*::  
-A seller provides the information necessary to make an item visible (photos, condition, category).  
+A seller provides the information required to make an item visible.  
 _Triggers:_ **Listing Published**
 
 *Browse*::  
-A buyer looks through available items, optionally using categories, keywords, or filters.  
-_Does not trigger an event by itself._
+A buyer inspects available listings, optionally using filters.  
+_Triggers:_ none; browsing is a pure query.
 
 *Express Interest*::  
-A buyer sends a message or contact request asking about availability or arranging a meetup.  
+A buyer initiates contact or signals desire to acquire a listing.  
 _Triggers:_ **Interest Expressed**
 
 *Update Listing*::  
@@ -36,78 +43,90 @@ A seller modifies previously posted information.
 _Triggers:_ **Listing Updated**
 
 *Close Listing*::  
-A seller marks the item as no longer available after an offline exchange or decision to withdraw it.  
+A seller marks the listing as no longer available after an exchange or a withdrawal.  
 _Triggers:_ **Listing Closed**
 
-==== Behaviors
+---
 
-A behavior is a recurring domain pattern composed of actions + events that appear across many exchanges.
+==== Behaviors
+A **behavior** is a recurring pattern consisting of a sequence of actions and the events they produce.  
+Behaviors arise across many instances of the domain and capture the characteristic rhythm of interactions.
+
+---
 
 ===== 1. Listing Lifecycle Behavior
-A recurring cycle in which a seller manages the visibility of an item.
+A recurring pattern describing how an item becomes visible, may be refined, and eventually leaves active circulation.
 
 [cols="1,3"]
 |===
-| *Trigger* | Seller decides to make an item available.
+| *Trigger* | A seller decides to make an item available.
 | *Actors*  | Seller (primary)
-| *Actions + Events* |
+| *Sequence* |
 - Publish Item → *Listing Published*  
-- Update Listing (optional) → *Listing Updated*  
+- (optional) Update Listing → *Listing Updated*  
 - Close Listing → *Listing Closed*
-| *Observed Pattern* | Items enter visibility, may be refined, and eventually leave circulation.
+| *Pattern* | Items cycle through visibility: made available → possibly refined → made unavailable.  
+This cycle may **repeat**: items may re-enter visibility after a period of dormant storage.
 |===
+
+---
 
 ===== 2. Discovery Behavior
-The pattern by which buyers locate items of interest.
+The recurring pattern by which buyers locate items.
 
 [cols="1,3"]
 |===
-| *Trigger* | Buyer searches for clothing or browses casually.
-| *Actors*  | Buyer (primary), Seller (indirect)
-| *Actions + Events* |
-- Browse (buyer)  
-- (optional) filtering or keyword search  
-_No event is triggered until buyer expresses interest._
-| *Observed Pattern* | Buyers scan available offerings opportunistically, often during brief windows of free time.
+| *Trigger* | Buyer searches intentionally or browses casually.
+| *Actors*  | Buyer (primary)
+| *Sequence* |
+- Browse  
+- (optional) apply filters or text queries  
+_No event is generated until interest is expressed._
+| *Pattern* | Opportunistic scanning of available items during brief time windows.
 |===
+
+---
 
 ===== 3. Interest and Contact Behavior
-A recurring interaction when a buyer wants more information or wishes to acquire the item.
+The interaction pattern when a buyer wishes to proceed toward acquiring an item.
 
 [cols="1,3"]
 |===
-| *Trigger* | Buyer identifies an interesting item during discovery.
+| *Trigger* | Buyer identifies a listing of interest.
 | *Actors*  | Buyer (primary), Seller (respondent)
-| *Actions + Events* |
+| *Sequence* |
 - Express Interest → *Interest Expressed*  
-  (this event initiates the period during which buyer and seller coordinate)  
-- Seller responds (clarifications, availability confirmation)
-| *Observed Pattern* | Short informal message chains establish availability and next steps.
+- Seller provides clarification or confirmation
+| *Pattern* | Short informal exchanges that establish availability and next steps.
 |===
+
+---
 
 ===== 4. Offline Exchange Behavior
-The final handoff of the item, outside the platform.
+The culminating real-world interaction where the item changes possession.
 
 [cols="1,3"]
 |===
-| *Trigger* | Buyer and seller agree to meet after interest is established.
+| *Trigger* | Buyer and seller agree on meeting arrangements.
 | *Actors*  | Buyer and Seller
-| *Actions + Events* |
-- Coordinate offline exchange (time, place)  
+| *Sequence* |
+- Coordinate meeting place and time  
 - Physical handoff  
-- Seller closes listing → *Listing Closed*
-| *Observed Pattern* | Exchanges occur face-to-face in familiar public areas; value transfer is informal.
+- Seller performs Close Listing → *Listing Closed*
+| *Pattern* | Face-to-face exchanges in familiar semi-public areas; payment or donation are informal.
 |===
+
+---
 
 ===== 5. Post-Exchange Feedback Behavior
-Reputation-related actions occurring after the physical exchange.
+Reputation-related actions occurring after the exchange.
 
 [cols="1,3"]
 |===
-| *Trigger* | Exchange has concluded and listing has been closed.
-| *Actors*  | Buyer (primary), Community (indirect)
-| *Actions + Events* |
-- Buyer leaves informal comments or reviews through social channels  
-(No required event; this varies by community norms)
-| *Observed Pattern* | Positive experiences are shared informally; negative ones are quietly avoided.
+| *Trigger* | Listing has been closed following an exchange.
+| *Actors*  | Buyer (primary)
+| *Sequence* |
+- Buyer optionally provides feedback or a review through supported channels  
+(No required event; feedback patterns vary)
+| *Pattern* | Positive interactions are acknowledged publicly; negative ones are avoided or reported informally.
 |===

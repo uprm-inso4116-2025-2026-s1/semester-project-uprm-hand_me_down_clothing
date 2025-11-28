@@ -1,159 +1,183 @@
 === *2.2.1 Epics, Features, and User Stories*
 
-=== *Epics*
+Epics describe high-level goals that span multiple sprints and require several coordinated features.  
+Features refine epics into concrete functionality.  
+User stories express these features from the perspective of stakeholders within the domain.
 
-Epics are a higher-level overview of goals that are large enough in scope that they can be broken down into multiple sprints. They provide direction and group related work together.
+All EPIC → FEATURE and FEATURE → REQUIREMENT traceability links use AsciiDoc anchors for clarity.
 
-*Buyer Epics*
+---
+
+== *Epics*
+
+=== *Buyer Epics*
 
 [[EPIC-1]]
-. Listing Discovery  
-.. As a buyer, I want to search for listings by category, filters, and keywords, so that I can quickly find clothing items that meet my needs.  
+. **Listing Discovery**  
+As a buyer, I want to browse, filter, and search listings so that I can efficiently find items that match my preferences and financial constraints.  
 *Implemented by:* <<FEATURE-1.1>>, <<FEATURE-1.2>>, <<FEATURE-1.3>>
 
 [[EPIC-2]]
-. Saved Listings  
-.. As a buyer, I want to bookmark listings I am interested in, so that I can revisit them later when deciding whether to contact the seller.  
+. **Saved Listings**  
+As a buyer, I want to save or bookmark listings so I can revisit them later when deciding whether to contact the seller.  
 *Implemented by:* <<FEATURE-2.1>>, <<FEATURE-2.2>>
 
 [[EPIC-3]]
-. Trust and Transparency  
-.. As a buyer, I want to view detailed seller profiles and leave reviews after exchanges, so that I can make informed and confident decisions about future interactions.  
+. **Trust and Transparency**  
+As a buyer, I want access to seller profiles and post-exchange reviews so I can make informed decisions before initiating contact.  
 *Implemented by:* <<FEATURE-3.1>>, <<FEATURE-3.2>>, <<FEATURE-3.3>>, <<FEATURE-3.4>>
 
-*Seller Epics*
+---
+
+=== *Seller Epics*
 
 [[EPIC-4]]
-. Listing Management  
-.. As a seller, I want to create, edit, and close listings with detailed information, so that I can effectively manage the items I am offering for reuse or resale.  
+. **Listing Management**  
+As a seller, I want to create, update, and close listings so I can manage items I intend to resell, donate, or withdraw.  
 *Implemented by:* <<FEATURE-4.1>>, <<FEATURE-4.2>>, <<FEATURE-4.3>>, <<FEATURE-4.4>>
 
 [[EPIC-5]]
-. Interest Notifications  
-.. As a seller, I want to receive notifications when someone shows interest in my item, so that I can promptly respond and arrange the exchange offline.  
+. **Interest Notifications**  
+As a seller, I want to receive notifications when buyers express interest so I can respond promptly and arrange offline exchanges.  
 *Implemented by:* <<FEATURE-5.1>>, <<FEATURE-5.2>>
 
 [[EPIC-6]]
-. Seller Profile and Trust  
-.. As a seller, I want to maintain a profile with personal and location details, so that I can establish credibility and attract buyers interested in my listings.  
+. **Seller Profile and Trust Signals**  
+As a seller, I want to maintain a profile with minimal, privacy-respecting details so buyers can build confidence before contacting me.  
 *Implemented by:* <<FEATURE-6.1>>, <<FEATURE-6.2>>
 
-=== *Features*
+---
 
-Features specify the functionality required to deliver the goals described in the epics to the user. They serve to provide more concrete goals related to development.
+== *Features*
 
-*Buyer Features*
+Features translate epics into specific capabilities.
 
-. Listing Discovery  
+=== *Buyer Features*
+
 [[FEATURE-1.1]]
-.. Filtering (clothing type, size, color, condition, category, price/free marker, etc.).  
-   *Supports:* <<EPIC-1>>  
-   *Requires:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>
+. **Filtering** (category, size, condition, price/free marker)  
+*Supports:* <<EPIC-1>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>
 
 [[FEATURE-1.2]]
-.. Keyword search.  
-   *Supports:* <<EPIC-1>>  
-   *Requires:* <<REQ-DR1>>, <<REQ-DR3>>
+. **Keyword Search**  
+*Supports:* <<EPIC-1>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR3>>
 
 [[FEATURE-1.3]]
-.. Sorting options (newest first, alphabetical, etc.).  
-   *Supports:* <<EPIC-1>>  
-   *Requires:* <<REQ-DR1>>
+. **Sorting Options** (newest first, alphabetical, condition rating)  
+*Supports:* <<EPIC-1>>  
+*Requires:* <<REQ-DR1>>
 
-. Saved Listings  
+---
+
+=== *Saved Listings*
+
 [[FEATURE-2.1]]
-.. Ability to bookmark listings for later consideration.  
-   *Supports:* <<EPIC-2>>  
-   *Requires:* <<REQ-DR1>>
+. **Bookmark Listing**  
+*Supports:* <<EPIC-2>>  
+*Requires:* <<REQ-DR1>>
 
 [[FEATURE-2.2]]
-.. Saved listings persist across sessions and devices.  
-   *Supports:* <<EPIC-2>>  
-   *Requires:* <<REQ-DR1>>
+. **Persistent Saved Listings**  
+*Supports:* <<EPIC-2>>  
+*Requires:* <<REQ-DR1>>
 
-. Trust and Transparency  
+---
+
+=== *Trust & Transparency*
+
 [[FEATURE-3.1]]
-.. Seller profile page (location, account age, bio).  
-   *Supports:* <<EPIC-3>>  
-   *Requires:* <<REQ-DR3>>
+. **Seller Profile Page**  
+*Supports:* <<EPIC-3>>  
+*Requires:* <<REQ-DR3>>
 
 [[FEATURE-3.2]]
-.. Seller ratings & reviews system.  
-   *Supports:* <<EPIC-3>>  
-   *Requires:* <<REQ-DR3>>
+. **Seller Ratings & Reviews**  
+*Supports:* <<EPIC-3>>  
+*Requires:* <<REQ-DR3>>
 
 [[FEATURE-3.3]]
-.. Buyer-to-seller review submission flow.  
-   *Supports:* <<EPIC-3>>  
-   *Requires:* <<REQ-DR3>>
+. **Review Submission Flow** (after offline exchange)  
+*Supports:* <<EPIC-3>>  
+*Requires:* <<REQ-DR3>>
 
 [[FEATURE-3.4]]
-.. Reporting mechanism for problematic listings or suspicious behavior.  
-   *Supports:* <<EPIC-3>>  
-   *Requires:* <<REQ-DR1>>
+. **Reporting Mechanism** (problematic listings or behavior)  
+*Supports:* <<EPIC-3>>  
+*Requires:* <<REQ-DR1>>
 
-*Seller Features*
+---
 
-. Listing Management  
+=== *Seller Features*
+
 [[FEATURE-4.1]]
-.. Create listing form (title, description, tags, price/free marker, category).  
-   *Supports:* <<EPIC-4>>  
-   *Requires:* <<REQ-DR1>>, <<REQ-DR4>>
+. **Create Listing Form**  
+*Supports:* <<EPIC-4>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR4>>
 
 [[FEATURE-4.2]]
-.. Upload multiple images per listing.  
-   *Supports:* <<EPIC-4>>  
-   *Requires:* <<REQ-DR1>>
+. **Upload Multiple Images**  
+*Supports:* <<EPIC-4>>  
+*Requires:* <<REQ-DR1>>
 
 [[FEATURE-4.3]]
-.. Edit listing details (update description, condition, images, price).  
-   *Supports:* <<EPIC-4>>  
-   *Requires:* <<REQ-DR1>>, <<REQ-DR5>>
+. **Edit Listing Details**  
+*Supports:* <<EPIC-4>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR5>>
 
 [[FEATURE-4.4]]
-.. Closing a listing once the exchange is complete offline.  
-   *Supports:* <<EPIC-4>>  
-   *Requires:* <<REQ-DR3>>
+. **Close a Listing** (mark as *Sold*, *Donated*, or *Retracted*)  
+*Supports:* <<EPIC-4>>  
+*Requires:* <<REQ-DR3>>
 
-. Interest Notifications  
+---
+
+=== *Interest Notifications*
+
 [[FEATURE-5.1]]
-.. Push/email/in-app notifications when a buyer expresses interest in a listing.  
-   *Supports:* <<EPIC-5>>  
-   *Requires:* <<REQ-DR3>>
+. **Instant Notifications** on Interest Expressed  
+*Supports:* <<EPIC-5>>  
+*Requires:* <<REQ-DR3>>
 
 [[FEATURE-5.2]]
-.. Notification center showing recent messages or contact attempts.  
-   *Supports:* <<EPIC-5>>  
-   *Requires:* <<REQ-DR3>>
+. **Notification Center**  
+*Supports:* <<EPIC-5>>  
+*Requires:* <<REQ-DR3>>
 
-. Seller Profile and Trust  
+---
+
+=== *Seller Profile & Trust*
+
 [[FEATURE-6.1]]
-.. Editable seller profile (profile picture, name, location, short bio).  
-   *Supports:* <<EPIC-6>>  
-   *Requires:* <<REQ-DR3>>
+. **Editable Seller Profile**  
+*Supports:* <<EPIC-6>>  
+*Requires:* <<REQ-DR3>>
 
 [[FEATURE-6.2]]
-.. Seller dashboard displaying active and closed listings, as well as reviews and ratings.  
-   *Supports:* <<EPIC-6>>  
-   *Requires:* <<REQ-DR1>>, <<REQ-DR3>>
+. **Seller Dashboard**  
+*Supports:* <<EPIC-6>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR3>>
 
-=== *User Stories*
+---
 
-User stories are derived from Features, breaking them down into smaller, individual tasks to be added to the backlog. These stories focus on user needs and help make development more user-focused.
+== *User Stories*
 
-*Buyer User Stories*
+User stories refine features by describing concrete goals from the perspective of domain actors.
 
-. As a buyer, I want to browse listings by category to find a specific type of item I want.  
-. As a buyer, I want to filter my search by size, condition, and category to tailor my search to my preferences.  
-. As a buyer, I want to search for listings using keywords to find specific items that may not fit predefined categories.  
-. As a buyer, I want to save interesting listings so I can revisit them later.  
-. As a buyer, I want to view a seller’s information such as location, reviews, and account details to feel confident before contacting them.  
-. As a buyer, I want to leave reviews for sellers after an offline exchange so others can trust the process.  
+=== *Buyer User Stories*
 
-*Seller User Stories*
+- As a buyer, I want to browse by category so I can quickly find the kind of item I need.  
+- As a buyer, I want to filter by size, condition, or price/free marker so my results match my constraints.  
+- As a buyer, I want to search using keywords so I can locate specific items not covered by filters.  
+- As a buyer, I want to save interesting listings so I can revisit them later.  
+- As a buyer, I want to view essential seller information (rating, location, account age) while still respecting seller privacy.  
+- As a buyer, I want to leave a review after an offline exchange so others can benefit from my experience.
 
-. As a seller, I want to create listings for my items with options such as adding multiple pictures, a description, and a condition rating so interested buyers can find me easily.  
-. As a seller, I want to edit my listings so I can update details whenever necessary.  
-. As a seller, I want to close listings once the item is exchanged offline so the system stays accurate.  
-. As a seller, I want to receive notifications when someone contacts me about a listing so I can respond quickly.  
-. As a seller, I want to provide information on my profile such as my name and location to increase trust with buyers.  
+=== *Seller User Stories*
+
+- As a seller, I want to create listings with clear details and images so buyers can evaluate items quickly.  
+- As a seller, I want to edit my listings so I can keep them accurate.  
+- As a seller, I want to close listings by marking them as *sold*, *donated*, or *retracted* so my dashboard remains up-to-date.  
+- As a seller, I want to receive notifications when someone expresses interest so I can coordinate the exchange.  
+- As a seller, I want to present minimal but trustworthy profile information to attract buyers without oversharing.
