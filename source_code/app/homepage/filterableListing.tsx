@@ -58,13 +58,13 @@ export default function FilterableFeaturedItems({initialItems}: any) {
     let content;
     if (filtered.length > 0) {
       content = (
-        <div className="grid grid-cols-4 gap-1 px-15 py-4">
+        <div className="flex flex-wrap justify-center gap-6 m-4">
           {filtered.map((item: Piece) => (
             // changed from <button> to <div> so we don’t nest a button inside
             <div
               key={item.id}
               id="Featured_Item_btn"
-              className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl"
+              className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-1 rounded-3xl"
             >
               <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">
                 <div className="w-18 h-6 bg-[#f6e5e6] border-2 border-[#E5E7EF] text-sm text-[#666666] rounded-xl">
@@ -104,15 +104,15 @@ export default function FilterableFeaturedItems({initialItems}: any) {
     return (
     <>
       {/* Featured items: displays highlighted clothing listings */}
-      <h2 className="text-3xl font-bold italic pl-15 pt-13">Featured items</h2>
+      <h2 className="text-3xl font-bold text-center lg:text-left italic lg:pl-8 pt-13">Featured items</h2>
 
-      <div className="flex space-x-auto px-13 pt-4 pl-18 pr-18">
+      <div className="flex flex-wrap justify-center pt-4 px-5">
         {featured_categories.map((cat) => (
           <button
             onClick={() => handleFilter(cat.filter)}
             key={cat.id}
             id="Featured_Category_btn"
-            className="w-39 h-11 bg-[#e6dac7] hover:bg-[#d8c8b4] focus:bg-[#c9b8a2] px-4 m-auto rounded-full"
+            className="w-auto h-11 bg-[#e6dac7] hover:bg-[#d8c8b4] focus:bg-[#c9b8a2] px-10 m-1 rounded-full"
           >
             <div className="text-md text-[#666666]">{cat.name}</div>
           </button>
