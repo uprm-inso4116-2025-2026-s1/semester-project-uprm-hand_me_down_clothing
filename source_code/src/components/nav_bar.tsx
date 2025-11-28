@@ -43,9 +43,9 @@ export default function TopNav() {
   }, [prefersReducedMotion]);
 
   const links = [
-    { href: "/listings/sell_piece", label: "Browse" },
+    { href: "/listings/transactions/sell_piece", label: "Browse" },
     { href: "/map", label: "Map" },
-    { href: "/listings/donate", label: "Donate" },
+    { href: "/listings/transactions/donate", label: "Donate" },
     { href: "/about", label: "About" },
     { href: "/Login", label: "Sign in/Sign Up" },
     { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
