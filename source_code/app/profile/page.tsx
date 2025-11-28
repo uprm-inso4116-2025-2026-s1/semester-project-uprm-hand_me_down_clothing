@@ -173,7 +173,7 @@ export default function ProfilePage() {
 
             {/* Description */}
             <div className="mt-4">
-              <p className="text-gray-800 font-medium">{profile?.firstname}’s shop</p>
+              <p className="text-gray-800 font-medium">{profile?.firstname ? profile.firstname + "’s shop" : ""}</p>
               <p className="text-gray-600 leading-relaxed">{description || "Add profile description..."}</p>
             </div>
 
