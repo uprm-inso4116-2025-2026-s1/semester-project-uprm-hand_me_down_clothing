@@ -661,3 +661,171 @@ Benefits of this CQS refactor:
 * **Improved reuse**: `getAuthUser` can be reused anywhere current user information is needed without pulling in sign-in logic.
 * **Easier testing**: query and command logic can be unit-tested independently with focused mocks.
 * **Consistent CQS story**: together with the side-effect-free validators and command handlers documented earlier, this example strengthens the project’s adherence to Command–Query Separation in the Auth subsystem.
+
+===== Stand-Alone Auth Provider: Centralizing Supabase SDK Dependency
+
+To reduce coupling and follow the “stand-alone class” guidance from the Supple Design lecture, the Auth Team refactored how components access authentication. Instead of each component depending directly on the Supabase Auth SDK, all SDK usage is now centralized in a stand-alone provider (`SupabaseAuthProvider`) and a stable hook (`useSupabaseAuth`). This section documents the before/after transformation and how it reduces dependencies.
+
+====== Before: Components Depending Directly on Supabase Auth SDK
+
+Originally, multiple components imported and used the Supabase client directly. Each component was responsible for calling the SDK, handling session changes, and interpreting authentication state.
+
+Example (simplified):
+
+[source,typescript]
+----
+import { supabase } from "@/lib/supabaseClient";
+import { onMounted, ref } from "vue";
+
+export default {
+  setup() {
+    const user = ref(null);
+    const loading = ref(true);
+
+    onMounted(async () => {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      user.value = currentUser ?? null;
+      loading.value = false;
+
+      supabase.auth.onAuthStateChange((_event, session) => {
+        user.value = session?.user ?? null;
+      });
+    });
+
+    async function handleSignOut() {
+      await supabase.auth.signOut(); 
+      user.value = null;
+    }
+
+    return { user, loading, handleSignOut };
+  },
+};
+----
+
+Problems:
+
+* Each component depended directly on the Supabase Auth SDK.
+* Auth state subscription logic was duplicated across components.
+* Changing auth provider (or how sessions are handled) required editing many files.
+* Testing components required mocking the Supabase client in multiple places.
+* The intent (“I need auth state”) was obscured by low-level SDK calls.
+
+====== After: SupabaseAuthProvider and useSupabaseAuth as Stand-Alone Abstractions
+
+The team introduced a stand-alone provider component and a shared hook to encapsulate SDK calls. Components no longer depend on the Supabase SDK; instead, they depend only on a stable interface defined by `useSupabaseAuth`.
+
+Provider component (stand-alone class/component):
+
+[source,typescript]
+----
+import { supabase } from "@/lib/supabaseClient";
+import { defineComponent, provide, ref, onMounted } from "vue";
+
+const AuthSymbol = Symbol("AuthContext");
+
+export const SupabaseAuthProvider = defineComponent({
+  name: "SupabaseAuthProvider",
+  setup(_, { slots }) {
+    const user = ref(null);
+    const loading = ref(true);
+
+    onMounted(async () => {
+      const { data: { user: currentUser } } = await supabase.auth.getUser();
+      user.value = currentUser ?? null;
+      loading.value = false;
+
+      supabase.auth.onAuthStateChange((_event, session) => {
+        user.value = session?.user ?? null;
+      });
+    });
+
+    async function signOut() {
+      await supabase.auth.signOut();
+      user.value = null;
+    }
+
+    const value = { user, loading, signOut };
+
+    provide(AuthSymbol, value);
+
+    return () => slots.default ? slots.default() : null;
+  },
+});
+
+export function useSupabaseAuth() {
+  const ctx = inject(AuthSymbol);
+  if (!ctx) {
+    throw new Error("useSupabaseAuth must be used within SupabaseAuthProvider.");
+  }
+  return ctx;
+}
+----
+
+Component usage after refactor:
+
+[source,typescript]
+----
+import { useSupabaseAuth } from "@/auth/SupabaseAuthProvider";
+
+export default {
+  setup() {
+    const { user, loading, signOut } = useSupabaseAuth();
+
+    return {
+      user,
+      loading,
+      handleSignOut: signOut,
+    };
+  },
+};
+----
+
+Key changes:
+
+* All Supabase Auth SDK calls (getUser, onAuthStateChange, signOut) are centralized in `SupabaseAuthProvider`.
+* Components depend only on the stable stand-alone abstraction `useSupabaseAuth`.
+* If the project changes auth providers or session handling, only the provider implementation must be updated.
+
+====== Diagram: Stand-Alone Auth Provider Reducing Dependencies
+
+[plantuml]
+----
+@startuml
+interface AuthInterface {
+  +user
+  +loading
+  +signOut()
+}
+
+class SupabaseAuthProvider {
+  -supabaseClient
+  +provide(AuthInterface)
+}
+
+class ComponentA
+class ComponentB
+
+SupabaseAuthProvider ..> AuthInterface
+ComponentA --> AuthInterface : uses via useSupabaseAuth()
+ComponentB --> AuthInterface : uses via useSupabaseAuth()
+
+AuthInterface <|.. SupabaseAuthProvider
+@enduml
+----
+
+====== Dependency Reduction and Benefits
+
+* **Reduced Dependencies:**  
+  Components no longer import or configure the Supabase client directly; they depend only on `useSupabaseAuth`, a stand-alone abstraction.
+
+* **Centralized SDK Usage:**  
+  All low-level SDK calls are located in a single provider file, making changes to the auth backend or session behavior localized.
+
+* **Improved Testability:**  
+  Components can be tested by mocking `useSupabaseAuth` instead of mocking the entire Supabase client. This yields simpler, more targeted tests.
+
+* **Clearer Intent:**  
+  At the component level, the code now expresses intent (“I need auth state and signOut”) rather than implementation details (“call supabase.auth.getUser() and manage listeners”).
+
+* **Alignment with Milestone 3 and Lectures:**  
+  The `SupabaseAuthProvider` behaves as a stand-alone class that shields the rest of the system from low-level dependencies, satisfying the Milestone 3 requirement for dependency reduction and reflecting the stand-alone class guidance from the Supple Design lecture.
