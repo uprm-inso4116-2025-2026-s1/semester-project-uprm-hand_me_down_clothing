@@ -1,0 +1,27 @@
+= Separation of Concerns & High Cohesion
+:doctype: article
+:toc: macro
+:sectnums:
+:icons: font
+
+[abstract]
+This document explains how category and condition filters interact with global search while adhering to Separation of Concerns and High Cohesion. It captures guiding principles, interaction rules, and a concise testing plan to validate behavior.
+
+toc::[]
+
+== Principles
+- Separation of Concerns: Search (free text) is decoupled from categorical filters (category, condition, etc.).
+- High Cohesion: Each filter component owns its responsibility and exposes a clear, minimal interface.
+
+== Interaction Rules
+- Global search applies case-insensitive partial matching across user-facing text fields.
+- Category and condition filters constrain results orthogonally to search.
+- When both are present, results must satisfy filters first, then match search terms.
+
+== Testing Plan
+- Unit tests: repository-level search + filter composition.
+- Integration tests: UI form submits with combined filters and search.
+- Edge cases: empty search, long inputs, invalid categories/conditions.
+
+== Notes
+If this replaced an older doc, its filename was `filter-search-interaction.adoc`. The content here reflects the updated naming and focus.
