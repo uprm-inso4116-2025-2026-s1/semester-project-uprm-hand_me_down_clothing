@@ -1,4 +1,0 @@
-=== 2.5 Integrated End-to-End Feature Verification
-
-This section documents all user-facing features implemented end-to-end during Milestone 3.  
-The features span Authentication, Listing Lifecycle, Map Interaction, and the UI.  

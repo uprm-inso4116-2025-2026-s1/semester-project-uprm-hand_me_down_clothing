@@ -111,6 +111,119 @@ consistent layout, iconography, and branding defined in the global style guide.
 A GitHub Actions workflow will execute linting and unit-test jobs on pull requests to
 maintain consistent quality and prevent regressions once automated tests are in place.
 
+==== End-to-End Feature Verification
+
+The following table summarizes the implemented features across subsystems.
+
+[cols="1,3,2", options="header"]
+|===
+| Subsystem | Implemented Features | Source
+
+| Authentication (Team 2)
+| Signup, login, logout, persistent sessions, profile editing, protected routes
+| Team 2 Auth Summary
+
+| Backend (Team 3)
+| Create Piece, Create Listing, Publish Listing, Close Listing (transactional), Saved Listings, Filtered Listing Retrieval
+| Team 3 Backend Summary
+
+| Map (Team 4)
+| Map rendering, marker clustering, routing providers, modals, location info, route preview
+| Team 4 Map Summary
+
+| UI (Team 5)
+| Home → Browse → Listing → Interest flow, Auth screens, Profile screens, Map screens, Saved Listings UI, loading/error states
+| Team 5 UI Summary
+|===
+
+The following acceptance tests demonstrate end-to-end behavior across multiple subsystems.  
+All tests use the recommend Given–When–Then (GWT).
+
+==== Authentication Flow
+
+===== Test A1 – Successful Login
+*Given* the user has a valid email and password  
+*When* they submit the login form  
+*Then* the system returns an authenticated session  
+*And* the user is redirected to the Home screen  
+*And* protected content becomes accessible
+
+===== Test A2 – Session Restoration
+*Given* a previously authenticated session exists  
+*When* the app is reopened  
+*Then* the Auth subsystem restores the session  
+*And* the user is taken directly to Home without re-entering credentials
+
+===== Test A3 – Profile Update
+*Given* the user is authenticated  
+*When* they update their profile information  
+*Then* the backend persists the new profile  
+*And* the UI reflects the updated data
+
+==== Listing Lifecycle
+
+===== Test L1 – Create → Publish Listing
+*Given* the seller is authenticated  
+*And* they have created a Piece  
+*When* they create a Listing and publish it  
+*Then* the backend stores the Listing  
+*And* it appears in the browse screen  
+*And* Map markers update accordingly
+
+===== Test L2 – Close Listing (Transactional)
+*Given* a Listing is active  
+*When* the seller closes the Listing  
+*Then* the backend transitions the Listing atomically to a closed state  
+*And* it no longer appears in active browsing  
+*And* the UI shows the closed status on the seller’s Listing screen
+
+===== Test L3 – Save a Listing
+*Given* a buyer is authenticated  
+*When* they save a listing  
+*Then* it appears under Saved Listings  
+*And* the backend reflects the saved state
+
+==== Map Interaction
+
+===== Test M1 – Load Map With Markers
+*Given* the user opens the Map screen  
+*When* the Map provider initializes  
+*Then* all active Listings are shown as markers  
+*And* marker clustering activates for dense areas
+
+===== Test M2 – View Location Info Modal
+*Given* markers are visible  
+*When* the user taps a marker  
+*Then* a modal appears with Listing details  
+*And* route options become available
+
+===== Test M3 – Start Route Preview
+*Given* a Listing location is selected  
+*When* the user chooses a routing mode  
+*Then* the routing provider builds a path  
+*And* the route preview renders on the Map
+
+==== UI Navigation Flows
+
+===== Test U1 – Home → Browse → Listing
+*Given* the user is authenticated  
+*When* they navigate to Browse  
+*And* select a Listing  
+*Then* the Listing detail screen appears  
+*And* the UI renders all Listing data returned by the backend
+
+===== Test U2 – Browse → Filters → Results
+*Given* the Browse screen is open  
+*When* the buyer applies valid filters  
+*Then* the backend returns matching Listings  
+*And* the screen updates with the filtered results
+
+===== Test U3 – Saved Listings Screen
+*Given* the user has saved Listings  
+*When* they navigate to Saved Listings  
+*Then* all saved items appear with correct metadata  
+*And* tapping one navigates to its detail page
+
 ==== Outcomes
 
 – Documentation, domain model, and requirements were aligned and validated through internal review cycles.  
