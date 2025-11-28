@@ -1,4 +1,4 @@
-== Assertions
+=== 2.4 Assertions
 
 This section introduces formal preconditions and postconditions for key operations across the Authentication, Backend, and Map subsystems. These assertions improve clarity and support validation.
 
