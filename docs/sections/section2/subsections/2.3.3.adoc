@@ -1,114 +1,144 @@
-=== 2.3.3 Cross-Cutting Patterns
+=== 2.3.3 Strategy Pattern
+*Status: Added for Milestone 3 – Application of Techniques*
 
-While the core patterns (Specification, Strategy, CQS, Assertions, Stand-Alone Classes, etc.) are expressed through the domain and requirements sections, the system architecture also incorporates three additional patterns across multiple subsystems:
+This section documents how the *Strategy Pattern* was applied in the routing subsystem of the Map Team. The original implementation used a hard-coded OSRMv1 router built into Leaflet. Milestone 3 required refactoring this design so the project could support multiple routing providers in the future (Google Maps, Mapbox, or a custom shortest-path engine) without changing existing controller code.
 
-* Transaction Pattern  
-* State Pattern  
-* Builder-like Construction Pattern  
+This section follows the same structure as <<_2_3_2_specification_pattern,Section 2.3.2 Specification Pattern>> and builds on the Architectural separation described in <<_2_2_architecture_and_layering,Section 2.2>>.
 
-These patterns are cross-cutting and contribute to the stability, safety, and composability of the platform.
+==== Before: Hard-Coded OSRMv1 Router
+Originally, routing logic lived directly inside the Map Controller and called the Leaflet OSRMv1 provider explicitly:
 
-==== Transaction Pattern (Team 3 – Listing Lifecycle)
-
-The Transaction Pattern is applied by Team 3 during the `closeListing` operation.  
-Closing a listing requires multiple steps to succeed together:
-
-* validating seller ownership  
-* verifying that the listing is active  
-* applying a terminal state  
-* persisting the new state  
-* returning the updated Listing
-
-These steps are treated as a single conceptual transaction. If any check fails, the entire transition is aborted, preserving domain invariants and preventing partial or invalid Listing states.  
-This satisfies the Milestone requirement for an additional pattern grounded in domain correctness.
-
-==== State Pattern (Team 2, Team 4, Team 5)
-
-The State Pattern appears across three major subsystems.
-
-===== Authentication Flow (Team 2)
-
-Authentication transitions through stable states such as:
-
-* unauthenticated  
-* loading  
-* authenticated  
-* expired  
-
-These are encoded within the canonical `AuthContextValue`.  
-Each operation returns a context in a well-defined state.  
-
-===== Map Interaction States (Team 4)
-
-The Map subsystem relies on UI-driven state transitions:
-
-* map loading  
-* markers available  
-* modal active  
-* route selected  
-* route previewing  
-
-Map actions depend on which state is active, enabling predictable and testable flows.  
-
-===== UI Screen States (Team 5)
-
-The UI applies the State Pattern across screens:
-
-* loading  
-* error  
-* results available  
-* no results  
-
-Screens render only after transitioning to a stable state with domain data.  
-
-Across subsystems, the State Pattern ensures that operations are only valid when the system is in a compatible state, improving correctness and clarity.
-
-==== Builder-Like Construction (Team 4 – Routing Providers)
-
-Team 4 uses a stepwise construction process for Map routing providers.  
-Although not implemented as a formal Builder class, the pattern exhibits Builder characteristics:
-
-* configuration in incremental steps  
-* validation per step  
-* deferred finalization  
-* predictable output shape  
-
-Example structure:
-
-[source,plaintext]
+[source,typescript]
 ----
-RoutingProvider:
-  setOrigin(lat, lon)
-  setDestination(lat, lon)
-  setMode("walking")
-  build()
+async function getRoute(origin, destination) {
+  const router = L.Routing.osrmv1({
+    serviceUrl: "https://router.project-osrm.org/route/v1",
+  });
+
+  return new Promise((resolve, reject) => {
+    router.route([origin, destination], (err, routes) => {
+      if (err) reject(err);
+      else resolve(routes[0]);
+    });
+  });
+}
 ----
 
-This approach simplifies map interactions, reduces configuration errors, and supports clear separation between configuration and execution.
+*Problems identified:*
+- Controller was tightly coupled to **OSRMv1**.
+- No room to switch to Google Maps, Mapbox, or a custom algorithm.
+- Testing routing behavior required mocking Leaflet directly.
+- Violated the *Open–Closed Principle* because adding a new router required modifying existing logic.
 
-==== Unified Example Across Subsystems
+This tightly-coupled version made experimentation or provider comparison impossible.
 
-A typical user journey demonstrates how these patterns work together:
+==== New Insight
+Routing is a behavior, and behaviors that vary should be encapsulated behind an interface — which is exactly what the Strategy Pattern provides.
 
-1. The Auth subsystem transitions through states until the user becomes authenticated.  
-2. The Map subsystem enters states that determine what markers and modals appear.  
-3. The backend executes the closeListing operation using the Transaction Pattern.  
-4. The UI transitions into the appropriate state to display the updated Listing.
+The team realized that switching routing engines must:
+- Happen **without rewriting controllers**.
+- Support future provider additions.
+- Allow local testing without depending on the OSRM server.
+- Maintain the same `getRoute()` API for all strategies.
 
-[source,plaintext]
+This led to introducing the `RoutingStrategy` interface.
+
+==== After: RoutingStrategy Interface
+A generic routing contract was introduced:
+
+[source,typescript]
 ----
-Auth: unauthenticated → loading → authenticated
-Map: idle → markers → route-selected
-Listing: active → closed  (transaction)
-UI: loading → content
+export interface RoutingStrategy {
+  getRoute(origin: LatLng, destination: LatLng): Promise<RouteResult>;
+}
 ----
 
-==== Architectural Benefits
+The real, currently implemented strategy: **OSRMRoutingStrategy**.
 
-* Enforces atomic Listing lifecycle transitions  
-* Ensures predictable UI and Map flows  
-* Maintains stable intermediate states across the system  
-* Separates configuration (Builder-like) from execution  
-* Reduces coupling between subsystems  
-* Supports long-term extensibility in Listing, Map, and Auth modules
+[source,typescript]
+----
+export class OSRMRoutingStrategy implements RoutingStrategy {
+  private router = L.Routing.osrmv1({
+    serviceUrl: "https://router.project-osrm.org/route/v1",
+  });
 
+  async getRoute(origin, destination): Promise<RouteResult> {
+    return new Promise((resolve, reject) => {
+      this.router.route([origin, destination], (err, routes) => {
+        if (err) reject(err);
+        else resolve(routes[0]);
+      });
+    });
+  }
+}
+----
+
+Stub strategies added as *planned extension points* (documented for M3):
+
+[source,typescript]
+----
+export class GoogleMapsRoutingStrategy implements RoutingStrategy {
+  async getRoute(origin, destination) {
+    throw new Error("Google Maps routing planned but not yet implemented.");
+  }
+}
+
+export class MapboxRoutingStrategy implements RoutingStrategy {
+  async getRoute(origin, destination) {
+    throw new Error("Mapbox routing planned but not yet implemented.");
+  }
+}
+
+export class CustomShortestPathStrategy implements RoutingStrategy {
+  async getRoute(origin, destination) {
+    throw new Error("Custom routing engine planned but not yet implemented.");
+  }
+}
+----
+
+Controller-level usage becomes independent of provider choice:
+
+[source,typescript]
+----
+const routingStrategy: RoutingStrategy = new OSRMRoutingStrategy();
+// Could later be changed to GoogleMapsRoutingStrategy with no controller edits
+
+const route = await routingStrategy.getRoute(origin, destination);
+----
+
+This removes the hard-coded dependency and supports future routing flexibility.
+
+==== UML Strategy Diagram
+[plantuml]
+----
+@startuml
+interface RoutingStrategy {
+  +getRoute(origin, destination): Promise<RouteResult>
+}
+
+class OSRMRoutingStrategy
+class GoogleMapsRoutingStrategy
+class MapboxRoutingStrategy
+class CustomShortestPathStrategy
+
+RoutingStrategy <|.. OSRMRoutingStrategy
+RoutingStrategy <|.. GoogleMapsRoutingStrategy
+RoutingStrategy <|.. MapboxRoutingStrategy
+RoutingStrategy <|.. CustomShortestPathStrategy
+
+OSRMRoutingStrategy --> "uses" L.Routing.osrmv1
+@enduml
+----
+
+==== Benefits Achieved
+- **Decoupling:** Controllers no longer depend on OSRMv1.
+- **Extensibility:** New providers can be added by implementing the interface.
+- **Testability:** Strategies can be mocked independently of Leaflet.
+- **Consistency:** All providers share the same method signature.
+- **Alignment:** Follows architectural principles from <<_2_2_architecture_and_layering,Section 2.2>>.
+
+==== Testing & Verification
+- PlantUML renders without warnings.
+- Code and names match the Map Team’s real OSRM integration.
+- Future strategies documented without contradicting earlier sections.
+- Controller routing logic is now compliant with the Strategy Pattern.
