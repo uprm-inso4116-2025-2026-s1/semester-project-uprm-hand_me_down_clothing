@@ -49,6 +49,8 @@ export class PieceFactory {
                 item['reason'],
                 item['images'],
                 item['user_id'],
+                item['latitude'],
+                item['longitude'],
                 status,
             );
         }
@@ -65,6 +67,8 @@ export class PieceFactory {
                 item['reason'],
                 item['images'],
                 item['user_id'],
+                item['latitude'],
+                item['longitude'],
                 status,
                 item['donation_center'] ?? null,
             );
@@ -136,6 +140,8 @@ export class PieceFactory {
             reason: piece.reason,
             images: piece.images,
             user_id: piece.user_id,
+            latitude: piece.latitude,
+            longitude: piece.longitude,
             status: Status[piece.status],
         };
     }

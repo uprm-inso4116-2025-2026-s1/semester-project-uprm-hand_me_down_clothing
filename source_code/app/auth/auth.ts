@@ -34,7 +34,10 @@ export async function signUp (
       }
     }
   })
-  if (error) return { data: null, error }
+  if (error) {
+    logAuthError('signUp', error)
+    return { data: null, error: { ...error, message: mapAuthError(error) } }
+  }
   try {
     const userId = data?.user?.id
     if (userId) {
@@ -80,18 +83,27 @@ export async function signIn (
     email,
     password
   })
+  if (error) {
+    logAuthError('signIn', error)
+    return { data: null, error: { ...error, message: mapAuthError(error) } }
+  }
   return { data, error }
 }
 
 // Log out the current user
 export async function signOut () {
   const { error } = await supabase.auth.signOut()
+  if (error) logAuthError('signOut', error)
   return { error }
 }
 
 // Request password reset email
 export async function requestPasswordReset (email: string) {
   const { data, error } = await supabase.auth.resetPasswordForEmail(email)
+  if (error) {
+    logAuthError('requestPasswordReset', error)
+    return { data: null, error: { ...error, message: mapAuthError(error) } }
+  }
   return { data, error }
 }
 
@@ -103,6 +115,10 @@ export async function updatePassword (newPassword: string) {
   const { data, error } = await supabase.auth.updateUser({
     password: newPassword
   })
+  if (error) {
+    logAuthError('updatePassword', error)
+    return { data: null, error: { ...error, message: mapAuthError(error) } }
+  }
   return { data, error }
 }
 
@@ -116,6 +132,10 @@ export async function updatePassword (newPassword: string) {
 // You can check verification status via supabase.auth.getUser()
 export async function getUser () {
   const { data, error } = await supabase.auth.getUser()
+  if (error) {
+    logAuthError('getUser', error)
+    return { data: null, error: { ...error, message: mapAuthError(error) } }
+  }
   return { data, error }
 }
 
@@ -123,6 +143,10 @@ export async function getUser () {
 // Send OTP to phone for sign-in or verification
 export async function signInWithPhone (phone: string) {
   const { data, error } = await supabase.auth.signInWithOtp({ phone })
+  if (error) {
+    logAuthError('signInWithPhone', error)
+    return { data: null, error: { ...error, message: mapAuthError(error) } }
+  }
   return { data, error }
 }
 
@@ -133,7 +157,10 @@ export async function verifyPhoneOtp (phone: string, token: string) {
     token,
     type: 'sms'
   })
-  if (error) return { data, error }
+  if (error) {
+    logAuthError('verifyPhoneOtp', error)
+    return { data: null, error: { ...error, message: mapAuthError(error) } }
+  }
 
   // On successful verification, update user's metadata to mark phone verification and enable 2FA
   try {

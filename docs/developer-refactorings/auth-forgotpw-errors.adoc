@@ -1,0 +1,32 @@
+Forgot Password link and Auth Error Handling Improvements
+
+This change implements two related improvements to the authentication UX and error handling:
+
+1. Wire the "Forgot Password?" link on the login page to the reset flow.
+2. Centralize and map Supabase auth errors to friendlier messages, with lightweight logging.
+
+Files changed
+
+- `source_code/app/Login/page.tsx`
+- `source_code/app/auth/reset_password_request/page.tsx`
+- `source_code/app/auth/auth.ts` (auth helpers)
+- `source_code/app/auth/errorMapper.ts` (new helper)
+- `source_code/tests/unit/auth_errors.test.ts` (new tests)
+
+ What I changed
+
+- Login page: converted the static "Forgot Password?" text into a real link that navigates to `/auth/reset_password_request` so users can request a reset email.
+- Reset password page: improved success/error feedback, added `aria-live` attributes for screen reader announcements, and extra guidance (check spam, retry guidance).
+- Auth helpers: added `errorMapper.ts` and integrated it into `auth.ts`. All helper functions now log errors with `console.error` and return an error object whose `message` field is a friendly, mapped string. This keeps UI pages simple (they can display `error.message`) while providing predictable wording.
+- Tests: added unit tests that mock `supabase.auth` to assert that rate-limit and invalid credentials errors are mapped to friendly messages.
+
+Why this helps
+
+- Users get clear, actionable feedback when reset emails fail or when sign-in fails.
+- Developers have a single place to update error mapping and integrate structured logging or monitoring later.
+
+ Next steps
+
+- Extend the error mappings (e.g., map specific Supabase codes) as we encounter real error payloads.
+- Replace `console.error` with a proper monitoring integration (Sentry) in production.
+- Add integration/UI tests for the reset flow in the browser (RTL / Playwright) to validate accessible feedback.

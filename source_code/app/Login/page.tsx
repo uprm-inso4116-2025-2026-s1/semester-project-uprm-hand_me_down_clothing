@@ -136,7 +136,8 @@ export default function LoginPage() {
 
 
           <div className="text-center font-semibold underline hover:opacity-80">
-            Forgot Password?</div>
+            <Link href="/auth/reset_password_request">Forgot Password?</Link>
+          </div>
 
 
           <div className="relative text-center text-xs text-gray-500 py-2">
