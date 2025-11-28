@@ -1,89 +1,147 @@
 === 2.3 Implementation
 
 ==== Objective
-Describe the overall architecture and design of the clothing repurposing application, showing
-how the React frontend, JavaScript logic, and Supabase database/storage/auth components
-work together. Include mockups and selected fragments that clarify implementation decisions.
-This chapter distinguishes between what has already been implemented and what remains part
-of the planned architecture.
+Describe the overall architecture and design of the Hand Me Down application, showing how
+the React frontend, JavaScript logic, and Supabase backend (database, storage, auth) work
+together as an integrated system. Mockups and implementation fragments are included only
+when they clarify architectural decisions. This section distinguishes explicitly between
+**Implemented** functionality and **Planned — Not Yet Implemented** functionality, as required
+by Milestone 3.
 
 ==== Description
-The application is structured as follows.  
-Where relevant, we clarify which parts are already implemented in the current system versus
-planned extensions that have architectural support but no functional code yet.
 
-* Frontend (React)
-** The implemented portions of the frontend handle the user interface for browsing active listings,
-saving favorites, uploading new listings, and loading donation centers. These components are fully connected to Supabase and reflect real data.
-** Some UI pages are **planned but not yet implemented**; these exist only as prototypes
-and their purpose here is to show intended architectural integration, not to behave as a user manual.
-** Planned pages/screens include:
-*** Home Page: shows recent listings and navigation options. *(Prototype implemented; data binding functional.)*
-*** Clothing Listing Page: displays a scrollable list of available items with filters and sorting. *(Core listing feed implemented; extended filters planned.)*
-*** Upload Page: supports publishing items as listings. *(Partially implemented: image upload + required-field validation completed; extended editing flows planned.)*
-*** Saved Listings Page: lets buyers revisit bookmarked items. *(Basic saving implemented; full saved-list dashboard planned.)*
-*** Map Page: integrates with Leaflet to display donation centers. *(Basic map rendering implemented; advanced metadata display planned.)*
-** Styling is implemented with CSS modules or CSS-in-JS for maintainability.
+The application is composed of a React frontend, a set of JavaScript application services, and
+Supabase components for persistence, authentication, and storage. The subsections below
+indicate which parts are implemented today and which remain planned for future milestones.
 
-* Backend Logic (JavaScript functions)
-** The backend logic includes a mixture of implemented modules and planned modules.  
-Implemented logic includes:
-*** Input validation for listing creation.
-*** Image uploads to Supabase Storage.
-*** Authentication integration via Supabase Auth.
-*** Basic CRUD operations on listings and user profiles.
-*** Enforcement of invariants such as required fields and mandatory seller identity.
-** Planned logic includes:
-*** Messaging and contact flows linked to the `InterestExpressed` event.
-*** Review submission rules (requiring a closed listing before review).
-*** Advanced filtering through a `Filter` value object tied to domain requirements.
-*** Moderation and reporting workflows.
+---
 
-* Database & Storage (Supabase)
-** The database schema contains several **fully implemented** structures:
-*** User profiles (name, email, role, reputation score).
-*** Listings (seller ID, title, description, category, size, condition, price/free marker, status).
-*** Saved listings associations.
-*** Donation center metadata used by the Map page.
-** Reviews and ratings tables exist in the schema but **full review logic is planned**, not yet implemented.
-** Supabase Storage manages image uploads and retrieval in production.
-** Supabase Auth is fully functional for authentication and secure access.
+== Frontend (React)
 
-* External Services
-** Leaflet.js provides the implemented base map functionality for donation center locations.
-** Optional geocoding APIs are part of the **planned** extension for address-to-coordinate conversion.
+=== Implemented
+* Browsing and filtering of active listings (connected to Supabase).
+* Basic filtering (category, price/free marker, and other simple fields).
+* Saving/unsaving listings (with Supabase persistence).
+* Upload Page with:
+** image upload to Supabase Storage,
+** required-field validation,
+** successful insertion into Supabase.
+* Map Page with:
+** rendering via Leaflet,
+** ESRI tile-layer imagery (metadata is provided externally by ESRI),
+** working marker display and clustering,
+** implemented route preview (OSRM).
+* Basic profile editing and authentication screens.
+* Styling through CSS modules or CSS-in-JS.
 
-==== Architecture Diagram
-The architecture of the application is designed to separate concerns between the frontend, backend logic, and Supabase services. This diagram is included because it clarifies how implemented and planned components fit into the system’s layered design and how data moves between layers.
+=== Planned — Not Yet Implemented
+* Full Seller Dashboard (only partially completed for demo purposes).
+* Advanced filtering tied directly to the Filter Value Object (VO); current filtering exists, but
+spec-driven filters are planned.
+* Messaging and contact flows.
+* Review submission and display.
+* Notification center for “Interest Expressed” events.
+* Extended editing flows on the Upload Page.
+* Map metadata overlays (map currently relies solely on ESRI’s imagery tiles).
 
+---
+
+== Backend Logic (JavaScript Functions)
+
+=== Implemented
+* Input validation for listing creation (following CQS validators).
+* Image uploads via Supabase Storage.
+* Authentication integration (sign up, login, logout, session restore).
+* CRUD operations for Listings and Pieces.
+* Saving/unsaving listings.
+* Listing closure (seller transitions listing to a closed state).
+* Domain invariants (required fields, ownership checks) enforced in backend flows.
+* Routing strategy implementation using OSRM + Strategy Pattern abstraction.
+
+=== Planned — Not Yet Implemented
+* Messaging and InterestExpressed workflow.
+* Review submission rules (requires closed listing).
+* Advanced Filter VO → composable Specification Pattern integration.
+* Moderation/reporting workflows.
+* Additional routing strategies (Google Maps, Mapbox, custom shortest-path).
+
+---
+
+== Database & Storage (Supabase)
+
+=== Implemented
+* Profiles table (name, email, reputation score).
+* Listings table (title, description, category, size, condition, price/free marker, status).
+* Saved Listings relation table.
+* Donation-center locations (map uses these coordinates).
+* Supabase Storage for image uploads.
+* Supabase Auth for secure authentication.
+* RLS policies for profile and listing access control.
+
+=== Planned — Not Yet Implemented
+* Review + rating table logic (tables exist, workflow not implemented).
+* RLS rules for messaging and review flows.
+* Extended geospatial metadata layers (beyond ESRI tiles).
+
+---
+
+== External Services
+
+=== Implemented
+* Leaflet.js for map rendering.
+* ESRI tile server for high-quality satellite imagery and basemap tiles.
+* OSRM routing provider for path previews.
+
+=== Planned — Not Yet Implemented
+* Geocoding services (address → coordinate conversion).
+* Additional routing providers (Google Maps, Mapbox).
+* Metadata overlays on the map (relying on ESRI tile imagery for now).
+
+---
+
+== Architecture Diagram
 image::Architecture_Diagram.png[Architecture Diagram, align=center]
+
+The diagram is included because it highlights how implemented frontend, backend, and
+Supabase components communicate. It also clarifies extension points for planned features,
+such as messaging, review workflows, and additional routing strategies.
 
 . Architecture Overview
 .. React Frontend
-*** Implements the primary user-facing mechanisms for browsing, filtering, and saving listings.
-*** User actions such as creating a listing or saving an item trigger calls to implemented backend functions.
-*** Planned UI components (e.g., messaging, enhanced search tools) will integrate with the same flow.
+*** Implements primary user-facing flows (browse, filter, save, upload).
+*** Prototype-only components (e.g., messaging UI) appear for architectural completeness.
+*** Planned components will reuse the same application-service boundaries.
 
-.. JavaScript Logic (Backend Logic)
-*** Implements input validation, storage coordination, and basic CRUD operations.
-*** Formats data before insertion into the database and handles error responses.
-*** Planned logic will extend this layer to handle events such as expressing interest, review submission, and improved filtering.
+.. JavaScript Logic (Application Layer)
+*** Implements validation, image-upload flow, CRUD operations, and closure logic.
+*** Provides abstraction for routing through a pluggable Strategy Pattern.
+*** Planned extensions include expressing interest, advanced filtering, and moderation.
 
 .. Supabase Services
-*** Implemented database tables store active listings, profiles, saved relationships, and donation centers.
-*** Cloud Storage handles implemented image-upload flows.
-*** Auth enforces authentication and authorization, ensuring proper access control.
-*** Planned enhancements include RLS-based constraints for messaging and review linking.
+*** Database tables persist listings, profiles, saved relationships, and donation centers.
+*** Storage manages listing images.
+*** Auth manages sessions, secure access, and RLS enforcement.
+*** Planned enhancements include messaging constraints and review linkage.
 
 .. Data Flow
-*** Requests flow from the React frontend through JavaScript logic to Supabase.
-*** Responses update React state so users see the most recent data.
-*** The platform **does not** process payments or facilitate mediated transactions; offline coordination is intentional and domain-driven.
-*** Separating UI, logic, and persistence ensures maintainability and future extensibility.
+*** Requests travel from React → Application Services → Supabase.
+*** Responses update React state with the most recent domain data.
+*** System intentionally supports **offline exchanges only**; no payments or mediated transactions.
+
+---
 
 ==== Layer Mapping (Clean Architecture / DDD Alignment)
-* **Domain Layer**: Core concepts (Listing, Piece, User, Review), invariants (required fields, category assignment), and event definitions.  
-* **Application Layer**: Implemented use cases (publishListing, saveListing), and planned use cases (expressInterest, closeListing, review).  
-* **Interface/Adapters Layer**: React components for forms, lists, profile, and prototype messaging UIs; adapters for calling application services.  
-* **Frameworks/Drivers Layer**: Supabase services (PostgreSQL, Storage, Auth), Leaflet maps, geocoding APIs, and HTTP clients.
 
+* **Domain Layer**  
+  Core domain concepts (Listing, Piece, User, Review), invariants, and key events
+  (*ListingPublished*, *InterestExpressed*, *ListingClosed*).
+
+* **Application Layer**  
+  Implemented use cases: `publishListing`, `saveListing`, `browseAvailableItems`.  
+  Planned use cases: `expressInterest`, `review`, advanced filtering, messaging.
+
+* **Interface / Adapters Layer**  
+  React screens, forms, prototypes, and data-adapter modules for calling application services.
+
+* **Frameworks / Drivers Layer**  
+  Supabase (Database, Storage, Auth), Leaflet, OSRM, ESRI tiles, HTTP clients.

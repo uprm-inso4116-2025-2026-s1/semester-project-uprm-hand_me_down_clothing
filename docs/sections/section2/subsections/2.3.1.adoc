@@ -1,11 +1,14 @@
-=== *2.3.1 Selected Fragments of the Implementation*
-This section provides selected fragments of the implementation that complement the architecture described in Section 2.3.  
-To comply with project guidelines, the fragments are organized into:
+=== 2.3.1 Selected Fragments of the Implementation
 
-1. **Implemented Fragments** – Functionality already built and connected to Supabase.  
-2. **Planned Fragments** – UI prototypes that illustrate intended behavior or domain mappings but are not yet implemented.
+This section provides selected implementation fragments that complement the architectural
+description in Section 2.3. To satisfy Milestone 3 requirements, fragments are divided into:
 
-Screenshots are used *only when they illuminate architectural decisions, domain flows, or state transitions*, not as user-manual illustrations.
+1. **Implemented Fragments** – Functionality already built and connected to Supabase.
+2. **Planned — Not Yet Implemented Fragments** – Architectural prototypes illustrating
+   intended domain mappings, not functional code.
+
+Screenshots appear **only** where they clarify domain flows, state transitions, or architectural
+decisions. They are *not* used as a user manual.
 
 '''
 
@@ -14,59 +17,75 @@ Screenshots are used *only when they illuminate architectural decisions, domain 
 ==== Home Page (Implemented UI Fragment)
 image::HomePage.png[Home Page (Implemented Fragment), align=center, pdfwidth=80%]
 
-*Caption:* *This screenshot demonstrates the implemented binding between React state and Supabase listing data. It is included because it shows how the Home Page retrieves the most recent active listings and displays them as part of the implemented browsing flow.*
+*Caption:*  
+*Included because it shows the implemented data-binding architecture: the Home Page retrieves
+active listings from Supabase and renders them in React state. This illustrates how UI
+components consume application-level services such as `browseAvailableItems`.*
 
-The implemented Home Page fragment:
+The implemented Home Page:
 - fetches active listings from Supabase,  
-- displays them in a scrollable feed, and  
-- provides navigation to other implemented features (e.g., listing creation, browsing feed).
+- renders them in an infinite/scrollable feed,  
+- links to other implemented features (upload page, browse view).  
 
-This fragment demonstrates how the frontend consumes application-level domain functions such as `browseAvailableItems`.
+This fragment demonstrates the separation between UI rendering, application-service calls,
+and Supabase queries.
 
 '''
 
 ==== Clothing Listing Page (Implemented UI Fragment)
 image::ListingsPage.png[Listings Page (Implemented Fragment), align=center, pdfwidth=80%]
 
-*Caption:* *Included to show the operational flow from a Supabase “active listings” query into a React-rendered list component. This directly reflects the domain’s browsing functions.*
+*Caption:*  
+*Included because it illustrates the implemented end-to-end flow from Supabase data
+retrieval → React rendering → filter/sorting logic. This fragment validates the correctness of
+the listing-retrieval architecture.*
 
 This implemented component:
-- loads available listings using Supabase filters,  
-- displays listing metadata (title, image, free/resale marker), and  
-- supports client-side sorting.
+- loads available listings through Supabase queries,  
+- displays essential listing metadata (title, main image, free/resale marker),  
+- supports client-side sorting and basic filtering (category, free/price).  
 
-These elements correspond directly to domain actions such as filtering and browsing available items.
+Advanced filter-composition (Filter VO + Specification Pattern) is **planned**, but basic filtering
+shown here is **implemented**.
 
 '''
 
-==== Item Upload Flow – Implemented Logic
+==== Item Upload Flow — Implemented Logic
 image::HandMeDown_ItemUpload.png[Item Upload Flow (Implemented Logic), align=center]
 
-*Caption:* *Flowchart included to illustrate the implemented control flow from the React form to Supabase Storage and Database. This visualization explains the domain-level `publishListing` action and its mapping to the current backend logic.*
+*Caption:*  
+*Included because it visualizes the implemented control flow: client-side validation →
+Supabase Storage upload → listing insertion. This supports the domain function
+`publishListing` and documents the actual data movement across layers.*
 
-Implemented behaviors include:
-1. Authenticated user opens the listing creation form.  
-2. Required fields validated client-side.  
+Implemented steps:
+1. Authenticated user opens the creation form.  
+2. Required fields validated using CQS validators.  
 3. Images uploaded to Supabase Storage.  
-4. Listing inserted into the database with `status = active`.  
+4. Listing inserted into Supabase with `status = active`.  
 
-This flow enforces domain invariants but **does not** create or manage transactions.
+This flow enforces domain invariants but intentionally performs **no transaction or payment logic**.
 
 '''
 
-=== **Planned Fragments**
+=== **Planned — Not Yet Implemented Fragments**
 
-*(These pages are not yet implemented; they serve to document intended architectural fit. No user-manual behavior is described.)*
+*(These prototypes illustrate the intended architectural integration of domain concepts.
+They are not implemented and contain no production logic.)*
 
 ==== Item Detail Page (Planned UI Fragment)
 image::IndividualListing.png[Planned Item Detail Page, align=center, pdfwidth=80%]
 
-*Caption:* *This prototype is included because it illustrates how domain entities (Listing, Seller, Review summary) will map to a unified detail view once fully implemented.*
+*Caption:*  
+*This prototype shows how multiple domain objects (Listing, Seller, Review summary) will be
+aggregated into a single detail view. It is included solely to illustrate architectural fit for planned
+use cases such as `expressInterest` and `review`.*
 
-This planned view will integrate:
-- listing metadata,  
-- seller information,  
-- interest/contact actions tied to the domain event `InterestExpressed`.  
+Planned integrations:
+- listing metadata display,  
+- seller information panel,  
+- interest/contact actions linked to `InterestExpressed`,  
+- review summary once review logic is implemented.  
 
 No backend logic exists yet.
 
@@ -77,16 +96,26 @@ image::Map1.png[Map Prototype 1, align=center]
 image::Map2.png[Map Prototype 2, align=center]
 image::Map3.png[Map Prototype 3, align=center]
 
-*Caption:* *These prototypes illustrate the architectural role of the map: integrating Supabase-stored locations with Leaflet. They are included only to show planned frontend–database interactions, not to document UI behavior.*
+*Caption:*  
+*These prototypes illustrate the architectural role of the Map feature: React → Leaflet →
+donation-center data from Supabase. ESRI imagery tiles provide basemap layers; metadata
+overlays are not implemented. These fragments exist strictly for architectural documentation.*
 
-The map will integrate:
+The planned Map architecture includes:
 - Leaflet for geospatial rendering,  
-- Supabase for donation-center metadata,  
-- optional geocoding services.
+- donation-center locations retrieved from Supabase,  
+- optional geocoding + alternate routing strategies (planned).  
 
-This fragment is architectural only; full functionality is not implemented.
+No advanced metadata overlays or enhanced routing providers exist yet.
 
 '''
 
 === Summary
-This section now distinguishes implemented behavior from planned prototypes and uses screenshots strictly to illustrate architectural or domain-relevant flows. All user-manual descriptions have been removed, aligning the documentation with Milestone 3 expectations.
+
+This section now:
+- clearly distinguishes between **Implemented** and **Planned** fragments,
+- uses screenshots solely for architectural justification,
+- removes any user-manual language,
+- accurately reflects what the current system supports versus what remains planned for future milestones.
+
+This aligns fully with Milestone 3 expectations and professor feedback.
