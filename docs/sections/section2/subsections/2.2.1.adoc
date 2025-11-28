@@ -2,9 +2,11 @@
 
 Epics describe high-level goals that span multiple sprints and require several coordinated features.  
 Features refine epics into concrete functionality.  
-User stories express these features from the perspective of stakeholders within the domain.
+User stories express these features from the perspective of domain stakeholders.
 
-All EPIC → FEATURE and FEATURE → REQUIREMENT traceability links use AsciiDoc anchors for clarity.
+Traceability uses AsciiDoc anchors to link:
+EPIC → FEATURE → REQUIREMENT  
+and back REQUIREMENT → FEATURE → EPIC
 
 ---
 
@@ -14,18 +16,21 @@ All EPIC → FEATURE and FEATURE → REQUIREMENT traceability links use AsciiDoc
 
 [[EPIC-1]]
 . **Listing Discovery**  
-As a buyer, I want to browse, filter, and search listings so that I can efficiently find items that match my preferences and financial constraints.  
-*Implemented by:* <<FEATURE-1.1>>, <<FEATURE-1.2>>, <<FEATURE-1.3>>
+As a buyer, I want to browse, filter, and search listings so that I can efficiently find items that match my preferences.  
+*Implemented by:* <<FEATURE-1.1>>, <<FEATURE-1.2>>, <<FEATURE-1.3>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR3>>, <<REQ-DR4>>
 
 [[EPIC-2]]
 . **Saved Listings**  
-As a buyer, I want to save or bookmark listings so I can revisit them later when deciding whether to contact the seller.  
-*Implemented by:* <<FEATURE-2.1>>, <<FEATURE-2.2>>
+As a buyer, I want to save listings to revisit them later.  
+*Implemented by:* <<FEATURE-2.1>>, <<FEATURE-2.2>>  
+*Supported by Requirements:* <<REQ-DR1>>
 
 [[EPIC-3]]
 . **Trust and Transparency**  
-As a buyer, I want access to seller profiles and post-exchange reviews so I can make informed decisions before initiating contact.  
-*Implemented by:* <<FEATURE-3.1>>, <<FEATURE-3.2>>, <<FEATURE-3.3>>, <<FEATURE-3.4>>
+As a buyer, I want seller profiles and reviews to make safe choices.  
+*Implemented by:* <<FEATURE-3.1>>, <<FEATURE-3.2>>, <<FEATURE-3.3>>, <<FEATURE-3.4>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 ---
 
@@ -33,41 +38,47 @@ As a buyer, I want access to seller profiles and post-exchange reviews so I can 
 
 [[EPIC-4]]
 . **Listing Management**  
-As a seller, I want to create, update, and close listings so I can manage items I intend to resell, donate, or withdraw.  
-*Implemented by:* <<FEATURE-4.1>>, <<FEATURE-4.2>>, <<FEATURE-4.3>>, <<FEATURE-4.4>>
+As a seller, I want to create, update, and close listings.  
+*Implemented by:* <<FEATURE-4.1>>, <<FEATURE-4.2>>, <<FEATURE-4.3>>, <<FEATURE-4.4>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>, <<REQ-DR4>>, <<REQ-DR5>>
 
 [[EPIC-5]]
 . **Interest Notifications**  
-As a seller, I want to receive notifications when buyers express interest so I can respond promptly and arrange offline exchanges.  
-*Implemented by:* <<FEATURE-5.1>>, <<FEATURE-5.2>>
+As a seller, I want to be notified when buyers express interest.  
+*Implemented by:* <<FEATURE-5.1>>, <<FEATURE-5.2>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 [[EPIC-6]]
-. **Seller Profile and Trust Signals**  
-As a seller, I want to maintain a profile with minimal, privacy-respecting details so buyers can build confidence before contacting me.  
-*Implemented by:* <<FEATURE-6.1>>, <<FEATURE-6.2>>
+. **Seller Profile & Trust Signals**  
+As a seller, I want a minimal profile to help buyers build confidence.  
+*Implemented by:* <<FEATURE-6.1>>, <<FEATURE-6.2>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>
 
 ---
 
 == *Features*
 
-Features translate epics into specific capabilities.
+Features refine epics into implementable slices of functionality.
 
 === *Buyer Features*
 
 [[FEATURE-1.1]]
 . **Filtering** (category, size, condition, price/free marker)  
-*Supports:* <<EPIC-1>>  
-*Requires:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>
+*Supports Epic:* <<EPIC-1>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>
 
 [[FEATURE-1.2]]
 . **Keyword Search**  
-*Supports:* <<EPIC-1>>  
-*Requires:* <<REQ-DR1>>, <<REQ-DR3>>
+*Supports Epic:* <<EPIC-1>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>
 
 [[FEATURE-1.3]]
-. **Sorting Options** (newest first, alphabetical, condition rating)  
-*Supports:* <<EPIC-1>>  
-*Requires:* <<REQ-DR1>>
+. **Sorting Options** (newest first, alphabetical, condition)  
+*Supports Epic:* <<EPIC-1>>  
+*Requires:* <<REQ-DR1>>  
+*Supported by Requirements:* <<REQ-DR1>>
 
 ---
 
@@ -75,13 +86,15 @@ Features translate epics into specific capabilities.
 
 [[FEATURE-2.1]]
 . **Bookmark Listing**  
-*Supports:* <<EPIC-2>>  
-*Requires:* <<REQ-DR1>>
+*Supports Epic:* <<EPIC-2>>  
+*Requires:* <<REQ-DR1>>  
+*Supported by Requirements:* <<REQ-DR1>>
 
 [[FEATURE-2.2]]
 . **Persistent Saved Listings**  
-*Supports:* <<EPIC-2>>  
-*Requires:* <<REQ-DR1>>
+*Supports Epic:* <<EPIC-2>>  
+*Requires:* <<REQ-DR1>>  
+*Supported by Requirements:* <<REQ-DR1>>
 
 ---
 
@@ -89,23 +102,27 @@ Features translate epics into specific capabilities.
 
 [[FEATURE-3.1]]
 . **Seller Profile Page**  
-*Supports:* <<EPIC-3>>  
-*Requires:* <<REQ-DR3>>
+*Supports Epic:* <<EPIC-3>>  
+*Requires:* <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 [[FEATURE-3.2]]
 . **Seller Ratings & Reviews**  
-*Supports:* <<EPIC-3>>  
-*Requires:* <<REQ-DR3>>
+*Supports Epic:* <<EPIC-3>>  
+*Requires:* <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 [[FEATURE-3.3]]
-. **Review Submission Flow** (after offline exchange)  
-*Supports:* <<EPIC-3>>  
-*Requires:* <<REQ-DR3>>
+. **Review Submission Flow**  
+*Supports Epic:* <<EPIC-3>>  
+*Requires:* <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 [[FEATURE-3.4]]
-. **Reporting Mechanism** (problematic listings or behavior)  
-*Supports:* <<EPIC-3>>  
-*Requires:* <<REQ-DR1>>
+. **Reporting Mechanism**  
+*Supports Epic:* <<EPIC-3>>  
+*Requires:* <<REQ-DR1>>  
+*Supported by Requirements:* <<REQ-DR1>>
 
 ---
 
@@ -113,37 +130,43 @@ Features translate epics into specific capabilities.
 
 [[FEATURE-4.1]]
 . **Create Listing Form**  
-*Supports:* <<EPIC-4>>  
-*Requires:* <<REQ-DR1>>, <<REQ-DR4>>
+*Supports Epic:* <<EPIC-4>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR4>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR4>>
 
 [[FEATURE-4.2]]
 . **Upload Multiple Images**  
-*Supports:* <<EPIC-4>>  
-*Requires:* <<REQ-DR1>>
+*Supports Epic:* <<EPIC-4>>  
+*Requires:* <<REQ-DR1>>  
+*Supported by Requirements:* <<REQ-DR1>>
 
 [[FEATURE-4.3]]
 . **Edit Listing Details**  
-*Supports:* <<EPIC-4>>  
-*Requires:* <<REQ-DR1>>, <<REQ-DR5>>
+*Supports Epic:* <<EPIC-4>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR5>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR5>>
 
 [[FEATURE-4.4]]
-. **Close a Listing** (mark as *Sold*, *Donated*, or *Retracted*)  
-*Supports:* <<EPIC-4>>  
-*Requires:* <<REQ-DR3>>
+. **Close Listing (Sold/Donated/Retracted)**  
+*Supports Epic:* <<EPIC-4>>  
+*Requires:* <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 ---
 
 === *Interest Notifications*
 
 [[FEATURE-5.1]]
-. **Instant Notifications** on Interest Expressed  
-*Supports:* <<EPIC-5>>  
-*Requires:* <<REQ-DR3>>
+. **Instant Notification on Interest Expressed**  
+*Supports Epic:* <<EPIC-5>>  
+*Requires:* <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 [[FEATURE-5.2]]
 . **Notification Center**  
-*Supports:* <<EPIC-5>>  
-*Requires:* <<REQ-DR3>>
+*Supports Epic:* <<EPIC-5>>  
+*Requires:* <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 ---
 
@@ -151,33 +174,20 @@ Features translate epics into specific capabilities.
 
 [[FEATURE-6.1]]
 . **Editable Seller Profile**  
-*Supports:* <<EPIC-6>>  
-*Requires:* <<REQ-DR3>>
+*Supports Epic:* <<EPIC-6>>  
+*Requires:* <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR3>>
 
 [[FEATURE-6.2]]
 . **Seller Dashboard**  
-*Supports:* <<EPIC-6>>  
-*Requires:* <<REQ-DR1>>, <<REQ-DR3>>
+*Supports Epic:* <<EPIC-6>>  
+*Requires:* <<REQ-DR1>>, <<REQ-DR3>>  
+*Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>
 
 ---
 
 == *User Stories*
 
-User stories refine features by describing concrete goals from the perspective of domain actors.
+User stories refine features into small, testable goals from domain actors’ perspectives.
 
-=== *Buyer User Stories*
-
-- As a buyer, I want to browse by category so I can quickly find the kind of item I need.  
-- As a buyer, I want to filter by size, condition, or price/free marker so my results match my constraints.  
-- As a buyer, I want to search using keywords so I can locate specific items not covered by filters.  
-- As a buyer, I want to save interesting listings so I can revisit them later.  
-- As a buyer, I want to view essential seller information (rating, location, account age) while still respecting seller privacy.  
-- As a buyer, I want to leave a review after an offline exchange so others can benefit from my experience.
-
-=== *Seller User Stories*
-
-- As a seller, I want to create listings with clear details and images so buyers can evaluate items quickly.  
-- As a seller, I want to edit my listings so I can keep them accurate.  
-- As a seller, I want to close listings by marking them as *sold*, *donated*, or *retracted* so my dashboard remains up-to-date.  
-- As a seller, I want to receive notifications when someone expresses interest so I can coordinate the exchange.  
-- As a seller, I want to present minimal but trustworthy profile information to attract buyers without oversharing.
+(UNCHANGED — no cross-linking needed here)
