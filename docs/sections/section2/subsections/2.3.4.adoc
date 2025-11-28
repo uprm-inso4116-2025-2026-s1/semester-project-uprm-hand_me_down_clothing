@@ -1,0 +1,114 @@
+=== 2.3.3 Cross-Cutting Patterns
+
+While the core patterns (Specification, Strategy, CQS, Assertions, Stand-Alone Classes, etc.) are expressed through the domain and requirements sections, the system architecture also incorporates three additional patterns across multiple subsystems:
+
+* Transaction Pattern  
+* State Pattern  
+* Builder-like Construction Pattern  
+
+These patterns are cross-cutting and contribute to the stability, safety, and composability of the platform.
+
+==== Transaction Pattern (Team 3 – Listing Lifecycle)
+
+The Transaction Pattern is applied by Team 3 during the `closeListing` operation.  
+Closing a listing requires multiple steps to succeed together:
+
+* validating seller ownership  
+* verifying that the listing is active  
+* applying a terminal state  
+* persisting the new state  
+* returning the updated Listing
+
+These steps are treated as a single conceptual transaction. If any check fails, the entire transition is aborted, preserving domain invariants and preventing partial or invalid Listing states.  
+This satisfies the Milestone requirement for an additional pattern grounded in domain correctness.
+
+==== State Pattern (Team 2, Team 4, Team 5)
+
+The State Pattern appears across three major subsystems.
+
+===== Authentication Flow (Team 2)
+
+Authentication transitions through stable states such as:
+
+* unauthenticated  
+* loading  
+* authenticated  
+* expired  
+
+These are encoded within the canonical `AuthContextValue`.  
+Each operation returns a context in a well-defined state.  
+
+===== Map Interaction States (Team 4)
+
+The Map subsystem relies on UI-driven state transitions:
+
+* map loading  
+* markers available  
+* modal active  
+* route selected  
+* route previewing  
+
+Map actions depend on which state is active, enabling predictable and testable flows.  
+
+===== UI Screen States (Team 5)
+
+The UI applies the State Pattern across screens:
+
+* loading  
+* error  
+* results available  
+* no results  
+
+Screens render only after transitioning to a stable state with domain data.  
+
+Across subsystems, the State Pattern ensures that operations are only valid when the system is in a compatible state, improving correctness and clarity.
+
+==== Builder-Like Construction (Team 4 – Routing Providers)
+
+Team 4 uses a stepwise construction process for Map routing providers.  
+Although not implemented as a formal Builder class, the pattern exhibits Builder characteristics:
+
+* configuration in incremental steps  
+* validation per step  
+* deferred finalization  
+* predictable output shape  
+
+Example structure:
+
+[source,plaintext]
+----
+RoutingProvider:
+  setOrigin(lat, lon)
+  setDestination(lat, lon)
+  setMode("walking")
+  build()
+----
+
+This approach simplifies map interactions, reduces configuration errors, and supports clear separation between configuration and execution.
+
+==== Unified Example Across Subsystems
+
+A typical user journey demonstrates how these patterns work together:
+
+1. The Auth subsystem transitions through states until the user becomes authenticated.  
+2. The Map subsystem enters states that determine what markers and modals appear.  
+3. The backend executes the closeListing operation using the Transaction Pattern.  
+4. The UI transitions into the appropriate state to display the updated Listing.
+
+[source,plaintext]
+----
+Auth: unauthenticated → loading → authenticated
+Map: idle → markers → route-selected
+Listing: active → closed  (transaction)
+UI: loading → content
+----
+
+==== Architectural Benefits
+
+* Enforces atomic Listing lifecycle transitions  
+* Ensures predictable UI and Map flows  
+* Maintains stable intermediate states across the system  
+* Separates configuration (Builder-like) from execution  
+* Reduces coupling between subsystems  
+* Supports long-term extensibility in Listing, Map, and Auth modules
+
