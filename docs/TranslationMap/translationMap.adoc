@@ -1,0 +1,170 @@
+# Translation Map
+
+// --
+// Author: Fabiola Z. Torres Maldonado
+// User: @FabiolaZTorres
+// Revdate: 2025-11-23
+// Ver: 1.0
+// Issue: #339
+// --
+
+## Purpose
+This document defines a **Translation Map** between the terminology used in:
+
+- **Domain Model** - Classes: `Piece`, `DonatedPiece`, `SoldPiece`, enums, repositories
+- **Supabase Persistence Layer** - Tables: `pieces`, `auth.users`, `locales`, etc.
+- **UI/UX Layer** - User-facing wording: listings, items, categories, etc.
+
+This Translation Map reduces ambiguity, prevents accidental coupling, and supports a clean **Anti-Corruption Layer (ACL)** between contexts.
+
+
+## Overview
+Hand Me Down currently uses multiple terms interchangeably across contexts  
+(e.g., *Piece*, *Item*, *Listing*, *Post*).  
+This document standardizes translation to ensure that data flowing between the Domain, Database, and UI remains consistent.
+
+
+## High-Level Concept Map
+[options='header']
+|===
+| Concept | Domain Model (Code) | Database (Supabase) | UI/UX (Frontend) | Notes
+| Clothing Object | `Piece`, `DonatedPiece`, `SoldPiece` | `pieces` table | *Item* | **"Piece"** is used in code; **"Item"** is the user-facing term.
+| Listing (the page) | N/A (UI concept only) | N/A | *Listing* | Refers to the page that displays an Item.
+| Seller / Donator | `user_id` in `Piece`, future domain class | `auth.users` + relation | *Seller* or *Donor* | UI may merge both roles; domain keeps them separate (SoldPiece vs DonatedPiece).
+| Category | `Category` enum | `category` column (text/enum) | *Category* (displayed as human-readable text) | UI requires Title Case formatting.
+| Condition | `Condition` enum | `condition` column | *Condition* (New, Like New, etc.) | Mapping required: enum → readable label.
+| Size | `Size` enum | `size` column | *Size* | Same as above.
+| Gender | `Gender` enum | `gender` column | *Fit* or *Gender* | UI terminology may vary; needs normalization.
+| Price | `price` | `price` | *Price* or *Free* | Domain formats price when `null`.
+| Images | `images` | `images` (array) | *Photos* | No translation needed—naming is consistent.
+| Reason | `reason` | `reason` | *Why you’re giving it away* | Displayed differently for donors vs sellers.
+|===
+
+
+## Field-Level Translation Table
+
+### Piece / Item Attributes
+[options='header']
+|===
+| Domain Model | Supabase Field | UI Wording | Notes
+| `id` | `id` | Hidden | Same ID across all contexts.
+| `name` | `name` | *Item Name* | Direct mapping.
+| `category` (`Category` enum) | `category` | *Category* | Enum → Title Case label required.
+| `color` | `color` | *Color* | Direct.
+| `brand` | `brand` | *Brand* | Direct.
+| `gender` (`Gender` enum) | `gender` | *Fit / Gender* | Enum → readable.
+| `size` (`Size` enum) | `size` | *Size* | Enum → readable.
+| `price` | `price` | *Price* | `null` → “Free”.
+| `condition` (`Condition` enum) | `condition` | *Condition* | Enum → readable (New, Used, etc.).
+| `reason` | `reason` | *Reason for Donating/Selling* | UI wording varies by context.
+| `images` | `images` | *Photos* | Same meaning.
+| `user_id` | `user_id` | *Seller/Donor* | Pulls from `auth.users`.
+|===
+
+### User / Seller
+[options='header']
+|===
+| Domain Model | Supabase | UI Wording | Notes
+| (future class) | `auth.users` | *Seller* or *Donor* | UI merges both user roles.
+| `email` | `email` | *Contact* | Display may be restricted.
+| `phone` | `phone` | *Phone Number* | Optional.
+| `pieces` (list of ids) | implicit via `pieces.user_id` | *Items Posted* | Not explicitly modeled in Domain yet.
+|===
+
+### Donation Locale (for Donated Pieces)
+[options='header']
+|===
+| Domain Model | Supabase | UI Wording | Notes
+| `donation_center` | N/A (future schema addition) | *Donation Location* | Planned addition.
+| `Locale` | `locales` table | *Drop-off Location* | Stored separately from pieces.
+|===
+
+
+## Enum Translation Guide
+
+### Category Enum
+[options='header']
+|===
+| Enum | UI Display
+| SHIRT | Shirt
+| DRESS | Dress
+| JACKET | Jacket
+| PANTS | Pants
+| UNDERWEAR | Underwear
+| SOCKS | Socks
+| SCARF | Scarf
+| HOODIE | Hoodie
+| COAT | Coat
+|===
+
+### Condition Enum
+[options='header']
+|===
+| Enum | UI Display
+| NEW | New
+| LIKE_NEW | Like New
+| USED | Used
+| WORN | Worn
+| OLD | Old
+|===
+
+### Gender Enum
+[options='header']
+|===
+| Enum | UI Display
+| FEMALE | Women's
+| MALE | Men's
+| UNISEX | Unisex
+|===
+
+### Size Enum
+[options='header']
+|===
+| Enum | UI Display
+| SMALL_X2 | XXS
+| SMALL_X  | XS
+| SMALL | S
+| MEDIUM | M
+| LARGE | L
+| LARGE_X | XL
+| LARGE_X2 | XXL
+| CUSTOM | Custom
+|===
+
+
+## Domain → Database → UI Flow (for Item Viewing)
+1. User selects an *Item* → UI sends `item_id`.
+2. Domain uses `PieceRepository` to fetch from `pieces` table.
+3. Database returns raw fields (`category`, `condition`, etc.).
+4. Domain converts:
+   - enum values → UI strings  
+   - `null` price → `"Free"`
+   - internal values → formatted fields
+5. UI receives a **DisplayPiece** (front-end translational object).
+6. UI renders Item page.
+
+
+## Known Inconsistencies Identified
+- “Piece” used in code vs “Item” in UI  
+- “Listing” refers to page, not product  
+- Browse categories differ from enum categories  
+- Some UI mockups show additional tags not present in Domain  
+- No unified human-readable formatting (category, size, gender, condition)  
+- Seller vs Donor distinction unclear in front-end copy  
+- Price nullability interpreted differently across pages
+
+These inconsistencies informed the Translation Map and motivate the ACL guidelines.
+
+
+## Recommendations
+1. Create a `DisplayPiece` DTO to standardize UI-facing fields.
+2. Add a formatting layer in the ACL to prevent UI from consuming enums.
+3. Ensure future backend/database schema updates reflect the Domain Model consistently.
+4. Store browse categories and tags in a centralized configuration file.
+5. Add explicit documentation for “Item vs Piece vs Listing.”
+
+
+## Conclusion
+This Translation Map provides a shared vocabulary for all teams and acts as a reference for maintaining consistency across the Domain Model, Supabase schema, and UI.
+
+If changes to naming arise, update this document to prevent semantic drift.

@@ -1,7 +1,7 @@
 import { SoldPiece } from "@/app/types/sold_piece";
 import { DonatedPiece } from "@/app/types/donated_piece";
 import { Piece } from "@/app/types/piece";
-import { Category, Condition, Gender, Size, Status } from "@/app/types/classifications";
+import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 
 /**
  * Factory class responsible for creating Piece domain objects
@@ -34,7 +34,6 @@ export class PieceFactory {
         const gender = this.parseGender(item['gender']);
         const size = this.parseSize(item['size']);
         const condition = this.parseCondition(item['condition']);
-        const status = this.parseStatus(item['status']);
         if(item['price'] != null && item['price'] != 0){
             return new SoldPiece(
                 item['id'],
@@ -49,9 +48,6 @@ export class PieceFactory {
                 item['reason'],
                 item['images'],
                 item['user_id'],
-                item['latitude'],
-                item['longitude'],
-                status,
             );
         }
         else {
@@ -67,56 +63,109 @@ export class PieceFactory {
                 item['reason'],
                 item['images'],
                 item['user_id'],
-                item['latitude'],
-                item['longitude'],
-                status,
                 item['donation_center'] ?? null,
             );
         }
     }
 
     /**
-     * Generic enum parser used by specific enum parsers below.
+     * Parses a given input into a Category enum value.
+     * @param {string | number} category - The category input to parse.
+     * @returns {Category} - The corresponding Category enum value.
+     * @throws {Error} - Throws if the input is not a valid Category.
      */
-    private parseEnum<T>(enumType: any, value: string | number, label: string): T {
-        if (typeof value === 'number') {
-            if (enumType[value] !== undefined) {
-                return value as T;
+    private parseCategory(category : string | number) : Category {
+        if (typeof category === 'number') {
+            if (Category[category] !== undefined) {
+                return category as Category;
             }
-        } else if (typeof value === 'string') {
-            // direct key match (case-insensitive)
-            const key = value.toUpperCase();
-            if (Object.prototype.hasOwnProperty.call(enumType, key)) {
-                return enumType[key as keyof typeof enumType] as T;
+        } else if (typeof category === 'string' && typeof category[0] != 'number') {
+            const key = category.toUpperCase();
+            if (Object.prototype.hasOwnProperty.call(Category, key)) {
+                return Category[key as keyof typeof Category];
             }
-
-            // numeric string like "1"
-            const numeric = Number.parseInt(value as string);
-            if (!isNaN(numeric) && enumType[numeric] !== undefined) {
-                return numeric as T;
+        } else if (typeof category === 'string' && typeof category[0] == 'number') {
+            const key = Number.parseInt(category);
+            if (Category[key] !== undefined) {
+                return key as Category;
             }
         }
-        throw new Error(`Invalid ${label} value: ${value}`);
+        throw new Error(`Invalid Category value: ${category}`);
     }
 
-    private parseCategory(category : string | number) : Category {
-        return this.parseEnum<Category>(Category, category, 'Category');
-    }
-
+    /**
+     * Parses a given input into a Gender enum value.
+     * @param {string | number} gender - The gender input to parse.
+     * @returns {Gender} - The corresponding Gender enum value.
+     * @throws {Error} - Throws if the input is not a valid Gender.
+     */
     private parseGender(gender: string | number): Gender {
-        return this.parseEnum<Gender>(Gender, gender, 'Gender');
+        if (typeof gender === 'number') {
+            if (Gender[gender] !== undefined) {
+                return gender as Gender;
+            }
+        } else if (typeof gender === 'string' && typeof gender[0] != 'number') {
+            const key = gender.toUpperCase();
+            if (Object.prototype.hasOwnProperty.call(Gender, key)) {
+                return Gender[key as keyof typeof Gender];
+            }
+        } else if (typeof gender === 'string' && typeof gender[0] == 'number') {
+            const key = Number.parseInt(gender);
+            if (Gender[key] !== undefined) {
+                return key as Gender;
+            }
+        }
+        throw new Error(`Invalid Gender value: ${gender}`);
     }
 
+    /**
+     * Parses a given input into a Size enum value.
+     * @param {string | number} size - The size input to parse.
+     * @returns {Size} - The corresponding Size enum value.
+     * @throws {Error} - Throws if the input is not a valid Size.
+     */
     private parseSize(size: string | number): Size {
-        return this.parseEnum<Size>(Size, size, 'Size');
+        if (typeof size === 'number') {
+            if (Size[size] !== undefined) {
+                return size as Size;
+            }
+        } else if (typeof size === 'string' && typeof size[0] != 'number') {
+            const key = size.toUpperCase();
+            if (Object.prototype.hasOwnProperty.call(Size, key)) {
+                return Size[key as keyof typeof Size];
+            }
+        } else if (typeof size === 'string' && typeof size[0] == 'number') {
+            const key = Number.parseInt(size);
+            if (Size[key] !== undefined) {
+                return key as Size;
+            }
+        }
+        throw new Error(`Invalid Size value: ${size}`);
     }
 
+    /**
+     * Parses a given input into a Condition enum value.
+     * @param {string | number} condition - The condition input to parse.
+     * @returns {Condition} - The corresponding Condition enum value.
+     * @throws {Error} - Throws if the input is not a valid Condition.
+     */
     private parseCondition(condition: string | number): Condition {
-        return this.parseEnum<Condition>(Condition, condition, 'Condition');
-    }
-
-    private parseStatus(status: string | number): Status {
-        return this.parseEnum<Status>(Status, status, 'Status');
+        if (typeof condition === 'number') {
+            if (Condition[condition] !== undefined) {
+                return condition as Condition;
+            }
+        } else if (typeof condition === 'string' && typeof condition[0] != 'number') {
+            const key = condition.toUpperCase();
+            if (Object.prototype.hasOwnProperty.call(Condition, key)) {
+                return Condition[key as keyof typeof Condition];
+            }
+        } else if (typeof condition === 'string' && typeof condition[0] == 'number') {
+            const key = Number.parseInt(condition);
+            if (Condition[key] !== undefined) {
+                return key as Condition;
+            }
+        }
+        throw new Error(`Invalid Condition value: ${condition}`);
     }
 
     /**
@@ -140,9 +189,6 @@ export class PieceFactory {
             reason: piece.reason,
             images: piece.images,
             user_id: piece.user_id,
-            latitude: piece.latitude,
-            longitude: piece.longitude,
-            status: Status[piece.status],
         };
     }
 }
