@@ -80,7 +80,7 @@ publishListing(Piece, Seller, Locale) → ListingPublished
 expressInterest(Listing, Buyer) → InterestExpressed
 closeListing(Listing) → ListingClosed
 rate(Piece, ConditionRating) → ConditionRating
-review(Seller, Buyer, Review) → ReviewSubmitted
+submitReview(Seller, Buyer, Review) → ReviewSubmitted
 ----
 
 *Rationale:*  

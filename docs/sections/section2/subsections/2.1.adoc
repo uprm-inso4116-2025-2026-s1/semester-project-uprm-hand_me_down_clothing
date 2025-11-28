@@ -48,7 +48,7 @@ From a functional perspective, the domain can be represented through abstract op
 * `bookmarkListing(Listing, Buyer) → ListingBookmarked`  
 * `expressInterest(Listing, Buyer) → InterestExpressed`  
 * `rate(Piece, ConditionRating) → ConditionRating`  
-* `review(Seller, Buyer, Review) → ReviewSubmitted`  
+* `submitReview(Seller, Buyer, Review) → ReviewSubmitted`  
 * `categorize(Piece, Type) → Piece`  
 * `closeListing(Listing) → ListingClosed`
 

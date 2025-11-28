@@ -48,7 +48,7 @@ They must not be part of the *Listing* aggregate itself.
 | Invariant | Enforced In | Temp. Violation? | Rationale
 | A Listing requires ≥ 1 image at publish time. | Factory / publish step | No | Visual trust for discovery.
 | `ConditionRating` ∈ `[1..10]`. | `rateCondition()` | No | Consistent quality scale.
-| A `Review` belongs to exactly one Piece. | `addReview()` | No | Prevents cross-linking reviews.
+| A `Review` belongs to exactly one Piece. | `submitReview()` | No | Prevents cross-linking reviews.
 | Status transitions follow `Active ↔ Reserved → Closed` (no reopen). | Root methods | Yes (within method only) | Coherent lifecycle; history integrity.
 | `reserveFor(buyer)` only when status = `Active`. | `reserveFor()` | No | Avoid double holds; associates with *Buyer* (concept), not just a raw ID.
 | `close(reason)` only when status ∈ {`Active`,`Reserved`}. | `close()` | No | Forbids illegal re-closing.
@@ -62,7 +62,7 @@ They must not be part of the *Listing* aggregate itself.
 - `reserveFor(buyer)` — `Active → Reserved` (hold while parties coordinate offline).
 - `releaseReservation()` — `Reserved → Active`.
 - `close(reason)` — `Active/Reserved → Closed` after offline handoff or withdrawal.
-- `addReview(reviewer, rating, comment)` — attach feedback post-close.
+- `submitReview(reviewer, rating, comment)` — attach feedback post-close.
 
 ===== Repository (Conceptual)
 A repository operates at the *aggregate level* (reads may provide projections for lists):

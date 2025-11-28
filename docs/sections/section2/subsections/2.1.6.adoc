@@ -54,7 +54,7 @@ Postconditions:: Piece’s stored rating updated.
 
 Notes:: Returns `None` if Listing missing/closed.
 
-review : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]  
+submitReview : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]  
 
 Description:: Records a review after an offline exchange.
 
@@ -100,4 +100,4 @@ Notes:: Returns `None` if Listing missing/closed.
 3. Buyer triggers `expressInterest(Listing, Buyer)` → produces `InterestExpressed`.  
 4. Both users coordinate offline to exchange the item.  
 5. Seller closes the listing via `closeListing(Listing, Seller)` → produces `ListingClosed`.  
-6. Buyer leaves a review using `review(Seller, Buyer, Review)` → produces `ReviewSubmitted`.
+6. Buyer leaves a review using `submitReview(Seller, Buyer, Review)` → produces `ReviewSubmitted`.
