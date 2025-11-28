@@ -1,0 +1,293 @@
+= Event Choreography vs. Orchestration in Hand-Me-Down
+:toc:
+:toclevels: 2
+
+== Objective
+
+This document explores two coordination styles for distributed workflows in the Hand-Me-Down application:
+
+Event choreography – services react to events from each other.
+
+Orchestration – a central controller directs the workflow.
+
+The goal is to understand how these approaches affect coupling, observability, failure handling, and long-term evolvability of the system.
+
+== Context and Definitions
+
+Even though Hand-Me-Down is currently implemented as a single deployable app, we already have distinct bounded contexts / modules:
+
+Auth / Profiles – user accounts, roles, basic profile data.
+
+Listings – creating and managing donation / selling listings.
+
+Matching & Reservations – matching items to interested users, handling claims.
+
+Notifications – email / in-app messages.
+
+Admin / Moderation – approvals, fraud checks, policy enforcement.
+
+As the system grows, these modules may become separate services (or at least separate sub-systems). The way they coordinate complex flows will be important.
+
+=== Event Choreography
+
+In event choreography, each service reacts to domain events published by others. There is no single “boss” of the workflow.
+
+Characteristics:
+** Each service owns its own logic.
+** Communication is event-driven (ListingCreated, DonationApproved, PickupCompleted, …).
+** The overall workflow emerges from how services react to events.
+
+Pros:
+
+High decoupling between services.
+
+Easy to add new reactions to events without changing existing services.
+
+Fits naturally with event-driven architectures and message brokers.
+
+Cons:
+
+Harder to see the “full picture” of a workflow.
+
+Debugging multi-step flows can be difficult.
+
+Complex error handling and compensation logic spread across services.
+
+=== Orchestration
+
+In orchestration, one service (or workflow engine) is responsible for the whole process. It calls other services in sequence and decides what happens next.
+
+Characteristics:
+** An orchestrator service owns the workflow.
+** Other services are “workers” that perform individual tasks.
+** The orchestrator calls them via APIs or commands and tracks progress.
+
+Pros:
+
+Clear, centralized view of the workflow.
+
+Easier to reason about failures and compensations.
+
+Better suited for long-running, stateful workflows.
+
+Cons:
+
+The orchestrator can become a “god service” if not designed carefully.
+
+Tighter coupling (the orchestrator must know the steps and APIs of all participants).
+
+Less flexible when adding new reactions or side-effects.
+
+== Chosen Workflow: Donation Listing Lifecycle
+
+We will use the Donation Listing Lifecycle as the example workflow. It spans several modules:
+
+A donor creates a new donation listing.
+
+The listing may require admin approval.
+
+Once approved, the listing becomes visible and notification(s) are sent.
+
+A recipient requests/claims the item.
+
+The system confirms the match and sends pickup instructions.
+
+This workflow can be modeled via:
+
+Event choreography; or
+
+A dedicated “DonationOrchestrator”.
+
+The following sections show both.
+
+== Workflow as Event Choreography
+
+=== Narrative
+
+Listings Service saves the new listing and publishes ListingCreated.
+
+Moderation Service listens for ListingCreated:
+
+If moderation is required, it moves listing to pending and later publishes ListingApproved or ListingRejected.
+
+Notifications Service listens to:
+
+ListingApproved – sends “Your listing is live” to the donor.
+
+ListingApproved – optionally notifies nearby users about the new item.
+
+Matching Service listens to ListingApproved and updates its recommendation index.
+
+When a user clicks “Claim item”, Matching Service writes a reservation and publishes ListingClaimRequested.
+
+Notifications Service listens to ListingClaimRequested and sends emails to donor and recipient.
+
+When pickup is confirmed, Matching Service publishes PickupCompleted, which may trigger additional notifications or analytics.
+
+=== Sequence Diagram (Choreography)
+
+[mermaid]
+....
+sequenceDiagram
+participant Donor
+participant Listings
+participant Moderation
+participant Matching
+participant Notifications
+
+Donor->>Listings: POST /donations (new listing)
+Listings-->>Listings: Save listing (status=draft/pending)
+Listings-->>EventBus: ListingCreated
+
+Moderation-->>EventBus: subscribes ListingCreated
+EventBus-->>Moderation: ListingCreated
+Moderation-->>Moderation: Review listing
+Moderation-->>EventBus: ListingApproved
+
+EventBus-->>Listings: ListingApproved
+Listings-->>Listings: status=active
+
+EventBus-->>Notifications: ListingApproved
+Notifications-->>Donor: Email "Your listing is live"
+
+Recipient->>Matching: Request /claim
+Matching-->>Matching: Reserve item
+Matching-->>EventBus: ListingClaimRequested
+
+EventBus-->>Notifications: ListingClaimRequested
+Notifications-->>Donor: Email "Someone claimed your item"
+Notifications-->>Recipient: Email "Pickup details"
+
+
+....
+
+There is no central coordinator. Each service observes events and reacts.
+
+== Workflow as Orchestration
+
+In orchestration, we introduce a DonationOrchestrator that owns the flow.
+
+=== Narrative
+
+Donor submits the listing to DonationOrchestrator.
+
+Orchestrator calls Listings Service to create the listing.
+
+If moderation is required, Orchestrator calls Moderation Service and waits for the result.
+
+Once approved, Orchestrator:
+
+Calls Listings Service to set status to active.
+
+Calls Notifications Service to notify donor and interested users.
+
+When a user clicks “Claim item”, the UI calls Orchestrator, not Matching directly.
+
+Orchestrator calls Matching Service to reserve the item, then Notifications Service to send confirmation emails.
+
+=== Sequence Diagram (Orchestration)
+
+[mermaid]
+....
+sequenceDiagram
+participant Donor
+participant Orchestrator
+participant Listings
+participant Moderation
+participant Matching
+participant Notifications
+
+Donor->>Orchestrator: CreateDonationCommand
+Orchestrator->>Listings: POST /donations
+Listings-->>Orchestrator: listingId, status=pending
+
+Orchestrator->>Moderation: POST /review?listingId
+Moderation-->>Orchestrator: decision=approved
+
+Orchestrator->>Listings: PATCH /donations/{id} (status=active)
+Orchestrator->>Notifications: POST /notifyListingApproved
+
+Recipient->>Orchestrator: ClaimDonationCommand
+Orchestrator->>Matching: POST /claims
+Matching-->>Orchestrator: claimId, status=reserved
+Orchestrator->>Notifications: POST /notifyClaimCreated
+
+
+....
+
+Here, all steps route through DonationOrchestrator which has the full picture of the process.
+
+== Tradeoff Comparison
+
+[cols="2,1,1",options="header"]
+|===
+| Dimension
+| Event Choreography
+| Orchestration
+
+| Coupling
+| Low coupling – producers don’t need to know consumers; new listeners can be added with no changes to existing services.
+| Higher coupling – the orchestrator knows all participant services and their APIs.
+
+| Control & Visibility
+| Control is distributed; it can be harder to see end-to-end flows and state.
+| Centralized control and a single place to inspect the workflow and its status.
+
+| Failure Handling
+| Error and compensation logic is scattered across services; complex to coordinate retries and rollbacks.
+| Orchestrator can implement retries, timeouts, and compensating actions in one place.
+
+| Complexity Location
+| Logic is split across many services; each service is simpler, but the system behavior can be hard to reason about.
+| Orchestrator becomes more complex; other services can be kept simple “workers”.
+
+| Scalability & Flexibility
+| Easy to add new reactions to events (e.g., analytics listeners) without touching existing flows. Good for evolving products.
+| Scaling and evolving the orchestrator requires more care; adding new steps involves editing central code.
+
+| Observability
+| Requires aggregated tracing across many services and events to reconstruct a flow.
+| Easier to add metrics and logging in one place since the orchestrator sees the whole process.
+
+| Team Autonomy
+| Teams can own services and evolve event handlers independently, as long as they respect event contracts.
+| Orchestrator team must coordinate with all other teams when changing workflows.
+
+| Suitability in Hand-Me-Down
+| Good fit for notifications, analytics, and side-effects that can react to domain events.
+| Good fit for critical, multi-step flows like donation lifecycle, returns/cancellations, or payouts.
+|===
+
+== Recommendations for Hand-Me-Down
+
+Use both styles, but in different places.
+
+Prefer event choreography for:
+** Non-critical side-effects: analytics, activity feeds, “someone near you listed X” suggestions.
+** Cross-cutting reactions: when multiple services want to react to the same event (e.g., ListingApproved).
+
+Prefer orchestration for:
+** Long-running, multi-step flows that cross several capabilities and need strong consistency, such as:
+*** Donation lifecycle (creation → moderation → activation → claim → pickup).
+*** Any future payment or payout workflow.
+** Flows with complex failure behavior or compensating actions (e.g., if matching fails, revert listing status and send a clear message to the donor).
+
+Short-term implementation guidance:
+
+Treat current modules as logical services and start publishing domain events from Listings and Matching (even inside the monolith).
+
+Introduce a lightweight “DonationOrchestrator” module or service only for the critical donation lifecycle, while keeping notifications and analytics event-driven.
+
+Add basic tracing/logging so we can see an end-to-end donation flow in both styles.
+
+Revisit the architecture as the product grows to decide whether to move more workflows into orchestration or keep them choreographed.
+
+== How This Guides Future Work
+
+This analysis should be used when designing new features that cross multiple contexts:
+
+When the key question is “how easy is it to extend this with new side-effects?” → lean toward choreography.
+
+When the key question is “how do we guarantee consistency and handle errors?” → lean toward orchestration.
+
+Future architecture docs can reference this file when deciding how to coordinate new workflows such as returns, exchanges, or scheduled pickups.
