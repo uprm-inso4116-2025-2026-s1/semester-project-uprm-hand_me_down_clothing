@@ -15,7 +15,10 @@ export class SoldPiece extends Piece {
         reason: string | null,
         images: Array<string>,
         user_id: string,
+        status: Status,
+        public latitude: number | null,
+        public longitude: number | null,
     ) {
-        super(id, name, category, color, brand, gender, size, price, condition, reason, images, user_id);
+        super(id, name, category, color, brand, gender, size, price, condition, reason, images, user_id, status, latitude, longitude);
     }
 }

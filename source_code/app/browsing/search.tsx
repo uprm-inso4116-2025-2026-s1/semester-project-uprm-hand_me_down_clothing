@@ -41,9 +41,9 @@ export default function ResultsPanel({ items, className }: ResultsPanelProps) {
             <div className={className ?? ''}>
                 <div className="flex flex-wrap justify-center gap-6">
                     {items.map(piece => (
-                        <div className="flex flex-wrap justify-center gap-6 mb-6">
+                        <div className="flex flex-wrap justify-center gap-6 mb-6"
+                        key={piece.id}>
                             <button
-                                key={piece.id}
                                 id="Featured_Item_btn"
                                 className="flex flex-col text-left indent-4 w-78 h-94 hover:bg-[#F9F8F8] border-2 border-[#E5E7EF] m-auto rounded-3xl">
                                 <div className="w-full h-50 text-center indent-0 bg-[#aac7c0] p-3 flex space-x-2 rounded-3xl">

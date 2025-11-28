@@ -26,6 +26,7 @@ export default function Browsing() {
     const [loading, setLoading] = useState(true);
     const [currentItems, setCurrentItems] = useState<Piece[]>([]);
     const [filteredItems, setFilteredItems] = useState<Piece[]>([]);
+    const [locationDenied, setLocationDenied] = useState(false);
 
     useEffect(() => {
         async function mount() {
@@ -98,9 +99,24 @@ export default function Browsing() {
                     className="w-150 h-13 px-4 py-2 mt-6 mb-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
                 </input>
                 </form>
-                <DistanceFilterButton />
+                <DistanceFilterButton
+                    query={query}
+                    onNearbyResults={(pieces) => {
+                        setCurrentItems(pieces);
+                        setFilteredItems(pieces);
+                    }}
+                    onLocationDenied={() => setLocationDenied(true)}
+                />
             </div>
-
+            {/* Location denied or Location is off message*/}
+            {locationDenied && (
+                <div className="flex justify-center mb-4 px-4">
+                <div className="w-full max-w-xl rounded-2xl border border-[#E5E7EF] bg-[#FFF4F4] px-4 py-3 text-sm text-[#7A2E2E]">
+                    Location is turned off or permission was denied. Please enable
+                    location access for this webpage to use the “Near Me” filter.
+                </div>
+                </div>
+            )}
             <h2 className="text-3xl font-bold italic pl-15 ">Filter your search...</h2>
             <div className="flex space-x-auto mb-6 px-13 pt-4 pl-18 pr-18">
                 {featured_categories.map((cat) => (
