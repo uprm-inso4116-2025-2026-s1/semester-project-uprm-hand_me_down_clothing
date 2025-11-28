@@ -5,6 +5,7 @@ import SupabaseClient from '@supabase/supabase-js/dist/module/SupabaseClient'
 import { setAuthPersistence } from './storage'
 import { supabase } from './supabaseClient'
 import { User } from '@supabase/supabase-js'
+import { mapAuthError, logAuthError } from './errorMapper'
 
 export type Profile = {
   id: string
