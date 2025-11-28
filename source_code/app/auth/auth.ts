@@ -4,7 +4,7 @@
 import SupabaseClient from '@supabase/supabase-js/dist/module/SupabaseClient'
 import { setAuthPersistence } from './storage'
 import { supabase } from './supabaseClient'
-import { User } from '@supabase/supabase-js'
+import { User, Session } from '@supabase/supabase-js'
 
 export type Profile = {
   id: string
@@ -17,6 +17,25 @@ export type Profile = {
   followers_count: number
   following_count: number
   donations_count: number
+}
+
+export type Role = 'user' | 'buyer' | 'seller' | 'donor' | 'admin'
+
+// Normalize any raw string into a valid Role
+export function normalizeRole (raw?: string | null): Role {
+  if (
+    raw === 'buyer' ||
+    raw === 'seller' ||
+    raw === 'donor' ||
+    raw === 'admin'
+  ) {
+    return raw
+  }
+  return 'user'
+}
+
+export function hasAnyRole (role: Role, allowed: Role[]): boolean {
+  return allowed.includes(role)
 }
 
 export type OAuthProvider = 'google' | 'facebook' | 'apple'
@@ -218,6 +237,55 @@ export async function getAuthUserWithProfile (
   return {
     user,
     profile: profile ?? null,
+    error: profileError ?? null
+  }
+}
+
+export type AuthWithProfile = {
+  user: User | null
+  session: Session | null
+  profile: Profile | null
+  role: Role
+}
+
+export async function getAuthWithProfile (
+  client: SupabaseClient
+): Promise<{ data: AuthWithProfile; error: Error | null }> {
+  const { data: sessionData, error: sessionError } =
+    await client.auth.getSession()
+
+  if (sessionError) {
+    return {
+      data: { user: null, session: null, profile: null, role: 'user' },
+      error: sessionError
+    }
+  }
+
+  const session = sessionData.session
+  const user = session?.user ?? null
+
+  if (!user) {
+    return {
+      data: { user: null, session: null, profile: null, role: 'user' },
+      error: null
+    }
+  }
+
+  const { data: profile, error: profileError } = await client
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .maybeSingle<Profile>()
+
+  const rawRole =
+    (profile?.role as string | null | undefined) ??
+    (user.user_metadata?.role as string | undefined) ??
+    null
+
+  const role = normalizeRole(rawRole)
+
+  return {
+    data: { user, session, profile: profile ?? null, role },
     error: profileError ?? null
   }
 }

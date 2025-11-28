@@ -4,7 +4,7 @@ import "./globals.css";
 import AnnouncementBar from "@/src/components/announcementBar";
 import TopNav from "@/src/components/nav_bar";
 import Footer from "@/src/components/Footer";
-import { SupabaseAuthProvider } from "@/app/auth/SupabaseAuthProvider";
+import { SupabaseAuthProvider } from "@/app/auth/useSupabaseAuth";  // 👈 change here
 
 
 

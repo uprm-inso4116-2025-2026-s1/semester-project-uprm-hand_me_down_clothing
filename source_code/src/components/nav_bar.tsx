@@ -8,6 +8,7 @@ import { useEffect, useRef, useState } from "react";
 
 import { supabase } from "@/app/auth/supabaseClient";
 import { useSupabaseAuth } from "@/app/auth/useSupabaseAuth";
+import { hasAnyRole, type Role } from "@/app/auth/auth";
 
 function cx(...c: (string | false | undefined)[]) {
   return c.filter(Boolean).join(" ");
@@ -17,7 +18,7 @@ export default function TopNav() {
   const pathname = usePathname();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
-  const { user, loading } = useSupabaseAuth(); // 👈 auth context
+  const { user, role, loading } = useSupabaseAuth(); // 👈 auth context
 
 
   // --- dynamic behavior: sticky + hide-on-scroll + shadow ---
@@ -64,22 +65,50 @@ export default function TopNav() {
     }
   }
 
-  const links = [
+  type NavLink = {
+    href: string;
+    label: string;
+    minAuth?: boolean;       // requires logged-in user?
+    allowedRoles?: Role[];   // optional per-link restriction
+  };
+
+  const links: NavLink[] = [
     { href: "/", label: "Home" },
     { href: "/browsing", label: "Browse" },
     { href: "/map", label: "Map" },
     { href: "/listings/transactions/donate", label: "Donate" },
-    // { href: "/listings/transactions/sell_piece", label: "Browse" },
     { href: "/about", label: "About" },
-    { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
-    { href: "/profile", label: "Profile" },
-    { href: "/login", label: "Sign In / Sign Up" }
+
+    // Only for logged-in users with certain roles:
+    {
+      href: "/dashboard",
+      label: "Dashboard",
+      minAuth: true,
+      allowedRoles: ["seller", "donor", "admin"],  // example
+    },
+    {
+      href: "/profile",
+      label: "Profile",
+      minAuth: true,
+      allowedRoles: ["user", "buyer", "seller", "donor", "admin"],
+    },
+
+    // Only for logged-out users:
+    { href: "/login", label: "Sign In / Sign Up" },
   ];
 
-  // Filter links based on auth state:
-  const visibleLinks = links.filter(({ href }) => {
-    if (href === "/login" && user) return false; // hide sign in when logged in
-    if ((href === "/dashboard" || href === "/profile") && !user) return false; // hide authed-only links when logged out
+  const visibleLinks = links.filter((link) => {
+    // hide login when logged in
+    if (link.href === "/login" && user) return false;
+
+    // require auth?
+    if (link.minAuth && !user) return false;
+
+    // if allowedRoles specified, enforce it
+    if (link.allowedRoles && !hasAnyRole(role, link.allowedRoles)) {
+      return false;
+    }
+
     return true;
   });
 
