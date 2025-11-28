@@ -95,6 +95,7 @@ export default function Browsing() {
                     name="Search_Bar"
                     type="text"
                     placeholder="Search for clothing..."
+                    maxLength={150}
                     className="w-150 h-13 px-4 py-2 mt-6 mb-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
                 </input>
                 </form>

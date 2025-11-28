@@ -4,6 +4,20 @@ import { PieceFactory } from "../factories/pieceFactory";
 import { Category, Condition, Gender, Size, Status } from "@/app/types/classifications";
 import { PieceSpecification } from "../specifications/piece_specifications";
 
+// Maximum character lengths for specific filter fields
+const FIELD_MAX_LENGTHS: Record<string, number> = {
+    name: 100,           // Item name/description
+    color: 20,           // Color name
+    brand: 50,           // Brand name
+    category: 30,        // Category type
+    gender: 10,          // Gender classification
+    size: 10,            // Size designation
+    condition: 15,       // Condition description
+    status: 15,          // Status type
+    // Default fallback for any other fields
+    default: 150
+};
+
 /**
  * Repository class responsible for all CRUD operations and data retrieval
  * for Piece domain objects from the Supabase database.
@@ -168,6 +182,7 @@ export class PieceRepository {
     /**
      * Filters pieces in the database based on optional criteria.
      * Supports partial name search (case-insensitive) and exact matches for other fields.
+     * Filter values are limited to 150 characters for performance and security.
      *
      * @param {Partial<Record<string, any>>} filters - Filter criteria such as:
      * `{ name, category, brand, color, size, gender, price, condition }`
@@ -190,6 +205,15 @@ export class PieceRepository {
 
             Object.entries(filters).forEach(([key, value]) => {
                 if (value == null || value === '') return;
+                
+                // Validate string length for security and performance with field-specific limits
+                if (typeof value === 'string') {
+                    const maxLength = FIELD_MAX_LENGTHS[key] || FIELD_MAX_LENGTHS.default;
+                    if (value.length > maxLength) {
+                        console.warn(`Filter value for "${key}" exceeds maximum length of ${maxLength} characters. Truncating.`);
+                        value = value.substring(0, maxLength);
+                    }
+                }
 
                 if (searchFields.includes(key)) {
                     query = query.ilike(key, `%${value}%`);

@@ -125,6 +125,7 @@ export default function Homepage() {
                 name="Search_Bar"
                 type="text"
                 placeholder="Search for clothing..."
+                maxLength={150}
                 className="w-full sm:w-96 px-4 py-3 mt-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]"
               />
             </form>
