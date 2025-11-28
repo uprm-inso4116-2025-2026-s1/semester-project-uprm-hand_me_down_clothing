@@ -41,7 +41,7 @@ Abstraction groups related responsibilities into meaningful architectural contex
 
 * Authentication ↦ identity, access, user sessions  
 * Listings ↦ items offered for sale or donation  
-* Communication ↦ messages, pickup coordination
+
 
 Instead of dealing with **everything at once**, abstraction elevates our view so we only see essential structures.
 
