@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from "react";
-import {fetchPieces, SearchPieces as handleSearch, mountPieceElements} from "./search";
+import {fetchPieces} from "./searchService";
 import ResultsPanel from "./search";
 import { useSearchParams } from "next/navigation";
 import DistanceFilterButton from "./distance_filter";
