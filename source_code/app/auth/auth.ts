@@ -13,6 +13,10 @@ export type Profile = {
   firstname?: string | null
   lastname?: string | null
   role?: string | null
+  bio: string | null
+  followers_count: number
+  following_count: number
+  donations_count: number
 }
 
 // Sign up (register) a new user

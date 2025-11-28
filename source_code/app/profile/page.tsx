@@ -5,18 +5,7 @@ import { useRouter } from "next/navigation";
 
 import { supabase } from "@/app/auth/supabaseClient";
 import { useSupabaseAuth } from "@/app/auth/useSupabaseAuth";
-
-type Profile = {
-  id: string;
-  display_name?: string | null;
-  firstname?: string | null;
-  lastname?: string | null;
-  role?: string | null;
-  bio?: string | null;
-  followers_count?: number | null;
-  following_count?: number | null;
-  donations_count?: number | null;
-};
+import { Profile } from "../auth/auth";
 
 export default function ProfilePage() {
   const router = useRouter();
@@ -163,7 +152,7 @@ export default function ProfilePage() {
 
             <p className="mt-1 text-sm text-gray-600">
               {/* This line can later be bound to a computed stat, e.g. donations count */}
-              {profile?.donations_count != null
+              {profile?.donations_count
                 ? `has donated more than ${Math.floor(profile.donations_count / 10) * 10} pieces of clothing`
                 : "No donations yet"}
             </p>
@@ -185,7 +174,7 @@ export default function ProfilePage() {
             {/* Description */}
             <div className="mt-4">
               <p className="text-gray-800 font-medium">{profile?.firstname}’s shop</p>
-              <p className="text-gray-600 leading-relaxed">{description}</p>
+              <p className="text-gray-600 leading-relaxed">{description || "Add profile description..."}</p>
             </div>
 
             {profileError && (

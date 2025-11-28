@@ -71,6 +71,7 @@ export default function TopNav() {
     { href: "/about", label: "About" },
     { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
     { href: "/profile", label: "Profile" },
+    { href: "/login", label: "Sign In / Sign Up" }
   ];
 
   // Filter links based on auth state:
