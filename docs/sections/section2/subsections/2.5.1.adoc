@@ -1,0 +1,24 @@
+=== 2.5.1 Summary of Implemented End-to-End Features
+
+The following table summarizes the implemented features across subsystems.
+
+[cols="1,3,2", options="header"]
+|===
+| Subsystem | Implemented Features | Source
+
+| Authentication (Team 2)
+| Signup, login, logout, persistent sessions, profile editing, protected routes
+| Team 2 Auth Summary
+
+| Backend (Team 3)
+| Create Piece, Create Listing, Publish Listing, Close Listing (transactional), Saved Listings, Filtered Listing Retrieval
+| Team 3 Backend Summary
+
+| Map (Team 4)
+| Map rendering, marker clustering, routing providers, modals, location info, route preview
+| Team 4 Map Summary
+
+| UI (Team 5)
+| Home → Browse → Listing → Interest flow, Auth screens, Profile screens, Map screens, Saved Listings UI, loading/error states
+| Team 5 UI Summary
+|===
