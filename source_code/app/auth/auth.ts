@@ -1,7 +1,17 @@
 // Log in (sign in) an existing user
 import { setAuthPersistence } from './storage'
 import { supabase } from './supabaseClient'
+import { User } from '@supabase/supabase-js'
 import { mapAuthError, logAuthError } from './errorMapper'
+
+export type Profile = {
+  id: string
+  email?: string | null
+  display_name?: string | null
+  firstname?: string | null
+  lastname?: string | null
+  role?: string | null
+}
 
 // Sign up (register) a new user
 export async function signUp (
