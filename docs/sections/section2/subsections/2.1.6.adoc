@@ -86,7 +86,7 @@ publishListing : Piece >< Seller >< Locale -> Either[ValidationError, Listing]
 
 Description:: A Seller publishes a Piece in a given Locale, producing a new Listing.
 
-Preconditions:: Seller and Piece exist and are active; Piece has required metadata (title, condition, images).
+Preconditions:: Seller and Listing exist and are active; Listing has required metadata (title, condition, images).
 
 Postconditions:: A new Listing is created and stored in the ListingRepository as *available*.
 
@@ -111,7 +111,7 @@ Preconditions:: Piece exists; rating within valid scale.
 
 Postconditions:: Returns the updated Piece.
 
-review : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]
+submitReview : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]
 
 Description:: Records a review after an offline exchange.
 
@@ -132,9 +132,9 @@ categorize : Piece >< Type -> Option[Piece]
 
 Description:: Assigns a category type to a Piece.
 
-discard : Piece -> Option[Void]
+discard : Listing -> Option[Void]
 
-Description:: Marks a Piece as inactive and removes it from circulation.
+Description:: Marks a Listing as closed and removes it from circulation.
 
 browseAvailableItems : ListingRepository -> Set<Listing>
 
@@ -182,4 +182,4 @@ Description:: Retrieves a Listing by identifier from the repository.
    `closeListing(Listing, Seller) -> Either[ClosedError, Listing]`.
 
 6. Buyer leaves a review using  
-   `review(Seller, Buyer, Review) -> Either[ReviewError, ReviewSubmitted]`.
+   `submitReview(Seller, Buyer, Review) -> Either[ReviewError, ReviewSubmitted]`.

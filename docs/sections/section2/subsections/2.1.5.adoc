@@ -93,7 +93,7 @@ The final handoff of the item, outside the platform.
 | *Trigger* | Buyer and seller agree to meet after interest is established.
 | *Actors*  | Buyer and Seller
 | *Actions + Events* |
-- Coordinate meetup (time, place)  
+- Coordinate offline exchange (time, place)  
 - Physical handoff  
 - Seller closes listing → *Listing Closed*
 | *Observed Pattern* | Exchanges occur face-to-face in familiar public areas; value transfer is informal.

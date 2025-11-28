@@ -8,6 +8,7 @@ ensures alignment with both domain knowledge and system concerns.
 [cols="^,^,^,3", options="header", align=center]
 |===
 | Term | Concept Type | Phase Introduced | Definition / Notes
+| User | Entity | Domain | A person who interacts with the platform that can assume the role of a Seller or Buyer.
 | Seller | Role | Domain | Social role representing an actor who offers Pieces for reuse or resale.
 | Buyer | Role | Domain | Social role representing an actor who browses Listings and initiates contact.
 | Piece | Entity | Domain | A physical clothing item, existing independently of the system’s representation.
