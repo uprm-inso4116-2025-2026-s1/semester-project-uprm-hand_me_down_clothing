@@ -17,7 +17,8 @@ accessory that circulates between actors. Each Piece carries attributes such as:
 * *Type*: The category of clothing.  
 * *Condition Rating*: A measure of quality or usability.
 
-Pieces move between states through events:
+Meanwhile, a *Listing* is a published representation of a Piece in the platform.
+Listings move between states through events:
 
 * *Listing Published*: Occurs when a Seller makes a garment visible to potential Buyers.  
 * *Interest Expressed*: Occurs when a Buyer contacts a Seller regarding a listed garment.  

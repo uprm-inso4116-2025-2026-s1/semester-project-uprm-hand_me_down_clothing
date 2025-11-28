@@ -26,10 +26,10 @@ A **Listing** — *Entity* — represents an item made visible by a seller for r
 |===
 | Role | Kind | Notes
 
-| Piece | Aggregate Root | Discoverable item (listing) and single entry point for changes.
+| Listing | Aggregate Root | Discoverable item and single entry point for changes.
 | ConditionRating | Value Object | Integer in `[1..10]`; updated via root method only.
 | Review | Child Entity | `{id, reviewer, rating (1–5), comment, createdAt}`; belongs to exactly one Piece. // reviewer (concept), not just an ID
-| Reservation | Value Object | *Conceptually associates a Buyer with a Piece*; storage may use an internal identifier (e.g., buyerId) but the domain concept is *Buyer*.
+| Reservation | Value Object | *Conceptually associates a Buyer with a Listing*; storage may use an internal identifier (e.g., buyerId) but the domain concept is *Buyer*.
 | Images | Collection of Value Objects | ≥ 1 image required when publishing (URI + metadata).
 | Status | Value Object | One of: `Active | Reserved | Closed`.
 | Seller | Reference (Primitive/VO) | Owner identity outside the aggregate boundary (storage key may be `sellerId`).
@@ -38,15 +38,15 @@ A **Listing** — *Entity* — represents an item made visible by a seller for r
 
 [NOTE]
 ====
-*Domain Purity:* Read-model/presentation types such as `Page<PieceSummary>` belong to query/view layers.
-They must not be part of the *Piece* aggregate itself.
+*Domain Purity:* Read-model/presentation types such as `Page<ListingSummary>` belong to query/view layers.
+They must not be part of the *Listing* aggregate itself.
 ====
 
 ===== Invariants
 [cols="2,1,1,3", options="header"]
 |===
 | Invariant | Enforced In | Temp. Violation? | Rationale
-| A Piece requires ≥ 1 image at publish time. | Factory / publish step | No | Visual trust for discovery.
+| A Listing requires ≥ 1 image at publish time. | Factory / publish step | No | Visual trust for discovery.
 | `ConditionRating` ∈ `[1..10]`. | `rateCondition()` | No | Consistent quality scale.
 | A `Review` belongs to exactly one Piece. | `addReview()` | No | Prevents cross-linking reviews.
 | Status transitions follow `Active ↔ Reserved → Closed` (no reopen). | Root methods | Yes (within method only) | Coherent lifecycle; history integrity.
@@ -56,7 +56,7 @@ They must not be part of the *Piece* aggregate itself.
 |===
 
 ===== Root Operations (Conceptual Surface)
-- `publish()` — (if drafts are modeled) make the Piece publicly visible.
+- `publish()` — (if drafts are modeled) make the Listing publicly visible.
 - `editDetails(updates)` — update title/description/attributes (forbidden when `Closed`).
 - `rateCondition(newRating)` — set/adjust condition in `[1..10]`.
 - `reserveFor(buyer)` — `Active → Reserved` (hold while parties coordinate offline).
@@ -66,8 +66,8 @@ They must not be part of the *Piece* aggregate itself.
 
 ===== Repository (Conceptual)
 A repository operates at the *aggregate level* (reads may provide projections for lists):
-- `findById(pieceId) → Piece?`
-- `save(piece) → void` (persists the whole aggregate and its members)
+- `findById(ListingId) → Listing?`
+- `save(Listing) → void` (persists the whole aggregate and its members)
 - Read-model queries *(projections)* for UI lists, e.g.:
-  - `findActiveByFilters(filters) → Page<PieceSummary>`
-  - `findBySeller(seller) → Page<PieceSummary>`
+  - `findActiveByFilters(filters) → Page<ListingSummary>`
+  - `findBySeller(seller) → Page<ListingSummary>`

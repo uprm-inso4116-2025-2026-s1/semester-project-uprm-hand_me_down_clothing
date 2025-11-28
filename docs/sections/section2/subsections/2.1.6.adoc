@@ -25,9 +25,9 @@ The general format of a function signature is:
 
 publishListing : Piece >< Seller >< Locale -> Either[ValidationError,ListingPublished]
 
-Description:: A Seller publishes a Piece in a given Locale, producing a ListingPublished event.
+Description:: A Seller publishes a Listing in a given Locale, producing a ListingPublished event.
 
-Preconditions:: Seller and Piece exist and are active; Piece has required metadata (title, condition, images).
+Preconditions:: Seller and Listing exist and are active; Listing has required metadata (title, condition, images).
 
 Postconditions:: Listing becomes visible; `ListingPublished` recorded.
 
@@ -52,7 +52,7 @@ Preconditions:: Piece exists; rating within 1–5.
 
 Postconditions:: Piece’s stored rating updated.
 
-Notes:: Returns `None` if Piece missing/inactive.
+Notes:: Returns `None` if Listing missing/inactive.
 
 review : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]  
 
@@ -84,15 +84,15 @@ Postconditions:: Piece’s Type attribute updated.
 
 Notes:: Returns `None` if Piece missing/inactive. Does not change visibility.
 
-discard : Piece -> Option[Void]
+discard : Listing -> Option[Void]
 
-Description:: Removes a Piece from active circulation.
+Description:: Removes a Listing from active circulation.
 
-Preconditions:: Piece exists and is active.
+Preconditions:: Listing exists and is active.
 
-Postconditions:: Piece marked as discarded/inactive.
+Postconditions:: Listing marked as discarded/inactive.
 
-Notes:: Returns `None` if Piece missing/inactive.
+Notes:: Returns `None` if Listing missing/inactive.
 
 ==== Example Scenario: From Listing to Offline Exchange
 1. Seller publishes a listing using `publishListing(Piece, Seller, Locale)` → produces `ListingPublished`.  
