@@ -1,0 +1,170 @@
+=== 2.3.2 Specification Pattern
+*Status: Added for Milestone 3 – Application of Techniques*
+
+This section documents how the team applied the *Specification Pattern* to replace scattered conditional logic and move toward reusable, composable domain rules. The example below aligns with the Listing and Filter concepts defined in <<_2_1_domain_model_overview,Section 2.1 Domain Model Overview>> and with the architectural separation of concerns described in <<_2_2_architecture_and_layering,Section 2.2 Architecture & Layering>>.
+
+==== Before: Scattered Conditional Logic
+Originally, the logic for filtering listings or map markers existed as raw conditional statements mixed directly inside controller methods. These conditionals were repeated in multiple places (Map screen, Listing search endpoint, utility handlers).
+
+This “Before” approach violated the principle of keeping business rules inside the domain layer (see <<_2_2_architecture_and_layering,Section 2.2>>), since controllers were deciding domain-level rules like *Near Me* or *Open Now*.
+
+Example of *Before* logic:
+
+[source,typescript]
+----
+function filterResults(listings, filters) {
+  return listings.filter(listing => {
+    let ok = true;
+
+    if (filters.nearMe) {
+      const dist = calculateDistance(listing.location, filters.userLocation);
+      if (dist > filters.radiusMeters) ok = false;
+    }
+
+    if (filters.openNow) {
+      const hour = new Date().getHours();
+      if (!(listing.openingHour <= hour && hour <= listing.closingHour)) {
+        ok = false;
+      }
+    }
+
+    if (filters.category) {
+      if (listing.category !== filters.category) ok = false;
+    }
+
+    return ok;
+  });
+}
+----
+
+*Observed issues:*
+- Rules were mixed directly into UI/Controller code.
+- Logic duplicated across the project.
+- Adding new rules required editing multiple files.
+- No clear mapping to the `Filter` Value Object introduced in <<_2_1_domain_model_overview,Section 2.1>>.
+
+==== New Insight
+While preparing Milestone 3, the team recognized that *filters are domain rules*, not UI concerns.  
+Each rule has meaning in the domain and should be modeled accordingly.
+
+This realization parallels the reasoning behind the Strategy Pattern previously documented in <<_2_3_1_strategy_pattern,Section 2.3.1 Strategy Pattern>>, where behavior was extracted into dedicated, interchangeable classes.
+
+Here, Specifications become a natural extension:  
+**Each filter = a Specification. Multiple filters = composed Specifications.**
+
+This also aligns directly with the new `Filter` Value Object defined in the domain.
+
+==== After: Reusable Specification Classes
+The Specification Pattern was applied by modeling each rule as a standalone class implementing a common contract:
+
+[source,typescript]
+----
+interface Specification<T> {
+  isSatisfiedBy(candidate: T): boolean;
+}
+----
+
+Concrete domain rules:
+
+[source,typescript]
+----
+export class NearMeSpecification implements Specification<Listing> {
+  constructor(private userLocation, private radiusMeters) {}
+
+  isSatisfiedBy(listing: Listing): boolean {
+    const dist = calculateDistance(listing.location, this.userLocation);
+    return dist <= this.radiusMeters;
+  }
+}
+
+export class OpenNowSpecification implements Specification<Listing> {
+  constructor(private currentHour: number) {}
+
+  isSatisfiedBy(listing: Listing): boolean {
+    return (
+      listing.openingHour <= this.currentHour &&
+      this.currentHour <= listing.closingHour
+    );
+  }
+}
+----
+
+Composition (from Section 2.1’s domain rules and the architecture constraints in Section 2.2):
+
+[source,typescript]
+----
+export class AndSpecification<T> implements Specification<T> {
+  constructor(private left: Specification<T>, private right: Specification<T>) {}
+
+  isSatisfiedBy(candidate: T): boolean {
+    return this.left.isSatisfiedBy(candidate) && this.right.isSatisfiedBy(candidate);
+  }
+}
+----
+
+Used in domain filtering:
+
+[source,typescript]
+----
+function applySpecifications(listings: Listing[], specs: Specification<Listing>[]) {
+  return listings.filter(l =>
+    specs.every(spec => spec.isSatisfiedBy(l))
+  );
+}
+----
+
+Combined filter application (maps cleanly to the Filter VO from Section 2.1):
+
+[source,typescript]
+----
+const specs: Specification<Listing>[] = [];
+
+if (filterVO.nearMe) {
+  specs.push(new NearMeSpecification(userLoc, filterVO.radius));
+}
+
+if (filterVO.openNow) {
+  specs.push(new OpenNowSpecification(currentHour));
+}
+
+const result = applySpecifications(allListings, specs);
+----
+
+==== Diagram: Specification Composition Flow
+[plantuml]
+----
+@startuml
+interface Specification {
+  +isSatisfiedBy(candidate)
+}
+
+class NearMeSpecification
+class OpenNowSpecification
+class AndSpecification
+
+Specification <|.. NearMeSpecification
+Specification <|.. OpenNowSpecification
+Specification <|.. AndSpecification
+
+NearMeSpecification --> Listing : distance rule
+OpenNowSpecification --> Listing : time rule
+
+AndSpecification *-- Specification : left
+AndSpecification *-- Specification : right
+@enduml
+----
+
+==== Benefits Achieved
+- **Follows Domain Layer boundaries** from <<_2_2_architecture_and_layering,Section 2.2>>.  
+- **Directly models rules described in the Listing and Filter VO** from <<_2_1_domain_model_overview,Section 2.1>>.  
+- **Consistent with behavioral extraction principles** from <<_2_3_1_strategy_pattern,Section 2.3.1 Strategy Pattern>>.  
+- **Reusable:** Same domain rules used by Map Team and backend filtering.  
+- **Composable:** Rules combine with AND/OR without modifying controller code.  
+- **Testable:** Each Specification is independently unit-tested.  
+- **Extensible:** Adding a new filter means adding a new Specification class only.
+
+==== Testing & Verification
+- AsciiDoc renders without warnings.
+- Specification logic matches real Listing, Map, and Filter VO code.
+- Cross-references are correct and point to actual earlier sections.
+- No inconsistencies remain between UI filters and backend filtering rules.

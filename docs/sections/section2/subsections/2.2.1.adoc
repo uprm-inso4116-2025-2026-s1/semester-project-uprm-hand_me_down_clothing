@@ -6,28 +6,37 @@ Epics are a higher-level overview of goals that are large enough in scope that t
 
 *Buyer Epics*
 
+[[EPIC-1]]
 . Listing Discovery  
 .. As a buyer, I want to search for listings by category, filters, and keywords, so that I can quickly find clothing items that meet my needs.  
+*Implemented by:* <<FEATURE-1.1>>, <<FEATURE-1.2>>, <<FEATURE-1.3>>
 
+[[EPIC-2]]
 . Saved Listings  
 .. As a buyer, I want to bookmark listings I am interested in, so that I can revisit them later when deciding whether to contact the seller.  
+*Implemented by:* <<FEATURE-2.1>>, <<FEATURE-2.2>>
 
+[[EPIC-3]]
 . Trust and Transparency  
 .. As a buyer, I want to view detailed seller profiles and leave reviews after exchanges, so that I can make informed and confident decisions about future interactions.  
+*Implemented by:* <<FEATURE-3.1>>, <<FEATURE-3.2>>, <<FEATURE-3.3>>, <<FEATURE-3.4>>
 
 *Seller Epics*
 
+[[EPIC-4]]
 . Listing Management  
 .. As a seller, I want to create, edit, and close listings with detailed information, so that I can effectively manage the items I am offering for reuse or resale.  
+*Implemented by:* <<FEATURE-4.1>>, <<FEATURE-4.2>>, <<FEATURE-4.3>>, <<FEATURE-4.4>>
 
+[[EPIC-5]]
 . Interest Notifications  
 .. As a seller, I want to receive notifications when someone shows interest in my item, so that I can promptly respond and arrange the exchange offline.  
+*Implemented by:* <<FEATURE-5.1>>, <<FEATURE-5.2>>
 
+[[EPIC-6]]
 . Seller Profile and Trust  
 .. As a seller, I want to maintain a profile with personal and location details, so that I can establish credibility and attract buyers interested in my listings.  
-
-
-// =================================================================
+*Implemented by:* <<FEATURE-6.1>>, <<FEATURE-6.2>>
 
 === *Features*
 
@@ -36,38 +45,97 @@ Features specify the functionality required to deliver the goals described in th
 *Buyer Features*
 
 . Listing Discovery  
+[[FEATURE-1.1]]
 .. Filtering (clothing type, size, color, condition, category, price/free marker, etc.).  
+   *Supports:* <<EPIC-1>>  
+   *Requires:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>
+
+[[FEATURE-1.2]]
 .. Keyword search.  
+   *Supports:* <<EPIC-1>>  
+   *Requires:* <<REQ-DR1>>, <<REQ-DR3>>
+
+[[FEATURE-1.3]]
 .. Sorting options (newest first, alphabetical, etc.).  
+   *Supports:* <<EPIC-1>>  
+   *Requires:* <<REQ-DR1>>
 
 . Saved Listings  
-.. Ability to bookmark for later consideration.  
+[[FEATURE-2.1]]
+.. Ability to bookmark listings for later consideration.  
+   *Supports:* <<EPIC-2>>  
+   *Requires:* <<REQ-DR1>>
+
+[[FEATURE-2.2]]
 .. Saved listings persist across sessions and devices.  
+   *Supports:* <<EPIC-2>>  
+   *Requires:* <<REQ-DR1>>
 
 . Trust and Transparency  
+[[FEATURE-3.1]]
 .. Seller profile page (location, account age, bio).  
+   *Supports:* <<EPIC-3>>  
+   *Requires:* <<REQ-DR3>>
+
+[[FEATURE-3.2]]
 .. Seller ratings & reviews system.  
+   *Supports:* <<EPIC-3>>  
+   *Requires:* <<REQ-DR3>>
+
+[[FEATURE-3.3]]
 .. Buyer-to-seller review submission flow.  
+   *Supports:* <<EPIC-3>>  
+   *Requires:* <<REQ-DR3>>
+
+[[FEATURE-3.4]]
 .. Reporting mechanism for problematic listings or suspicious behavior.  
+   *Supports:* <<EPIC-3>>  
+   *Requires:* <<REQ-DR1>>
 
 *Seller Features*
 
 . Listing Management  
+[[FEATURE-4.1]]
 .. Create listing form (title, description, tags, price/free marker, category).  
+   *Supports:* <<EPIC-4>>  
+   *Requires:* <<REQ-DR1>>, <<REQ-DR4>>
+
+[[FEATURE-4.2]]
 .. Upload multiple images per listing.  
+   *Supports:* <<EPIC-4>>  
+   *Requires:* <<REQ-DR1>>
+
+[[FEATURE-4.3]]
 .. Edit listing details (update description, condition, images, price).  
+   *Supports:* <<EPIC-4>>  
+   *Requires:* <<REQ-DR1>>, <<REQ-DR5>>
+
+[[FEATURE-4.4]]
 .. Closing a listing once the exchange is complete offline.  
+   *Supports:* <<EPIC-4>>  
+   *Requires:* <<REQ-DR3>>
 
 . Interest Notifications  
+[[FEATURE-5.1]]
 .. Push/email/in-app notifications when a buyer expresses interest in a listing.  
+   *Supports:* <<EPIC-5>>  
+   *Requires:* <<REQ-DR3>>
+
+[[FEATURE-5.2]]
 .. Notification center showing recent messages or contact attempts.  
+   *Supports:* <<EPIC-5>>  
+   *Requires:* <<REQ-DR3>>
 
 . Seller Profile and Trust  
+[[FEATURE-6.1]]
 .. Editable seller profile (profile picture, name, location, short bio).  
+   *Supports:* <<EPIC-6>>  
+   *Requires:* <<REQ-DR3>>
+
+[[FEATURE-6.2]]
 .. Seller dashboard displaying active and closed listings, as well as reviews and ratings.  
-
-
-// =================================================================
+   *Supports:* <<EPIC-6>>  
+   *Requires:* <<REQ-DR1>>, <<REQ-DR3>>
 
 === *User Stories*
 

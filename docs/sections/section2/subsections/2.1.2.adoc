@@ -1,6 +1,7 @@
 === *2.1.2 - Terminology*
 
-The following terminology consolidates entities, events, functions, and behaviors in the domain. Each entry specifies the type of concept it represents and the phase in which it is introduced  
+The following terminology consolidates entities, events, functions, and behaviors in the domain.  
+Each entry specifies the type of concept it represents and the phase in which it is introduced  
 (domain, requirements, design, implementation). This approach avoids circular definitions and  
 ensures alignment with both domain knowledge and system concerns.
 
@@ -8,20 +9,20 @@ ensures alignment with both domain knowledge and system concerns.
 |===
 | Term | Concept Type | Phase Introduced | Definition / Notes
 | User | Entity | Domain | A person who interacts with the platform that can assume the role of a Seller or Buyer.
-| Seller | Attribute/Role | Domain | A User who posts a clothing item on the platform to make it visible for reuse or resale.
-| Buyer | Attribute/Role | Domain | A User who browses listings and contacts sellers to express interest in an item.
-| Piece | Entity | Domain | An individual clothing item, defined independently of the system.
-| Listing | Representation | Design | A published representation of a Piece in the platform, visible to potential buyers.
-| Listing Published | Event | Domain | Instantaneous occurrence when a Seller makes a clothing item publicly visible.
-| Interest Expressed | Event | Domain | Instantaneous occurrence when a Buyer contacts a Seller about a listed item.
-| Listing Closed | Event | Domain | Occurrence when a Listing is manually closed by the Seller after the exchange is completed offline or the item is withdrawn.
-| Condition Rating | Attribute / Function | Domain | A measure (e.g., scale 1–10) of quality for a Piece.
-| Review | Artifact | Domain | Feedback associated with a completed offline exchange between Buyer and Seller.
-| Locale | Entity | Domain | Physical location where exchanges typically occur (e.g., campus area, public spot).
-| Type | Attribute | Domain | Category of clothing (dress, pants, shirt, etc.).
-| rate(Piece, ConditionRating) -> ConditionRating | Function | Design | Updates the condition rating of a Piece using the new rating value; no pre-existing rating is required.
-| publishListing(Piece, Seller, Locale) -> ListingPublished | Event Function | Design | Function that triggers the publication of a new Listing by a Seller at a given Locale.
-| bookmarkListing(Listing, Buyer) -> ListingBookmarked | Event Function | Design | Function that triggers the event when a Buyer bookmarks a Listing, making it appear in the Saved Listings page.
-| expressInterest(Listing, Buyer) -> InterestExpressed | Event Function | Design | Function that triggers the event when a Buyer contacts a Seller about a Listing.
-| closeListing(Listing, Seller) -> ListingClosed | Event Function | Design | Function that closes a Listing, indicating that the exchange has been completed offline or the item is no longer available.
+| Seller | Role | Domain | Social role representing an actor who offers Pieces for reuse or resale.
+| Buyer | Role | Domain | Social role representing an actor who browses Listings and initiates contact.
+| Piece | Entity | Domain | A physical clothing item, existing independently of the system’s representation.
+| Listing | Entity | Design | A system-created representation of a Piece made visible for discovery.
+| Listing Published | Event | Domain | Instantaneous domain event marking when a Listing becomes publicly visible.
+| Interest Expressed | Event | Domain | Event occurring when a Buyer initiates contact regarding a Listing.
+| Listing Closed | Event | Domain | Event reflecting that a Listing is no longer available, either due to exchange or withdrawal.
+| Condition Rating | Value Object | Domain | Immutable value representing the assessed quality of a Piece (e.g., scale 1–10).
+| Review | Value Object | Domain | User-generated evaluative artifact created after an offline interaction; not an event itself.
+| Locale | Setting | Domain | Physical or institutional environment where exchanges occur (campus areas, public spaces).
+| Type | Value Object | Domain | Taxonomic clothing classification used to categorize Pieces (e.g., shirts, pants, shoes).
+| rate(Piece, ConditionRating) -> ConditionRating | Action | Design | Operation that evaluates or updates the condition rating of a Piece (pure transformation).
+| publishListing(Piece, Seller, Locale) -> ListingPublished | Action | Design | Action that causes the Listing Published event and results in a new system Listing.
+| expressInterest(Listing, Buyer) -> InterestExpressed | Action | Design | Action that triggers the Interest Expressed event by creating an Interest that references the Buyer and Listing (the Seller is obtained through the Listing, not through a direct structural link).
+| Interest | Entity | Domain | A persistent association created when a buyer shows interest in a listing; the Interest references the Buyer and the Listing involved, with the Seller derived through the Listing.
+| closeListing(Listing, Seller) -> ListingClosed | Action | Design | Action that ends Listing availability and triggers the Listing Closed event.
 |===

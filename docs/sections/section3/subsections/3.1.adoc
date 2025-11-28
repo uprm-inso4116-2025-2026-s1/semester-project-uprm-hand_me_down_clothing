@@ -1,47 +1,72 @@
 === *3.1 Concept Formation and Analysis*
 
-This section documents how the concepts identified in *2.1.2 – Terminology* emerged from the raw observations and examples in *2.1.1 – Domain Rough Sketch*.  
-It clarifies how individual, context-specific details were abstracted into general domain entities, events, functions, and behaviors.  
-The goal is to make the reasoning behind each abstraction traceable and verifiable.
+This section documents how the domain concepts were derived from the raw observations in *2.1.1 – Domain Rough Sketch* and the everyday practices described in   *2.1.4 – Domain Narrative*. It explains how concrete, context-specific details were abstracted into entities, events, roles, value objects, actions, and behaviors.   The goal is to show a clear and verifiable path from observation to domain model.
 
 ==== From Observation to Abstraction
 
-The first stories in the rough sketch (Adriana’s search and Manuel’s donation) revealed a repeating structure of discovery, communication, and exchange.  
-By comparing these scenarios side-by-side, the team recognized several recurring phenomena:
+The rough sketch stories revealed a recurring structure across different individuals: someone makes an item visible to others, potential takers discover it, a brief conversation follows, and the parties meet in person to complete the exchange.   Although the exact tools vary (group chats, social media posts, direct messaging), the underlying phenomena remain consistent.
 
-* Listings (Facebook posts, WhatsApp messages) act as public representations of clothing items.  
-* Buyers and sellers interact through short, informal text exchanges that express *interest* and confirm details.  
-* The actual hand-off happens offline, after mutual agreement.  
-* Trust is maintained through norms such as showing garment tags, using bilingual communication, and meeting in visible places.
+Several recurring patterns emerged:
 
-These repeated elements were abstracted into domain concepts — *Listing*, *Buyer*, *Seller*, *Interest Expressed*, *Condition Disclosure Norm*, and *Meetup Practice*.  
-Each concept reflects a consistent pattern observed in multiple exchanges, rather than a one-off anecdote.
+* People show items using posts or photos that function as temporary “public signals.”
+* Interested parties initiate contact with short, informal messages asking if the item
+  is still available.
+* Agreement is reached by clarifying small details (size, condition, pickup spot).
+* The exchange occurs at a familiar physical location.
+* After the handoff, the item is no longer advertised, and the original post is often
+  updated or removed.
+* Positive or negative experiences influence future interactions through informal
+  reputation.
 
-==== Entity Consolidation
+Because these behaviors appeared across multiple narratives, the team abstracted them into stable domain concepts rather than anecdotal exceptions.
 
-Multiple items described in the examples (e.g., “blazer,” “shirts”) suggested a single core entity: **Piece**, representing any individual clothing item in circulation.  
-The posts and messages that made those items visible became the entity **Listing**, distinct from the physical item itself.  
-This separation mirrors how the domain actually functions: a Listing can exist, be updated, or be removed independently of the Piece it describes.
+==== Consolidating Entities
 
-==== Event and Function Identification
+The physical objects (“shirts,” “blazer,” “backpack,” etc.) were generalized into the entity **Piece**, representing any clothing item circulating in the community.
 
-Actions observed in the examples were distilled into domain functions:
+In contrast, the posts, messages, or shared images that made these items visible were abstracted into **Listings**—representational artifacts distinct from the Pieces they describe. This distinction was necessary because Listings have their own lifecycle: they can appear, be updated, be ignored, or be removed independently of the Piece.
 
-* `publishListing(Piece, Seller, Locale)` — a seller’s act of making an item visible.  
-* `closeListing(Listing, Seller)` — a seller’s act of marking a listing closed after the offline exchange.
+This separation mirrors what happens in real exchanges: the representation moves through visibility states while the underlying item simply exists.
 
-Each function captures a discrete transition in the domain, corresponding to what participants *do* rather than what the platform might later automate.
+==== Identifying Events and Actions
 
-==== Behavioral Norms and Implicit Concepts
+Certain moments in the narratives corresponded to discrete transitions:
 
-Trust-related practices emerged as implicit but crucial aspects of the domain.  
-For instance, showing tags or defects evolved into the **Condition Disclosure Norm**, while bilingual messaging and recognizable names became **Trust Cues**.  
-By identifying these implicit elements explicitly, the terminology provides a shared vocabulary that aligns both domain understanding and future requirements.
+* when an item becomes publicly visible  
+* when someone expresses interest  
+* when the availability of the item changes  
+
+These transitions were abstracted into **Events** such as *Listing Published*, *Interest Expressed*, and *Listing Closed*.   Each event marks an instantaneous change observed in participant behavior.
+
+The human activities that lead to these events—posting an item, contacting someone, removing a post—became **Actions**. This separation allowed the model to differentiate between *what people do* and *what changes occur in the domain* as a result.
+
+==== Behavioral Norms and Implicit Practices
+
+The rough sketches contained implicit social rules that shape exchanges even though they are rarely stated explicitly.
+
+Several of these norms recurred across different stories:
+
+* **Condition Disclosure Norm** — participants often show wear, defects, or tags before exchanging items.
+* **Meetup Practice** — exchanges consistently occur in familiar, visible locations, often near the UPRM campus.
+* **Trust Cues** — people rely on conversational tone, mutual acquaintances, bilingual communication, or recognizable names.
+* **Student Resale Price Band** — symbolic or low-cost pricing appeared repeatedly in student-to-student transactions.
+* **Exchange Flow** — the behavioral pattern “share → discover → contact → meet” formed a recognizable structure across all accounts.
+* **Reuse Loop** — items sometimes re-enter circulation after a period of use or storage, showing that clothing may undergo multiple listing cycles.
+
+These implicit behaviors were made explicit to accurately reflect the lived domain and to ensure future requirements align with local social practices rather than imposing new ones.
+
+==== Roles, Settings, and Value Objects
+
+Observations showed that participants shift roles depending on context. Someone who gives away an item one week may seek another the next. These shifting positions were abstracted as the roles **Buyer** and **Seller**, not as fixed categories of people.
+
+Exchanges consistently took place at physical locations such as campus entries, bus stops, or parking lots. These stable spatial anchors were captured as **Settings** under the term **Locale**.
+
+Repeated references to size, type, and condition formed the basis for **Value Objects** such as **Type**, **Condition Rating**, and other descriptive attributes that help people assess suitability quickly.
 
 ==== Iterative Refinement
 
-During group analysis sessions, terms were revisited to ensure they described phenomena observable without assuming the existence of a system.  
-This distinction kept the domain pure — describing only what happens in the world — while preparing a foundation for requirements in Section 2.2.
+As concepts solidified, the team rechecked them against the narratives to ensure that each abstraction described something observable without assuming any future technical system. Concepts related to visibility, interest, trust, representations, and reuse were reshaped until they represented domain truths rather than system intentions.
 
-In conclusion, the concept analysis bridges the gap between individual real-world stories and the structured domain model.  
-It traces how recurring actions, roles, and norms were abstracted into formal concepts that will guide subsequent design and implementation work.
+This iterative process ensured that the domain model remained faithful to real-world behaviors while providing a structured foundation for the requirements and design work in Section 2.2.
+
+In summary, the concept formation process bridges concrete stories and abstract structures. It documents how repeated behaviors, roles, events, and norms were distilled into a coherent domain model that guides subsequent architectural and design decisions.

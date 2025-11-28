@@ -1,0 +1,106 @@
+==== Identity Rules for the Item Lifecycle Cluster (Piece → Listing → Donation → RecyclingEvent)
+
+This section clarifies how identity behaves across four closely related concepts in the Hand Me Down domain: *Piece*, *Listing*, *Donation*, and *RecyclingEvent*. Together, they form the *Item Lifecycle Cluster*, describing how a real clothing item enters, moves through, and eventually leaves circulation.
+
+The focus here is on whether each concept:
+
+- has a persistent identity (Entity),  
+- is a Value Object, or  
+- is an Event (possibly with a local identifier only for logging/tracing).
+
+===== Piece
+
+*Type:* Entity with persistent ID
+
+*Identity Rule:*  
+A *Piece* represents a physical clothing item. It has a stable identity as long as the garment exists in wearable form. Its identity does **not** change when it is resold, donated, or relisted. Ownership and location may change; the *Piece* is still the same underlying item.
+
+*Lifecycle Effects:*
+
+- **Resale:** The Piece’s identity is preserved; only context (owner, listing) changes.  
+- **Donation:** The Piece’s identity is preserved; it moves to a new owner or recipient.  
+- **RecyclingEvent:** If the item is irreversibly transformed or destroyed, this marks the *end* of the Piece’s practical identity in the domain. Historical records may keep the ID for traceability, but the item no longer participates in new exchanges.
+
+===== Listing
+
+*Type:* Entity with its own ID (representation of a Piece at a point in time)
+
+*Identity Rule:*  
+A *Listing* is a public representation of a Piece in a specific context (time, price marker, description, photos). It has its **own** identity, distinct from the Piece.  
+
+The same Piece may generate multiple Listings over time (e.g., first resale, later re-donation, future resale by another owner). Each of these Listings is a different entity with a different Listing ID.
+
+*Lifecycle Effects:*
+
+- A Listing is created for a Piece (or sometimes a bundle) and remains valid until it is closed, withdrawn, or expires.  
+- Closing or expiring a Listing does *not* affect the Piece’s identity; only its visibility in that particular context ends.  
+- New Listings for the same Piece represent *new entities* that just happen to refer to the same underlying Piece.
+
+===== Donation
+
+*Type:* Event with local identity (not a long-lived Entity)
+
+*Identity Rule:*  
+In the Hand Me Down domain, *Donation* is best modeled as a **domain event** (often called *DonationEvent*) marking that a Piece has been offered without expectation of payment to a new owner or group.
+
+The event may carry a local event ID for logging or auditing, but it is **not** a persistent business entity with behavior or independent lifecycle.
+
+*Lifecycle Effects:*
+
+- A Donation event occurs at the moment the giver transfers the Piece under “free” or non-commercial terms.  
+- The Piece’s identity is preserved across the Donation; only who holds it and under what social/economic framing changes.  
+- Historical Donation events can be associated with the Piece for analytics or sustainability tracking, but they are **not** aggregate roots.
+
+*Relation to Piece:*  
+A Donation references the Piece identity (and the donor/recipient) but does not establish a new object identity for the Piece itself.
+
+===== RecyclingEvent
+
+*Type:* Event with local identity (terminating or transforming the Piece)
+
+*Identity Rule:*  
+A *RecyclingEvent* marks that a Piece has left normal circulation — for example, being shredded, repurposed into rags, or otherwise transformed such that it is no longer traded or worn as clothing.
+
+As with Donation, this is an **event** with a local ID (for history, reports, or impact metrics), not an entity with its own long-term behavior.
+
+*Lifecycle Effects:*
+
+- When a RecyclingEvent occurs, the Piece’s lifecycle in the Hand Me Down domain ends. The physical material may continue in another domain (industrial recycling, crafts, etc.), but the original Piece identity is no longer used for listings, donations, or resale.  
+- The Piece may still exist in historical records (e.g., “this item was recycled in 2027”) but is not part of active item circulation.
+
+===== Identity Flow Across the Item Lifecycle
+
+The overall identity behavior across the cluster can be summarized as follows:
+
+[listing]
+----
+ Real Clothing Item
+       │
+       ▼
+   Piece (Entity with ID)   ←─ persists as long as the garment is wearable
+       │
+       ├─ may be linked to multiple Listings over time
+       │    Listing₁ (Entity)  – first resale
+       │    Listing₂ (Entity)  – later donation listing
+       │    Listing₃ (Entity)  – future resale by new owner
+       │
+       ├─ may be involved in DonationEvents
+       │    DonationEvent₁, DonationEvent₂, ... (Events tied to Piece ID)
+       │
+       └─ eventually participates in a RecyclingEvent
+            RecyclingEvent (Event) – terminates practical identity of Piece
+----
+
+*Summary of Types:*
+
+- *Piece* → **Entity with ID** (identity persists across owners and Listings until recycled).  
+- *Listing* → **Entity with its own ID**, referencing a Piece ID. Multiple Listings can exist over time for the same Piece.  
+- *Donation* → **Event with local identity**, referencing a Piece and participants; does not create a new item identity.  
+- *RecyclingEvent* → **Event with local identity** that effectively terminates the Piece’s participation in the Hand Me Down domain.
+
+In this model, identity is:
+
+- **Preserved**: from real garment → Piece; across resale and donation.  
+- **Projected**: into multiple Listings that each have their own identity.  
+- **Observed/Recorded**: via Donation events that reference the Piece.  
+- **Terminated (in this domain)**: at RecyclingEvent, where the Piece stops being a tradable/wearable clothing item.

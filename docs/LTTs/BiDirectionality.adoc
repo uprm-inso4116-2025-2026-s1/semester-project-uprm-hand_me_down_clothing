@@ -1,0 +1,124 @@
+=== *Refinement of Association Directionality*
+*(Lecture Topic: Communication and the Use of Language)*
+
+This section documents and justifies the adjustments made to the Hand Me Down domain model
+to comply with the lecture principles on semantic directionality, unidirectional associations,
+and avoiding unjustified bidirectional links. After reviewing the milestone documentation,
+several definitions and function descriptions contained implicit Buyer ↔ Seller or Listing ↔ Review
+structural associations that were not justified by the domain narratives or rough sketches.
+
+The following refinements ensure that all associations reflect actual usage patterns
+in the domain and preserve the intended meaning with minimal necessary structure.
+
+==== *1. expressInterest Definition (Section 2.1.2 – Terminology)*
+
+The terminology row for `expressInterest` originally described the action as creating
+a "persistent Interest relationship between Buyer and Seller," implying a symmetric,
+long-lived association between the two actors.
+
+This is incompatible with the domain: buyers do not form persistent relationships
+with sellers. Instead, the interaction always occurs *through a Listing*, and the
+Seller is identified by the Listing’s seller reference.
+
+To correct this, the definition was revised so that:
+
+* Interest references **Buyer and Listing**, not Buyer ↔ Seller.
+* The Seller is obtained indirectly via the Listing.
+* No structural Buyer ↔ Seller link is implied.
+
+This aligns with the lecture guidance that association direction should match
+expressed domain language and should not introduce inverse relationships unless
+strictly necessary.
+
+==== *2. Interest Entity Definition (Section 2.1.2 – Terminology)*
+
+The row for *Interest* stated that it “connects Buyer ↔ Seller during the
+coordination stage,” which incorrectly imposed a symmetric, persistent link
+between the two roles.
+
+However, the domain narrative makes clear that:
+
+* The Buyer expresses interest *in a Listing*.
+* The Seller is known because the Listing references its creator.
+* Buyer and Seller do not possess a direct, structural connection.
+
+The definition was rewritten to characterize Interest as an association object
+that references the Buyer and Listing involved, with the Seller inferred from
+the Listing. This adjustment removes the unjustified symmetric association.
+
+==== *3. expressInterest Function Semantics (Section 2.1.6 – Function Signatures)*
+
+Two directionality issues appeared in the function signature:
+
+*The Description* originally stated that an Interest “creates a persistent relationship
+between Buyer and Seller,” mirroring the incorrect implication in the Terminology table.
+
+*The Postconditions* similarly claimed that `InterestExpressed` is recorded “linking Buyer,
+Seller, and Listing,” suggesting a triadic, persistent structural link.
+
+Both statements were revised so that:
+
+* Interest references **Buyer and Listing** only.
+* Seller is derived from the Listing and not structurally linked.
+* No direct Buyer ↔ Seller or triadic association is introduced.
+
+This ensures that the function semantics match the domain reality and that
+the structure of associations is consistent across the documentation.
+
+==== *4. review Function Semantics (Section 2.1.6 – Function Signatures)*
+
+The original Postconditions stated that “ReviewSubmitted is attached to the parties,”
+which could be interpreted as Listings or Sellers containing their reviews.
+
+This contradicts the intended directionality:
+
+* Reviews are *about* a Listing and a Seller (reviewed party).
+* Reviews point *to* their subjects.
+* Listings and Sellers do not structurally store collections of Reviews.
+
+The Postconditions were revised to state that:
+
+* ReviewSubmitted references the Listing and reviewed User.
+* Neither Listing nor Seller contains Reviews.
+* Any view of “reviews for a listing” is a query, not a stored association.
+
+This change enforces the lecture principle that the flow of meaning should guide
+association direction.
+
+==== *5. Clarification of Listing Structure (Section 2.1.2 – Terminology)*
+
+Although the Listing definition did not explicitly imply bidirectionality,
+it lacked clarity on association direction.
+
+A clarifying note was added to state that:
+
+* A Listing references its Seller and Piece.
+* Sellers and Pieces do **not** contain or track Listings.
+
+This removes ambiguity and ensures structural consistency across terms and
+function signatures.
+
+==== *Summary of Corrections*
+
+The documentation now uses meaning-preserving, unidirectional associations:
+
+* Listing → Seller
+* Listing → Piece
+* Interest → Listing
+* Interest → Buyer
+* Review → Listing
+* Review → User (reviewed party)
+
+The following implicit or explicit bidirectional associations were removed:
+
+* Buyer ↔ Seller
+* Listing ↔ Review
+* Listing ↔ Piece
+* Direct triadic Buyer–Listing–Seller structural links
+* Review “attached to the parties”
+* Interest connecting Buyer ↔ Seller
+
+These refinements ensure alignment with the domain language, the rough sketch,
+and the lecture’s requirements for clear, unidirectional, meaning-driven modeling.
+They preserve the functional capabilities described by the system while correcting
+the direction in which meaning flows across entities and events.

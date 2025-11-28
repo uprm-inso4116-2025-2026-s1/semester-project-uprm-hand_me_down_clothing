@@ -1,0 +1,79 @@
+== Strategy Pattern for Condition Rating Interpretation
+
+The Hand-Me-Down platform uses a *Condition* attribute to describe how worn or preserved a clothing item (Piece) is. In the current documentation for Milestone 1 and Milestone 2, this condition appears as part of the Piece/Listing data (chosen by the seller), but the rules for how to interpret or enforce that condition are not modeled as explicit domain behavior.
+
+=== Before: Condition as a Simple Field
+
+In the existing documentation, Condition is treated as a simple attribute associated with a Piece or Listing.  
+The seller selects a condition value (e.g., from a predefined list) and the system stores it:
+
+- The platform does not define a specific domain service or policy for evaluating condition.
+- Any judgment about what counts as “good enough” for a given condition value is left implicit (in the seller’s judgment or UI hints).
+- There is no explicit way to apply different condition rules for different use cases (for example, stricter rules for campus events vs. general use).
+
+From a domain-driven design perspective, *condition interpretation* exists only as an implicit assumption, not as a first-class behavior.
+
+=== After: Making Condition Evaluation a Strategy
+
+To make condition evaluation explicit and flexible, we introduce a `ConditionPolicy` Strategy interface that defines how to evaluate the condition of a Piece.  
+Different concrete policies can then encapsulate alternative rules while sharing the same interface and producing the same kind of result: a `Condition` value.
+
+Examples of concrete strategies:
+
+- `DefaultConditionPolicy`: the general policy used by the platform in most flows.
+- `StrictConditionPolicy`: a stricter policy that might be applied for special contexts (e.g., campus-specific reuse events or curated collections).
+
+A `ConditionRatingService` collaborates with one `ConditionPolicy` instance to determine the final Condition for a Piece. This follows the Strategy Pattern from the “Relating Design Patterns to the Model” lecture: we define a family of algorithms (policies), encapsulate them, and make them interchangeable.
+
+=== UML Strategy Diagram
+
+[plantuml, condition-rating-strategy, png]
+----
+@startuml
+interface ConditionPolicy {
+    + evaluateCondition(piece: Piece): Condition
+}
+
+class DefaultConditionPolicy {
+    + evaluateCondition(piece: Piece): Condition
+}
+
+class StrictConditionPolicy {
+    + evaluateCondition(piece: Piece): Condition
+}
+
+ConditionPolicy <|.. DefaultConditionPolicy
+ConditionPolicy <|.. StrictConditionPolicy
+
+class ConditionRatingService {
+    - policy: ConditionPolicy
+    + determineCondition(piece: Piece): Condition
+}
+
+ConditionRatingService --> ConditionPolicy : uses
+
+class Piece
+class Condition
+@enduml
+----
+
+=== Before/After Comparison
+
+| Aspect                | Before (Condition as Plain Field)                                      | After (ConditionPolicy Strategy)                                       |
+|-----------------------|------------------------------------------------------------------------|-------------------------------------------------------------------------|
+| **Modeling**          | Condition is a stored attribute chosen directly by the seller.         | Condition is a behavior: `evaluateCondition(piece): Condition`.        |
+| **Rules Visibility**  | Rules for what counts as each Condition value are implicit or UI-only. | Rules are explicit in strategy classes (Default, Strict, etc.).        |
+| **Variability**       | Only one implicit interpretation for all situations.                   | Multiple policies can exist and be selected per use case.              |
+| **Testability**       | Hard to test “what counts as Good/Fair” in isolation.                 | Each ConditionPolicy can be unit-tested independently.                 |
+| **DDD Alignment**     | Condition interpretation is not part of the domain model.              | Condition interpretation becomes a first-class domain concept.         |
+
+=== Why This Fits the Strategy Pattern
+
+The “Relating Design Patterns to the Model” lecture describes the Strategy Pattern as a way to capture families of algorithms or policies behind a shared interface so they can be swapped without changing the client.  
+Condition evaluation in Hand-Me-Down fits this pattern: different policies (default vs. strict) apply different business rules to the same domain object (Piece) to produce the same kind of result (Condition).
+
+By introducing `ConditionPolicy` and `ConditionRatingService`:
+
+- We keep existing domain types (`Piece` and `Condition`) from the documentation.
+- We add a minimal set of new domain services to model behavior that was previously implicit.
+- We align the model with the lecture by making behavior explicit, intention-revealing, and easy to extend without rewriting existing clients.

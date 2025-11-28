@@ -1,24 +1,67 @@
 === *2.2.3 Domain Requirements*
 
-The system shall manage clothing listings according to the inherent properties of categories, items, and taxonomy structures observed in local resale and donation discovery platforms.  
-It must allow users to browse, publish, and filter listings efficiently without facilitating in-platform payments or transactions.
-
 [requirements]
-* DR1: The system must classify every listing under exactly one primary category (e.g., tops, bottoms, shoes, accessories) to ensure consistent organization and discoverability across the taxonomy.
-* DR2: The system must allow categories to have hierarchical subcategories, reflecting how real-world resale and reuse spaces organize clothing by type, gender, or size.
-* DR3: The system must distinguish between **Resale** and **Free/Donation** listings, preserving the domain difference in motivation and visibility while keeping both accessible through a unified discovery interface.
-* DR4: The system shall provide means to enforce item-to-category compatibility, ensuring that each listing aligns with an appropriate clothing category (e.g., shirts cannot be placed under footwear).
-* DR5: The system must support category evolution, allowing the taxonomy to incorporate new categories or subcategories (e.g., uniforms, vintage) without invalidating existing listings.
 
-Each of these requirements directly ties to observed domain properties:  
-- **DR1** reflects the necessity of a single, authoritative classification per item for consistent search results.  
-- **DR2** enforces hierarchical organization used in established discovery platforms like Facebook Marketplace or Craigslist.  
-- **DR3** maintains the conceptual distinction between resale and giveaway behavior while allowing both to coexist.  
-- **DR4** ensures semantic alignment between items and categories, avoiding misclassified listings.  
-- **DR5** enables adaptability and scalability as the listing ecosystem evolves and new categories emerge.
+[[REQ-DR1]]
+*DR1:* The system must classify every listing under exactly one primary category.  
+*Supported by:* <<FEATURE-1.1>>, <<FEATURE-1.2>>, <<FEATURE-1.3>>, <<FEATURE-2.1>>, <<FEATURE-2.2>>, <<FEATURE-3.4>>, <<FEATURE-4.1>>, <<FEATURE-4.2>>, <<FEATURE-4.3>>, <<FEATURE-6.2>>
 
-Sources::  
-* **Facebook Marketplace (Meta)**: https://www.facebook.com/marketplace/  
-* **OfferUp**: https://offerup.com/  
-* **Craigslist**: https://www.craigslist.org/about/sites  
-* **Goodwill (Donation)**: https://shopgoodwill.com/all-categories  
+[[REQ-DR2]]
+*DR2:* Categories may have hierarchical subcategories.  
+*Supported by:* <<FEATURE-1.1>>
+
+[[REQ-DR3]]
+*DR3:* The system must distinguish between **Resale** and **Free/Donation** listings.  
+*Supported by:* <<FEATURE-1.2>>, <<FEATURE-3.1>>, <<FEATURE-3.2>>, <<FEATURE-3.3>>, <<FEATURE-4.4>>, <<FEATURE-5.1>>, <<FEATURE-5.2>>, <<FEATURE-6.1>>, <<FEATURE-6.2>>
+
+
+==== *Justification: Why Donation Is Not Equivalent to a Zero-Price Sale*
+
+While both resale and donation result in a transfer of an item, they represent **fundamentally different domain phenomena** that must remain distinct in the model. Treating donation as simply “a sale at price = 0” erases critical behavioral, motivational, and social differences observed in the field:
+
+*Behavioral Motivation*  
+- **Resale** is economically motivated: sellers intend to recover value.  
+- **Donation** is altruistic: donors intend to help others, reduce waste, or give items a second life.  
+These intentions affect how users browse, filter, and evaluate listings.
+
+*Community Norms*  
+In observed platforms and local UPRM reuse culture, donation is framed as part of **mutual aid** and community support. A zero-price sale does not communicate the same norm of generosity or accessibility.
+
+*Visibility & Discovery Differences*  
+Users frequently search *only* for free items—especially students with financial constraints.  
+Treating donation as a sale at price 0 would require special-case logic to recreate a distinction that exists naturally in the domain.
+
+*Trust & Safety Implications*  
+Donation interactions often carry lighter expectations:  
+- no negotiation  
+- no price comparison  
+- less pressure to “justify” quality  
+Resale carries transactional expectations around condition, fairness, and accuracy.
+
+*Lifecycle & Data Semantics*  
+Donation signals a **different lifecycle path**, aligning with sustainability and circular-economy practices.  
+Platforms and institutions (e.g., sustainability coordinators, thrift partners) often track donation volumes separately from resale activity.
+
+*Legal & Institutional Context*  
+Some campus programs, community drives, or thrift partners only accept donation flows—not resales.  
+Modeling donation explicitly allows these stakeholders (e.g., Fernando, Isidra, Dr. Rivera) to interpret the platform’s impact correctly.
+
+For these reasons, the system must treat donation as its own domain concept rather than encoding it as a numeric edge case. This preserves clear intent, aligns with community expectations, and supports accurate categorization, filtering, reporting, and future integrations with sustainability efforts.
+
+[[REQ-DR4]]
+*DR4:* The system shall *support* item-to-category compatibility by helping users select an appropriate category for their listing. The system should provide suggestions or guidance, but shall not attempt to strictly enforce correctness.
+
+To assist users, the system may:
+- suggest likely categories based on the title, description, or user-selected attributes  
+- highlight common category choices for similar items  
+- warn when a category seems unusual (e.g., “Did you mean: Footwear?”)  
+- optionally use image recognition or LLM-assisted suggestions to improve accuracy
+
+This requirement does **not** imply strict enforcement or prevention of mismatches.  
+Its purpose is to reduce accidental misclassification while respecting user autonomy.
+
+*Supported by:* <<FEATURE-1.1>>, <<FEATURE-4.1>>
+
+[[REQ-DR5]]
+*DR5:* The system must support category evolution.  
+*Supported by:* <<FEATURE-4.3>>

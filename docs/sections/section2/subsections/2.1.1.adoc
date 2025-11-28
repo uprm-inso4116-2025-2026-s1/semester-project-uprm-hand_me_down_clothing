@@ -19,4 +19,34 @@ Within hours, a student replies: *“Can I pick up tomorrow morning?”* Manuel 
 - Listings and messages are bilingual; Spanish often dominates the first contact.  
 - Exchanges rely on visibility and responsiveness rather than any formal guarantee.  
 
-These examples illustrate the recurring pattern of discovery → contact → agreement → exchange that underlies the entire secondhand clothing domain.
+==== Observed Item Lifecycle 
+
+Real-world clothing circulation in the Mayagüez and UPRM community is *not linear*. The same item may move through several stages repeatedly as different people use it or store it.
+
+Below is a raw-domain sketch of this recurring cycle:
+
+
+
+[listing]
+----
+        Active Use
+             |
+             v
+         Storage
+     (Dormant Period)
+             |
+             v
+   Resale or Donation
+      (Relisting)
+             |
+             v
+         Exchange
+      (In-person)
+             |
+             v
+   → Returns to Active Use
+     by a new owner
+     (cycle repeats)
+----
+
+Items often circulate through several owners. A shirt donated one semester may reappear in a resale group months later, reenter storage, and be listed again by a new owner. This repeating loop—use → store → relist → exchange → new use—continues until the garment is no longer wearable and is ultimately discarded or repurposed.

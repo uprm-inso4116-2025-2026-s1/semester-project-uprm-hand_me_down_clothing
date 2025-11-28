@@ -1,23 +1,9 @@
 === *2.1.4 Domain Narrative*
 
-In Puerto Rico, informal clothing exchanges are a normal part of student and family life.  
-Individuals frequently use social media to find or offer clothing items and arrange in-person meetups.  
-The domain captured by this project represents those existing behaviors, listing, discovery, communication, and offline exchange rather than creating new ones.
+In Puerto Rico, especially around university communities like Mayagüez, informal clothing exchange is woven into everyday life. Students, families, and neighbors frequently pass along garments that no longer fit, are no longer needed, or might be useful to someone else. Most of these exchanges begin casually: a photo shared through a group chat, a quick post on social media, or a message asking whether anyone nearby has a specific item available.
 
-Sellers create posts or listings to share available garments, often including details such as size, condition, and photos.  
-Buyers search or browse listings, then contact sellers through direct messages to express interest.  
-Once both parties agree, they meet in person to complete the exchange.  
-Afterward, sellers may close their listings, and buyers may leave a review describing their experience.
+People commonly describe the condition of an item, mention its size, and include a picture taken at home or on campus. Those looking for clothing browse these posts whenever they have a free moment—between classes, during breaks at work, or at home in the evening. When something catches their attention, they reach out directly to the person offering it and ask whether it is still available.
 
-All exchanges happen directly between users, outside the platform.  
-The platform’s role is limited to:
+If both parties agree, they arrange to meet somewhere familiar and convenient, usually on or near the UPRM campus, at a bus stop, in a parking lot, or outside a classroom building. The handoff is quick and direct. Some exchanges involve a symbolic price, while others are simple gifts. Afterward, people often let their friends or peers know the item has been taken so others do not continue asking about it. In many cases, those who have had a positive experience mention it to others or comment on it in the group where the item was originally shared.
 
-* making listings visible
-
-* enabling efficient search and filtering  
-
-* supporting communication through messaging.
-
-The domain also includes secondary practices such as saving listings for later, checking reviews for trust, and adjusting a listing’s visibility (active, reserved, closed).  
-Together, these elements describe a clear, observable cycle of activity: *publish → discover → contact → exchange offline → close*.  
-The system reflects this real-world rhythm without modeling payment, ownership, or physical handoffs.
+Alongside these exchanges, people sometimes keep track of items they find interesting, ask friends to check certain posts for them, or look at previous interactions whendeciding whether to engage with someone new. These habits—sharing, searching, meeting, and informal reputation—form the everyday flow of secondhand clothing circulation in the community.

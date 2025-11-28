@@ -6,7 +6,7 @@ outputs, and possible changes in the domain.
 
 ==== Description
 
-Function signatures specify how actors in the system interact through domain actions. They define the logical relationships between inputs, outputs, and resulting state changes: 
+Function signatures specify how actors in the system interact through domain actions. They define the logical relationships between inputs, outputs, and resulting state changes:
 
 - *The name of the function*: The action being performed.  
 - *The input parameters*: The information required by the action.  
@@ -15,89 +15,171 @@ Function signatures specify how actors in the system interact through domain act
 
 The general format of a function signature is:
 
-- FunctionName: Input1 >< Input2 >< ... -> OutputType
+- `FunctionName : Input1 >< Input2 >< ... -> OutputType`
 - **Description** – what the function does.
 - **Preconditions** – what must be true or available for the function to execute.
-- **Postconditions** - what becomes true afterwards.
-- **Notes** - clarifications about scope, limits, or non-covered cases.
+- **Postconditions** – what becomes true afterwards.
+- **Notes** – clarifications about scope, limits, or non-covered cases.
 
-==== Examples
+In addition to individual entities (Piece, Listing, Seller, Buyer), we use:
 
-publishListing : Piece >< Seller >< Locale -> Either[ValidationError,ListingPublished]
+- `ListingRepository` as the *domain-level collection* that conceptually stores all listings in the system.  
+  From this repository we can derive:
+  - *all listings* (including closed/archived),
+  - *available listings* (listings that are still open and visible to buyers).
 
-Description:: A Seller publishes a Listing in a given Locale, producing a ListingPublished event.
+Browsing and searching operations always work **against** this conceptual repository.
+
+==== Filter Value Object
+
+A **Filter** is a *value object* that represents buyer-defined search constraints.  
+It is immutable and does not depend on `Piece`, `Page`, or UI-layer concepts.
+
+The Filter has the following fields:
+
+[cols="1,3,2",options="header"]
+|===
+| Field
+| Description
+| Type / Concept
+
+| `category`
+| Desired category of the item. Optional.
+| Value: ++Category++
+
+| `size`
+| Requested size. Optional.
+| Value: ++Size++
+
+| `gender`
+| Intended gender classification. Optional.
+| Value: ++Gender++
+
+| `minCondition`
+| Minimal acceptable condition rating. Optional.
+| Value: ++ConditionRating++
+
+| `maxPrice`
+| Maximum price the buyer is willing to pay. Optional.
+| Value: Money
+
+| `locale`
+| Campus/location where the buyer is willing to meet. Optional.
+| Value: ++Locale++
+
+| `textQuery`
+| Free-text query for title/description matches. Optional.
+| Value: String
+
+| `onlyActive`
+| Whether to restrict results to active listings. Defaults to true.
+| Boolean
+|===
+
+The Filter induces a matching predicate:
+
+`matches(f: Filter, p: Listing)` holds iff all present fields in `f` are satisfied by `p`.
+
+==== Function Signatures
+
+publishListing : Piece >< Seller >< Locale -> Either[ValidationError, Listing]
+
+Description:: A Seller publishes a Piece in a given Locale, producing a new Listing.
 
 Preconditions:: Seller and Listing exist and are active; Listing has required metadata (title, condition, images).
 
-Postconditions:: Listing becomes visible; `ListingPublished` recorded.
+Postconditions:: A new Listing is created and stored in the ListingRepository as *available*.
 
 Notes:: Discovery-only; no in-platform payments.
 
-
 expressInterest : Listing >< Buyer -> Either[ContactError, InterestExpressed]
 
-Description:: A Buyer signals interest in a Listing to start contact with the Seller.
+Description::  
+A Buyer signals interest in a Listing, creating an Interest entity that references the Buyer and the Listing (the Seller is determined from the Listing).
 
-Preconditions:: Listing is open; Buyer is authenticated.
 
-Postconditions:: `InterestExpressed` links Buyer and Seller.
+Preconditions:: Listing is available (open); Buyer is authenticated.
 
-Notes:: Returns `ContactError` if listing is closed/unavailable.
+Postconditions:: InterestExpressed is recorded as an Interest referencing the Buyer and the Listing; the Seller is indirectly determined through the Listing.
 
-rate : Piece >< ConditionRating -> Option[ConditionRating]
+
+rate : Piece >< ConditionRating -> Piece
 
 Description:: Assigns or updates a Piece’s condition rating.
 
-Preconditions:: Piece exists; rating within 1–5.
+Preconditions:: Piece exists; rating within valid scale.
 
-Postconditions:: Piece’s stored rating updated.
+Postconditions:: Returns the updated Piece.
 
-Notes:: Returns `None` if Listing missing/closed.
-
-submitReview : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]  
+submitReview : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]
 
 Description:: Records a review after an offline exchange.
 
-Preconditions:: A prior interaction/closed listing exists between the parties.
+Preconditions:: A prior successful exchange exists.
+
+Postconditions:: ReviewSubmitted maintains references to the Listing and the User being reviewed; Listings do not store or contain Reviews structurally.
 
 
-Postconditions:: `ReviewSubmitted` attached to reviewer/reviewee.
-Notes:: Returns `ReviewError` if no eligible exchange is found.
+closeListing : Listing >< Seller -> Either[ClosedError, Listing]
 
-closeListing : Listing >< Seller -> Either[ClosedError, ListingClosed]  
-
-Description:: Seller closes an active Listing after exchange or withdrawal.
+Description:: Seller closes an active Listing after an exchange or withdrawal.
 
 Preconditions:: Seller owns the Listing; Listing is active.
 
-Postconditions:: Listing state becomes "closed"; 'ListingClosed' recorded.
-
-Notes:: Not callable by Buyers.
+Postconditions:: Listing state becomes terminal (sold/donated/retracted) and the updated Listing is returned.
 
 categorize : Piece >< Type -> Option[Piece]
 
 Description:: Assigns a category type to a Piece.
 
-Preconditions:: Piece exists; Type is valid.
-
-Postconditions:: Piece’s Type attribute updated.
-
-Notes:: Returns `None` if Piece missing/closed. Does not change visibility.
-
 discard : Listing -> Option[Void]
 
-Description:: Removes a Listing from active circulation.
+Description:: Marks a Listing as closed and removes it from circulation.
 
-Preconditions:: Listing exists and is active.
+browseAvailableItems : ListingRepository -> Set<Listing>
 
-Postconditions:: Listing marked as discarded/closed.
+Description:: Returns the set of Listings that are currently *available*.
 
-Notes:: Returns `None` if Listing missing/closed.
+Preconditions:: ListingRepository is defined.
+
+Postconditions:: Returns a (possibly empty) set of available Listings.
+
+Notes:: Backend returns only active listings.
+
+findAvailableByFilter : ListingRepository >< Filter -> Set<Listing>
+
+Description:: Returns the set of available Listings that satisfy the Filter predicate.
+
+Preconditions:: ListingRepository is defined; Filter is valid.
+
+Postconditions:: Returns all Listings that are:
+* available, and  
+* matching the Filter.
+
+Notes:: Distinguishes “all listings” from the subset that is currently available and relevant to buyers.
+
+findListingById : ListingRepository >< ListingID -> Option[List‌ing]
+
+Description:: Retrieves a Listing by identifier from the repository.
 
 ==== Example Scenario: From Listing to Offline Exchange
-1. Seller publishes a listing using `publishListing(Piece, Seller, Locale)` → produces `ListingPublished`.  
-2. Buyer browses available items and finds one of interest.  
-3. Buyer triggers `expressInterest(Listing, Buyer)` → produces `InterestExpressed`.  
-4. Both users coordinate offline to exchange the item.  
-5. Seller closes the listing via `closeListing(Listing, Seller)` → produces `ListingClosed`.  
-6. Buyer leaves a review using `submitReview(Seller, Buyer, Review)` → produces `ReviewSubmitted`.
+
+1. Seller publishes a listing using  
+   `publishListing(Piece, Seller, Locale) -> Listing`,  
+   stored in the ListingRepository as *available*.
+
+2. Buyer browses available items using  
+   `browseAvailableItems(ListingRepository) -> Set<Listing>`  
+   or refines results using  
+   `findAvailableByFilter(ListingRepository, Filter) -> Set<Listing>`.
+
+3. Buyer expresses interest using  
+   `expressInterest(Listing, Buyer) -> Either[ContactError, InterestExpressed]`.
+
+4. The exchange happens offline.
+
+5. Seller closes the listing using  
+   `closeListing(Listing, Seller) -> Either[ClosedError, Listing]`.
+
+6. Buyer leaves a review using  
+   `submitReview(Seller, Buyer, Review) -> Either[ReviewError, ReviewSubmitted]`.
