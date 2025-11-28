@@ -11,7 +11,7 @@ A **Listing** — *Entity* — represents an item made visible by a seller for r
 *Associated Actions*::  
 - *Action* — Publishing a listing with sufficient information (title, category, photos).  
 - *Action* — Editing details (price marker, condition, description).  
-- *Action* — Deactivating or closing a listing once the item is no longer available.
+- *Action* — Closing a listing once the item is no longer available.
 
 *Events*::  
 - **Listing Published** — *Event* — occurs when a seller makes an item visible to the public.  

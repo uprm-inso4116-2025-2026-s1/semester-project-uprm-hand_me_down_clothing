@@ -52,7 +52,7 @@ Preconditions:: Piece exists; rating within 1–5.
 
 Postconditions:: Piece’s stored rating updated.
 
-Notes:: Returns `None` if Listing missing/inactive.
+Notes:: Returns `None` if Listing missing/closed.
 
 review : Seller >< Buyer >< Review -> Either[ReviewError, ReviewSubmitted]  
 
@@ -82,7 +82,7 @@ Preconditions:: Piece exists; Type is valid.
 
 Postconditions:: Piece’s Type attribute updated.
 
-Notes:: Returns `None` if Piece missing/inactive. Does not change visibility.
+Notes:: Returns `None` if Piece missing/closed. Does not change visibility.
 
 discard : Listing -> Option[Void]
 
@@ -90,9 +90,9 @@ Description:: Removes a Listing from active circulation.
 
 Preconditions:: Listing exists and is active.
 
-Postconditions:: Listing marked as discarded/inactive.
+Postconditions:: Listing marked as discarded/closed.
 
-Notes:: Returns `None` if Listing missing/inactive.
+Notes:: Returns `None` if Listing missing/closed.
 
 ==== Example Scenario: From Listing to Offline Exchange
 1. Seller publishes a listing using `publishListing(Piece, Seller, Locale)` → produces `ListingPublished`.  

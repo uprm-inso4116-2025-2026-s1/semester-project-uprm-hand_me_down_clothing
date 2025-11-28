@@ -28,7 +28,7 @@ This separation mirrors how the domain actually functions: a Listing can exist, 
 Actions observed in the examples were distilled into domain functions:
 
 * `publishListing(Piece, Seller, Locale)` — a seller’s act of making an item visible.  
-* `closeListing(Listing, Seller)` — a seller’s act of marking a listing inactive after the offline exchange.
+* `closeListing(Listing, Seller)` — a seller’s act of marking a listing closed after the offline exchange.
 
 Each function captures a discrete transition in the domain, corresponding to what participants *do* rather than what the platform might later automate.
 

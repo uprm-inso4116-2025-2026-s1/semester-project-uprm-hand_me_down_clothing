@@ -56,7 +56,7 @@ Features specify the functionality required to deliver the goals described in th
 .. Create listing form (title, description, tags, price/free marker, category).  
 .. Upload multiple images per listing.  
 .. Edit listing details (update description, condition, images, price).  
-.. Close or deactivate a listing once the exchange is complete offline.  
+.. Closing a listing once the exchange is complete offline.  
 
 . Interest Notifications  
 .. Push/email/in-app notifications when a buyer expresses interest in a listing.  
