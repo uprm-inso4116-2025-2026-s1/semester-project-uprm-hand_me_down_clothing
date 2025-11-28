@@ -1,0 +1,45 @@
+// --
+// Author: Andrea P Segarra Félix
+// User: @andreasegarra
+// Project: Hand-me-down Clothing
+// GitHub Issue: #335
+// --
+
+This glossary lists domain concepts that represent behaviors activities and business rules in the Hand Me Down Clothing. These concepts go beyond simple nouns and describe actions or processes that shape the domain.
+
+1. ItemPostingFlow
+- The sequence of steps a user completes when creating a new listing. This includes entering details selecting a category choosing item condition uploading images and submitting the listing for validation.
+- startItemPostingFlow(newListing)
+
+ex.
+The system guides the user through ItemPostingFlow which includes uploading images selecting category and confirming the listing before validation.
+
+2. ListingValidation
+- The set of rules that ensure every listing is complete and valid before it is published. Validation checks may include required images accurate condition category selection and correct pricing logic.
+- ListingValidation.runChecks(listing)
+
+ex.
+Before publishing a listing the ListingValidation step checks that at least one image is provided and that the chosen category and condition are valid.
+
+3. CategoryFiltering
+- The behavior that filters displayed listings based on the clothing categories selected by the user while browsing.
+- const results = CategoryFiltering.apply("Tops", allListings)
+
+ex.
+The Browse page applies CategoryFiltering when the user selects Tops. Only listings tagged with the Tops category are displayed.
+
+4. FavoritingAction
+- The action through which a user adds or removes a listing from the Favorites section. This behavior manages the connection between the user and the listing.
+- FavoritingAction.toggle(userId, listingId)
+
+ex.
+When the user taps the heart icon the system performs a FavoritingAction that links or unlinks the listing from the user’s Favorites list.
+
+5. AssistanceFlow
+- The behavior of the chatbot as it guides users through the platform by answering questions providing navigation support and assisting users with tasks.
+AssistanceFlow.respondTo("How do I donate clothes")
+
+ex.
+AssistanceFlow occurs when the chatbot responds to the question show me tops near me and guides the user to the Browse page with the Tops filter applied.
+
+These concepts demonstrate the principle of going beyond finding nouns in domain modeling. By identifying behaviors and rules such as flows validations filtering and actions the domain becomes more expressive and better aligned with real user activities and system constraints.

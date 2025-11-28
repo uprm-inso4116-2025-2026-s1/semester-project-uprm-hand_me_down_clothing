@@ -1,9 +1,11 @@
+'use client'
+
 import { CheckIcon } from '@heroicons/react/20/solid'
 import Link from 'next/link'
 
 export default function DonatePiece() {
   return (
-    <main className="p-3 text-[#2b2b2b] dark:text-[#f5f5dc]">
+    <main className="p-3 text-[#2b2b2b]">
       {/* Title */}
       <h1 className="italic text-5xl sm:text-6xl font-bold mb-8">
         Donate your clothing!
