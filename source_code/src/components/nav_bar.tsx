@@ -68,6 +68,8 @@ export default function TopNav() {
     { href: "/", label: "Home" },
     { href: "/browsing", label: "Browse" },
     { href: "/map", label: "Map" },
+    { href: "/listings/transactions/donate", label: "Donate" },
+    // { href: "/listings/transactions/sell_piece", label: "Browse" },
     { href: "/about", label: "About" },
     { href: "/dashboard", label: "Dashboard" }, // 👈 nuevo
     { href: "/profile", label: "Profile" },
