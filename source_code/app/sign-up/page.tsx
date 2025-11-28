@@ -12,10 +12,12 @@ import appleLogo from "@/logos/apple.png";
 
 import { validators } from "./validate";
 
+import { signUp } from "@/app/auth/auth";
+
+
 type FieldKey = keyof typeof validators;
 
 export default function SignupOneToOne() {
-  const supabase = useSupabaseClient();
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
@@ -49,17 +51,12 @@ export default function SignupOneToOne() {
     setBusy(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          data: {
-            fullname: `${values.first} ${values.last}`,
-            firstname: values.first,
-            lastname: values.last,
-          },
-        },
-      });
+      const { data, error } = await signUp(
+        values.first,
+        values.last,
+        values.email,
+        values.password
+      );
 
       if (error) {
         setMessage(error.message ?? "Sign-up failed. Please try again.");
@@ -88,7 +85,7 @@ export default function SignupOneToOne() {
       {/* Top-right helper link */}
       <div className="absolute right-8 top-6 text-sm text-gray-500">
         <span className="hidden sm:inline">Already registered?</span>{" "}
-        <a href="/Login" className="font-medium text-gray-800 hover:underline">
+        <a href="/login" className="font-medium text-gray-800 hover:underline">
           Sign in
         </a>
       </div>
@@ -112,8 +109,8 @@ export default function SignupOneToOne() {
                   aria-invalid={!!errors.first && touched.first}
                   aria-describedby="first-help"
                   className={`h-12 text-base ${touched.first && errors.first
-                      ? "border-red-500"
-                      : "border-[#00000033]"
+                    ? "border-red-500"
+                    : "border-[#00000033]"
                     }`}
                 />
                 {touched.first && errors.first && (
@@ -132,8 +129,8 @@ export default function SignupOneToOne() {
                   aria-invalid={!!errors.last && touched.last}
                   aria-describedby="last-help"
                   className={`h-12 text-base ${touched.last && errors.last
-                      ? "border-red-500"
-                      : "border-[#00000033]"
+                    ? "border-red-500"
+                    : "border-[#00000033]"
                     }`}
                 />
                 {touched.last && errors.last && (
@@ -155,8 +152,8 @@ export default function SignupOneToOne() {
                 aria-invalid={!!errors.email && touched.email}
                 aria-describedby="email-help"
                 className={`h-12 text-base ${touched.email && errors.email
-                    ? "border-red-500"
-                    : "border-[#00000033]"
+                  ? "border-red-500"
+                  : "border-[#00000033]"
                   }`}
               />
               {touched.email && errors.email && (
@@ -178,8 +175,8 @@ export default function SignupOneToOne() {
                   aria-invalid={!!errors.password && touched.password}
                   aria-describedby="password-help"
                   className={`pr-12 h-12 text-base w-full ${touched.password && errors.password
-                      ? "border-red-500"
-                      : "border-[#00000033]"
+                    ? "border-red-500"
+                    : "border-[#00000033]"
                     }`}
                 />
                 <button
@@ -207,8 +204,8 @@ export default function SignupOneToOne() {
             {message && (
               <div
                 className={`mt-5 flex items-start gap-2 rounded-md p-3 text-sm ${messageType === "success"
-                    ? "bg-green-100 text-green-800 border border-green-300"
-                    : "bg-red-100 text-red-800 border border-red-300"
+                  ? "bg-green-100 text-green-800 border border-green-300"
+                  : "bg-red-100 text-red-800 border border-red-300"
                   }`}
               >
                 {messageType === "success" ? (

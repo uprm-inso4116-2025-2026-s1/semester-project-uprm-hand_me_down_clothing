@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { useRouter } from "next/navigation";
+import { signIn } from "@/app/auth/auth";
 
 
 export default function LoginPage() {
@@ -12,9 +13,20 @@ export default function LoginPage() {
   const [remember, setRemember] = useState(true);
   const [busy, setBusy] = useState(false);
   const [err, setErr] = useState<string | null>(null);
+  const [authInfo, setAuthInfo] = useState<string | null>(null); // 👈 NEW
+
   const router = useRouter();
 
   useEffect(() => {
+    try {
+      const msg = window.sessionStorage.getItem("hmdd:auth:lastError");
+      if (msg) {
+        setAuthInfo(msg);
+        window.sessionStorage.removeItem("hmdd:auth:lastError");
+      }
+    } catch {
+      // ignore
+    }
     try { const saved = localStorage.getItem("hmd_last_email"); if (saved) setEmail(saved); } catch { }
   }, []);
 
@@ -22,17 +34,36 @@ export default function LoginPage() {
     e.preventDefault();
     setErr(null);
 
-    if (!email || !pw) return setErr("Email and password are required.");
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return setErr("Enter a valid email.");
+    if (!email || !pw) {
+      return setErr("Email and password are required.");
+    }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      return setErr("Enter a valid email.");
+    }
 
     setBusy(true);
     try {
-      await new Promise(r => setTimeout(r, 700));
-      if (pw !== "handmedown") throw new Error("Invalid credentials"); // TEMP PASSWORD!!!!!!
+      // 🔑 Real Supabase sign-in
+      const { data, error } = await signIn(email, pw, remember);
 
-      if (remember) { try { localStorage.setItem("hmd_last_email", email); } catch { } }
-      else { try { localStorage.removeItem("hmd_last_email"); } catch { } }
+      if (error) {
+        // Supabase will send helpful messages like "Invalid login credentials"
+        setErr(error.message || "Invalid email or password.");
+        return;
+      }
 
+      // Optionally keep your “last email” helper UX
+      try {
+        if (remember) {
+          localStorage.setItem("hmd_last_email", email);
+        } else {
+          localStorage.removeItem("hmd_last_email");
+        }
+      } catch {
+        // non-fatal
+      }
+
+      // If sign-in succeeded, redirect
       router.push("/");
     } catch (e: any) {
       setErr(e?.message || "Something went wrong.");
@@ -49,6 +80,13 @@ export default function LoginPage() {
           <h1 className="text-3xl font-extrabold">Welcome back!</h1>
           <p className="text-2xl text-black-800 font-bold">Sign in to your account</p>
         </div>
+
+        {/* 🔔 One-time auth info message (e.g. expired session) */}
+        {authInfo && (
+          <div className="mb-4 text-sm text-blue-800 bg-blue-50 border border-blue-200 rounded-lg px-3 py-2">
+            {authInfo}
+          </div>
+        )}
 
         <form className="space-y-4" onSubmit={onSubmit} noValidate>
           {err && <div className="text-sm text-red-700 bg-red-50 border border-red-200 rounded-lg px-3 py-2">{err}</div>}
@@ -98,8 +136,7 @@ export default function LoginPage() {
 
 
           <div className="text-center font-semibold underline hover:opacity-80">
-            <Link href="/auth/reset_password_request">Forgot Password?</Link>
-          </div>
+            Forgot Password?</div>
 
 
           <div className="relative text-center text-xs text-gray-500 py-2">

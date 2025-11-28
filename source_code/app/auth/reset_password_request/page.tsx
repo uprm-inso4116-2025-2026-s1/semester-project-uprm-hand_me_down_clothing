@@ -14,17 +14,12 @@ export default function ResetPasswordRequestPage() {
     setLoading(true);
     setMessage(null);
     setError(null);
-    try {
-      const { error } = await requestPasswordReset(email);
-      if (error) {
-        setError(error.message || 'Failed to send reset email.');
-      } else {
-        setMessage('Password reset email sent! Check your inbox (and spam folder).');
-      }
-    } catch (e: any) {
-      setError((e && e.message) || 'Failed to send reset email.');
-    } finally {
-      setLoading(false);
+    const { error } = await requestPasswordReset(email);
+    setLoading(false);
+    if (error) {
+      setError(error.message || 'Failed to send reset email.');
+    } else {
+      setMessage('Password reset email sent! Check your inbox.');
     }
   };
 
@@ -48,11 +43,8 @@ export default function ResetPasswordRequestPage() {
           {loading ? 'Sending...' : 'Send Reset Email'}
         </button>
       </form>
-      {message && <div className="mt-4 text-green-600" role="status" aria-live="polite">{message}</div>}
-      {error && <div className="mt-4 text-red-600" role="alert" aria-live="assertive">{error}</div>}
-      <div className="mt-3 text-sm text-gray-600">
-        If you don't receive an email within a few minutes, try checking your spam folder or request the reset again.
-      </div>
+      {message && <div className="mt-4 text-green-600">{message}</div>}
+      {error && <div className="mt-4 text-red-600">{error}</div>}
     </div>
   );
 }
