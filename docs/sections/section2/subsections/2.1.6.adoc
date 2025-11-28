@@ -229,3 +229,77 @@ Retrieves a Listing by identifier from the ListingRepository.
 6. Buyer leaves a review using  
    `review(Seller, Buyer, Review) -> Either[ReviewError, ReviewSubmitted]`,  
    which records a review referencing the counterpart and the related Listing without embedding the review into the Listing structure.
+
+==== Closure Under Operations
+
+Closure under operations ensures that every domain-level function defined in this section
+returns a value that *remains within the domain model*, preserving the internal consistency
+of entities, events, value objects, and repositories.  
+This principle guarantees that domain operations do not “leak” values from outside the
+domain and that all returned types are themselves valid domain constructs.
+
+The following demonstrates closure for each operation:
+
+* **publishListing**  
+  Input types: `Piece`, `Seller`, `Locale`, `ListingRepository`  
+  Output type: `Either[ValidationError, Listing]`  
+  – Both `ValidationError` and `Listing` are domain-defined concepts.  
+  – The returned `Listing` is a domain entity created by `ListingFactory` and stored
+    through the `ListingRepository`, maintaining closure.
+
+* **expressInterest**  
+  Input types: `Listing`, `Buyer`, `InterestRepository`  
+  Output type: `Either[ContactError, InterestExpressed]`  
+  – `InterestExpressed` is a domain event, and `ContactError` is a domain error type.  
+  – The created `Interest` entity is stored within the domain (`InterestRepository`).  
+  – No extraneous structures are introduced.
+
+* **rate**  
+  Input types: `Piece`, `ConditionRating`  
+  Output type: `Piece`  
+  – The updated `Piece` remains the same domain entity, preserving closure.
+
+* **review**  
+  Input types: `Seller`, `Buyer`, `Review`  
+  Output type: `Either[ReviewError, ReviewSubmitted]`  
+  – Reviews remain domain constructs linked by reference and never embedded into Listings.  
+  – Returned values are fully internal to the domain vocabulary.
+
+* **closeListing**  
+  Input types: `Listing`, `Seller`  
+  Output type: `Either[ClosedError, Listing]`  
+  – The returned `Listing` is still the same domain entity, now in a terminal state  
+    (sold/donated/retracted).  
+  – Domain closure is respected because no outside type is introduced.
+
+* **categorize**  
+  Input types: `Piece`, `Type`  
+  Output type: `Option[Piece]`  
+  – Both `Piece` and `Type` are domain constructs, and `Option` wraps domain values only.
+
+* **discard**  
+  Input type: `Piece`  
+  Output type: `Option[Void]`  
+  – Returns domain-level void semantics (representing removal from circulation), not system-level types.
+
+* **browseAvailableItems**  
+  Input: `ListingRepository`  
+  Output: `Set<Listing>`  
+  – `Set` is a domain-level collection of domain entities (`Listing`).  
+  – No extraneous data structures are introduced.
+
+* **findAvailableByFilter**  
+  Input: `ListingRepository`, `Filter`  
+  Output: `Set<Listing>`  
+  – `Filter` is a domain value object.  
+  – Returned values remain domain entities.
+
+* **findListingById**  
+  Input: `ListingRepository`, `ListingID`  
+  Output: `Option[Listing]`  
+  – Lookup returns only domain types.
+
+In all cases, the domain’s operations map domain inputs to domain outputs without producing
+external or implementation-level values (e.g., raw database rows, API records, or UI components).  
+This demonstrates that the domain model is *closed under its defined operations*, satisfying the
+formal requirement highlighted in the Milestone 3 guidelines.

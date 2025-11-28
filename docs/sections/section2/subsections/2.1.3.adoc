@@ -1,81 +1,66 @@
 === *2.1.3 — Domain Terminology in Relation to Domain Rough*
 
-This section explains how several of the terms defined in *2.1.2 – Terminology* emerged from the material captured in *2.1.1 – Domain Rough Sketch*. Here we focus on *deriving the stable vocabulary* that will later be analysed more fully in §3.1 (Concept Formation and Analysis). Each derived term is annotated with its **conceptual category** — such as Behavior, Action, Norm, Setting, Entity, Value Object, or Environmental Phenomenon — to clarify how the terms relate to and differ from one another.
+This section explains how the terminology in §2.1.2 was derived from the raw observations in the Domain Rough Sketch (§2.1.1). The goal is to document the transformation from informal descriptions to stable domain concepts. Each term is tagged with its conceptual category (Behavior, Action, Norm, Setting, Entity, Value Object).
 
 ---
 
 ==== *Exchange Flow* (Behavior)
 
-The rough sketch described students: *“look up an item, contact the seller, agree on price, size, and place, then meet to exchange the item.”*  
-This recurring structure reflects a **Behavior**: a sequence of orderly, socially-recognised steps that organise informal garment handoffs.  
-We derived *Exchange Flow* to denote this **multi-step behavioral pattern**, distinct from individual actions like “contact seller” or “meet to exchange.”
+Students repeatedly described a sequence: discover item → contact seller → clarify details → meet → exchange.  
+We abstracted this into **Exchange Flow**, a Behavior pattern representing the typical order of actions in informal garment handoffs.
 
 ---
 
 ==== *Condition Disclosure Norm* (Norm)
 
-The sketch noted sellers sharing *photos of size tags, full pictures, and visible flaws*.  
-These lines reveal an **informal expectation** rather than a specific action: sellers “should” disclose accurate condition information.  
-Thus we derived *Condition Disclosure Norm*, a **social rule** that governs trustworthy representation of garments.  
-It differs from a behavior because it prescribes *how* an action ought to occur.
+Multiple stories included showing defects, tags, or wear. These reflect a **Norm**: sellers are expected to disclose condition accurately. It is a social rule, not an action.
 
 ---
 
 ==== *Student Resale Price Band* (Value Object)
 
-Mentions of *“symbolic prices between $8 and $15”* indicated a shared sense of what is reasonable in student-to-student exchanges.  
-The resulting term, *Student Resale Price Band*, is a **Value Object** — a conceptual range used to frame pricing conversations.  
-It is neither a behavior nor a norm but rather a **reference interval** derived from repeated practice.
+Mentions of “symbolic prices” created a recognizable interval of acceptable low-cost pricing. This became **Student Resale Price Band**, a Value Object representing a shared reference range.
 
 ---
 
 ==== *Textile Waste Stream* (Environmental Phenomenon)
 
-Comments about clothes being *discarded in open areas, taken to landfill, or rarely recycled* pointed to the **end-of-life pathways** of garments.  
-We named this background process *Textile Waste Stream*, an **environmental phenomenon** describing how clothing exits circulation.  
-Unlike behaviors or norms, it refers to large-scale flows rather than user-driven interactions.
+References to donated, discarded, or reused clothing reflect the end-of-life pathways of garments. We abstracted this into **Textile Waste Stream**, a phenomenon describing how clothing leaves circulation.
 
 ---
 
 ==== *Dormant Stock* (State / Entity Condition)
 
-Descriptions of *bags of outgrown clothes kept at home while owners decided what to do with them* revealed a transitional state.  
-We derived *Dormant Stock* to denote an **Entity Condition**: garments that still exist physically but have no active role.  
-It differs from behaviors or norms by describing a **state** rather than an action or expectation.
+Stories of bags of unused clothes indicated items in limbo.  
+We named this **Dormant Stock**, representing a Piece that exists physically but is not in active circulation.
 
 ---
 
 ==== *Meetup Spot* (Setting)
 
-Students mentioned *campus benches, apartment lobbies, and familiar public corners* as handoff locations.  
-These locations share a functional purpose: safe, semi-public spaces suitable for in-person exchange.  
-Thus we formed *Meetup Spot*, a **Setting** used within the Exchange Flow.  
-It is not itself a behavior; rather, it is a *place* in which behaviors unfold.
+Campus benches, bus stops, and parking lots were repeatedly used as handoff locations.  
+These became **Meetup Spot**, a Setting where Exchange Flow steps occur.
 
 ---
 
-==== *Ad-hoc Channel* (Setting / Communication Medium)
+==== *Ad-hoc Channel* (Communication Setting)
 
-The sketch referenced *Facebook Marketplace, WhatsApp groups, and Instagram stories*.  
-Instead of treating them individually, we saw these as **informal communication venues** for discovery and negotiation.  
-Hence *Ad-hoc Channel* is a **Communication Setting**: a medium supporting visibility and quick coordination.
+Students negotiated via WhatsApp, Marketplace, Instagram stories, etc. We unified these into **Ad-hoc Channel**, a medium enabling discovery and negotiation.
 
 ---
 
 ==== *Trust Cue* (Value Object / Signal)
 
-Mentions of recognising a name, seeing clear photos, or receiving bilingual messages pointed to subtle **signals of reliability**.  
-We combined these into *Trust Cue*, a **conceptual signal** used by participants to judge risk.  
-It differs from norms because it is *interpreted*, not mandated.
+Recognizable names, bilingual communication, and clear photos all served as signals of reliability.  
+These became **Trust Cues** — interpreted signals aiding decision-making.
 
 ---
 
 ==== *Seasonal Demand Pulse* (Environmental/Market Behavior)
 
-Questions about back-to-school periods, semester starts, or weather changes indicated **periodic fluctuations** in demand.  
-From this, we derived *Seasonal Demand Pulse*: a **cyclical behavioral pattern of the market**, not tied to individual users.  
-It differs from Exchange Flow because it occurs at a **population level**, not an individual level.
+Demand surges around semester beginnings or weather changes created cyclical patterns.  
+We abstracted this into **Seasonal Demand Pulse**, describing market-level fluctuations.
 
 ---
 
-By annotating each derived term and clarifying how they differ in conceptual kind, this section makes explicit the steps that led from informal wording in the rough sketch to the structured terminology presented in §2.1.2. These categories support later analysis by establishing which concepts describe actions, which describe settings or norms, and which represent state or environmental structure.
+These derived terms now serve as the conceptual foundation for the deeper analysis in §3.1, ensuring that the vocabulary used in the domain model originates directly from observed practices.
