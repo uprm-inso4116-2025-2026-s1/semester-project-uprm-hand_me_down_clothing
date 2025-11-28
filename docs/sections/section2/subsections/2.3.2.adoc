@@ -2,9 +2,10 @@
 
 This subsection presents the concrete techniques applied by the team during Milestone 3, demonstrating how the project evolved from scattered, duplicated logic to modular, intention-revealing, and maintainable structures. The examples below come from real improvements implemented by the Map, Auth, and Backend teams. Each example includes a before/after transformation aligned with Domain-Driven Design principles and the architectural rules described in <<_2_2_architecture_and_layering,Section 2.2 Architecture & Layering>>.
 
-=== Specification Pattern: From Scattered Conditionals to Composable Rules
+==== Specification Pattern: From Scattered Conditionals to Composable Rules
 
-==== Before
+===== Before
+
 Filtering logic in the Map and Listing domains was originally written using inline conditionals inside controllers, leading to duplication and tight coupling. Each filter—such as “Near Me,” “Open Now,” or “Category”—was evaluated manually:
 
 [source,typescript]
@@ -35,13 +36,16 @@ function filterResults(listings, filters) {
 ----
 
 Problems:
-- Controller-level business logic.
-- Repeated conditions in multiple files.
-- Adding a new filter required editing several modules.
-- Hard to test filtering rules independently.
 
-==== After
-Filters were refactored into **Specification objects**, each exposing a single, meaningful rule:
+* Controller-level business logic.
+* Repeated conditions in multiple files.
+* Adding a new filter required editing several modules.
+* Hard to test filtering rules independently.
+* No clear mapping to the Filter Value Object documented in the domain model.
+
+===== After
+
+Filters were refactored into *Specification* objects, each exposing a single, meaningful rule through a shared interface:
 
 [source,typescript]
 ----
@@ -55,7 +59,7 @@ Examples of concrete Specifications:
 [source,typescript]
 ----
 export class NearMeSpecification implements Specification<Listing> {
-  constructor(private userLocation, private radiusMeters) {}
+  constructor(private userLocation, private radiusMeters: number) {}
 
   isSatisfiedBy(listing: Listing): boolean {
     const dist = calculateDistance(listing.location, this.userLocation);
@@ -67,8 +71,10 @@ export class OpenNowSpecification implements Specification<Listing> {
   constructor(private currentHour: number) {}
 
   isSatisfiedBy(listing: Listing): boolean {
-    return listing.openingHour <= this.currentHour &&
-      this.currentHour <= listing.closingHour;
+    return (
+      listing.openingHour <= this.currentHour &&
+      this.currentHour <= listing.closingHour
+    );
   }
 }
 ----
@@ -78,11 +84,16 @@ Specifications can be composed:
 [source,typescript]
 ----
 export class AndSpecification<T> implements Specification<T> {
-  constructor(private left: Specification<T>, private right: Specification<T>) {}
+  constructor(
+    private left: Specification<T>,
+    private right: Specification<T>
+  ) {}
 
-  isSatisfiedBy(candidate: T) {
-    return this.left.isSatisfiedBy(candidate) &&
-           this.right.isSatisfiedBy(candidate);
+  isSatisfiedBy(candidate: T): boolean {
+    return (
+      this.left.isSatisfiedBy(candidate) &&
+      this.right.isSatisfiedBy(candidate)
+    );
   }
 }
 ----
@@ -93,40 +104,59 @@ The call site becomes clean and intention-revealing:
 ----
 const specs: Specification<Listing>[] = [];
 
-if (filterVO.nearMe) specs.push(new NearMeSpecification(userLoc, filterVO.radius));
-if (filterVO.openNow) specs.push(new OpenNowSpecification(currentHour));
+if (filterVO.nearMe) {
+  specs.push(new NearMeSpecification(userLoc, filterVO.radius));
+}
 
-const result = applySpecifications(allListings, specs);
+if (filterVO.openNow) {
+  specs.push(new OpenNowSpecification(currentHour));
+}
+
+const result = listings.filter(listing =>
+  specs.every(spec => spec.isSatisfiedBy(listing))
+);
 ----
 
-Benefits:
-- Encapsulated filtering rules.
-- Easy to add new filters without modifying controllers.
-- Clear mapping to the Filter VO.
-- Fully testable and maintainable.
+*Benefits*:
+
+* Encapsulated filtering rules instead of scattered conditionals.
+* Easy to add new filters without modifying controllers.
+* Clear mapping to the Filter VO.
+* Fully testable, composable domain rules.
 
 
-=== Strategy Pattern: Interchangeable Routing Providers
+===== Strategy Pattern: Interchangeable Routing Providers
 
-==== Before
-Routing was tightly coupled to Leaflet's OSRMv1 provider. Controllers directly instantiated the OSRM router:
+====== Before
+
+Routing was tightly coupled to Leaflet’s OSRMv1 provider. Controllers directly instantiated and configured the OSRM router:
 
 [source,typescript]
 ----
-const router = L.Routing.osrmv1({
-  serviceUrl: "https://router.project-osrm.org/route/v1",
-});
+async function getRoute(origin, destination) {
+  const router = L.Routing.osrmv1({
+    serviceUrl: "https://router.project-osrm.org/route/v1",
+  });
 
-router.route([origin, destination], callback);
+  return new Promise((resolve, reject) => {
+    router.route([origin, destination], (err, routes) => {
+      if (err) reject(err);
+      else resolve(routes[0]);
+    });
+  });
+}
 ----
 
 Problems:
-- Hard-coded provider (OSRMv1).
-- No ability to switch to Google Maps, Mapbox, or custom routing.
-- Difficult to test routing behavior.
 
-==== After
-A routing abstraction was introduced:
+* Hard-coded provider (OSRMv1).
+* No ability to switch to other routing engines (e.g., Google Maps, Mapbox, custom).
+* Difficult to test routing behavior in isolation from Leaflet.
+* Violated the Open–Closed Principle: adding a new routing policy required changing existing controller code.
+
+===== After
+
+A routing abstraction was introduced following the Strategy Pattern taught in lecture:
 
 [source,typescript]
 ----
@@ -135,7 +165,7 @@ export interface RoutingStrategy {
 }
 ----
 
-Current implementation:
+Current concrete strategy:
 
 [source,typescript]
 ----
@@ -144,23 +174,24 @@ export class OSRMRoutingStrategy implements RoutingStrategy {
     serviceUrl: "https://router.project-osrm.org/route/v1",
   });
 
-  async getRoute(origin, destination) {
+  async getRoute(origin: LatLng, destination: LatLng): Promise<RouteResult> {
     return new Promise((resolve, reject) => {
-      this.router.route([origin, destination], (err, routes) =>
-        err ? reject(err) : resolve(routes[0])
-      );
+      this.router.route([origin, destination], (err, routes) => {
+        if (err) reject(err);
+        else resolve(routes[0]);
+      });
     });
   }
 }
 ----
 
-Planned strategies (documented but not implemented):
+Planned strategies (documented as extension points, not yet implemented):
 
-- GoogleMapsRoutingStrategy
-- MapboxRoutingStrategy
-- CustomShortestPathStrategy
+* `GoogleMapsRoutingStrategy`
+* `MapboxRoutingStrategy`
+* `CustomShortestPathRoutingStrategy`
 
-Controller usage becomes:
+Controller usage becomes independent of the concrete routing engine:
 
 [source,typescript]
 ----
@@ -168,52 +199,90 @@ const routingStrategy: RoutingStrategy = new OSRMRoutingStrategy();
 const route = await routingStrategy.getRoute(origin, destination);
 ----
 
-Benefits:
-- Decouples controllers from routing provider.
-- Enables future routing engines without refactoring.
-- Clean, unified interface for route retrieval.
-- Aligns with extensibility principles from Milestone 3.
+*Benefits*:
+
+* Decouples controllers from a specific routing provider.
+* Enables future routing engines by implementing the same interface.
+* Simplifies testing by allowing mock strategies.
+* Aligns with the Strategy Pattern as presented in the course and with the project’s extensibility goals.
 
 
-=== Intention-Revealing Interfaces: Centralizing Authentication Logic
+==== Intention-Revealing Interfaces: Centralizing Authentication Logic
 
-==== Before
-Each page manually performed Supabase authentication and profile retrieval:
+===== Before
 
-[source,typescript]
-----
-const { data: { user } } = await supabase.auth.getUser();
-const { data: profile } = await supabase.from("profiles")
-  .select("*")
-  .eq("id", user.id)
-  .single();
-----
-
-Problems:
-- Code duplicated across pages.
-- Mixed concerns (auth, profile lookup, redirects).
-- Hard to maintain consistent profile structure.
-
-==== After
-The team introduced intention-revealing helpers:
+Each protected page manually performed Supabase authentication and profile retrieval, mixing concerns and duplicating logic:
 
 [source,typescript]
 ----
-export async function getAuthUserWithProfile(supabase) {
-  const { data: { user } } = await supabase.auth.getUser();
-  if (!user) return { user: null, profile: null };
+import { supabase } from "@/lib/supabaseClient";
 
-  const { data: profile } = await supabase
+export async function load({ redirect }) {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (!user || userError) {
+    throw redirect(302, "/login");
+  }
+
+  const { data: profile, error: profileError } = await supabase
     .from("profiles")
     .select("*")
     .eq("id", user.id)
     .single();
 
+  if (profileError) {
+    throw redirect(302, "/login");
+  }
+
   return { user, profile };
 }
 ----
 
-And a reactive hook:
+Problems:
+
+* Authentication and profile logic duplicated in many routes.
+* Slight variations in profile queries between pages.
+* Harder to maintain consistent behavior when auth rules change.
+* The main intention (“get authenticated user with profile or redirect”) was obscured by boilerplate.
+
+===== After
+
+The Auth team introduced intention-revealing helpers, matching the lecture’s emphasis on services with clear intent and side-effect-free functions where possible:
+
+[source,typescript]
+----
+export async function getAuthUserWithProfile(supabase) {
+  const { data: { user }, error: userError } = await supabase.auth.getUser();
+  if (!user || userError) {
+    return { user: null, profile: null };
+  }
+
+  const { data: profile, error: profileError } = await supabase
+    .from("profiles")
+    .select("*")
+    .eq("id", user.id)
+    .single();
+
+  if (profileError) {
+    return { user: null, profile: null };
+  }
+
+  return { user, profile };
+}
+----
+
+At the call site, the logic becomes shorter and intention-revealing:
+
+[source,typescript]
+----
+const { user, profile } = await getAuthUserWithProfile(supabase);
+if (!user) {
+  throw redirect(302, "/login");
+}
+
+return { user, profile };
+----
+
+For reactive components, a hook centralizes subscription to auth state:
 
 [source,typescript]
 ----
@@ -221,7 +290,7 @@ export function useSupabaseAuth() {
   const supabase = useSupabase();
   const auth = ref({ user: null, loading: true });
 
-  supabase.auth.onAuthStateChange((event, session) => {
+  supabase.auth.onAuthStateChange((_event, session) => {
     auth.value = {
       user: session?.user ?? null,
       loading: false,
@@ -232,17 +301,88 @@ export function useSupabaseAuth() {
 }
 ----
 
-Call sites become readable and meaningful:
+Typical usage:
 
 [source,typescript]
 ----
-const { user, profile } = await getAuthUserWithProfile(supabase);
-if (!user) throw redirect(302, "/login");
+const auth = useSupabaseAuth();
+
+if (auth.value.loading) {
+  return "Loading...";
+}
+
+if (!auth.value.user) {
+  router.push("/login");
+}
 ----
 
-Benefits:
-- Eliminates repetition.
-- Makes developer intent explicit.
-- Consistent profile retrieval.
-- Clear separation of concerns.
+*Benefits*:
 
+* **Intention-revealing**: the purpose of each helper is clear at the call site.
+* **Centralized logic**: changes to authentication or profile retrieval occur in one place.
+* **Consistency**: all pages rely on the same profile shape and redirect behavior.
+* **Testability**: helpers can be tested separately from page code.
+* **Alignment with lectures**: matches the emphasis on side-effect-free, intention-revealing services at boundaries.
+
+===== Assertions and Domain Invariants
+
+As discussed in the *Supple Design* lecture (slides 25–31), assertions help document and enforce the invariants that must always hold before and after domain operations. They make assumptions explicit, reduce ambiguity, and support the correctness of aggregates and services. In this project, assertions are incorporated into key operations across the Authentication, Backend, and Map subsystems to guarantee stability and prevent invalid states.
+
+====== Authentication Operation: signUp(firstname, lastname, email, password)
+
+The `signUp` flow creates a new user within the authentication subsystem. Assertions clarify the conditions under which the operation is valid and the guarantees it provides afterward.
+
+*Preconditions*
+- `email` is syntactically valid.
+- `password` meets the security policy (≥ 8 characters, includes number or symbol).
+- `email` is not already associated with an existing account.
+- `firstname` and `lastname` are non-empty strings.
+
+*Postconditions*
+- A new User account exists with the provided email.
+- The password is securely hashed (never stored in plain text).
+- A valid session or authentication credential is created.
+- The new user is considered authenticated immediately after sign-up.
+
+This mirrors the lecture guidance that authentication workflows benefit from explicit pre- and post-conditions to avoid ambiguous states (e.g., “user created but not authenticated”).
+
+====== Backend Operation: createPiece(pieceData)
+
+The `createPiece` operation instantiates a new `Piece` entity and enforces domain rules regarding categories, conditions, and ownership.
+
+*Preconditions*
+- The seller initiating the operation is authenticated and valid.
+- `category` must match one of the allowed domain categories.
+- Provided attributes must be compatible with the category  
+  (e.g., shoes must include `shoeSize`; accessories must not include a size field).
+- `condition` ∈ {new, like-new, lightly-used, used, heavily-used}.
+- `description` length does not exceed the domain’s maximum.
+
+*Postconditions*
+- A new Piece object exists and is associated with the seller.
+- The Piece receives a unique `pieceID`.
+- All fields (`category`, `condition`, `attributes`, `description`) match the validated input.
+- The Piece enters the `unlisted` state and is not part of any Listing yet.
+
+These assertions document the invariant that a Piece must always enter the system in a valid, unlisted, domain-compliant state.
+
+====== Map Operation: nearMe(listings, userLocation)
+
+The `nearMe` operation returns all listings within a fixed radius (8km) of the specified user location or map-selected point. Assertions ensure geospatial correctness and consistent results.
+
+*Preconditions*
+- `userLocation` contains valid latitude and longitude values.
+- `listings` is a non-null, iterable collection.
+- Each listing must include a valid meetup location or seller coordinate.
+
+*Postconditions*
+- Returned listings are only those within 8km of `userLocation`.
+- No listing outside the radius appears in the result.
+- Ordering of listings is preserved unless explicitly sorted afterward.
+- The function has no side effects (does not modify listings or persist data).
+
+By capturing the geospatial invariants explicitly, the Map subsystem aligns with the lecture principle that system behavior should never rely on hidden assumptions.
+
+====== Summary
+
+These assertions clarify the system’s behavioral expectations and match the lecture recommendations for maintaining model integrity through explicit invariants. Each subsystem—Auth, Backend, and Map—uses assertions to ensure operations transition between valid states, prevent malformed inputs, and reinforce domain rules. Together, they contribute to a more predictable, verifiable, and maintainable design.
