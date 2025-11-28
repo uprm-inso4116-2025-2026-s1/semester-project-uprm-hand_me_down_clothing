@@ -7,6 +7,7 @@ import { useSearchParams } from "next/navigation";
 import DistanceFilterButton from "./distance_filter";
 import { Piece } from "../types/piece";
 import * as filterListings from '../utils/filters/listingsFilter'
+import { frequently_searched_words } from "./frequent_words";
 
 const featured_categories = [
   { id: 1, name: "Tops", filter: "tops" },
@@ -26,7 +27,8 @@ export default function Browsing() {
     const [loading, setLoading] = useState(true);
     const [currentItems, setCurrentItems] = useState<Piece[]>([]);
     const [filteredItems, setFilteredItems] = useState<Piece[]>([]);
-
+    const [suggestions, setSuggestions] = useState<string[]>([]);
+    const [searchInput, setSearchInput] = useState('');
     useEffect(() => {
         async function mount() {
             const items = await fetchPieces(query);
@@ -36,6 +38,30 @@ export default function Browsing() {
         }
         mount();
     }, [query]);
+
+
+    function handleInputChange(value: string){
+        setSearchInput(value);
+
+        if(!value.trim()){
+            setSuggestions([]);
+            return;
+        }
+    //Finds the matches and sets the maximum of suggestions to 6
+        const matches= frequently_searched_words.filter(word=>word.toLowerCase().includes(value.toLowerCase())).slice(0,6);
+
+        setSuggestions(matches);
+    }
+
+    async function handleSuggestionClick(word:string){
+        setSearchInput(word);
+        setSuggestions([]);
+        setLoading(true);
+        const items= await fetchPieces(word);
+        setCurrentItems(items);
+        setFilteredItems(items);
+        setLoading(false);
+    }
 
     // Example filter function
     // handles the click and which filter to apply to the items
@@ -80,7 +106,7 @@ export default function Browsing() {
 
     return (
         <>
-            <div className="flex justify-center">
+            <div className="flex justify-center relative">
                 <form onSubmit={async (e) => {
                     e.preventDefault();
                     const input = (e.target as HTMLFormElement).elements.namedItem('Search_Bar') as HTMLInputElement;
@@ -89,14 +115,29 @@ export default function Browsing() {
                     setCurrentItems(items);
                     setFilteredItems(items);
                     setLoading(false);
+                    setSuggestions([]);
                 }}>
                 <input
-                    //onChange={(e)=> } use for Search Suggestions
+                    value={searchInput}
+                    onChange={(e)=> handleInputChange(e.target.value)} //used for Search Suggestions
                     name="Search_Bar"
                     type="text"
                     placeholder="Search for clothing..."
                     className="w-150 h-13 px-4 py-2 mt-6 mb-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
                 </input>
+                {suggestions.length > 0 && (
+                    <div className="absolute bg-white border border-gray-300 rounded-md mt-1 w-150 max-h-48 overflow-y-auto z-10">
+                    {suggestions.map((word, index) => (
+                        <button
+                            key={index}
+                            onClick={() => handleSuggestionClick(word)}
+                            className="w-full text-left px-4 py-2 hover:bg-gray-100"
+                        >
+                            {word}
+                            </button>
+                            ))}
+                    </div>
+                )}
                 </form>
                 <DistanceFilterButton />
             </div>
