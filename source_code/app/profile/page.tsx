@@ -83,7 +83,7 @@ export default function ProfilePage() {
       <div className="min-h-[100dvh] flex items-center justify-center">
         <p className="text-gray-600">Checking your session…</p>
       </div>
-    );
+    )
   }
 
   // If user is missing, we already pushed to /login, but show fallback
@@ -290,5 +290,5 @@ export default function ProfilePage() {
         )}
       </section>
     </div>
-  );
+  )
 }
