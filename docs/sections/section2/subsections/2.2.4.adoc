@@ -6,8 +6,6 @@ They specify observable states, validation rules, and permissible interactions.
 These requirements do *not* prescribe implementation details and do *not* function as a user manual.  
 All exchanges between buyers and sellers continue to occur offline.
 
----
-
 == *Interface Requirements*
 
 === Create Listing Form
@@ -20,8 +18,6 @@ All exchanges between buyers and sellers continue to occur offline.
 - Submissions with invalid or incomplete data shall trigger **inline validation messages**, with focus directed to the earliest failing field.  
 - On successful submission, the interface shall navigate to the **Listing Details** view and display a confirmation message.
 
----
-
 === Listing Details (Seller View)
 - When the Listing is **Active**, editable attributes (Title, Description, Images, Price, Condition) shall be available.  
 - A status selector shall reflect the domain transitions:  
@@ -30,8 +26,6 @@ All exchanges between buyers and sellers continue to occur offline.
 - When a Listing reaches a terminal state (Sold, Donated, Retracted), all editing controls shall be disabled and a corresponding status badge displayed.  
 - The interface shall present buyer contact requests associated with that Listing in reverse chronological order.
 
----
-
 === Browse & Search (Buyer View)
 - Buyers shall be able to perform **keyword search** and apply filters for **Category**, **Condition**, **Size**, and **Price/Free marker**.  
 - Sorting controls shall permit ordering by **Newest**, **Lowest Price**, or **Condition Rating**.  
@@ -39,22 +33,16 @@ All exchanges between buyers and sellers continue to occur offline.
 - Selecting a listing shall open its **Listing Details** view.  
 - If the viewer is not the Listing’s owner, the interface shall display a **Contact Seller** action.
 
----
-
 === Saved Listings (Buyer View)
 - Buyers shall be able to mark a listing as **Saved** or **Unsaved** from both card and detail views.  
 - Saved items shall persist across sessions.  
 - Visual indicators shall reflect saved/unsaved state consistently across browsing and detail views.
-
----
 
 === Contact Seller / Messaging
 - Activating **Contact Seller** shall open a message composer associated with the selected Listing.  
 - Upon sending a message, a confirmation shall appear, and the conversation shall be added to the buyer’s and seller’s message threads.  
 - Sellers shall receive a notification indicator when a new message arrives.  
 - Message threads shall be grouped by Listing and ordered chronologically.
-
----
 
 === Profile & Reviews
 - Each user shall have a profile page showing:  
@@ -65,35 +53,25 @@ All exchanges between buyers and sellers continue to occur offline.
 - Reviews shall be read-only for the profile owner and may only be submitted by counterparties after an offline exchange.  
 - Seller rating summaries (average rating + count) shall be presented prominently.
 
----
-
 === Accessibility & Feedback
 - All interactive controls shall be keyboard-navigable with visible focus indicators.  
 - Inline validation messages shall be **ARIA-live announced** for screen readers.  
 - Toasts and banners shall be non-blocking and dismissible via keyboard.  
 - All forms shall contain descriptive labels and accessible placeholder text.
 
----
-
 == Examples (Non-Exhaustive Illustrations)
 1. *Create Listing:* Required fields remain invalid until a Title, Category, and at least one Image are provided; once valid, Publish becomes enabled.  
 2. *Status Transitions:* A seller moves a listing from Active → Reserved → Sold; editing controls disappear once a terminal state is reached.  
 3. *Contact Seller:* A buyer sends a message; a confirmation appears and the seller receives a notification.
-
----
 
 == Relation to Domain Requirements
 - Domain Requirements define **what must exist** in the domain (e.g., Listings, Saved Listings, Reviews).  
 - Interface Requirements define **how users interact with those domain concepts** through observable UI states.  
 - Each interface rule supports verification of domain behavior by exposing consistent, testable interactions.
 
----
-
 == Justification
 These requirements ensure that UI-visible behavior remains predictable, accessible, and aligned with domain semantics.  
 They maintain a clear boundary between domain logic and interaction flow while supporting user trust, transparency, and usability.
-
----
 
 == Testing Plan
 - Verify validation logic, required fields, and control enable/disable states.  
