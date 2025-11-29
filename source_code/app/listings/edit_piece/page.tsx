@@ -2,7 +2,7 @@
 
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { useState, useEffect } from 'react'
-import { ImageUploader } from '../../../src/components/imageUploader'
+import { ImageUploader } from '@/src/components/imageUploader'
 import { useParams, useRouter } from 'next/navigation'
 import { PieceRepository } from '@/src/repositories/pieceRepository'
 import { Piece } from '@/app/types/piece'
@@ -39,6 +39,40 @@ export default function EditPiece() {
   const pieceRepository = new PieceRepository()
   const pieceFactory = new PieceFactory()
   const supabaseAuth = createClient()
+
+  // Local helpers (repository methods not available in this branch)
+  const canAddMoreImagesLocal = (images: string[], max: number): boolean => images.length < max
+
+  const validatePieceFormDataLocal = (
+    image_urls: string[],
+    city: string,
+    handoff: string,
+    title: string,
+    category: string,
+    condition: string,
+    size: string,
+    sex: string,
+    quantity: number,
+    maxImages: number
+  ): string | null => {
+    if (!title.trim()) return 'Item name is required.'
+    if (!category) return 'Category is required.'
+    if (!condition) return 'Condition is required.'
+    if (!size) return 'Size is required.'
+    if (!sex) return 'Designed for is required.'
+    if (!city.trim()) return 'City is required.'
+    if (!handoff) return 'Handoff method is required.'
+    if (quantity < 1) return 'Quantity must be at least 1.'
+    if (image_urls.length < 1) return 'At least one image is required.'
+    if (image_urls.length > maxImages) return `Maximum ${maxImages} images allowed.`
+    return null
+  }
+
+  const deleteImagesLocal = async (paths: string[]) => {
+    if (!paths.length) return
+    const { error } = await supabaseAuth.storage.from('piece_images').remove(paths)
+    if (error) throw error
+  }
 
   // Check authentication and fetch listing
   useEffect(() => {
@@ -115,11 +149,11 @@ export default function EditPiece() {
   }
 
   // Check if we can add more images using repository validation concept
-  const canAddMoreImages = pieceRepository.canAddMoreImages(formData.image_urls, MAX_IMAGES)
+  const canAddMoreImages = canAddMoreImagesLocal(formData.image_urls, MAX_IMAGES)
 
   // Validate form data using repository pattern
   const validateForm = (): string | null => {
-    return pieceRepository.validatePieceFormData(
+    return validatePieceFormDataLocal(
       formData.image_urls,
       formData.city,
       formData.handoff,
@@ -186,7 +220,7 @@ export default function EditPiece() {
           return path || url
         })
 
-        await pieceRepository.deleteImages(imagePaths)
+        await deleteImagesLocal(imagePaths)
       }
 
       alert('Listing updated successfully!')
@@ -255,7 +289,7 @@ export default function EditPiece() {
           {canAddMoreImages ? (
             <ImageUploader
               listingId={`edit-${listingId}-${Date.now()}`}
-              onUploadComplete={(urls) => {
+              onUploadComplete={(urls: string[]) => {
                 const newTotal = formData.image_urls.length + urls.length
                 if (newTotal > MAX_IMAGES) {
                   alert(`You can only add ${MAX_IMAGES - formData.image_urls.length} more image(s).`)

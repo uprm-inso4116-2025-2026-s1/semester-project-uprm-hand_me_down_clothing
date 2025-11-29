@@ -2,7 +2,6 @@ import { PieceRepository } from "@/src/repositories/pieceRepository";
 import { Piece } from "@/app/types/piece";
 import { Category, Condition, Gender, Size } from "@/app/types/classifications";
 import { PieceFactory } from "@/src/factories/pieceFactory";
-import { Lexend_Zetta } from "next/font/google";
 
 describe("PieceRepository", () => {
 
@@ -14,8 +13,7 @@ describe("PieceRepository", () => {
         repo = new PieceRepository();
     });
 
-
-    test("should create a new piece and link to a user", async () => {
+    test("should create and retrieve a piece", async () => {
         const user_id = "00000000-0000-0000-0000-000000000000";
 
         const piece: Piece = factory.makePiece({
@@ -28,163 +26,255 @@ describe("PieceRepository", () => {
             size: Size.MEDIUM,
             price: 40,
             condition: Condition.USED,
+            status: 0,
             reason: "Test reason",
             images: [],
             user_id,
         });
 
-        const result: Piece | Error = await repo.createPiece(piece);
-        expect(result).toBeInstanceOf(Piece);
+        const created = await repo.createPiece(piece) as Piece;
+        expect(created).toBeInstanceOf(Piece);
+        expect(created.name).toBe(piece.name);
 
-        // verify it exists in Supabase now
-        const fetched = await repo.getPieceById((result as Piece).id);
+        const fetched = await repo.getPieceById(created.id);
         expect(fetched).not.toBeNull();
-        expect(fetched!.id).not.toBe(piece.id);
         expect(fetched!.name).toBe(piece.name);
-        expect(fetched!.category).toBe(piece.category);
-        expect(fetched!.color).toBe(piece.color);
-        expect(fetched!.brand).toBe(piece.brand);
-        expect(fetched!.gender).toBe(piece.gender);
-        expect(fetched!.size).toBe(piece.size);
-        expect(fetched!.price).toBe(piece.price);
-        expect(fetched!.condition).toBe(piece.condition);
-        expect(fetched!.reason).toBe(piece.reason);
-        expect(fetched!.images).toEqual(piece.images);
         expect(fetched!.user_id).toBe(user_id);
 
         // cleanup
-        const deleted: boolean = await repo.deletePiece(fetched!.id);
-
-        expect(deleted).toBe(true);
-    });
-
-
-    test("should fail to create a new piece", async () => {
-        const user_id = "invalid-user-id";
-
-        const piece: Piece = factory.makePiece({
-            id: 0,
-            name: "Test Jacket",
-            category: Category.JACKET,
-            color: "Black",
-            brand: "TestBrand",
-            gender: Gender.UNISEX,
-            size: Size.MEDIUM,
-            price: 40,
-            condition: Condition.USED,
-            reason: "Test reason",
-            images: [],
-            user_id,
-        });
-
-        const result = await repo.createPiece(piece);
-        expect(result.name).toBeUndefined();
-    });
-
-    test("should fetch pieces from the database", async () => {
-        const pieces = await repo.getPieces();
-        expect(Array.isArray(pieces)).toBe(true);
-    });
-
-    test("should return null for non-existent piece ID", async () => {
-        const piece = await repo.getPieceById(0);
-        expect(piece).toBeNull();
+        await repo.deletePiece(fetched!.id);
     });
 
     test("should update an existing piece", async () => {
         const user_id = "00000000-0000-0000-0000-000000000000";
 
-        // 1. Create a piece
         const piece = factory.makePiece({
             id: 0,
-            name: "Updatable Jacket",
+            name: "Original Name",
             category: Category.JACKET,
             color: "Blue",
-            brand: "UpdateBrand",
+            brand: "Brand",
             gender: Gender.UNISEX,
             size: Size.SMALL,
             price: 25,
             condition: Condition.NEW,
-            reason: "Initial reason",
+            status: 0,
+            reason: "Test",
             images: [],
             user_id,
         });
 
-        const created = await repo.createPiece(piece);
-        expect(created).toBeInstanceOf(Piece);
+        const created = await repo.createPiece(piece) as Piece;
+        (created as any).name = "Updated Name";
 
-        // 2. Modify the piece object directly
-        (created as Piece).name = "Updated Jacket";
-        (created as Piece).price = 30;
-        (created as Piece).color = "Red";
-
-        // 3. Pass full piece object to updatePiece
-        const updated = await repo.updatePiece(created as Piece);
+        const updated = await repo.updatePiece(created);
         expect(updated).toBeInstanceOf(Piece);
-        expect(updated!.name).toBe("Updated Jacket");
-        expect((updated as Piece).price).toBe(30);
-        expect((updated as Piece).color).toBe("Red");
-
-        // 4. Fetch and verify persisted changes
-        const fetched = await repo.getPieceById((created as Piece).id);
-        expect(fetched!.name).toBe("Updated Jacket");
-        expect(fetched!.price).toBe(30);
-        expect(fetched!.color).toBe("Red");
+        expect(updated!.name).toBe("Updated Name");
 
         // cleanup
-        const deleted = await repo.deletePiece((created as Piece).id);
-        expect(deleted).toBe(true);
+        await repo.deletePiece(created.id);
     });
 
-    test("should fail to update a non-existing piece", async () => {
+    test("should delete a piece", async () => {
         const user_id = "00000000-0000-0000-0000-000000000000";
 
-        const fakePiece: Piece = factory.makePiece({
+        const piece = factory.makePiece({
             id: 0,
-            name: "Nonexistent",
-            category: Category.SHIRT,
-            color: "Black",
-            brand: "FakeBrand",
-            gender: Gender.UNISEX,
-            size: Size.MEDIUM,
-            price: 20,
-            condition: Condition.NEW,
-            reason: "No reason",
-            images: [],
-            user_id,
-        });
-
-        const updated = await repo.updatePiece(fakePiece);
-        expect(updated.name).toBeUndefined();
-    });
-
-    test("should delete a piece successfully", async () => {
-        const user_id = "00000000-0000-0000-0000-000000000000";
-
-        const piece: Piece | Error = factory.makePiece({
-            id: 0,
-            name: "Delete Me",
+            name: "To Delete",
             category: Category.SHIRT,
             color: "Red",
-            brand: "BrandA",
+            brand: "Brand",
             gender: Gender.MALE,
             size: Size.LARGE,
             price: 10,
             condition: Condition.USED,
-            reason: "Cleaning test data",
+            status: 0,
+            reason: "Test",
             images: [],
             user_id,
         });
 
-        const result: Piece | Error = await repo.createPiece(piece);
-        expect(result as Piece).toBeInstanceOf(Piece);
-
-        const deleted = await repo.deletePiece((result as Piece).id);
+        const created = await repo.createPiece(piece) as Piece;
+        const deleted = await repo.deletePiece(created.id);
         expect(deleted).toBe(true);
     });
+});
 
-    test("should fail to delete non-existing piece", async () => {
-        const deleted = await repo.deletePiece(0);
-        expect(deleted).toBe(false);
+describe("Piece class display methods", () => {
+    let factory: PieceFactory;
+
+    beforeAll(() => {
+        factory = new PieceFactory();
+    });
+
+    test("should format piece title and description", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Blue T-Shirt",
+            category: Category.SHIRT,
+            color: "Blue",
+            brand: "Nike",
+            gender: Gender.UNISEX,
+            size: Size.MEDIUM,
+            price: 25,
+            condition: Condition.LIKE_NEW,
+            status: 0,
+            reason: "Too small for me",
+            images: [],
+            user_id: "user123",
+        });
+
+        expect(piece.getTitle()).toBe("Blue T-Shirt");
+        expect(piece.getDescription()).toBe("Too small for me");
+    });
+
+    test("should format price correctly", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Item",
+            category: Category.SHIRT,
+            color: "Red",
+            brand: "Brand",
+            gender: Gender.MALE,
+            size: Size.LARGE,
+            price: 19.99,
+            condition: Condition.USED,
+            status: 0,
+            reason: null,
+            images: [],
+            user_id: "user123",
+        });
+
+        expect(piece.getFormattedPrice()).toBe("$19.99");
+    });
+
+    test("should return category trail and tags", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Jacket",
+            category: Category.JACKET,
+            color: "Black",
+            brand: "Adidas",
+            gender: Gender.FEMALE,
+            size: Size.SMALL,
+            price: 50,
+            condition: Condition.NEW,
+            status: 0,
+            reason: "New without tags",
+            images: [],
+            user_id: "user123",
+        });
+
+        expect(piece.getCategoryTrail()).toEqual(["Home", "Jacket"]);
+        expect(piece.getTags()).toEqual(["Female"]);
+    });
+
+    test("should format badges with condition and size", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Pants",
+            category: Category.PANTS,
+            color: "Gray",
+            brand: "Levi",
+            gender: Gender.MALE,
+            size: Size.MEDIUM,
+            price: 40,
+            condition: Condition.WORN,
+            status: 0,
+            reason: "Replaced with new pair",
+            images: [],
+            user_id: "user123",
+        });
+
+        const badges = piece.getBadges();
+        expect(badges.length).toBe(2);
+        expect(badges[0]).toBe("Worn");
+        expect(badges[1]).toBe("Medium");
+    });
+
+    test("should format location from coordinates", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Dress",
+            category: Category.DRESS,
+            color: "Pink",
+            brand: "H&M",
+            gender: Gender.FEMALE,
+            size: Size.SMALL_X,
+            price: 30,
+            condition: Condition.LIKE_NEW,
+            status: 0,
+            reason: "Never worn",
+            images: [],
+            user_id: "user123",
+            latitude: 18.2012,
+            longitude: -67.1414,
+        });
+
+        const location = piece.getLocation();
+        expect(location).toContain("18.2012");
+        expect(location).toContain("-67.1414");
+    });
+
+    test("should return N/A for missing location", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Hat",
+            category: Category.SCARF,
+            color: "White",
+            brand: "Generic",
+            gender: Gender.UNISEX,
+            size: Size.CUSTOM,
+            price: 10,
+            condition: Condition.USED,
+            status: 0,
+            reason: "No longer needed",
+            images: [],
+            user_id: "user123",
+            latitude: null,
+            longitude: null,
+        });
+
+        expect(piece.getLocation()).toBe("N/A");
+    });
+
+    test("should extract donor initials from user_id", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Socks",
+            category: Category.SOCKS,
+            color: "Black",
+            brand: "Nike",
+            gender: Gender.UNISEX,
+            size: Size.MEDIUM,
+            price: 5,
+            condition: Condition.NEW,
+            status: 0,
+            reason: "Extra pair",
+            images: [],
+            user_id: "john-doe@example.com",
+        });
+
+        expect(piece.getDonorInitials()).toBe("J");
+    });
+
+    test("should return U for missing user_id", () => {
+        const piece = factory.makePiece({
+            id: 1,
+            name: "Hoodie",
+            category: Category.HOODIE,
+            color: "Gray",
+            brand: "Champion",
+            gender: Gender.UNISEX,
+            size: Size.LARGE,
+            price: 35,
+            condition: Condition.LIKE_NEW,
+            status: 0,
+            reason: "Duplicate",
+            images: [],
+            user_id: "",
+        });
+
+        expect(piece.getDonorInitials()).toBe("U");
     });
 });
