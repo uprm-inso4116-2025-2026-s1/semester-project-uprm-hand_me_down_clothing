@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { PieceRepository } from '@/src/repositories/pieceRepository';
 import { PieceFactory } from '@/src/factories/pieceFactory';
-import { ImageUploader } from '@/src/components/imageUploader';
 
 const dummyUserId = "00000000-0000-0000-0000-000000000000"; // placeholder UUID
 
@@ -21,10 +20,15 @@ export default function SellPiece() {
   const [condition, setCondition] = useState("")
   const [reason, setReason] = useState("")
   const [images, setImages] = useState<Array<string>>([])
-  const [isSubmitting, setIsSubmitting] = useState(false)
 
   const router = useRouter();
-  const listingId = `sell-${Date.now()}`
+
+  // For simplicity, we'll handle file uploads as names only (not actual upload)
+  function handleImageChange(e: React.ChangeEvent<HTMLInputElement>) {
+    if (e.target.files) {
+      setImages(Array.from(e.target.files).map(f => f.name))
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
@@ -36,12 +40,6 @@ export default function SellPiece() {
     //   alert("You must be logged in to publish a piece.");
     //   return;
     // }
-
-    // Validate minimum 1 image
-    if (!images.length) {
-      alert("Please upload at least one image.")
-      return
-    }
 
     // Individual field validation
     if (!name.trim()) {
@@ -82,41 +80,32 @@ export default function SellPiece() {
       return;
     }
 
-    setIsSubmitting(true)
+    const factory = new PieceFactory();
+    const repository = new PieceRepository();
 
-    try {
-      const factory = new PieceFactory();
-      const repository = new PieceRepository();
+    const piece = factory.makePiece({
+      id: 0,
+      name: name,
+      category: category,
+      color: color,
+      brand: brand,
+      gender: gender,
+      size: size,
+      price: parsedPrice.toFixed(2),
+      condition: condition,
+      reason: reason,
+      images: images,
+      user_id: dummyUserId,
+      // user_id: user.id, 
+    });
 
-      const piece = factory.makePiece({
-        id: 0,
-        name: name,
-        category: category,
-        color: color,
-        brand: brand,
-        gender: gender,
-        size: size,
-        price: parsedPrice.toFixed(2),
-        condition: condition,
-        reason: reason,
-        images: images,
-        user_id: dummyUserId,
-        // user_id: user.id, 
-      });
+    const result = await repository.createPiece(piece);
 
-      const result = await repository.createPiece(piece);
-
-      if (result instanceof Error) {
-        alert("Failed to publish: " + (result as Error).message);
-      } else {
-        alert("Piece published successfully!");
-        router.push("/");
-      }
-    } catch (err) {
-      console.error("Error publishing piece:", err);
-      alert("Failed to publish. Please try again.");
-    } finally {
-      setIsSubmitting(false)
+    if (result instanceof Error) {
+      alert("Failed to publish: " + (result as Error).message);
+    } else {
+      alert("Piece published successfully!");
+      router.push("/");
     }
   }
 
@@ -141,20 +130,49 @@ export default function SellPiece() {
         <form onSubmit={handleSubmit}>
           {/* Photos */}
           <section id="photos" className="bg-white border-2 border-[#E5E7EF] rounded-3xl p-6 sm:p-8">
-            <h2 className="text-3xl font-bold italic mb-2">Add photos*</h2>
+            <h2 className="text-3xl font-bold italic mb-2">Add photos</h2>
             <p className="text-[#666666] mb-6">Min 1, max 8 — clear, bright, and true to color.</p>
-            
-            {/* ImageUploader integration */}
-            <ImageUploader
-              listingId={listingId}
-              onUploadComplete={(urls: string[]) => setImages(urls)}
-            />
 
-            {images.length > 0 && (
-              <p className="mt-2 text-sm text-green-600">
-                ✓ {images.length} image(s) uploaded successfully
-              </p>
-            )}
+            <div className="flex justify-center rounded-2xl border-2 border-dashed border-[#E5E7EF] bg-white/50 px-6 py-10">
+              <div className="text-center">
+                <p className="mb-2 text-[#666666]">Upload photos</p>
+                <label
+                  htmlFor="file-upload"
+                  className="relative cursor-pointer rounded-full px-4 py-2 bg-[#d7b1b1] hover:bg-[#cda0a0] text-white inline-block transition-colors"
+                >
+                  <span className="font-semibold italic">Upload a file</span>
+                  <input
+                    id="file-upload"
+                    name="file-upload"
+                    type="file"
+                    className="sr-only"
+                    multiple
+                    onChange={handleImageChange}
+                  />
+                </label>
+                <p className="pl-1 text-[#666666]">or drag and drop</p>
+                <p className="text-xs text-[#666666] mt-2">PNG, JPG, GIF up to 10MB</p>
+                {/* Preview selected file names */}
+                <div className="mt-2 text-xs text-[#2b2b2b]">
+                  {images.length > 0 && (
+                    <div>
+                      <span>Selected: </span>
+                      {images.join(', ')}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+
+            <div className="pt-5 text-sm text-[#666666]">
+              <h3 className="text-[#2b2b2b] dark:text-[#f5f5dc] font-semibold">Tips</h3>
+              <ul className="ml-4 mt-2 list-disc">
+                <li>Use natural lighting or a bright room.</li>
+                <li>Photograph the item from multiple angles.</li>
+                <li>Keep the background clean and uncluttered.</li>
+                <li>Show close-ups of important details or flaws.</li>
+              </ul>
+            </div>
           </section>
 
           {/* Piece Details Form */}
@@ -169,7 +187,6 @@ export default function SellPiece() {
                   name="name"
                   type="text"
                   placeholder="e.g., Nike Hoodie"
-                  maxLength={100}
                   className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={name}
                   onChange={e => setName(e.target.value)}
@@ -205,7 +222,6 @@ export default function SellPiece() {
                   name="color"
                   type="text"
                   placeholder="e.g., Lavender"
-                  maxLength={20}
                   className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={color}
                   onChange={e => setColor(e.target.value)}
@@ -219,7 +235,6 @@ export default function SellPiece() {
                   name="brand"
                   type="text"
                   placeholder="e.g., Nike"
-                  maxLength={50}
                   className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={brand}
                   onChange={e => setBrand(e.target.value)}
@@ -268,9 +283,7 @@ export default function SellPiece() {
                 <input
                   id="price"
                   name="price"
-                  type="number"
                   min={0}
-                  step="0.01"
                   placeholder="e.g., 25"
                   className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={price}
@@ -297,13 +310,12 @@ export default function SellPiece() {
               </div>
               {/* Reason */}
               <div className="col-span-full">
-                <label htmlFor="reason" className="block text-sm font-medium">Reason for selling (optional)</label>
+                <label htmlFor="reason" className="block text-sm font-medium">Reason for selling *</label>
                 <textarea
                   id="reason"
                   name="reason"
                   rows={4}
                   placeholder="Why are you selling this piece?"
-                  maxLength={100}
                   className="mt-2 block w-full rounded-2xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={reason}
                   onChange={e => setReason(e.target.value)}
@@ -329,16 +341,11 @@ export default function SellPiece() {
           <div className="flex flex-wrap gap-3 justify-end mt-5">
             <button
               type="submit"
-              disabled={isSubmitting}
-              className={`px-5 py-2 h-13 rounded-full inline-flex items-center text-white transition-colors ${
-                isSubmitting 
-                  ? 'bg-gray-400 cursor-not-allowed' 
-                  : 'bg-[#d7b1b1] hover:bg-[#cda0a0]'
-              }`}
+              className="px-5 py-2 h-13 bg-[#d7b1b1] hover:bg-[#cda0a0] rounded-full inline-flex items-center text-white transition-colors"
               aria-label="Publish listing"
             >
               <CheckIcon className="mr-2 size-5" aria-hidden="true" />
-              {isSubmitting ? 'Publishing...' : 'Publish'}
+              Publish
             </button>
           </div>
         </form>

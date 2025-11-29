@@ -108,14 +108,14 @@ export default function Homepage() {
                 </button>
               </Link>
             </div>
-              <form onSubmit={open_browsing}>
-                <input
-                    //onChange={(e)=> } use for Search Suggestions
-                    name="Search_Bar"
-                    type="text"
-                    placeholder="Search for clothing..."
-                    className="w-150 h-13 px-4 py-2 mt-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]">
-                </input>
+            <form onSubmit={open_browsing}>
+              <input
+                name="Search_Bar"
+                type="text"
+                placeholder="Search for clothing..."
+                maxLength={150}
+                className="w-full sm:w-96 px-4 py-3 mt-6 bg-[#E5E7EF] rounded-full text-[#989A9D] hover:bg-[#eceaea] focus:outline-none focus:ring-2 focus:ring-[#D6B1B1]"
+              />
             </form>
           </div>
           <img 
