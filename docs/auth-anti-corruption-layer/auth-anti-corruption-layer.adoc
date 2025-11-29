@@ -1,0 +1,93 @@
+= Anti-Corruption Layer for Authentication
+Hand-Me-Down Documentation
+:toc:
+:sectnums:
+
+== Objective
+
+Introduce a small Anti-Corruption Layer (ACL) between Supabase Auth (external boundary) and the Hand-Me-Down application domain, so that the rest of the app depends on a stable `DomainUser` model instead of the external `Supabase.User` type.
+
+== What Is the ACL Here?
+
+Supabase exposes a rich `User` shape with many fields and provider-specific details.
+The UI does not need all of that. To avoid leaking the external contract into our components, we:
+
+* Define a domain type: `DomainUser`.
+* Create a translator function `toDomainUser(user: User | null)`.
+* Use that translator inside `SupabaseAuthProvider`, so the context exposes only `DomainUser`.
+
+== Domain Model and Adapter
+
+[source,ts]
+----
+export type DomainUser = {
+  id: string
+  email: string | null
+}
+
+// Anti-Corruption translator: Supabase.User -> DomainUser
+export function toDomainUser(user: User | null): DomainUser | null {
+  if (!user) return null
+
+  return {
+    id: user.id,
+    email: user.email ?? null
+  }
+}
+----
+
+The rest of the app only sees `DomainUser`, even though the underlying implementation uses Supabase.
+
+== Integration in Auth Context
+
+[source,ts]
+----
+type AuthContextValue = {
+  user: DomainUser | null
+  session: Session | null
+  loading: boolean
+}
+
+setUser(toDomainUser(userData.user))
+
+// on auth state change
+setUser(toDomainUser(newSession?.user ?? null))
+----
+
+This context acts as a small ACL: UI components do not depend on Supabase’s types and can be refactored independently.
+
+== Diagram
+
+[plantuml,auth-acl,svg]
+----
+@startuml
+package "External Boundary" {
+  class SupabaseAuth {
+    + getSession()
+    + getUser()
+  }
+}
+
+package "ACL / Adapter" {
+  class AuthAdapter {
+    + toDomainUser(User): DomainUser
+  }
+}
+
+package "Auth Domain" {
+  class DomainUser
+  class SupabaseAuthProvider
+}
+
+SupabaseAuth --> AuthAdapter
+AuthAdapter --> DomainUser
+SupabaseAuthProvider --> DomainUser
+
+@enduml
+----
+
+== Benefits
+
+* The UI depends on a small, stable `DomainUser` type.
+* If we change auth provider or Supabase’s user shape, only the adapter needs to change.
+* Matches the lecture concept of an Anti-Corruption Layer between an external system and our domain.
