@@ -5,7 +5,7 @@ import React, { useState } from 'react'
 import { useRouter } from 'next/navigation';
 import { PieceRepository } from '@/src/repositories/pieceRepository';
 import { PieceFactory } from '@/src/factories/pieceFactory';
-import { ImageUploader } from '../../../src/components/imageUploader.tsx';
+import { ImageUploader } from '@/src/components/imageUploader';
 
 const dummyUserId = "00000000-0000-0000-0000-000000000000"; // placeholder UUID
 
@@ -147,7 +147,7 @@ export default function SellPiece() {
             {/* ImageUploader integration */}
             <ImageUploader
               listingId={listingId}
-              onUploadComplete={(urls) => setImages(urls)}
+              onUploadComplete={(urls: string[]) => setImages(urls)}
             />
 
             {images.length > 0 && (

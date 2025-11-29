@@ -2,8 +2,8 @@
 
 import { CheckIcon } from '@heroicons/react/20/solid'
 import { useState } from 'react'
-import { ImageUploader } from '../../../src/components/imageUploader.tsx'
-import { createClient } from '../../../app/auth/supabaseClient.ts';
+import { ImageUploader } from '@/src/components/imageUploader'
+import { createClient } from '@/app/auth/supabaseClient';
 import Link from 'next/link'
 
 export default function DonatePiece() {
@@ -155,7 +155,7 @@ export default function DonatePiece() {
           {/* Integrated ImageUploader */}
           <ImageUploader
             listingId={listingId}
-            onUploadComplete={(urls) => setFormData({ ...formData, image_urls: urls })}
+            onUploadComplete={(urls: string[]) => setFormData({ ...formData, image_urls: urls })}
           />
         </section>
 
