@@ -14,8 +14,6 @@ The application is composed of a React frontend, a set of JavaScript application
 Supabase components for persistence, authentication, and storage. The subsections below
 indicate which parts are implemented today and which remain planned for future milestones.
 
----
-
 == Frontend (React)
 
 === Implemented
@@ -44,8 +42,6 @@ spec-driven filters are planned.
 * Extended editing flows on the Upload Page.
 * Map metadata overlays (map currently relies solely on ESRI’s imagery tiles).
 
----
-
 == Backend Logic (JavaScript Functions)
 
 === Implemented
@@ -65,8 +61,6 @@ spec-driven filters are planned.
 * Moderation/reporting workflows.
 * Additional routing strategies (Google Maps, Mapbox, custom shortest-path).
 
----
-
 == Database & Storage (Supabase)
 
 === Implemented
@@ -83,8 +77,6 @@ spec-driven filters are planned.
 * RLS rules for messaging and review flows.
 * Extended geospatial metadata layers (beyond ESRI tiles).
 
----
-
 == External Services
 
 === Implemented
@@ -96,8 +88,6 @@ spec-driven filters are planned.
 * Geocoding services (address → coordinate conversion).
 * Additional routing providers (Google Maps, Mapbox).
 * Metadata overlays on the map (relying on ESRI tile imagery for now).
-
----
 
 == Architecture Diagram
 image::Architecture_Diagram.png[Architecture Diagram, align=center]
@@ -128,9 +118,7 @@ such as messaging, review workflows, and additional routing strategies.
 *** Responses update React state with the most recent domain data.
 *** System intentionally supports **offline exchanges only**; no payments or mediated transactions.
 
----
-
-==== Layer Mapping (Clean Architecture / DDD Alignment)
+=== Layer Mapping (Clean Architecture / DDD Alignment)
 
 * **Domain Layer**  
   Core domain concepts (Listing, Piece, User, Review), invariants, and key events
