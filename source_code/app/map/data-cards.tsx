@@ -192,8 +192,8 @@ export function LocationMarkers({
               closeButton
             >
                 {/* Popup Content */}
-                <div role="dialog" aria-labelledby={`h-${loc.id}`}>
-                  <h3 id={`h-${loc.id}`} className="font-semibold text-base mb-1">
+                <div role="dialog" aria-labelledby={`h-${loc.getID()}`}>
+                  <h3 id={`h-${loc.getID()}`} className="font-semibold text-base mb-1">
                     {loc.getName() || "Untitled Location"}
                   </h3>
 
