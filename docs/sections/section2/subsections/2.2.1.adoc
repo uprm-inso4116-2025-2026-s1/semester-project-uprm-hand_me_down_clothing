@@ -19,13 +19,11 @@ and back REQUIREMENT → FEATURE → EPIC
 As a buyer, I want to browse, filter, and search listings so that I can efficiently find items that match my preferences.  
 *Implemented by:* <<FEATURE-1.1>>, <<FEATURE-1.2>>, <<FEATURE-1.3>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR3>>, <<REQ-DR4>>
-
 [[EPIC-2]]
 . **Saved Listings**  
 As a buyer, I want to save listings to revisit them later.  
 *Implemented by:* <<FEATURE-2.1>>, <<FEATURE-2.2>>  
 *Supported by Requirements:* <<REQ-DR1>>
-
 [[EPIC-3]]
 . **Trust and Transparency**  
 As a buyer, I want seller profiles and reviews to make safe choices.  
@@ -41,20 +39,16 @@ As a buyer, I want seller profiles and reviews to make safe choices.
 As a seller, I want to create, update, and close listings.  
 *Implemented by:* <<FEATURE-4.1>>, <<FEATURE-4.2>>, <<FEATURE-4.3>>, <<FEATURE-4.4>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>, <<REQ-DR4>>, <<REQ-DR5>>
-
 [[EPIC-5]]
 . **Interest Notifications**  
 As a seller, I want to be notified when buyers express interest.  
 *Implemented by:* <<FEATURE-5.1>>, <<FEATURE-5.2>>  
 *Supported by Requirements:* <<REQ-DR3>>
-
 [[EPIC-6]]
 . **Seller Profile & Trust Signals**  
 As a seller, I want a minimal profile to help buyers build confidence.  
 *Implemented by:* <<FEATURE-6.1>>, <<FEATURE-6.2>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>
-
----
 
 == *Features*
 
@@ -67,13 +61,11 @@ Features refine epics into implementable slices of functionality.
 *Supports Epic:* <<EPIC-1>>  
 *Requires:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR2>>, <<REQ-DR4>>
-
 [[FEATURE-1.2]]
 . **Keyword Search**  
 *Supports Epic:* <<EPIC-1>>  
 *Requires:* <<REQ-DR1>>, <<REQ-DR3>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>
-
 [[FEATURE-1.3]]
 . **Sorting Options** (newest first, alphabetical, condition)  
 *Supports Epic:* <<EPIC-1>>  
@@ -89,7 +81,6 @@ Features refine epics into implementable slices of functionality.
 *Supports Epic:* <<EPIC-2>>  
 *Requires:* <<REQ-DR1>>  
 *Supported by Requirements:* <<REQ-DR1>>
-
 [[FEATURE-2.2]]
 . **Persistent Saved Listings**  
 *Supports Epic:* <<EPIC-2>>  
@@ -105,19 +96,16 @@ Features refine epics into implementable slices of functionality.
 *Supports Epic:* <<EPIC-3>>  
 *Requires:* <<REQ-DR3>>  
 *Supported by Requirements:* <<REQ-DR3>>
-
 [[FEATURE-3.2]]
 . **Seller Ratings & Reviews**  
 *Supports Epic:* <<EPIC-3>>  
 *Requires:* <<REQ-DR3>>  
 *Supported by Requirements:* <<REQ-DR3>>
-
 [[FEATURE-3.3]]
 . **Review Submission Flow**  
 *Supports Epic:* <<EPIC-3>>  
 *Requires:* <<REQ-DR3>>  
 *Supported by Requirements:* <<REQ-DR3>>
-
 [[FEATURE-3.4]]
 . **Reporting Mechanism**  
 *Supports Epic:* <<EPIC-3>>  
@@ -133,19 +121,16 @@ Features refine epics into implementable slices of functionality.
 *Supports Epic:* <<EPIC-4>>  
 *Requires:* <<REQ-DR1>>, <<REQ-DR4>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR4>>
-
 [[FEATURE-4.2]]
 . **Upload Multiple Images**  
 *Supports Epic:* <<EPIC-4>>  
 *Requires:* <<REQ-DR1>>  
 *Supported by Requirements:* <<REQ-DR1>>
-
 [[FEATURE-4.3]]
 . **Edit Listing Details**  
 *Supports Epic:* <<EPIC-4>>  
 *Requires:* <<REQ-DR1>>, <<REQ-DR5>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR5>>
-
 [[FEATURE-4.4]]
 . **Close Listing (Sold/Donated/Retracted)**  
 *Supports Epic:* <<EPIC-4>>  
@@ -161,7 +146,6 @@ Features refine epics into implementable slices of functionality.
 *Supports Epic:* <<EPIC-5>>  
 *Requires:* <<REQ-DR3>>  
 *Supported by Requirements:* <<REQ-DR3>>
-
 [[FEATURE-5.2]]
 . **Notification Center**  
 *Supports Epic:* <<EPIC-5>>  
@@ -177,14 +161,11 @@ Features refine epics into implementable slices of functionality.
 *Supports Epic:* <<EPIC-6>>  
 *Requires:* <<REQ-DR3>>  
 *Supported by Requirements:* <<REQ-DR3>>
-
 [[FEATURE-6.2]]
 . **Seller Dashboard**  
 *Supports Epic:* <<EPIC-6>>  
 *Requires:* <<REQ-DR1>>, <<REQ-DR3>>  
 *Supported by Requirements:* <<REQ-DR1>>, <<REQ-DR3>>
-
----
 
 == *User Stories*
 
