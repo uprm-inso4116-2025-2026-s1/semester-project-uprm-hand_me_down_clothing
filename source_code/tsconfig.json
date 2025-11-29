@@ -34,14 +34,15 @@
       ]
     }
   },
-
   "include": [
     "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/components/Footer.tsx"
-, "app/api/openrouter_logic/route.js", "app/reset-password"  ],
+    "app/components/Footer.tsx",
+    "app/api/openrouter_logic/route.js",
+    "app/reset-password"
+  ],
   "exclude": [
     "node_modules"
   ]
