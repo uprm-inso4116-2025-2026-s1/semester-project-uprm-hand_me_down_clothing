@@ -19,6 +19,13 @@ export type Profile = {
   donations_count: number
 }
 
+// 🔹 Domain model view of the authenticated user.
+// Our app doesn't need all of Supabase.User; we keep a small, stable shape.
+export type DomainUser = {
+  id: string
+  email: string | null
+}
+
 export const SITE_URL =
   process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
 
@@ -261,5 +268,16 @@ export async function getProfileByUserId (
   return {
     profile: data ?? null,
     error: error ?? null
+  }
+}
+
+// 🔁 Anti-Corruption Layer translator:
+// Convert Supabase.User to our internal DomainUser shape.
+export function toDomainUser (user: User | null): DomainUser | null {
+  if (!user) return null
+
+  return {
+    id: user.id,
+    email: user.email ?? null
   }
 }
