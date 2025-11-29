@@ -1,16 +1,8 @@
-// app/dashboard/page.tsx
 import { Piece } from "@/app/types/piece";
 import { PieceRepository } from "@/src/repositories/pieceRepository";
 import Link from "next/link";
-import UploadedPieceCard from "./UploadedPieceCard";
 
 const dummyUserId = "00000000-0000-0000-0000-000000000000"; // TODO: replace with real user id
-
-type PlainPiece = {
-  id: number | string;
-  name: string;
-  price: number;
-};
 
 export default async function DashboardPage() {
   const repository = new PieceRepository();
@@ -21,13 +13,6 @@ export default async function DashboardPage() {
     // @ts-ignore – adjust when your purchase model is ready
     (piece: any) => piece.buyer_id === dummyUserId
   );
-
-  // 🔹 Convert uploaded pieces to plain objects for client component
-  const uploadedPlainPieces: PlainPiece[] = uploadedPieces.map((piece: any) => ({
-    id: piece.id,
-    name: piece.name,
-    price: piece.price,
-  }));
 
   return (
     <main className="p-3 text-[#2b2b2b] dark:text-[#f5f5dc]">
@@ -82,10 +67,12 @@ export default async function DashboardPage() {
                 Manage the items you’re selling or have shared.
               </p>
             </div>
-            
+            <span className="inline-flex items-center justify-center rounded-full px-4 py-1.5 text-sm font-semibold bg-[#abc8c1] text-white">
+              {uploadedPieces.length} active
+            </span>
           </header>
 
-          {uploadedPlainPieces.length === 0 ? (
+          {uploadedPieces.length === 0 ? (
             <EmptyState
               title="No pieces uploaded yet"
               description="Start by listing a piece you no longer wear and give it a second life."
@@ -94,8 +81,8 @@ export default async function DashboardPage() {
             />
           ) : (
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-y-6 gap-x-4">
-              {uploadedPlainPieces.map((piece) => (
-                <UploadedPieceCard key={piece.id} piece={piece} />
+              {uploadedPieces.map((piece, index) => (
+                <PieceCard key={index} piece={piece} badge="On sale" />
               ))}
             </div>
           )}
@@ -180,11 +167,13 @@ function EmptyState({
   );
 }
 
-// Read-only card for purchased pieces (can still use the class type on server)
 function PieceCard({ piece, badge }: { piece: Piece; badge: string }) {
   return (
     <div className="w-full bg-white border border-gray-200 rounded-xl shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
+      {/* Bloque superior verde */}
       <div className="h-64 w-full bg-[#abc8c1]" />
+
+      {/* Parte inferior con info */}
       <div className="p-5 flex flex-col justify-between h-40">
         <div className="flex items-start justify-between gap-2 mb-2">
           <h5 className="text-lg font-semibold text-black truncate">
@@ -200,6 +189,7 @@ function PieceCard({ piece, badge }: { piece: Piece; badge: string }) {
             {badge}
           </span>
         </div>
+
         <div className="mt-4 flex items-center justify-between">
           <span className="text-xl font-bold text-black">
             {piece.getFormattedPrice

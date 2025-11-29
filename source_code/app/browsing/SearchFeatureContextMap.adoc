@@ -1,0 +1,214 @@
+= Context Map for Search Feature
+:icons: font
+:toc: left
+:toclevels: 3
+
+== Objective
+Provide a clear strategic view of how the **Search Context** interacts with other bounded contexts 
+within the clothing marketplace system.
+
+This context map illustrates boundaries, integration patterns, and how the internal search logic maintains 
+its domain purity while querying and filtering listings data.
+
+---
+
+== Context Map Diagram
+
+----
+┌──────────────────────────────────────────────────────────────────┐
+│                           Search Context                          │
+│      (Query Parsing, Suggestions, Filtering, Result Rendering)    │
+│                                                                  │
+│  ┌────────────────────────────────────────────────────────────┐  │
+│  │  UI Layer (page.tsx / search.tsx):                         │  │
+│  │   - Search Bar + Suggestions                               │  │
+│  │   - Category Filters                                       │  │
+│  │   - ResultsPanel Renderer                                  │  │
+│  ├────────────────────────────────────────────────────────────┤  │
+│  │  Search Logic (searchService.tsx):                         │  │
+│  │   - Query splitting                                        │  │
+│  │   - Multi-attribute matching                               │  │
+│  │   - Intersection of results                                │  │
+│  │   - Duplicate removal                                      │  │
+│  └────────────────────────────────────────────────────────────┘  │
+│                                                                  │
+└───────────────────────────────┬──────────────────────────────────┘
+                                │
+                                │ Customer–Supplier (Listings)
+                                │ Shared Kernel (Classifications)
+                                │ Conformist (Filters / Location)
+                                │
+              ┌─────────────────▼───────────────────────────┐
+              │               Listings Context               │
+              │        (PieceRepository + Piece Model)      │
+              └─────────────────▲───────────────────────────┘
+                                │ Published Language
+                                │
+              ┌─────────────────▼───────────────────────────┐
+              │          Classification Context              │
+              │      (Category / Condition / Size Enums)     │
+              └─────────────────▲───────────────────────────┘
+                                │ Shared Kernel
+                                │
+              ┌─────────────────▼───────────────────────────┐
+              │              Location Context                │
+              │     (Distance Filters & Map Utilities)       │
+              └─────────────────▲───────────────────────────┘
+                                │ Conformist Integration
+                                │
+              ┌─────────────────▼───────────────────────────┐
+              │           Infrastructure Context             │
+              │       (Supabase Persistence Layer)           │
+              └──────────────────────────────────────────────┘
+----
+
+---
+
+== Context Relationship Explanation
+
+=== Search Context → Listings Context *(Customer–Supplier)*
+The Search Context depends on the Listings Context for retrieving canonical `Piece` objects.
+
+All data queries pass through `PieceRepository`, which provides:
+
+- `filterPieces()`
+- `getPieces()`
+
+The Search Context *consumes* these services but does not modify domain rules owned by Listings.
+
+=== Search Context → Classification Context *(Shared Kernel)*
+Classification enums such as:
+
+- `Category`
+- `Size`
+- `Condition`
+
+are shared intentionally, ensuring consistent domain vocabulary.
+
+=== Search Context → Location Context *(Conformist)*
+When distance-based filtering is applied, the Search Context directly adopts filtering functions from:
+
+- `filterByCategory()`
+- `filterByGender()`
+- `filterByAge()`
+
+No translation layer is required.
+
+=== Search Context → Infrastructure Context *(ACL via Repository)*
+`PieceRepository` protects the Search Context from database schema and persistence concerns.
+
+It ensures:
+
+- stable return formats  
+- clean separation between domain logic and infrastructure  
+- avoidance of Supabase-specific terminology inside domain logic  
+
+---
+
+== Integration Pattern Details
+
+=== Data Flow
+
+----
+User Input
+    ↓
+Search UI (page.tsx)
+    ↓
+searchService.tsx (query parsing + intersection logic)
+    ↓
+PieceRepository (ACL for Supabase)
+    ↓
+Listings Data Returned
+    ↓
+ResultsPanel Rendering
+----
+
+=== Key Responsibilities Inside the Search Context
+
+1. **Query Processing**
+   - Split query into words
+   - Execute multi-field matching
+   - Intersect matches to preserve relevance
+
+2. **Suggestions Engine**
+   - Uses `frequently_searched_words`
+   - Offers up to 6 suggestions
+   - Lightweight, UI-driven autocomplete
+
+3. **Filtering Logic**
+   - Category buttons
+   - Age (kids)
+   - Gender (unisex)
+   - Location filters (from external context)
+
+4. **Presentation**
+   - Renders search UI
+   - Shows loading state
+   - Displays “no items found” view
+
+---
+
+== Bounded Context Definitions
+
+### Search Context (Internal)
+*Ubiquitous Language:*  
+Search Query, ResultsPanel, Suggestion, Filter, Match, Intersection
+
+*Bounded Entities:*  
+- Query String  
+- Search Suggestions  
+- Filtered Results  
+- UI Components  
+
+---
+
+### Listings Context
+*Responsibilities:*  
+- Owns canonical `Piece` entity  
+- Encapsulates persistence  
+- Provides query capabilities
+
+*Artifacts:*  
+- `PieceRepository`
+- `Piece` model
+
+---
+
+### Classification Context
+*Responsibilities:*  
+- Standardize category-related terminology  
+
+*Artifacts:*  
+- `Category`
+- `Condition`
+- `Size`
+
+---
+
+### Location Context
+*Responsibilities:*  
+- Filter items based on distance or location rules  
+
+*Artifacts:*  
+- Distance filter utilities  
+- `DistanceFilterButton`
+
+---
+
+== Benefits of This Context Mapping
+
+- Strong separation of concerns  
+- Increased maintainability  
+- Better testability  
+- Resilient to infrastructure changes  
+- Clearer ownership and boundaries  
+
+---
+
+== Future Considerations
+
+- Search analytics & domain events  
+- Caching repetitive queries  
+- A specialized SearchResult DTO  
+- Fuzzy matching and ranking improvements
+

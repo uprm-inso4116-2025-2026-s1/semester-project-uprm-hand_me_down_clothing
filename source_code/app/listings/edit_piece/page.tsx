@@ -6,7 +6,7 @@ import { ImageUploader } from '../../../src/components/imageUploader'
 import { useParams, useRouter } from 'next/navigation'
 import { PieceRepository } from '@/src/repositories/pieceRepository'
 import { Piece } from '@/app/types/piece'
-import { createClient } from '@/app/utils/supabase/client'
+import { createClient } from '@/app/auth/supabaseClient'
 import { PieceFactory } from '@/src/factories/pieceFactory'
 
 const MAX_IMAGES = 8

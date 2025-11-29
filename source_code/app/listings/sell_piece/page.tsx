@@ -187,7 +187,6 @@ export default function SellPiece() {
                   name="name"
                   type="text"
                   placeholder="e.g., Nike Hoodie"
-                  maxLength={100}
                   className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={name}
                   onChange={e => setName(e.target.value)}
@@ -223,7 +222,6 @@ export default function SellPiece() {
                   name="color"
                   type="text"
                   placeholder="e.g., Lavender"
-                  maxLength={20}
                   className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={color}
                   onChange={e => setColor(e.target.value)}
@@ -237,7 +235,6 @@ export default function SellPiece() {
                   name="brand"
                   type="text"
                   placeholder="e.g., Nike"
-                  maxLength={50}
                   className="mt-2 block w-full rounded-xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={brand}
                   onChange={e => setBrand(e.target.value)}
@@ -319,7 +316,6 @@ export default function SellPiece() {
                   name="reason"
                   rows={4}
                   placeholder="Why are you selling this piece?"
-                  maxLength={100}
                   className="mt-2 block w-full rounded-2xl bg-[#f3f3f3] border border-[#d1d5db] px-3 py-3 text-[#2b2b2b] placeholder-[#9a9a9a] focus:outline-none focus:ring-2 focus:ring-[#d7b1b1]"
                   value={reason}
                   onChange={e => setReason(e.target.value)}
