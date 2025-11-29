@@ -1,7 +1,52 @@
+// Client-side auth helpers (use in "use client" components)
+
 // Log in (sign in) an existing user
+import SupabaseClient from '@supabase/supabase-js/dist/module/SupabaseClient'
 import { setAuthPersistence } from './storage'
 import { supabase } from './supabaseClient'
-import { mapAuthError, logAuthError } from './errorMapper'
+import { User } from '@supabase/supabase-js'
+
+export type Profile = {
+  id: string
+  email?: string | null
+  display_name?: string | null
+  firstname?: string | null
+  lastname?: string | null
+  role?: string | null
+  bio: string | null
+  followers_count: number
+  following_count: number
+  donations_count: number
+}
+
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_SITE_URL ?? 'http://localhost:3000'
+
+export type OAuthProvider = 'google' | 'facebook' | 'apple'
+
+/**
+ * Start an OAuth sign-in flow with Supabase.
+ * This will redirect the browser to the provider and then back to our app.
+ */
+export async function signInWithOAuth (
+  provider: OAuthProvider,
+  redirectPath: string = '/' // or "/" if you prefer
+) {
+  // In Next.js "use client" components, window is defined
+  const redirectTo =
+    typeof window !== 'undefined'
+      ? `${window.location.origin}${redirectPath}`
+      : undefined
+
+  const { data, error } = await supabase.auth.signInWithOAuth({
+    provider,
+    options: {
+      redirectTo // Supabase will send the user back here after login
+    }
+  })
+
+  return { data, error }
+}
 
 // Sign up (register) a new user
 export async function signUp (
@@ -22,10 +67,7 @@ export async function signUp (
       }
     }
   })
-  if (error) {
-    logAuthError('signUp', error)
-    return { data: null, error: { ...error, message: mapAuthError(error) } }
-  }
+  if (error) return { data: null, error }
   try {
     const userId = data?.user?.id
     if (userId) {
@@ -71,27 +113,41 @@ export async function signIn (
     email,
     password
   })
-  if (error) {
-    logAuthError('signIn', error)
-    return { data: null, error: { ...error, message: mapAuthError(error) } }
-  }
   return { data, error }
 }
 
 // Log out the current user
 export async function signOut () {
   const { error } = await supabase.auth.signOut()
-  if (error) logAuthError('signOut', error)
   return { error }
 }
 
 // Request password reset email
 export async function requestPasswordReset (email: string) {
-  const { data, error } = await supabase.auth.resetPasswordForEmail(email)
+  const { data, error } = await supabase.auth.resetPasswordForEmail(email, {
+    redirectTo: `${SITE_URL}/reset-password` // 👈 this route we’ll create below
+  })
+
+  // IMPORTANT: for security, callers should *not* differ UI
+  // whether error is "user not found" or not. Just log and
+  // always show a generic success message.
   if (error) {
-    logAuthError('requestPasswordReset', error)
-    return { data: null, error: { ...error, message: mapAuthError(error) } }
+    console.warn('resetPasswordForEmail error:', error)
   }
+
+  return { data, error }
+}
+
+// Complete password update (called from reset-password page)
+export async function finishPasswordReset (newPassword: string) {
+  const { data, error } = await supabase.auth.updateUser({
+    password: newPassword
+  })
+
+  if (error) {
+    console.error('updateUser password error:', error)
+  }
+
   return { data, error }
 }
 
@@ -103,10 +159,6 @@ export async function updatePassword (newPassword: string) {
   const { data, error } = await supabase.auth.updateUser({
     password: newPassword
   })
-  if (error) {
-    logAuthError('updatePassword', error)
-    return { data: null, error: { ...error, message: mapAuthError(error) } }
-  }
   return { data, error }
 }
 
@@ -120,10 +172,6 @@ export async function updatePassword (newPassword: string) {
 // You can check verification status via supabase.auth.getUser()
 export async function getUser () {
   const { data, error } = await supabase.auth.getUser()
-  if (error) {
-    logAuthError('getUser', error)
-    return { data: null, error: { ...error, message: mapAuthError(error) } }
-  }
   return { data, error }
 }
 
@@ -131,10 +179,6 @@ export async function getUser () {
 // Send OTP to phone for sign-in or verification
 export async function signInWithPhone (phone: string) {
   const { data, error } = await supabase.auth.signInWithOtp({ phone })
-  if (error) {
-    logAuthError('signInWithPhone', error)
-    return { data: null, error: { ...error, message: mapAuthError(error) } }
-  }
   return { data, error }
 }
 
@@ -145,10 +189,7 @@ export async function verifyPhoneOtp (phone: string, token: string) {
     token,
     type: 'sms'
   })
-  if (error) {
-    logAuthError('verifyPhoneOtp', error)
-    return { data: null, error: { ...error, message: mapAuthError(error) } }
-  }
+  if (error) return { data, error }
 
   // On successful verification, update user's metadata to mark phone verification and enable 2FA
   try {
@@ -159,4 +200,66 @@ export async function verifyPhoneOtp (phone: string, token: string) {
   }
 
   return { data, error }
+}
+
+export type UserWithProfileResult = {
+  user: User | null
+  profile: Profile | null
+  error: Error | null
+}
+
+/**
+ * Generic helper that works with both:
+ *  - client-side supabase client (browser)
+ *  - server-side supabase client (SSR / route handlers)
+ *
+ * You pass *your* supabase instance, we do:
+ *  - supabase.auth.getUser()
+ *  - SELECT * FROM profiles WHERE id = user.id
+ */
+export async function getAuthUserWithProfile (
+  supabaseClient: SupabaseClient
+): Promise<UserWithProfileResult> {
+  // 1) Get the current auth user
+  const {
+    data: { user },
+    error: userError
+  } = await supabaseClient.auth.getUser()
+
+  if (userError || !user) {
+    return {
+      user: null,
+      profile: null,
+      error: userError ?? new Error('No authenticated user')
+    }
+  }
+
+  // 2) Get that user's profile
+  const { data: profile, error: profileError } = await supabaseClient
+    .from('profiles')
+    .select('*')
+    .eq('id', user.id)
+    .maybeSingle<Profile>() // safer than .single() if row might not exist
+
+  return {
+    user,
+    profile: profile ?? null,
+    error: profileError ?? null
+  }
+}
+
+export async function getProfileByUserId (
+  supabaseClient: SupabaseClient,
+  userId: string
+): Promise<{ profile: Profile | null; error: Error | null }> {
+  const { data, error } = await supabaseClient
+    .from('profiles')
+    .select('*')
+    .eq('id', userId)
+    .maybeSingle<Profile>()
+
+  return {
+    profile: data ?? null,
+    error: error ?? null
+  }
 }

@@ -3,25 +3,24 @@
 import React, { useState } from "react";
 import { Eye, EyeOff, CheckCircle, AlertCircle } from "lucide-react";
 import { useRouter } from "next/navigation";
-import { useSupabaseClient } from "@supabase/auth-helpers-react";
 
 import type { StaticImageData } from "next/image";
 import googleLogo from "@/logos/google.png";
-import facebookLogo from "@/logos/facebook.png";
-import appleLogo from "@/logos/apple.png";
 
 import { validators } from "./validate";
+import { OAuthProvider, signInWithOAuth, signUp } from "@/app/auth/auth";
 
 type FieldKey = keyof typeof validators;
 
 export default function SignupOneToOne() {
-  const supabase = useSupabaseClient();
   const router = useRouter();
 
   const [showPassword, setShowPassword] = useState(false);
   const [busy, setBusy] = useState(false);
   const [message, setMessage] = useState<string | null>(null);
-  const [messageType, setMessageType] = useState<"success" | "error" | null>(null);
+  const [messageType, setMessageType] = useState<"success" | "error" | null>(
+    null
+  );
 
   const [values, setValues] = useState({
     first: "",
@@ -29,37 +28,54 @@ export default function SignupOneToOne() {
     email: "",
     password: "",
   });
+
+  const [confirmPassword, setConfirmPassword] = useState("");
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [touched, setTouched] = useState<Record<string, boolean>>({});
+  const [confirmTouched, setConfirmTouched] = useState(false);
 
   const setField = (k: FieldKey, v: string) => {
     setValues((s) => ({ ...s, [k]: v }));
     setErrors((e) => ({ ...e, [k]: validators[k](v) }));
   };
 
-  const onBlur = (k: FieldKey) => setTouched((t) => ({ ...t, [k]: true }));
+  const onBlur = (k: FieldKey) =>
+    setTouched((t) => ({
+      ...t,
+      [k]: true,
+    }));
 
-  const isValid = Object.entries(values).every(
+  const baseValid = Object.entries(values).every(
     ([k, v]) => validators[k as FieldKey](v) === ""
   );
+
+  const passwordsMatch =
+    values.password.length > 0 &&
+    confirmPassword.length > 0 &&
+    values.password === confirmPassword;
+
+  const canSubmit = baseValid && passwordsMatch;
 
   async function handleCreateAccount() {
     setMessage(null);
     setMessageType(null);
+
+    // Extra guard for password mismatch
+    if (!passwordsMatch) {
+      setMessage("Passwords do not match.");
+      setMessageType("error");
+      return;
+    }
+
     setBusy(true);
 
     try {
-      const { data, error } = await supabase.auth.signUp({
-        email: values.email,
-        password: values.password,
-        options: {
-          data: {
-            fullname: `${values.first} ${values.last}`,
-            firstname: values.first,
-            lastname: values.last,
-          },
-        },
-      });
+      const { data, error } = await signUp(
+        values.first,
+        values.last,
+        values.email,
+        values.password
+      );
 
       if (error) {
         setMessage(error.message ?? "Sign-up failed. Please try again.");
@@ -83,12 +99,56 @@ export default function SignupOneToOne() {
     }
   }
 
+  async function handleOAuth(provider: OAuthProvider) {
+    setMessage(null);
+    setMessageType(null);
+    setBusy(true);
+
+    try {
+      const { error } = await signInWithOAuth(provider);
+
+      if (error) {
+        console.error("OAuth error:", error);
+        setMessage(
+          `We couldn't start the ${provider} sign-in. Please try again or use email/password.`
+        );
+        setMessageType("error");
+      }
+    } catch (err) {
+      console.error(err);
+      setMessage("Unexpected error starting social sign-in.");
+      setMessageType("error");
+    } finally {
+      setBusy(false);
+    }
+  }
+
+  function SocialButton({
+    label,
+    imgSrc,
+  }: {
+    label: string;
+    imgSrc: string | StaticImageData;
+  }) {
+    const src = typeof imgSrc === "string" ? imgSrc : imgSrc.src;
+    return (
+      <button
+        type="button"
+        onClick={async () => handleOAuth("google")}
+        className="flex h-10 flex-1 items-center justify-center gap-3 rounded-md border border-[#00000033] bg-gray-100 px-3 text-sm sm:text-base text-gray-700 hover:bg-gray-200"
+      >
+        <img src={src} alt="" className="h-5 w-5 object-contain" />
+        <span className="leading-none">{label}</span>
+      </button>
+    );
+  }
+
   return (
     <div className="min-h-screen w-full bg-white relative">
       {/* Top-right helper link */}
       <div className="absolute right-8 top-6 text-sm text-gray-500">
         <span className="hidden sm:inline">Already registered?</span>{" "}
-        <a href="/Login" className="font-medium text-gray-800 hover:underline">
+        <a href="/login" className="font-medium text-gray-800 hover:underline">
           Sign in
         </a>
       </div>
@@ -203,6 +263,31 @@ export default function SignupOneToOne() {
               )}
             </div>
 
+            {/* Confirm Password */}
+            <div className="mt-4">
+              <Input
+                placeholder="Confirm password"
+                type={showPassword ? "text" : "password"}
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onBlur={() => setConfirmTouched(true)}
+                aria-invalid={confirmTouched && !passwordsMatch}
+                aria-describedby="confirm-help"
+                className={`h-12 text-base ${confirmTouched && !passwordsMatch && confirmPassword
+                    ? "border-red-500"
+                    : "border-[#00000033]"
+                  }`}
+              />
+              {confirmTouched && confirmPassword && !passwordsMatch && (
+                <p
+                  id="confirm-help"
+                  className="mt-1 text-[13px] text-red-600"
+                >
+                  Passwords do not match.
+                </p>
+              )}
+            </div>
+
             {/* --- ✅ User Message Section --- */}
             {message && (
               <div
@@ -223,8 +308,8 @@ export default function SignupOneToOne() {
             {/* Primary CTA */}
             <button
               type="button"
-              disabled={!isValid}
-              className={`mt-5 w-full rounded-md border border-[#00000033] bg-gray-300 text-gray-700 text-sm sm:text-base font-medium h-12 ${!isValid ? "opacity-60 cursor-not-allowed" : ""
+              disabled={!canSubmit || busy}
+              className={`mt-5 w-full rounded-md border border-[#00000033] bg-gray-300 text-gray-700 text-sm sm:text-base font-medium h-12 ${!canSubmit || busy ? "opacity-60 cursor-not-allowed" : ""
                 }`}
               onClick={handleCreateAccount}
             >
@@ -241,8 +326,6 @@ export default function SignupOneToOne() {
             {/* Social buttons */}
             <div className="flex items-center gap-4">
               <SocialButton label="Google" imgSrc={googleLogo} />
-              <SocialButton label="Facebook" imgSrc={facebookLogo} />
-              <SocialButton label="Apple" imgSrc={appleLogo} />
             </div>
           </div>
         </div>
@@ -266,24 +349,5 @@ function Input({
         className,
       ].join(" ")}
     />
-  );
-}
-
-function SocialButton({
-  label,
-  imgSrc,
-}: {
-  label: string;
-  imgSrc: string | StaticImageData;
-}) {
-  const src = typeof imgSrc === "string" ? imgSrc : imgSrc.src;
-  return (
-    <button
-      type="button"
-      className="flex h-10 flex-1 items-center justify-center gap-3 rounded-md border border-[#00000033] bg-gray-100 px-3 text-sm sm:text-base text-gray-700 hover:bg-gray-200"
-    >
-      <img src={src} alt="" className="h-5 w-5 object-contain" />
-      <span className="leading-none">{label}</span>
-    </button>
   );
 }

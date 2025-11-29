@@ -1,5 +1,5 @@
 import { Piece } from './piece';
-import { Category, Gender, Size, Condition, Status } from "./classifications";
+import { Category, Gender, Size, Condition } from "./classifications";
 
 export class SoldPiece extends Piece {
     constructor(
@@ -15,11 +15,10 @@ export class SoldPiece extends Piece {
         reason: string | null,
         images: Array<string>,
         user_id: string,
-        latitude: number | null,
-        longitude: number | null,
         status: Status,
-        donation_center: string | null = null,
+        public latitude: number | null,
+        public longitude: number | null,
     ) {
-        super(id, name, category, color, brand, gender, size, price, condition, reason, images, user_id, latitude, longitude, status, donation_center);
+        super(id, name, category, color, brand, gender, size, price, condition, reason, images, user_id, status, latitude, longitude);
     }
 }
