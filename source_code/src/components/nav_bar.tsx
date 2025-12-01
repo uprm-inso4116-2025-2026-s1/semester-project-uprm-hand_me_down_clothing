@@ -157,19 +157,21 @@ export default function TopNav() {
                 Hi, {user.email}
               </span>
             )} */}
-            <Link
-              href="/sign-up"
-              className={cx(
-                "inline-flex items-center justify-center rounded-full",
-                "px-4 md:px-5 py-1.5 md:py-2 text-sm md:text-base font-semibold",
-                "text-white bg-[#cea2a2] shadow-sm transition",
-                "hover:opacity-95 active:bg-[#c29090] active:shadow-inner active:translate-y-[1px] active:scale-95",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black/40",
-                "touch-manipulation"
-              )}
-            >
-              Get Started
-            </Link>
+            {!user &&
+              <Link
+                href="/sign-up"
+                className={cx(
+                  "inline-flex items-center justify-center rounded-full",
+                  "px-4 md:px-5 py-1.5 md:py-2 text-sm md:text-base font-semibold",
+                  "text-white bg-[#cea2a2] shadow-sm transition",
+                  "hover:opacity-95 active:bg-[#c29090] active:shadow-inner active:translate-y-[1px] active:scale-95",
+                  "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-black/40",
+                  "touch-manipulation"
+                )}
+              >
+                Get Started
+              </Link>
+            }
 
             {/* Heart -> Favorite (turns pink on press, stays pink on /favorite) */}
             <Link
@@ -199,7 +201,7 @@ export default function TopNav() {
             </Link>
 
             {/* Cart -> Listings */}
-            <Link
+            {/* <Link
               href="/listings"
               aria-label="Cart"
               title="Cart"
@@ -211,7 +213,7 @@ export default function TopNav() {
               )}
             >
               <ShoppingBag strokeWidth={2.25} className="h-8 w-10 md:h-8 md:w-8 text-black" />
-            </Link>
+            </Link> */}
 
             {/* Logout button – only when logged in */}
             {!loading && user && (
