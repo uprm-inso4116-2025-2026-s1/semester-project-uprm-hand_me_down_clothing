@@ -7,22 +7,20 @@ import {
   useState,
   type ReactNode,
 } from "react";
-import type { Session } from "@supabase/supabase-js";
+import type { Session, User } from "@supabase/supabase-js";
 import { useRouter } from "next/navigation";
 import { supabase } from "./supabaseClient";
-import { toDomainUser, type DomainUser } from "./auth";
 
 type AuthContextValue = {
-  user: DomainUser | null;
+  user: User | null;
   session: Session | null;
   loading: boolean;
 };
 
-
 const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 
 export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
-  const [user, setUser] = useState<DomainUser | null>(null);
+  const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const router = useRouter();
@@ -89,7 +87,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
 
       // ✅ Session is valid
       setSession(data.session);
-      setUser(toDomainUser(userData.user));
+      setUser(userData.user);
       setLoading(false);
     }
 
@@ -101,7 +99,7 @@ export function SupabaseAuthProvider({ children }: { children: ReactNode }) {
     } = supabase.auth.onAuthStateChange((_event, newSession) => {
       if (cancelled) return;
       setSession(newSession);
-      setUser(toDomainUser(newSession?.user ?? null));
+      setUser(newSession?.user ?? null);
       setLoading(false);
     });
 
