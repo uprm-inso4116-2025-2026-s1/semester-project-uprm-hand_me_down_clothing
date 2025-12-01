@@ -1,0 +1,186 @@
+// --
+// Author: Yamilette Alemañy Vázquez
+// User: @yamilette-alemany
+// Project: Hand-me-down Clothing
+// GitHub Issue: #118
+// --
+
+== Apply Interface Segregation Principle to Favorites
+
+For this lecture topic task, the intent was to refactor a “fat” interface and separate methods into read and write versions to separate their responsibilities. In the Clean Arquitecture presentation, it is mentioned that design units should only have a single responsibility. In this context, a “fat” interface is a class whose interfaces are not cohesive (can be broken up).  
+
+In the case of Favorites, it was considered a “fat” interface. Below are some code snippets and explanations that justify this idea.
+
+
+The favorites logic is centralized in FavoritesProvider.tsx using a single context value type. 
+
+            type FavoriteId = number;
+
+            type FavoritesContextValue = {
+            favorites: FavoriteId[];
+            isFavorite: (id: FavoriteId) => boolean;
+            toggleFavorite: (id: FavoriteId) => void;
+            addFavorite: (id: FavoriteId) => void;
+            removeFavorite: (id: FavoriteId) => void;
+            };
+
+            const FavoritesContext = createContext<FavoritesContextValue | undefined>(
+            undefined
+            );
+
+The FavoritesProvider implements all of these methods and exposes them through a single hook:
+
+            export function useFavorites() {
+            const ctx = useContext(FavoritesContext);
+            if (!ctx) {
+                throw new Error("useFavorites must be used within a FavoritesProvider");
+            }
+            return ctx;
+            }
+
+
+== Why is this a “fat” interface?
+
+FavoritesContextValue mixes read responsibilities (favorites, isFavorite) with write responsibilities (addFavorite, removeFavorite, toggleFavorite) in one interface.
+
+The useFavorites() hook always returns the entire interface, so any component using it is coupled to all favorites behaviors, even if it only needs a few of them.
+
+
+Additionally, from the code it can be concluded that Clients are depending on more than they use. Several components call useFavorites() and receive the entire FavoritesContextValue, but only use a few of its methods.
+
+
+A good example of this is that in FilterableListings.tsx, a small FavoriteHeartButton component is declared inline:
+
+            function FavoriteHeartButton({ listingId }: { listingId: number }) {
+            const { isFavorite, toggleFavorite } = useFavorites();
+            const active = isFavorite(listingId);
+
+            async function handleClick(e: React.MouseEvent) {
+                e.stopPropagation();
+                toggleFavorite(listingId);
+            }
+
+            return (
+                <button /* ... */>
+                <span className={active ? "text-[#f495ba]" : "text-[#9a9a9a]"}>
+                    {active ? "♥" : "♡"}
+                </span>
+                </button>
+            );
+            }
+
+This component is used inside the “Featured items” grid:
+
+            <div className="w-8 h-8 bg-[#F9F8F8] border-2 border-[#E5E7EF] text-xl text-[#f495ba] ml-23 rounded-full">
+            <FavoriteHeartButton listingId={item.id} />
+            </div>
+
+FavoriteHeartButton only needs isFavorite and toggleFavorite. But because it calls useFavorites(), it is implicitly depending on the full FavoritesContextValue (including addFavorite and removeFavorite), even though those methods are never used there.
+
+On the individual listing page, the favorites API is used to toggle a single hard-coded listing ID:
+
+            const listingId = 1;
+            const { isFavorite, toggleFavorite } = useFavorites();
+            const isSaved = isFavorite(listingId);
+
+            <button
+            onClick={() => toggleFavorite(listingId)}
+            /* ... */
+            >
+            <span className={isSaved ? "text-[#f495ba]" : "text-neutral-500"}>
+                {isSaved ? "♥" : "💗"}
+            </span>
+            <span>{isSaved ? "Saved" : "Save"}</span>
+            </button>
+
+Again, the page only needs to read and toggle favorites for a single listing. But by using useFavorites(), it is tied to the entire favorites interface, including addFavorite and removeFavorite.
+
+The Favorites page uses the list of favorite IDs to filter mock listings and to remove items from favorites:
+
+            const { favorites: favoriteIds, toggleFavorite } = useFavorites();
+
+            const favoriteListings = React.useMemo(
+            () => ALL_LISTINGS.filter((item) => favoriteIds.includes(item.id)),
+            [favoriteIds]
+            );
+
+This page needs: favorites (the list of IDs) and toggleFavorite (to remove an item from favorites). It does not use addFavorite or removeFavorite directly. However, through useFavorites(), it still depends on the full FavoritesContextValue interface.
+
+
+Analysing all of these findings while having in mind  ISP, there is one combined favorites interface (FavoritesContextValue) that mixes responsibilities:
+
+    - Read responsibilities: favorites, isFavorite, get favorites from localStorage.
+    - Write responsibilities: addFavorite, removeFavorite, toggleFavorite.
+    - The useFavorites() hook always returns this full interface.
+
+As well as UI components like:
+
+    - FavoriteHeartButton in FilterableFeaturedItems
+    - The “Save” button in IndividualListing
+
+
+The favorites grid in the Favorites page
+all call useFavorites() and therefore depend on methods they do not use (e.g., addFavorite, removeFavorite).
+
+
+== ISP conclusions
+
+All of this supports the idea that Favorites behaves like a “fat” interface. Client components are forced to depend on both read and write favorites operations, even when they only need one side. This violates the Interface Segregation Principle and motivates splitting the favorites API into smaller, role-specific interfaces (e.g., FavoritesReader and FavoritesMutator).”
+
+
+== Implementing ISP
+
+
+Here are code snippets implementing the split interfaces. The idea was to have one provider, but two client-specific interfaces. 
+
+
+            type FavoritesContextValue = {
+            favorites: FavoriteId[];
+            isFavorite: (id: FavoriteId) => boolean;
+            addFavorite: (id: FavoriteId) => void;
+            removeFavorite: (id: FavoriteId) => void;
+            toggleFavorite: (id: FavoriteId) => void;
+            };
+
+            const FavoritesContext = createContext<FavoritesContextValue | undefined>(undefined);
+
+            // ISP: reader-only
+            export type FavoritesReader = {
+            favorites: FavoriteId[];
+            isFavorite: (id: FavoriteId) => boolean;
+            };
+
+            export function useFavoritesReader(): FavoritesReader {
+            const ctx = useContext(FavoritesContext);
+            if (!ctx) {
+                throw new Error("useFavoritesReader must be used within a FavoritesProvider");
+            }
+            const { favorites, isFavorite } = ctx;
+            return { favorites, isFavorite };
+            }
+
+            // ISP: writer-only
+            export type FavoritesMutator = {
+            addFavorite: (id: FavoriteId) => void;
+            removeFavorite: (id: FavoriteId) => void;
+            toggleFavorite: (id: FavoriteId) => void;
+            };
+
+            export function useFavoritesMutator(): FavoritesMutator {
+            const ctx = useContext(FavoritesContext);
+            if (!ctx) {
+                throw new Error("useFavoritesMutator must be used within a FavoritesProvider");
+            }
+            const { addFavorite, removeFavorite, toggleFavorite } = ctx;
+            return { addFavorite, removeFavorite, toggleFavorite };
+            }
+
+
+Now, clients use only the slice of the interface they actually need:
+
+    - Components that display and change favorites (e.g., the heart button) use both
+    “FavoritesReader” and “FavoritesMutator”.
+    - Components that only display favorites (e.g., the Favorites page) depend
+    only on “FavoritesReader”.
+
+

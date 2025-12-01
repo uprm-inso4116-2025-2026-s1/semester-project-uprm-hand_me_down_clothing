@@ -4,8 +4,8 @@ import "./globals.css";
 import AnnouncementBar from "@/src/components/announcementBar";
 import TopNav from "@/src/components/nav_bar";
 import Footer from "@/src/components/Footer";
-import { SupabaseAuthProvider } from "@/app/auth/SupabaseAuthProvider";
-
+// import { SupabaseAuthProvider } from "@/app/auth/SupabaseAuthProvider";
+import { FavoritesProvider } from "./Favorites/FavoritesProvider";
 
 
 const lato = Lato({
@@ -26,7 +26,8 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${lato.variable} antialiased`}>
         {/* Skip link for accessibility */}
-        <SupabaseAuthProvider>
+        <FavoritesProvider>
+          {/* <SupabaseAuthProvider> */}
 
           <a
             href="#main"
@@ -43,7 +44,8 @@ export default function RootLayout({
             {children}
             <Footer />
           </main>
-        </SupabaseAuthProvider>
+          {/* </SupabaseAuthProvider> */}
+        </FavoritesProvider>
       </body>
     </html>
   );
