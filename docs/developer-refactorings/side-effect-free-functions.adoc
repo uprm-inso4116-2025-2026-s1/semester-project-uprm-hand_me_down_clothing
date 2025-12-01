@@ -1,0 +1,89 @@
+= Side-effect-free functions
+
+== Title
+Implement Side-Effect-Free Functions
+
+== Objective
+Transform a state-changing command into a pure function that returns a new value instead of mutating state.
+
+== Description (short)
+Move mutation out of the core logic. The pure function should accept all inputs it needs, not mutate them, and return a new value representing the updated state. Keep side-effects (IO, persistence) in a thin adapter layer.
+
+== Why
+- Easier to test (deterministic, referentially transparent).
+- Easier to reason about and reuse.
+- Safer in concurrent or async contexts.
+
+== implementation 
+
+1. Identify the minimal command that mutates state (example: a `register()` that calls `map.set(...)`).
+2. Define a pure function signature that takes the complete state it needs: no `this`, no globals.
+3. In the function, shallow-copy mutable containers (e.g., `new Map(existing)` or `existing.slice()` for arrays).
+4. Apply changes to the copy and return it.
+5. Keep the original impure method as a thin adapter that calls the pure function and performs any required side-effects (assign back to `this` state, persist to DB, etc.).
+6. Add unit tests that assert the original input is unchanged and the returned value contains the expected change.
+
+== Minimal example
+
+Before (impure):
+
+----
+class PaymentRegistry {
+  constructor() {
+    this.map = new Map()
+  }
+
+  register(method) {
+    if (this.map.has(method.id)) throw new Error('Payment method already registered: ' + method.id)
+    this.map.set(method.id, method) // mutation
+  }
+}
+----
+
+After (pure helper + adapter):
+
+----
+// pure helper — returns a new Map, does not mutate inputs
+function registerPaymentMethod(existing, method) {
+  if (existing.has(method.id)) throw new Error('Payment method already registered: ' + method.id)
+  const next = new Map(existing) // shallow copy
+  next.set(method.id, method)
+  return next
+}
+
+// adapter (keeps runtime behaviour)
+class PaymentRegistry {
+  constructor() { this.map = new Map() }
+  register(method) { this.map = registerPaymentMethod(this.map, method) }
+}
+----
+
+== Tests (example using Jest)
+
+Create a test file under `tests/` and assert non-mutation and correctness.
+
+----
+test('registerPaymentMethod returns new Map and does not mutate original', () => {
+  const original = new Map()
+  const method = { id: 'x', label: 'X' }
+  const next = registerPaymentMethod(original, method)
+  expect(next).not.toBe(original)
+  expect(next.get('x')).toEqual(method)
+  expect(original.has('x')).toBe(false)
+})
+
+test('registerPaymentMethod throws when id exists', () => {
+  const original = new Map([['x', { id: 'x' }]])
+  expect(() => registerPaymentMethod(original, { id: 'x' })).toThrow()
+})
+----
+
+== Edge cases and notes
+
+- The Map copy is shallow. If values are mutable objects, consider cloning values or using immutable value objects.
+- Copying large structures has cost — only apply to the smallest practical scope.
+- Keep IO and side-effects in the adapter: logging, network, storage.
+
+
+
+

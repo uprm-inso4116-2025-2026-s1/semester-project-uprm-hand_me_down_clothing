@@ -172,8 +172,8 @@ export default function SignupOneToOne() {
                   aria-invalid={!!errors.first && touched.first}
                   aria-describedby="first-help"
                   className={`h-12 text-base ${touched.first && errors.first
-                      ? "border-red-500"
-                      : "border-[#00000033]"
+                    ? "border-red-500"
+                    : "border-[#00000033]"
                     }`}
                 />
                 {touched.first && errors.first && (
@@ -192,8 +192,8 @@ export default function SignupOneToOne() {
                   aria-invalid={!!errors.last && touched.last}
                   aria-describedby="last-help"
                   className={`h-12 text-base ${touched.last && errors.last
-                      ? "border-red-500"
-                      : "border-[#00000033]"
+                    ? "border-red-500"
+                    : "border-[#00000033]"
                     }`}
                 />
                 {touched.last && errors.last && (
@@ -215,8 +215,8 @@ export default function SignupOneToOne() {
                 aria-invalid={!!errors.email && touched.email}
                 aria-describedby="email-help"
                 className={`h-12 text-base ${touched.email && errors.email
-                    ? "border-red-500"
-                    : "border-[#00000033]"
+                  ? "border-red-500"
+                  : "border-[#00000033]"
                   }`}
               />
               {touched.email && errors.email && (
@@ -238,8 +238,8 @@ export default function SignupOneToOne() {
                   aria-invalid={!!errors.password && touched.password}
                   aria-describedby="password-help"
                   className={`pr-12 h-12 text-base w-full ${touched.password && errors.password
-                      ? "border-red-500"
-                      : "border-[#00000033]"
+                    ? "border-red-500"
+                    : "border-[#00000033]"
                     }`}
                 />
                 <button
@@ -274,8 +274,8 @@ export default function SignupOneToOne() {
                 aria-invalid={confirmTouched && !passwordsMatch}
                 aria-describedby="confirm-help"
                 className={`h-12 text-base ${confirmTouched && !passwordsMatch && confirmPassword
-                    ? "border-red-500"
-                    : "border-[#00000033]"
+                  ? "border-red-500"
+                  : "border-[#00000033]"
                   }`}
               />
               {confirmTouched && confirmPassword && !passwordsMatch && (
@@ -292,8 +292,8 @@ export default function SignupOneToOne() {
             {message && (
               <div
                 className={`mt-5 flex items-start gap-2 rounded-md p-3 text-sm ${messageType === "success"
-                    ? "bg-green-100 text-green-800 border border-green-300"
-                    : "bg-red-100 text-red-800 border border-red-300"
+                  ? "bg-green-100 text-green-800 border border-green-300"
+                  : "bg-red-100 text-red-800 border border-red-300"
                   }`}
               >
                 {messageType === "success" ? (

@@ -197,7 +197,7 @@ function SelectPill({
           className="h-9 pl-4 pr-9 rounded-full bg-[#F9F8F8] text-[#333333] border border-[#E5E7EF] cursor-default"
           aria-disabled
           defaultValue={options[0]?.value}
-          onChange={() => {}}
+          onChange={() => { }}
         >
           {options.map((o) => (
             <option key={o.value} value={o.value}>
